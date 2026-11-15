@@ -77,11 +77,14 @@ def get_patient(
 @router.post("/patients", status_code=201)
 def create_patient(
     patient_data: PatientCreate,
+    forceCreate: bool = Query(False, description="Create even when identity matches exist"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Create a new patient."""
-    return PatientService(db).create(patient_data, current_user.id)
+    """Create a new patient. Returns 409 with matches when duplicates exist unless forceCreate."""
+    return PatientService(db).create(
+        patient_data, current_user.id, force_create=forceCreate
+    )
 
 
 @router.put("/patients/{patientId}")

@@ -47,6 +47,7 @@ function TestWorkflowIdentityLines({
   orderId,
   sampleId,
   testCode,
+  accessionNumber,
 }: {
   patientName: string;
   testName: string;
@@ -55,6 +56,7 @@ function TestWorkflowIdentityLines({
   orderId: number;
   sampleId?: number;
   testCode: string;
+  accessionNumber?: string | null;
 }) {
   const idClass = 'whitespace-nowrap';
 
@@ -106,6 +108,14 @@ function TestWorkflowIdentityLines({
     if (line2.length > 0) line2.push(<InlineDot key="dot-sam" />);
     line2.push(
       <RecordId key="sam" type="sample" value={sampleId} emphasis="headerMuted" className={idClass} />
+    );
+  }
+  if (accessionNumber) {
+    if (line2.length > 0) line2.push(<InlineDot key="dot-acc" />);
+    line2.push(
+      <span key="acc" className={cn(IDENTITY_STACK.secondaryText, idClass)}>
+        {accessionNumber}
+      </span>
     );
   }
   if (testCode) {
@@ -223,6 +233,7 @@ export function TestWorkflowCardLeftColumn({
           orderId={row.orderId}
           sampleId={row.sampleId ?? undefined}
           testCode={row.testCode}
+          accessionNumber={'accessionNumber' in row ? (row.accessionNumber as string | undefined) : undefined}
         />
       }
       alerts={

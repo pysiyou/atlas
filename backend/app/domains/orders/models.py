@@ -47,6 +47,10 @@ class Order(Base):
     doctorApprovedBy = Column("doctor_approved_by", String, nullable=True)
     doctorApprovedAt = Column("doctor_approved_at", DateTime(timezone=True), nullable=True)
 
+    deliveredAt = Column("delivered_at", DateTime(timezone=True), nullable=True)
+    deliveredBy = Column("delivered_by", String, nullable=True)
+    deliveryMethod = Column("delivery_method", String, nullable=True)
+
     # Metadata
     createdBy = Column("created_by", String, nullable=False)
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())

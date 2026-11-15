@@ -64,6 +64,7 @@ export const apiErrorSchema = z.object({
   field: z.string().optional(),
   status: z.number().optional(),
   details: z.array(apiErrorDetailSchema).optional(),
+  matches: z.array(z.unknown()).optional(),
 });
 
 export type ApiError = z.infer<typeof apiErrorSchema>;

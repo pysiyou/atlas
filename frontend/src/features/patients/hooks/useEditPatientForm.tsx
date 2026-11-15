@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ModalContextSubtitle } from '@/components/display';
 
 import type { Patient } from '@/types';
-import { patientCreateSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
+import { patientCreateSchema, patientSchema, type PatientFormInput } from '../schemas/patientFormSchemas';
 import { useCreatePatient, useUpdatePatient } from '../api/patients';
 import { patientToFormInput } from '../utils/formTransformers';
 import { patientCreateDefaultValues } from '../utils/patientFormDefaults';
@@ -18,11 +18,13 @@ import {
   resolveFirstPatientFormErrorPath,
 } from '../patientFormNavigation';
 import { useModuleListTitles } from '@/strings';
+import { isApiError } from '@/lib/api';
 
 export interface UseEditPatientFormParams {
   patient?: Patient;
   mode: 'create' | 'edit';
   onClose: () => void;
+  onCreated?: (patient: Patient) => void;
 }
 
 const TABS = [
@@ -31,8 +33,10 @@ const TABS = [
   { id: 'affiliation', label: 'Affiliation' },
 ] as const;
 
-export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFormParams) {
+export function useEditPatientForm({ patient, mode, onClose, onCreated }: UseEditPatientFormParams) {
   const [activeTab, setActiveTab] = useState<string>('general');
+  const [duplicateMatches, setDuplicateMatches] = useState<Patient[]>([]);
+  const [pendingCreateData, setPendingCreateData] = useState<PatientFormInput | null>(null);
   const create = useCreatePatient();
   const update = useUpdatePatient();
 
@@ -53,17 +57,37 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
   const formValues = useWatch({ control });
   const isPendingMutation = create.isPending || update.isPending;
 
-  const onSubmit = async (data: PatientFormInput) => {
+  const finishCreate = (created: Patient) => {
+    reset();
+    setDuplicateMatches([]);
+    setPendingCreateData(null);
+    onCreated?.(created);
+    onClose();
+  };
+
+  const onSubmit = async (data: PatientFormInput, forceCreate = false) => {
     if (isPendingMutation) return;
     try {
       if (mode === 'edit' && patient) {
         await update.mutateAsync({ id: patient.id, data });
-      } else {
-        await create.mutateAsync(data);
+        reset();
+        onClose();
+        return;
       }
-      reset();
-      onClose();
+      const created = await create.mutateAsync({ data, forceCreate });
+      finishCreate(created as Patient);
     } catch (error) {
+      if (isApiError(error) && error.code === 'DUPLICATE_PATIENT') {
+        const parsed = (error.matches ?? [])
+          .map(item => {
+            const result = patientSchema.safeParse(item);
+            return result.success ? (result.data as Patient) : null;
+          })
+          .filter((item): item is Patient => item !== null);
+        setPendingCreateData(data);
+        setDuplicateMatches(parsed);
+        return;
+      }
       console.error('Form submission error:', error);
     }
   };
@@ -107,6 +131,19 @@ export function useEditPatientForm({ patient, mode, onClose }: UseEditPatientFor
     modalTitle,
     subtitle,
     submitLabel,
+    duplicateMatches,
+    onSelectExisting: (existing: Patient) => {
+      finishCreate(existing);
+    },
+    onForceCreate: () => {
+      if (pendingCreateData) {
+        void onSubmit(pendingCreateData, true);
+      }
+    },
+    onDismissDuplicates: () => {
+      setDuplicateMatches([]);
+      setPendingCreateData(null);
+    },
   };
 }
 

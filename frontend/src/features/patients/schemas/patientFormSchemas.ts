@@ -136,6 +136,7 @@ export const medicalHistorySchema = z.object({
 
 export const patientSchema = z.object({
   id: z.number().int().positive(),
+  mrn: z.string().nullable().optional(),
   fullName: nameSchema,
   dateOfBirth: dateStringSchema,
   gender: zEnumFromValues(GENDER_VALUES),

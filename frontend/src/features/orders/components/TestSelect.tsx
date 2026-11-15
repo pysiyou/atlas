@@ -14,6 +14,7 @@ import { getEmptyCopy, usePanelCopy } from '@/strings';
 
 import { RemovableTag, CheckboxIndicator } from '@/components/primitives';
 import type { TestSummary } from '@/types';
+import type { CatalogPanel } from '@/features/catalog';
 import { indexTestsByCode } from '@/features/catalog/testLookup';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
@@ -96,6 +97,8 @@ interface TestSelectorProps {
   error?: string;
   /** Slim catalog for looking up names and prices by code */
   tests?: TestSummary[];
+  panels?: CatalogPanel[];
+  onAddPanel?: (memberCodes: string[]) => void;
 }
 
 /**
@@ -154,22 +157,48 @@ interface TestSelectPopoverProps {
   visibleTests: TestSummary[];
   selectedSet: Set<string>;
   onToggleTest: (testCode: string) => void;
+  visiblePanels: CatalogPanel[];
+  onAddPanel?: (memberCodes: string[]) => void;
 }
 
 function TestSelectPopover({
   visibleTests,
   selectedSet,
   onToggleTest,
+  visiblePanels,
+  onAddPanel,
 }: TestSelectPopoverProps) {
   const panels = usePanelCopy();
+  const resultCount = visibleTests.length + visiblePanels.length;
   return (
   <SearchResultsPopoverShell
     title={panels.orders.matchingTests}
-    resultCount={visibleTests.length}
+    resultCount={resultCount}
     emptyMessage={getEmptyCopy().matchingTests.title}
     emptyDescription={getEmptyCopy().matchingTests.description}
-    isEmpty={visibleTests.length === 0}
+    isEmpty={resultCount === 0}
   >
+    {visiblePanels.map(panel => (
+      <button
+        key={`panel-${panel.code}`}
+        type="button"
+        onClick={() => onAddPanel?.(panel.memberTestCodes)}
+        className={cn(
+          'w-full text-left px-space-3 py-space-2',
+          'transition-colors cursor-pointer flex items-center gap-space-2',
+          'hover:bg-surface-page',
+          CONTROL.focusVisibleTight,
+          'bg-surface'
+        )}
+      >
+        <div className="min-w-0 flex-1">
+          <p className={`${text({ role: 'body' })} font-normal truncate`}>{panel.name}</p>
+          <p className={`${text({ role: 'caption' })} truncate`}>
+            Panel · {panel.memberTestCodes.length} tests
+          </p>
+        </div>
+      </button>
+    ))}
     {visibleTests.map(test => {
             const code = typeof test.code === 'string' ? test.code : String(test.code);
             const isSelected = selectedSet.has(code);
@@ -220,6 +249,8 @@ export function TestSelect({
   onToggleTest,
   error,
   tests = [],
+  panels = [],
+  onAddPanel,
 }: TestSelectorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -242,6 +273,14 @@ export function TestSelect({
     () => (hasSearch ? filteredTests : []),
     [hasSearch, filteredTests]
   );
+  const visiblePanels = useMemo(() => {
+    if (!hasSearch) return [];
+    const term = testSearch.trim().toLowerCase();
+    return panels.filter(
+      panel =>
+        panel.name.toLowerCase().includes(term) || panel.code.toLowerCase().includes(term)
+    );
+  }, [hasSearch, panels, testSearch]);
 
   // Build tags with test details (code and name) for display inside the input.
   // Matches patient tag styling but without avatar.
@@ -278,6 +317,8 @@ export function TestSelect({
           visibleTests={visibleTests}
           selectedSet={selectedSet}
           onToggleTest={onToggleTest}
+          visiblePanels={visiblePanels}
+          onAddPanel={onAddPanel}
         />
       )}
     </div>

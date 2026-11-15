@@ -41,6 +41,11 @@ export const queryKeys = {
     search: (query: string) => [...queryKeys.tests.all, 'search', query] as const,
   },
 
+  panels: {
+    all: ['panels'] as const,
+    list: () => [...queryKeys.panels.all, 'list'] as const,
+  },
+
   /**
    * Users queries (static data)
    */
@@ -225,6 +230,9 @@ export const queryKeys = {
         dateFrom?: string;
         dateTo?: string;
         sampleType?: string;
+        priority?: string;
+        priorityGroup?: string;
+        category?: string;
       }
     ) => [...queryKeys.worklists.all, 'collection', params] as const,
     entry: (
@@ -235,6 +243,9 @@ export const queryKeys = {
         dateFrom?: string;
         dateTo?: string;
         sampleType?: string;
+        priority?: string;
+        priorityGroup?: string;
+        category?: string;
       }
     ) => [...queryKeys.worklists.all, 'entry', params] as const,
     validation: (
@@ -245,6 +256,9 @@ export const queryKeys = {
         dateFrom?: string;
         dateTo?: string;
         sampleType?: string;
+        priority?: string;
+        priorityGroup?: string;
+        category?: string;
       }
     ) => [...queryKeys.worklists.all, 'validation', params] as const,
     dashboardToday: (params?: { page?: number; pageSize?: number; search?: string }) =>

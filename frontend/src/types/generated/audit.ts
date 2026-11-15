@@ -5,7 +5,7 @@
 // =============================================================================
 export type EventLogDomain = "patient" | "order" | "laboratory" | "billing" | "reporting" | "system";
 
-export type EventLogLaboratoryKindKey = "laboratory:sample" | "laboratory:result" | "laboratory:validation" | "laboratory:escalation" | "laboratory:quality" | "laboratory:analyzer";
+export type EventLogLaboratoryKindKey = "laboratory:sample" | "laboratory:result" | "laboratory:validation" | "laboratory:escalation" | "laboratory:analyzer";
 
 export type EventLogKind = EventLogDomain | EventLogLaboratoryKindKey;
 
@@ -13,7 +13,7 @@ export type StoredEventScope = "order" | "lab" | "patient" | "system";
 
 export type EventLogLaboratorySubdomain = (typeof LABORATORY_SUBDOMAIN_VALUES)[number];
 
-export const LABORATORY_SUBDOMAIN_VALUES = ["sample","result","validation","escalation","quality","analyzer"] as const;
+export const LABORATORY_SUBDOMAIN_VALUES = ["sample","result","validation","escalation","analyzer"] as const;
 
 export const EVENT_LOG_KIND_OPTIONS: { id: EventLogKind; label: string }[] = [
   { id: "patient", label: "Patient" },
@@ -26,7 +26,6 @@ export const EVENT_LOG_KIND_OPTIONS: { id: EventLogKind; label: string }[] = [
   { id: "laboratory:result", label: "Laboratory · Results" },
   { id: "laboratory:validation", label: "Laboratory · Validation" },
   { id: "laboratory:escalation", label: "Laboratory · Escalation" },
-  { id: "laboratory:quality", label: "Laboratory · Quality" },
   { id: "laboratory:analyzer", label: "Laboratory · Analyzer" },
 ];
 
@@ -37,7 +36,7 @@ export const DEFAULT_STORED_EVENT_SCOPE = "order" as const;
 // =============================================================================
 // definitions
 // =============================================================================
-export type AuditEventWire = "patient.create" | "patient.update" | "patient.delete" | "patient.view" | "order.create" | "order.update" | "order.status" | "order.delete" | "order.test.add" | "order.test.remove" | "order.test.cancel" | "order.test.retest" | "order.test.reflex" | "laboratory.sample.create" | "laboratory.sample.collect" | "laboratory.sample.reject" | "laboratory.sample.recollect_request" | "laboratory.sample.recollect_approve" | "laboratory.sample.recollect_deny" | "laboratory.analyzer.duplicate_ingest" | "laboratory.analyzer.ingest_rejected" | "laboratory.result.enter" | "laboratory.result.update" | "laboratory.result.critical_detect" | "laboratory.result.critical_notify" | "laboratory.result.critical_acknowledge" | "laboratory.validation.approve" | "laboratory.validation.reject" | "laboratory.escalation.trigger" | "laboratory.escalation.resolve" | "billing.payment.process" | "billing.invoice.generate" | "billing.invoice.void" | "billing.insurance.submit" | "reporting.generate" | "reporting.download" | "system.user.login" | "system.user.logout" | "system.user.create" | "system.user.update" | "system.catalog.create" | "system.catalog.update";
+export type AuditEventWire = "patient.create" | "patient.create.forced" | "patient.update" | "patient.delete" | "patient.view" | "order.create" | "order.update" | "order.status" | "order.delete" | "order.test.add" | "order.test.remove" | "order.test.cancel" | "order.test.retest" | "order.test.reflex" | "laboratory.sample.create" | "laboratory.sample.collect" | "laboratory.sample.reject" | "laboratory.sample.recollect_request" | "laboratory.sample.recollect_approve" | "laboratory.sample.aliquot" | "laboratory.sample.recollect_deny" | "laboratory.analyzer.duplicate_ingest" | "laboratory.analyzer.ingest_rejected" | "laboratory.result.enter" | "laboratory.result.update" | "laboratory.result.critical_detect" | "laboratory.result.critical_notify" | "laboratory.result.critical_acknowledge" | "laboratory.validation.approve" | "laboratory.validation.auto" | "laboratory.validation.reject" | "laboratory.escalation.trigger" | "laboratory.escalation.resolve" | "billing.payment.process" | "billing.invoice.generate" | "billing.invoice.void" | "billing.insurance.submit" | "reporting.generate" | "reporting.download" | "reporting.email" | "system.user.login" | "system.user.logout" | "system.user.create" | "system.user.update" | "system.catalog.create" | "system.catalog.update";
 
 export type TrailingActorPolicy = 'human' | 'never';
 
@@ -55,6 +54,7 @@ export interface AuditEventDefinition {
 
 export const AUDIT_EVENT_DEFINITIONS: Record<AuditEventWire, AuditEventDefinition> = {
   "patient.create": { wire: "patient.create", domain: "patient", domainLabel: "Patient", verbPhrase: "patient profile created" },
+  "patient.create.forced": { wire: "patient.create.forced", domain: "patient", domainLabel: "Patient", verbPhrase: "patient profile created despite duplicate match" },
   "patient.update": { wire: "patient.update", domain: "patient", domainLabel: "Patient", verbPhrase: "patient profile updated" },
   "patient.delete": { wire: "patient.delete", domain: "patient", domainLabel: "Patient", verbPhrase: "patient profile archived" },
   "patient.view": { wire: "patient.view", domain: "patient", domainLabel: "Patient", verbPhrase: "patient chart viewed" },
@@ -72,6 +72,7 @@ export const AUDIT_EVENT_DEFINITIONS: Record<AuditEventWire, AuditEventDefinitio
   "laboratory.sample.reject": { wire: "laboratory.sample.reject", domain: "laboratory", laboratorySubdomain: "sample", domainLabel: "Sample", verbPhrase: "sample rejected for", headlineMetaKeys: ["rejection_reason"] },
   "laboratory.sample.recollect_request": { wire: "laboratory.sample.recollect_request", domain: "laboratory", laboratorySubdomain: "sample", domainLabel: "Sample", verbPhrase: "sample recollection requested for", headlineMetaKeys: ["stage"] },
   "laboratory.sample.recollect_approve": { wire: "laboratory.sample.recollect_approve", domain: "laboratory", laboratorySubdomain: "sample", domainLabel: "Sample", verbPhrase: "sample recollection approved for" },
+  "laboratory.sample.aliquot": { wire: "laboratory.sample.aliquot", domain: "laboratory", laboratorySubdomain: "sample", domainLabel: "Laboratory", verbPhrase: "aliquot created from parent sample", headlineMetaKeys: ["parent_sample_id","aliquot_index"] },
   "laboratory.sample.recollect_deny": { wire: "laboratory.sample.recollect_deny", domain: "laboratory", laboratorySubdomain: "sample", domainLabel: "Sample", verbPhrase: "sample recollection denied for", headlineMetaKeys: ["reason"] },
   "laboratory.analyzer.duplicate_ingest": { wire: "laboratory.analyzer.duplicate_ingest", domain: "laboratory", laboratorySubdomain: "analyzer", domainLabel: "Analyzer", verbPhrase: "duplicate analyzer ingest for", headlineMetaKeys: ["test_code","idempotency_key"], treatAsSystemActor: true },
   "laboratory.analyzer.ingest_rejected": { wire: "laboratory.analyzer.ingest_rejected", domain: "laboratory", laboratorySubdomain: "analyzer", domainLabel: "Analyzer", verbPhrase: "analyzer ingest rejected for", headlineMetaKeys: ["test_code","reason"], treatAsSystemActor: true },
@@ -81,6 +82,7 @@ export const AUDIT_EVENT_DEFINITIONS: Record<AuditEventWire, AuditEventDefinitio
   "laboratory.result.critical_notify": { wire: "laboratory.result.critical_notify", domain: "laboratory", laboratorySubdomain: "result", domainLabel: "Results", verbPhrase: "clinician notification documented for", headlineMetaKeys: ["test_code"] },
   "laboratory.result.critical_acknowledge": { wire: "laboratory.result.critical_acknowledge", domain: "laboratory", laboratorySubdomain: "result", domainLabel: "Results", verbPhrase: "critical value protocol acknowledged for", headlineMetaKeys: ["test_code"] },
   "laboratory.validation.approve": { wire: "laboratory.validation.approve", domain: "laboratory", laboratorySubdomain: "validation", domainLabel: "Validation", verbPhrase: "validated", headlineMetaKeys: ["test_code"] },
+  "laboratory.validation.auto": { wire: "laboratory.validation.auto", domain: "laboratory", laboratorySubdomain: "validation", domainLabel: "Validation", verbPhrase: "auto-verified", headlineMetaKeys: ["test_code"] },
   "laboratory.validation.reject": { wire: "laboratory.validation.reject", domain: "laboratory", laboratorySubdomain: "validation", domainLabel: "Validation", verbPhrase: "validation rejected for", headlineMetaKeys: ["reason","test_code"] },
   "laboratory.escalation.trigger": { wire: "laboratory.escalation.trigger", domain: "laboratory", laboratorySubdomain: "escalation", domainLabel: "Escalation", verbPhrase: "escalated", headlineMetaKeys: ["reason_code","test_code"] },
   "laboratory.escalation.resolve": { wire: "laboratory.escalation.resolve", domain: "laboratory", laboratorySubdomain: "escalation", domainLabel: "Escalation", verbPhrase: "escalation resolved for", headlineMetaKeys: ["resolution","test_code"] },
@@ -90,6 +92,7 @@ export const AUDIT_EVENT_DEFINITIONS: Record<AuditEventWire, AuditEventDefinitio
   "billing.insurance.submit": { wire: "billing.insurance.submit", domain: "billing", domainLabel: "Billing", verbPhrase: "submitted insurance claim for order", headlineMetaKeys: ["payer","claim_number"] },
   "reporting.generate": { wire: "reporting.generate", domain: "reporting", domainLabel: "Reporting", verbPhrase: "report generated for order" },
   "reporting.download": { wire: "reporting.download", domain: "reporting", domainLabel: "Reporting", verbPhrase: "report downloaded for order", headlineMetaKeys: ["format"] },
+  "reporting.email": { wire: "reporting.email", domain: "reporting", domainLabel: "Reporting", verbPhrase: "report emailed for order", headlineMetaKeys: ["recipients"] },
   "system.user.login": { wire: "system.user.login", domain: "system", domainLabel: "System", verbPhrase: "signed in", leadingActor: true, trailingActor: "never" },
   "system.user.logout": { wire: "system.user.logout", domain: "system", domainLabel: "System", verbPhrase: "signed out", leadingActor: true, trailingActor: "never" },
   "system.user.create": { wire: "system.user.create", domain: "system", domainLabel: "System", verbPhrase: "created user account" },
@@ -98,4 +101,4 @@ export const AUDIT_EVENT_DEFINITIONS: Record<AuditEventWire, AuditEventDefinitio
   "system.catalog.update": { wire: "system.catalog.update", domain: "system", domainLabel: "Catalog", verbPhrase: "catalog test updated", headlineMetaKeys: ["test_code"] },
 };
 
-export const AUDIT_EVENT_WIRES = ["patient.create","patient.update","patient.delete","patient.view","order.create","order.update","order.status","order.delete","order.test.add","order.test.remove","order.test.cancel","order.test.retest","order.test.reflex","laboratory.sample.create","laboratory.sample.collect","laboratory.sample.reject","laboratory.sample.recollect_request","laboratory.sample.recollect_approve","laboratory.sample.recollect_deny","laboratory.analyzer.duplicate_ingest","laboratory.analyzer.ingest_rejected","laboratory.result.enter","laboratory.result.update","laboratory.result.critical_detect","laboratory.result.critical_notify","laboratory.result.critical_acknowledge","laboratory.validation.approve","laboratory.validation.reject","laboratory.escalation.trigger","laboratory.escalation.resolve","billing.payment.process","billing.invoice.generate","billing.invoice.void","billing.insurance.submit","reporting.generate","reporting.download","system.user.login","system.user.logout","system.user.create","system.user.update","system.catalog.create","system.catalog.update"] as const;
+export const AUDIT_EVENT_WIRES = ["patient.create","patient.create.forced","patient.update","patient.delete","patient.view","order.create","order.update","order.status","order.delete","order.test.add","order.test.remove","order.test.cancel","order.test.retest","order.test.reflex","laboratory.sample.create","laboratory.sample.collect","laboratory.sample.reject","laboratory.sample.recollect_request","laboratory.sample.recollect_approve","laboratory.sample.aliquot","laboratory.sample.recollect_deny","laboratory.analyzer.duplicate_ingest","laboratory.analyzer.ingest_rejected","laboratory.result.enter","laboratory.result.update","laboratory.result.critical_detect","laboratory.result.critical_notify","laboratory.result.critical_acknowledge","laboratory.validation.approve","laboratory.validation.auto","laboratory.validation.reject","laboratory.escalation.trigger","laboratory.escalation.resolve","billing.payment.process","billing.invoice.generate","billing.invoice.void","billing.insurance.submit","reporting.generate","reporting.download","reporting.email","system.user.login","system.user.logout","system.user.create","system.user.update","system.catalog.create","system.catalog.update"] as const;

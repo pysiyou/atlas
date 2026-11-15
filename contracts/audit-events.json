@@ -9,6 +9,13 @@
       "verbPhrase": "patient profile created"
     },
     {
+      "member": "PATIENT_CREATE_FORCED",
+      "wire": "patient.create.forced",
+      "domain": "patient",
+      "domainLabel": "Patient",
+      "verbPhrase": "patient profile created despite duplicate match"
+    },
+    {
       "member": "PATIENT_UPDATE",
       "wire": "patient.update",
       "domain": "patient",
@@ -171,6 +178,18 @@
       "verbPhrase": "sample recollection approved for"
     },
     {
+      "member": "LABORATORY_SAMPLE_ALIQUOT",
+      "wire": "laboratory.sample.aliquot",
+      "domain": "laboratory",
+      "domainLabel": "Laboratory",
+      "laboratorySubdomain": "sample",
+      "verbPhrase": "aliquot created from parent sample",
+      "headlineMetaKeys": [
+        "parent_sample_id",
+        "aliquot_index"
+      ]
+    },
+    {
       "member": "LABORATORY_SAMPLE_RECOLLECT_DENY",
       "wire": "laboratory.sample.recollect_deny",
       "domain": "laboratory",
@@ -276,6 +295,17 @@
       ]
     },
     {
+      "member": "LABORATORY_VALIDATION_AUTO",
+      "wire": "laboratory.validation.auto",
+      "domain": "laboratory",
+      "laboratorySubdomain": "validation",
+      "domainLabel": "Validation",
+      "verbPhrase": "auto-verified",
+      "headlineMetaKeys": [
+        "test_code"
+      ]
+    },
+    {
       "member": "LABORATORY_VALIDATION_REJECT",
       "wire": "laboratory.validation.reject",
       "domain": "laboratory",
@@ -366,6 +396,16 @@
       "verbPhrase": "report downloaded for order",
       "headlineMetaKeys": [
         "format"
+      ]
+    },
+    {
+      "member": "REPORTING_EMAIL",
+      "wire": "reporting.email",
+      "domain": "reporting",
+      "domainLabel": "Reporting",
+      "verbPhrase": "report emailed for order",
+      "headlineMetaKeys": [
+        "recipients"
       ]
     },
     {
@@ -478,12 +518,6 @@
         "subdomain": "escalation",
         "label": "Laboratory · Escalation",
         "eventTypePrefix": "laboratory.escalation."
-      },
-      {
-        "id": "laboratory:quality",
-        "subdomain": "quality",
-        "label": "Laboratory · Quality",
-        "eventTypePrefix": "laboratory.quality."
       },
       {
         "id": "laboratory:analyzer",

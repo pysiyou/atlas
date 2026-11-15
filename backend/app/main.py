@@ -14,6 +14,7 @@ from app.platform.database import Base, engine
 from app.platform.http.v1_router import build_v1_router
 from app.platform.middleware import CacheHeadersMiddleware, DelayMiddleware
 from app.platform.middleware.error_handlers import register_exception_handlers
+from app.platform.schema_patches import apply_schema_patches
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,18 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
     Base.metadata.create_all(bind=engine)
+    apply_schema_patches(engine)
+    try:
+        from app.domains.catalog.panel_service import CatalogPanelService
+        from app.platform.database import SessionLocal
+
+        db = SessionLocal()
+        try:
+            CatalogPanelService(db).seed_from_catalog_tests()
+        finally:
+            db.close()
+    except Exception:
+        logger.exception("Catalog panel seed skipped")
     redis_client = get_redis()
     if redis_client:
         logger.info("Redis cache connected")

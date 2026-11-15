@@ -15,6 +15,8 @@ export {
   useInvalidateTestCatalog,
 } from './api/tests';
 
+export { panelAPI, useCatalogPanels, type CatalogPanel } from './api/panels';
+
 export {
   affiliationAPI,
   useAffiliationPrice,

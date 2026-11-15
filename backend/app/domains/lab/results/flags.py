@@ -125,8 +125,8 @@ class FlagCalculatorService:
         Select the appropriate reference range based on patient demographics.
 
         Priority:
-        1. Gender-specific adult range (if gender matches)
-        2. Pediatric range (if age < 18)
+        1. Pediatric range (if age < 18)
+        2. Gender-specific adult range (if gender matches)
         3. General adult range
         """
         result = {"low": None, "high": None}
@@ -134,15 +134,13 @@ class FlagCalculatorService:
         if not reference_range:
             return result
 
-        # Check gender-specific ranges first
+        if age is not None and age < 18 and "pediatric" in reference_range:
+            return reference_range["pediatric"]
+
         if gender == "male" and "adult_male" in reference_range:
             return reference_range["adult_male"]
         if gender == "female" and "adult_female" in reference_range:
             return reference_range["adult_female"]
-
-        # Check pediatric range
-        if age is not None and age < 18 and "pediatric" in reference_range:
-            return reference_range["pediatric"]
 
         # Fall back to general adult range
         if "adult_general" in reference_range:

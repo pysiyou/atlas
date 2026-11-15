@@ -46,12 +46,14 @@ export interface SampleCollectionCardLeftColumnProps {
 function SampleCollectionIdentityLines({
   patientName,
   sampleId,
+  accessionNumber,
   orderId,
   referentDoctorName,
   orderDate,
 }: {
   patientName: string;
   sampleId: number;
+  accessionNumber?: string | null;
   orderId: number;
   referentDoctorName?: string;
   orderDate?: string;
@@ -68,6 +70,14 @@ function SampleCollectionIdentityLines({
   }
   line1.push(<InlineDot key="dot-sam" />);
   line1.push(<RecordId key="sam" type="sample" value={sampleId} className={idClass} />);
+  if (accessionNumber) {
+    line1.push(<InlineDot key="dot-acc" />);
+    line1.push(
+      <span key="acc" className={cn(IDENTITY_STACK.secondaryText, idClass)}>
+        {accessionNumber}
+      </span>
+    );
+  }
 
   const line2: ReactNode[] = [];
   if (referentDoctorName) {
@@ -164,6 +174,7 @@ export function SampleCollectionCardLeftColumn({
         <SampleCollectionIdentityLines
           patientName={patientName}
           sampleId={sample.sampleId}
+          accessionNumber={sample.accessionNumber}
           orderId={orderId}
           referentDoctorName={referentDoctorName}
           orderDate={orderDate}

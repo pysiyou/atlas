@@ -206,6 +206,7 @@ export const LAB_PATHS = {
     byId: (sampleId: string | number) => `/lab/samples/${sampleId}`,
     workContext: (sampleId: string | number) => `/lab/samples/${sampleId}/work-context`,
     collect: (sampleId: string | number) => `/lab/samples/${sampleId}/collect`,
+    aliquots: (sampleId: string | number) => `/lab/samples/${sampleId}/aliquots`,
   },
   results: {
     pendingEscalation: '/lab/results/pending-escalation',
@@ -221,6 +222,7 @@ export const LAB_PATHS = {
     validation: '/lab/worklists/validation',
     dashboardToday: '/lab/worklists/dashboard-today',
     allTests: '/lab/worklists/all-tests',
+    worksheet: '/lab/worklists/worksheet',
   },
   board: { full: '/lab/board', summary: '/lab/board/summary' },
   criticalValues: {

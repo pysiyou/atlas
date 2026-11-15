@@ -39,7 +39,7 @@ function PatientSelectedChip({ patient }: { patient: Patient }) {
           {patient.fullName}
         </span>
         <span className={`${text({ role: 'caption' })} font-normal truncate`}>
-          {contactLine || 'No contact on file'}
+          {[patient.mrn, contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
         </span>
       </div>
     </>
@@ -55,6 +55,7 @@ interface PatientSelectorProps {
   onClearSelection: () => void;
   error?: string;
   disabled?: boolean;
+  onCreatePatient?: () => void;
 }
 
 /**
@@ -124,6 +125,7 @@ export function PatientSelect({
   onClearSelection,
   error,
   disabled = false,
+  onCreatePatient,
 }: PatientSelectorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -163,6 +165,18 @@ export function PatientSelect({
           emptyDescription={getEmptyCopy().matchingPatients.description}
           isEmpty={visiblePatients.length === 0}
         >
+          {visiblePatients.length === 0 && onCreatePatient ? (
+            <button
+              type="button"
+              className="w-full text-left px-space-3 py-space-2 hover:bg-surface-page"
+              onClick={() => {
+                onCreatePatient();
+                setIsPopoverOpen(false);
+              }}
+            >
+              Register new {tLower('patient', 'patient')}
+            </button>
+          ) : null}
           {visiblePatients.map(patient => {
                   const isSelected = selectedPatient?.id === patient.id;
                   const contactLine = formatPatientContactLine(patient);
@@ -193,11 +207,9 @@ export function PatientSelect({
                         <p className={`${text({ role: 'body' })} font-normal truncate capitalize`}>
                           {patient.fullName}
                         </p>
-                        {contactLine ? (
-                          <p className={`${text({ role: 'caption' })} truncate`}>{contactLine}</p>
-                        ) : (
-                          <p className={`${text({ role: 'caption' })} ${FG.muted} truncate`}>No contact on file</p>
-                        )}
+                        <p className={`${text({ role: 'caption' })} truncate`}>
+                          {[patient.mrn, contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
+                        </p>
                       </div>
                     </button>
                   );

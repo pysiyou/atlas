@@ -140,7 +140,7 @@ class AnalyzerIngestService:
         analyzer_id: str | None = None,
     ) -> AnalyzerResultResponse:
         service = LabOperationsService(self.db)
-        extra_metadata: dict[str, Any] = {}
+        extra_metadata: dict[str, Any] = {"source": "analyzer"}
         if analyzer_id:
             extra_metadata["analyzer_id"] = analyzer_id
 

@@ -78,6 +78,13 @@ class Sample(Base):
         "recollection_attempt", Integer, default=1
     )  # 1 = original/first collection, 2 = 1st recollection, etc.
 
+    accessionNumber = Column("accession_number", String, nullable=True, unique=True, index=True)
+
+    parentSampleId = Column("parent_sample_id", Integer, nullable=True, index=True)
+    isAliquot = Column("is_aliquot", Boolean, default=False)
+    aliquotIndex = Column("aliquot_index", Integer, nullable=True)
+    aliquotVolume = Column("aliquot_volume", Float, nullable=True)
+
     # Metadata
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
     createdBy = Column("created_by", String, nullable=False)

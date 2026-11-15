@@ -197,7 +197,55 @@ class ResultCommandHandler:
             metadata=enter_metadata,
         )
 
+        self._maybe_auto_verify(
+            order_test,
+            user_id=user_id,
+            flags=flags,
+            delta_warnings=delta_warnings,
+            extra_metadata=extra_metadata,
+        )
+
         return order_test
+
+    def _maybe_auto_verify(
+        self,
+        order_test: OrderTest,
+        *,
+        user_id: int,
+        flags: list[ResultFlag],
+        delta_warnings: list,
+        extra_metadata: dict[str, Any] | None,
+    ) -> None:
+        """Auto-validate analyzer results that are fully normal."""
+        from app.platform.client_config import client_config
+        from app.shared.contracts.enums import ResultStatus as FlagStatus
+
+        if not client_config.workflows.get("enableAutoVerification", False):
+            return
+        source = (extra_metadata or {}).get("source")
+        is_analyzer = user_id == 0 or source == "analyzer"
+        if not is_analyzer:
+            return
+        if order_test.status != TestStatus.RESULTED:
+            return
+        if order_test.hasCriticalValues:
+            return
+        if any(flag.status != FlagStatus.NORMAL for flag in flags):
+            return
+        if delta_warnings:
+            return
+        validated = self.validate_results(
+            order_test.id,
+            user_id=0,
+            validation_notes="Auto-verified",
+        )
+        self._svc.emitter.validation_auto(
+            validated.orderId,
+            validated.id,
+            validated.testCode,
+            0,
+            metadata={"source": "analyzer"},
+        )
 
     def validate_results(
         self,
@@ -221,9 +269,7 @@ class ResultCommandHandler:
 
         require_dual = client_config.workflows.get("requireDualValidation", False)
         is_second_signoff = (
-            require_dual
-            and order_test.validatedBy
-            and not order_test.secondValidatorId
+            require_dual and order_test.validatedBy and not order_test.secondValidatorId
         )
         is_first_dual_signoff = require_dual and not order_test.validatedBy
 
@@ -279,9 +325,7 @@ class ResultCommandHandler:
 
         reflex_added = []
         if not is_first_dual_signoff:
-            reflex_added = ReflexEngine(self._svc.db).evaluate_after_validation(
-                order_test, user_id
-            )
+            reflex_added = ReflexEngine(self._svc.db).evaluate_after_validation(order_test, user_id)
         if reflex_added:
             reflex_note = "; ".join(
                 f"Reflex {r.added_test_code}: {r.rule_description}" for r in reflex_added

@@ -61,6 +61,14 @@ export function CollectionDetailGrid({
     });
   }
 
+  if (sample.accessionNumber) {
+    sections.push({
+      preset: 'panel.compact.standard',
+      title: 'Accession',
+      fields: [{ label: 'Accession', value: sample.accessionNumber }],
+    });
+  }
+
   sections.push({
     preset: 'panel.compact.standard', title: 'Volume Tracking',
     fields: [

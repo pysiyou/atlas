@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
-import type { Order, PaymentMethod } from '@/types';
+import type { Order, Patient, PaymentMethod } from '@/types';
 import { PRIORITY_LEVEL_VALUES, PRIORITY_LEVEL_CONFIG } from '@/types';
 import { formatCurrency } from '@/utils';
 import { ModalContextSubtitle } from '@/components/display';
@@ -44,6 +44,7 @@ export function useOrderUpsertModal({
     refetch: refetchOrder,
   } = useOrder(shouldFetchOrder ? String(orderId) : undefined);
   const order = orderProp ?? fetchedOrder;
+  const [isCreatePatientOpen, setIsCreatePatientOpen] = useState(false);
   const [patientSearch, setPatientSearch] = useState('');
   const [testSearch, setTestSearch] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | undefined>(undefined);
@@ -229,6 +230,14 @@ export function useOrderUpsertModal({
     selectedReferentDoctor,
     onSelectReferentDoctor,
     onClearReferentDoctor,
+    isCreatePatientOpen,
+    onCreatePatient: () => setIsCreatePatientOpen(true),
+    onCloseCreatePatient: () => setIsCreatePatientOpen(false),
+    onPatientCreated: (created: Patient) => {
+      setValue('patientId', created.id, { shouldValidate: true });
+      setPatientSearch('');
+      setIsCreatePatientOpen(false);
+    },
     patientSearch,
     setPatientSearch,
     filteredPatients,

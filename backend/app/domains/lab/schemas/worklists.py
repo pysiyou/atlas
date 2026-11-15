@@ -37,6 +37,9 @@ class CollectionWorklistItem(BaseModel):
     paymentStatus: PaymentStatus
     orderDate: datetime
     testCodes: list[str]
+    accessionNumber: str | None = None
+    isAliquot: bool = False
+    parentSampleId: int | None = None
     isRecollection: bool
     originalSampleId: int | None = None
     originalSampleCollectedAt: datetime | None = None
@@ -79,6 +82,7 @@ class EntryWorklistItem(BaseModel):
     testName: str
     sampleId: int | None
     sampleType: str
+    accessionNumber: str | None = None
     priority: PriorityLevel
     status: TestStatus
     collectedAt: datetime | None
@@ -145,6 +149,7 @@ class ValidationWorklistItem(BaseModel):
     testCode: str
     testName: str
     sampleType: str
+    accessionNumber: str | None = None
     priority: PriorityLevel
     status: TestStatus
     sampleId: int | None = None
@@ -183,6 +188,29 @@ class ValidationWorklistItem(BaseModel):
 class WorklistResponse(BaseModel):
     items: list
     pagination: WorklistPagination
+
+
+class WorksheetRow(BaseModel):
+    """One bench-worksheet line for a single order test."""
+
+    orderTestId: int
+    orderId: int
+    patientName: str
+    accessionNumber: str | None = None
+    sampleType: str
+    priority: PriorityLevel
+    testCode: str
+    testName: str
+
+
+class WorksheetGroup(BaseModel):
+    testCode: str
+    testName: str
+    rows: list[WorksheetRow]
+
+
+class WorksheetResponse(BaseModel):
+    groups: list[WorksheetGroup]
 
 
 class CollectionWorklistResponse(BaseModel):

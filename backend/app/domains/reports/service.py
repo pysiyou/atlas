@@ -12,7 +12,9 @@ from app.domains.reports.eligibility import (
     active_order_tests,
     is_reportable_order,
 )
-from app.domains.reports.schemas import ReportableOrderItem
+from app.domains.reports.email_service import send_report_email
+from app.domains.reports.pdf_service import ReportPdfService
+from app.domains.reports.schemas import ReportableOrderItem, ReportEmailRequest
 from app.shared.contracts.enums import OrderStatus, TestStatus
 from app.shared.schemas.pagination import create_paginated_response, skip_to_page
 from fastapi import HTTPException
@@ -134,3 +136,60 @@ class ReportService:
         )
         self.db.commit()
         return item
+
+    def _load_completed_order(self, order_id: int) -> Order:
+        order = self._load_reportable_order(order_id)
+        if order.overallStatus != OrderStatus.COMPLETED:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Order {order_id} must be COMPLETED before issuing a PDF",
+            )
+        return order
+
+    def issue_pdf(self, order_id: int, user_id: int) -> tuple[bytes, str]:
+        """Generate, archive, and return PDF bytes plus a download filename."""
+        order = self._load_completed_order(order_id)
+        pdf_bytes, _document = ReportPdfService(self.db).generate_and_store(order, user_id)
+        AuditEmitter(self.db).reporting_generated(order.orderId, user_id)
+        self.db.commit()
+        return pdf_bytes, f"lab-report-ORD{order.orderId:04d}.pdf"
+
+    def _collect_email_recipients(self, order: Order, payload: ReportEmailRequest) -> list[str]:
+        recipients: list[str] = []
+        if payload.includePatient and order.patient and order.patient.email:
+            recipients.append(order.patient.email)
+        if payload.includePhysician and order.referentDoctor and order.referentDoctor.email:
+            recipients.append(order.referentDoctor.email)
+        recipients.extend(payload.extraRecipients or [])
+        unique: list[str] = []
+        seen: set[str] = set()
+        for addr in recipients:
+            cleaned = addr.strip()
+            if not cleaned or cleaned.lower() in seen:
+                continue
+            seen.add(cleaned.lower())
+            unique.append(cleaned)
+        return unique
+
+    def email_report(self, order_id: int, user_id: int, payload: ReportEmailRequest) -> dict:
+        """SMTP the archived PDF and stamp delivery metadata on the order."""
+        order = self._load_completed_order(order_id)
+        recipients = self._collect_email_recipients(order, payload)
+        if not recipients:
+            raise HTTPException(status_code=400, detail="No email recipients on file")
+        pdf_bytes, _document = ReportPdfService(self.db).generate_and_store(order, user_id)
+        filename = f"lab-report-ORD{order.orderId:04d}.pdf"
+        patient_name = order.patient.fullName if order.patient else f"order {order.orderId}"
+        send_report_email(
+            recipients=recipients,
+            subject=f"Laboratory report for {patient_name}",
+            body="Please find the attached laboratory report.",
+            pdf_bytes=pdf_bytes,
+            filename=filename,
+        )
+        order.deliveredAt = datetime.now(UTC)
+        order.deliveredBy = str(user_id)
+        order.deliveryMethod = "email"
+        AuditEmitter(self.db).reporting_emailed(order.orderId, user_id, recipients)
+        self.db.commit()
+        return {"orderId": order.orderId, "recipients": recipients, "deliveryMethod": "email"}

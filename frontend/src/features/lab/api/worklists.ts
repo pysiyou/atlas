@@ -36,6 +36,9 @@ interface WorklistParams {
   sampleType?: string;
   status?: string;
   priority?: string;
+  priorityGroup?: string;
+  category?: string;
+  testCode?: string;
 }
 
 function buildParams(params?: WorklistParams): Record<string, string> {
@@ -48,6 +51,8 @@ function buildParams(params?: WorklistParams): Record<string, string> {
   if (params?.sampleType) q.sampleType = params.sampleType;
   if (params?.status) q.status = params.status;
   if (params?.priority) q.priority = params.priority;
+  if (params?.priorityGroup) q.priorityGroup = params.priorityGroup;
+  if (params?.category) q.category = params.category;
   return q;
 }
 
@@ -86,6 +91,25 @@ export const worklistsAPI = {
       buildParams(params)
     );
   },
+
+  getWorksheet(params?: WorklistParams) {
+    return apiClient.get<{
+      groups: Array<{
+        testCode: string;
+        testName: string;
+        rows: Array<{
+          orderTestId: number;
+          orderId: number;
+          patientName: string;
+          accessionNumber?: string | null;
+          sampleType: string;
+          priority: string;
+          testCode: string;
+          testName: string;
+        }>;
+      }>;
+    }>(LAB_PATHS.worklists.worksheet, buildParams(params));
+  },
 };
 
 /**
@@ -101,6 +125,8 @@ interface WorklistHookParams {
   sampleType?: string;
   status?: string;
   priority?: string;
+  priorityGroup?: string;
+  category?: string;
 }
 
 type WorklistQueryKeyFn = (params?: WorklistHookParams) => readonly unknown[];
@@ -121,6 +147,8 @@ function createWorklistQueryHook<TItem>(
       sampleType: params?.sampleType ?? null,
       status: params?.status ?? null,
       priority: params?.priority ?? null,
+      priorityGroup: params?.priorityGroup ?? null,
+      category: params?.category ?? null,
     });
 
     useEffect(() => {

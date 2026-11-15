@@ -177,6 +177,10 @@ export interface ClientConfig {
      * Require emergency contact for patients
      */
     requireEmergencyContact?: boolean;
+    /**
+     * Auto-validate analyzer results that are fully normal
+     */
+    enableAutoVerification?: boolean;
     [k: string]: boolean | undefined;
   };
   /**

@@ -18,6 +18,7 @@ import { useLabCopy } from '@/strings';
 import type { SampleCollectionQueueItem } from '@/types';
 import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
 import { printSampleLabel } from '../../utils/labSample';
+import { useCreateAliquots } from '../../api/samples';
 
 function SampleLabelPrintButton({
   sample,
@@ -199,6 +200,11 @@ export function SampleCollectionDetailFooter({
   onPopoverSubmittingChange?: (submitting: boolean) => void;
 }) {
   const labCopy = useLabCopy();
+  const createAliquots = useCreateAliquots();
+  const remainingVolume =
+    sample.status === 'collected' && 'remainingVolume' in sample
+      ? Number(sample.remainingVolume ?? 0)
+      : 0;
   if (isPending && pendingSampleDisplay && onCollect) {
     const isRecollection = sample.isRecollection === true;
     const collectAllowed = isLabActionAllowed(pendingSampleDisplay.allowedActions, 'collect');
@@ -233,6 +239,22 @@ export function SampleCollectionDetailFooter({
   if (isCollected && sample.sampleId) {
     return (
       <div className="flex items-center gap-space-2 flex-nowrap justify-end w-full">
+        {remainingVolume > 0 && !sample.isAliquot ? (
+          <Button
+            size="sm"
+            variant="secondary"
+            disabled={createAliquots.isPending}
+            onClick={() =>
+              void createAliquots.mutateAsync({
+                sampleId: sample.sampleId,
+                count: 1,
+                aliquotVolume: remainingVolume,
+              })
+            }
+          >
+            Create aliquot
+          </Button>
+        ) : null}
         <SampleLabelPrintButton sample={sample} patientName={patientName} eventAt={collectedAt} />
         <SampleRejectionPopover
           sampleId={sample.sampleId.toString()}

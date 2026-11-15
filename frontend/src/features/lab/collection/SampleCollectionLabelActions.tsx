@@ -132,11 +132,13 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
   assertSampleLabelPrintable(sample);
 
   const sampleIdDisplay = displayId.sample(sample.sampleId);
+  const accessionDisplay = displayId.accession(sample.accessionNumber);
   const sampleType = sampleTypeLabel(sample.sampleType || 'other').toUpperCase();
   const dateTime = resolveLabelDateTime(sample, eventAt);
 
   const safeDateTime = escapeHtml(dateTime);
   const safeSampleId = escapeHtml(sampleIdDisplay);
+  const safeAccession = escapeHtml(accessionDisplay);
   const nameTypeLine = escapeHtml(`${patientName.trim() || 'Unknown'} - ${sampleType}`);
   const barcodeValue = escapeJsString(sampleIdDisplay);
 
@@ -156,7 +158,7 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
           <div class="label-barcode">
             <svg id="barcode" role="img" aria-label="Barcode"></svg>
           </div>
-          <p class="label-line label-sample-id">${safeSampleId}</p>
+          <p class="label-line label-sample-id">${safeSampleId}${safeAccession ? ` · ${safeAccession}` : ''}</p>
         </div>
         <script>
           (function() {

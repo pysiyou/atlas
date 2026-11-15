@@ -113,12 +113,12 @@ export function getPatientSpecificRange(
     if ('age' in patient && patient.age !== undefined) age = patient.age;
     else if ('dateOfBirth' in patient && patient.dateOfBirth) age = calculateAge(patient.dateOfBirth);
   }
+  if (age !== undefined && age < 18 && catalogRange.pediatric)
+    return { ...catalogRange.pediatric, source: 'pediatric' };
   if (patient?.gender === 'male' && catalogRange.adult_male)
     return { ...catalogRange.adult_male, source: 'adult_male' };
   if (patient?.gender === 'female' && catalogRange.adult_female)
     return { ...catalogRange.adult_female, source: 'adult_female' };
-  if (age !== undefined && age < 18 && catalogRange.pediatric)
-    return { ...catalogRange.pediatric, source: 'pediatric' };
   if (catalogRange.adult_general) return { ...catalogRange.adult_general, source: 'adult_general' };
   return { source: 'none' };
 }

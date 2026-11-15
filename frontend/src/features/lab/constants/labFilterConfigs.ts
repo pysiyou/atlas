@@ -15,6 +15,22 @@ import { IconKeys } from '@/icons';
 import { getSharedFilterPlaceholders, getLabQueueFilterPlaceholders } from '@/strings';
 import { buildLabFilterConfig } from '../utils/buildLabFilterConfig';
 
+const PRIORITY_GROUP_OPTIONS: FilterOption[] = [
+  { id: 'stat', label: 'STAT' },
+  { id: 'routine', label: 'Routine' },
+];
+
+const priorityGroupControl = {
+  type: 'multiSelect' as const,
+  key: 'priorityGroup',
+  label: 'STAT / Routine',
+  options: PRIORITY_GROUP_OPTIONS,
+  selectAllLabel: 'All urgencies',
+  icon: IconKeys.domain.priority,
+  placeholder: 'STAT or Routine',
+  helpText: 'STAT is urgent; Routine is low, medium, and high.',
+};
+
 const COLLECTION_STATUS_OPTIONS: FilterOption[] = [
   { id: 'pending', label: 'Pending', color: 'pending' },
   { id: 'collected', label: 'Collected', color: 'collected' },
@@ -30,6 +46,7 @@ export function getCollectionFilterConfig() {
     searchHelpText: ph.searchHelpText,
     dateRangeHelpText: ph.dateRangeHelpText,
     extraControls: [
+      priorityGroupControl,
       {
         type: 'multiSelect',
         key: 'status',
@@ -58,6 +75,7 @@ export function getEntryFilterConfig() {
     searchHelpText: ph.searchHelpText,
     dateRangeHelpText: ph.dateRangeHelpText,
     extraControls: [
+      priorityGroupControl,
       {
         type: 'multiSelect',
         key: 'status',
@@ -87,6 +105,7 @@ export function getValidationFilterConfig() {
     searchHelpText: ph.searchHelpText,
     dateRangeHelpText: ph.dateRangeHelpText,
     extraControls: [
+      priorityGroupControl,
       {
         type: 'multiSelect',
         key: 'priority',

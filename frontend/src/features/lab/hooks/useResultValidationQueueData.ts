@@ -25,6 +25,9 @@ export function useResultValidationQueueData(params?: {
   dateFrom?: string;
   dateTo?: string;
   sampleType?: string;
+  priority?: string;
+  priorityGroup?: string;
+  category?: string;
 }): ResultValidationQueueData {
   const { hasRole } = useAuthStore();
   const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);

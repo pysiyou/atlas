@@ -83,6 +83,13 @@ export const sampleAPI = {
     };
     return apiClient.patch<Sample>(LAB_PATHS.samples.collect(sampleId), body);
   },
+
+  async createAliquots(
+    sampleId: string | number,
+    data: { count: number; aliquotVolume: number; testCodes?: string[] }
+  ): Promise<Sample[]> {
+    return apiClient.post<Sample[]>(LAB_PATHS.samples.aliquots(sampleId), data);
+  },
 };
 
 /**
@@ -230,6 +237,28 @@ export function useCollectSample() {
         actualContainerColor,
         collectionNotes,
       }),
+    onSuccess: () => invalidateCollectionQueries(queryClient),
+  });
+}
+
+/**
+ * Split remaining volume of a collected parent into child aliquot tubes.
+ */
+export function useCreateAliquots() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      sampleId,
+      count,
+      aliquotVolume,
+      testCodes,
+    }: {
+      sampleId: string | number;
+      count: number;
+      aliquotVolume: number;
+      testCodes?: string[];
+    }) => sampleAPI.createAliquots(sampleId, { count, aliquotVolume, testCodes }),
     onSuccess: () => invalidateCollectionQueries(queryClient),
   });
 }

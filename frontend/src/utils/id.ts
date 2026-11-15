@@ -24,8 +24,15 @@ export function formatDisplayId(entityType: EntityType, id: number | null | unde
   return `${ID_PREFIXES[entityType]}${n.toString().padStart(4, '0')}`;
 }
 
+/** Human accession `YYMMDD-NNNN` shown next to SAM####. */
+export function formatAccessionNumber(value: string | null | undefined): string {
+  if (!value || !value.trim()) return '';
+  return value.trim();
+}
+
 export const displayId = {
   patient: (id: number | null | undefined) => formatDisplayId('patient', id),
+  accession: formatAccessionNumber,
   order: (id: number | null | undefined) => formatDisplayId('order', id),
   sample: (id: number | null | undefined) => formatDisplayId('sample', id),
   orderTest: (id: number | null | undefined) => formatDisplayId('orderTest', id),

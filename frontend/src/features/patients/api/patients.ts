@@ -2,7 +2,7 @@
  * Patient HTTP + query/mutation hooks.
  * Convention: `*API` objects are pure fetch; `use*` hooks wrap TanStack Query (same file).
  */
-import { apiClient } from '@/lib/api';
+import { apiClient, isApiError } from '@/lib/api';
 import { withPaginatedParams } from '@/lib/api';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import type { Gender, Patient, PatientContext } from '@/types';
@@ -72,8 +72,9 @@ export const patientAPI = {
     return apiClient.get<Patient>(`/patients/${id}`);
   },
 
-  async create(patient: Patient): Promise<Patient> {
-    return apiClient.post<Patient>('/patients', patient);
+  async create(patient: Patient, options?: { forceCreate?: boolean }): Promise<Patient> {
+    const path = options?.forceCreate ? '/patients?forceCreate=true' : '/patients';
+    return apiClient.post<Patient>(path, patient);
   },
 
   async update(id: string, updates: Partial<Patient>): Promise<Patient> {
@@ -428,10 +429,20 @@ export function useCreatePatient() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: unknown) => {
-      const validated = patientCreateSchema.parse(input);
+    mutationFn: async (input: unknown | { data: unknown; forceCreate?: boolean }) => {
+      const forceCreate =
+        typeof input === 'object' && input !== null && 'forceCreate' in input
+          ? Boolean((input as { forceCreate?: boolean }).forceCreate)
+          : false;
+      const payload =
+        typeof input === 'object' && input !== null && 'data' in input
+          ? (input as { data: unknown }).data
+          : input;
+      const validated = patientCreateSchema.parse(payload);
       const transformed = formInputToPayload(validated);
-      const response = await patientAPI.create(transformed as unknown as Patient);
+      const response = await patientAPI.create(transformed as unknown as Patient, {
+        forceCreate,
+      });
       return patientSchema.parse(response);
     },
     onSuccess: () => {
@@ -439,7 +450,10 @@ export function useCreatePatient() {
       queryClient.refetchQueries({ queryKey: queryKeys.patients.list() });
       notify.show('patient.create.success');
     },
-    onError: error => {
+    onError: (error: unknown) => {
+      if (isApiError(error) && error.code === 'DUPLICATE_PATIENT') {
+        return;
+      }
       notify.apiError('patient.create.error', error);
     },
   });

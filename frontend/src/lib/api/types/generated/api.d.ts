@@ -63,6 +63,33 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Setup Status
+         * @description Public: whether the first administrator still needs to be created in the UI.
+         */
+        get: operations["get_setup_status_api_v1_auth_setup_get"];
+        put?: never;
+        /**
+         * Create First Administrator
+         * @description Public once: create the first administrator from the login screen.
+         *
+         *     Rejected with 409 after any user exists. Later accounts are created by an
+         *     administrator in User management.
+         */
+        post: operations["create_first_administrator_api_v1_auth_setup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -223,7 +250,7 @@ export interface paths {
         put?: never;
         /**
          * Create Patient
-         * @description Create a new patient.
+         * @description Create a new patient. Returns 409 with matches when duplicates exist unless forceCreate.
          */
         post: operations["create_patient_api_v1_patients_post"];
         delete?: never;
@@ -323,6 +350,45 @@ export interface paths {
         get: operations["get_test_api_v1_tests__testCode__get"];
         /** Update Test */
         put: operations["update_test_api_v1_tests__testCode__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/panels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Panels
+         * @description List orderable panels (taxonomy tags inverted into member bundles).
+         */
+        get: operations["list_panels_api_v1_panels_get"];
+        put?: never;
+        /** Create Panel */
+        post: operations["create_panel_api_v1_panels_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/panels/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Panel */
+        get: operations["get_panel_api_v1_panels__code__get"];
+        /** Update Panel */
+        put: operations["update_panel_api_v1_panels__code__put"];
         post?: never;
         delete?: never;
         options?: never;
@@ -668,6 +734,26 @@ export interface paths {
         patch: operations["collect_sample_api_v1_lab_samples__sampleId__collect_patch"];
         trace?: never;
     };
+    "/api/v1/lab/samples/{sampleId}/aliquots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Sample Aliquots
+         * @description Create child aliquot tubes from a collected parent sample.
+         */
+        post: operations["create_sample_aliquots_api_v1_lab_samples__sampleId__aliquots_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/lab/results/pending-escalation": {
         parameters: {
             query?: never;
@@ -797,6 +883,26 @@ export interface paths {
         };
         /** Get Validation Worklist */
         get: operations["get_validation_worklist_api_v1_lab_worklists_validation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/worklists/worksheet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Bench Worksheet
+         * @description Printable entry-stage worksheet grouped by test code.
+         */
+        get: operations["get_bench_worksheet_api_v1_lab_worklists_worksheet_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1198,6 +1304,81 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/reports/orders/{orderId}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download Order Report Pdf */
+        get: operations["download_order_report_pdf_api_v1_reports_orders__orderId__pdf_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/orders/{orderId}/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Email Order Report */
+        post: operations["email_order_report_api_v1_reports_orders__orderId__email_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/batch/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Batch Download Pdfs
+         * @description Return concatenated PDFs as a zip-like sequential payload of per-order files.
+         *
+         *     Clients should prefer per-order GET /pdf; this endpoint archives each order
+         *     and returns the last generated file when a single id is supplied, or a
+         *     simple application/zip of all PDFs for multiple ids.
+         */
+        post: operations["batch_download_pdfs_api_v1_reports_batch_pdf_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/batch/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Batch Email Reports */
+        post: operations["batch_email_reports_api_v1_reports_batch_email_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1451,6 +1632,62 @@ export interface components {
             attentionType: string;
         };
         /**
+         * CatalogPanelCreate
+         * @description Create a named panel of catalog tests.
+         */
+        CatalogPanelCreate: {
+            /** Name */
+            name: string;
+            /** Membertestcodes */
+            memberTestCodes: string[];
+            /** Price */
+            price?: number | null;
+            /**
+             * Isactive
+             * @default true
+             */
+            isActive: boolean;
+            /** Code */
+            code: string;
+        };
+        /**
+         * CatalogPanelResponse
+         * @description Persisted panel row.
+         */
+        CatalogPanelResponse: {
+            /** Name */
+            name: string;
+            /** Membertestcodes */
+            memberTestCodes: string[];
+            /** Price */
+            price?: number | null;
+            /**
+             * Isactive
+             * @default true
+             */
+            isActive: boolean;
+            /** Code */
+            code: string;
+            /** Createdat */
+            createdAt?: string | null;
+            /** Updatedat */
+            updatedAt?: string | null;
+        };
+        /**
+         * CatalogPanelUpdate
+         * @description Partial panel update.
+         */
+        CatalogPanelUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Membertestcodes */
+            memberTestCodes?: string[] | null;
+            /** Price */
+            price?: number | null;
+            /** Isactive */
+            isActive?: boolean | null;
+        };
+        /**
          * ClaimStatus
          * @enum {string}
          */
@@ -1477,6 +1714,15 @@ export interface components {
             orderDate: string;
             /** Testcodes */
             testCodes: string[];
+            /** Accessionnumber */
+            accessionNumber?: string | null;
+            /**
+             * Isaliquot
+             * @default false
+             */
+            isAliquot: boolean;
+            /** Parentsampleid */
+            parentSampleId?: number | null;
             /** Isrecollection */
             isRecollection: boolean;
             /** Originalsampleid */
@@ -1750,6 +1996,8 @@ export interface components {
             sampleId: number | null;
             /** Sampletype */
             sampleType: string;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
             priority: components["schemas"]["PriorityLevel"];
             status: components["schemas"]["TestStatus"];
             /** Collectedat */
@@ -1858,6 +2106,20 @@ export interface components {
             newTestId?: number | null;
             /** Newsampleid */
             newSampleId?: number | null;
+        };
+        /**
+         * FirstAdminSetupRequest
+         * @description Public first-account payload. Role is always administrator.
+         */
+        FirstAdminSetupRequest: {
+            /** Username */
+            username: string;
+            /** Password */
+            password: string;
+            /** Name */
+            name: string;
+            /** Email */
+            email?: string | null;
         };
         /**
          * Gender
@@ -2203,9 +2465,14 @@ export interface components {
             patientId: number;
             /**
              * Tests
-             * @description At least one test required
+             * @description Explicit catalog tests
              */
-            tests: components["schemas"]["OrderTestCreate"][];
+            tests?: components["schemas"]["OrderTestCreate"][];
+            /**
+             * Panelcodes
+             * @description Orderable panel codes expanded server-side
+             */
+            panelCodes?: string[];
             /** @default low */
             priority: components["schemas"]["PriorityLevel"];
             /** Referentdoctorid */
@@ -2697,6 +2964,8 @@ export interface components {
             affiliation?: components["schemas"]["Affiliation"] | null;
             /** Id */
             id: number;
+            /** Mrn */
+            mrn?: string | null;
             /**
              * Registrationdate
              * Format: date-time
@@ -3193,6 +3462,32 @@ export interface components {
          * @enum {string}
          */
         RemedyType: "retry_same_sample" | "recollect" | "request_recollection" | "escalate" | "cancel";
+        /**
+         * ReportBatchRequest
+         * @description Batch PDF/email of completed reportable orders.
+         */
+        ReportBatchRequest: {
+            /** Orderids */
+            orderIds: number[];
+        };
+        /**
+         * ReportEmailRequest
+         * @description Send the order PDF to the patient and/or referent physician.
+         */
+        ReportEmailRequest: {
+            /**
+             * Includepatient
+             * @default true
+             */
+            includePatient: boolean;
+            /**
+             * Includephysician
+             * @default true
+             */
+            includePhysician: boolean;
+            /** Extrarecipients */
+            extraRecipients?: string[];
+        };
         /** ReportQualityIssueRequest */
         ReportQualityIssueRequest: {
             target: components["schemas"]["QualityIssueTarget"];
@@ -3259,6 +3554,18 @@ export interface components {
             /** Rejectionreason */
             rejectionReason?: string | null;
             preferredRemedy?: components["schemas"]["RemedyType"] | null;
+        };
+        /**
+         * SampleAliquotCreateRequest
+         * @description Split remaining volume of a collected parent into child tubes.
+         */
+        SampleAliquotCreateRequest: {
+            /** Count */
+            count: number;
+            /** Aliquotvolume */
+            aliquotVolume: number;
+            /** Testcodes */
+            testCodes?: string[] | null;
         };
         /** SampleCollectRequest */
         SampleCollectRequest: {
@@ -3333,6 +3640,19 @@ export interface components {
              * @default 1
              */
             recollectionAttempt: number;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
+            /** Parentsampleid */
+            parentSampleId?: number | null;
+            /**
+             * Isaliquot
+             * @default false
+             */
+            isAliquot: boolean;
+            /** Aliquotindex */
+            aliquotIndex?: number | null;
+            /** Aliquotvolume */
+            aliquotVolume?: number | null;
             /**
              * Createdat
              * Format: date-time
@@ -3358,6 +3678,14 @@ export interface components {
          * @enum {string}
          */
         SampleType: "blood" | "urine" | "stool" | "saliva" | "swab" | "tissue" | "sputum" | "csf" | "pleural_fluid" | "serum" | "plasma" | "other";
+        /**
+         * SetupStatusResponse
+         * @description Whether the login screen should collect the first administrator.
+         */
+        SetupStatusResponse: {
+            /** Required */
+            required: boolean;
+        };
         /**
          * StatusPresentation
          * @description UI-facing primary status and optional secondary reason label.
@@ -3707,6 +4035,8 @@ export interface components {
             testName: string;
             /** Sampletype */
             sampleType: string;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
             priority: components["schemas"]["PriorityLevel"];
             status: components["schemas"]["TestStatus"];
             /** Sampleid */
@@ -3807,6 +4137,41 @@ export interface components {
             /** Hasprev */
             hasPrev: boolean;
         };
+        /** WorksheetGroup */
+        WorksheetGroup: {
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+            /** Rows */
+            rows: components["schemas"]["WorksheetRow"][];
+        };
+        /** WorksheetResponse */
+        WorksheetResponse: {
+            /** Groups */
+            groups: components["schemas"]["WorksheetGroup"][];
+        };
+        /**
+         * WorksheetRow
+         * @description One bench-worksheet line for a single order test.
+         */
+        WorksheetRow: {
+            /** Ordertestid */
+            orderTestId: number;
+            /** Orderid */
+            orderId: number;
+            /** Patientname */
+            patientName: string;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
+            /** Sampletype */
+            sampleType: string;
+            priority: components["schemas"]["PriorityLevel"];
+            /** Testcode */
+            testCode: string;
+            /** Testname */
+            testName: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -3872,6 +4237,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConfigValidationResult"];
+                };
+            };
+        };
+    };
+    get_setup_status_api_v1_auth_setup_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SetupStatusResponse"];
+                };
+            };
+        };
+    };
+    create_first_administrator_api_v1_auth_setup_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FirstAdminSetupRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Token"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -4151,7 +4569,10 @@ export interface operations {
     };
     create_patient_api_v1_patients_post: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Create even when identity matches exist */
+                forceCreate?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -4461,6 +4882,136 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TestResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_panels_api_v1_panels_get: {
+        parameters: {
+            query?: {
+                activeOnly?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogPanelResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_panel_api_v1_panels_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogPanelCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogPanelResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_panel_api_v1_panels__code__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogPanelResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_panel_api_v1_panels__code__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogPanelUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogPanelResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5322,6 +5873,41 @@ export interface operations {
             };
         };
     };
+    create_sample_aliquots_api_v1_lab_samples__sampleId__aliquots_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sampleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SampleAliquotCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_pending_escalation_api_v1_lab_results_pending_escalation_get: {
         parameters: {
             query?: never;
@@ -5519,7 +6105,11 @@ export interface operations {
                 page?: number;
                 pageSize?: number;
                 search?: string | null;
-                priority?: components["schemas"]["PriorityLevel"] | null;
+                /** @description Comma-separated priority levels */
+                priority?: string | null;
+                priorityGroup?: ("stat" | "routine") | null;
+                /** @description Catalog test category */
+                category?: string | null;
                 dateFrom?: string | null;
                 dateTo?: string | null;
                 /** @description Comma-separated sample types */
@@ -5557,7 +6147,11 @@ export interface operations {
                 page?: number;
                 pageSize?: number;
                 search?: string | null;
-                priority?: components["schemas"]["PriorityLevel"] | null;
+                /** @description Comma-separated priority levels */
+                priority?: string | null;
+                priorityGroup?: ("stat" | "routine") | null;
+                /** @description Catalog test category */
+                category?: string | null;
                 dateFrom?: string | null;
                 dateTo?: string | null;
                 /** @description Comma-separated sample types */
@@ -5595,7 +6189,11 @@ export interface operations {
                 page?: number;
                 pageSize?: number;
                 search?: string | null;
-                priority?: components["schemas"]["PriorityLevel"] | null;
+                /** @description Comma-separated priority levels */
+                priority?: string | null;
+                priorityGroup?: ("stat" | "routine") | null;
+                /** @description Catalog test category */
+                category?: string | null;
                 dateFrom?: string | null;
                 dateTo?: string | null;
                 /** @description Comma-separated sample types */
@@ -5614,6 +6212,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationWorklistResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_bench_worksheet_api_v1_lab_worklists_worksheet_get: {
+        parameters: {
+            query?: {
+                testCode?: string | null;
+                category?: string | null;
+                /** @description Comma-separated priority levels */
+                priority?: string | null;
+                priorityGroup?: ("stat" | "routine") | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorksheetResponse"];
                 };
             };
             /** @description Validation Error */
@@ -6404,6 +7037,138 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReportableOrderItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_order_report_pdf_api_v1_reports_orders__orderId__pdf_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    email_order_report_api_v1_reports_orders__orderId__email_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportEmailRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    batch_download_pdfs_api_v1_reports_batch_pdf_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    batch_email_reports_api_v1_reports_batch_email_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportBatchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */

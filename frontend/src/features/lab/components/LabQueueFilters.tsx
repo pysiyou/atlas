@@ -17,6 +17,8 @@ export interface LabQueueFiltersProps<S = string[]> {
   statusFilters: S;
   onStatusFiltersChange: (values: S) => void;
   statusFilterKey?: 'status' | 'priority';
+  priorityGroupFilters?: string[];
+  onPriorityGroupFiltersChange?: (values: string[]) => void;
 }
 
 export function LabQueueFilters<S = string[]>({
@@ -30,17 +32,27 @@ export function LabQueueFilters<S = string[]>({
   statusFilters,
   onStatusFiltersChange,
   statusFilterKey = 'status',
+  priorityGroupFilters = [],
+  onPriorityGroupFiltersChange,
 }: LabQueueFiltersProps<S>): React.ReactElement {
   const value = useMemo(
     () => ({
       searchQuery,
       dateRange,
       sampleType: sampleTypeFilters,
+      priorityGroup: priorityGroupFilters,
       ...(statusFilterKey === 'priority'
         ? { priority: statusFilters }
         : { status: statusFilters }),
     }),
-    [searchQuery, dateRange, sampleTypeFilters, statusFilters, statusFilterKey],
+    [
+      searchQuery,
+      dateRange,
+      sampleTypeFilters,
+      statusFilters,
+      statusFilterKey,
+      priorityGroupFilters,
+    ],
   );
 
   const handlers = useMemo(
@@ -51,12 +63,14 @@ export function LabQueueFilters<S = string[]>({
             dateRange: onDateRangeChange,
             sampleType: onSampleTypeFiltersChange,
             priority: onStatusFiltersChange,
+            priorityGroup: onPriorityGroupFiltersChange,
           }
         : {
             searchQuery: onSearchChange,
             dateRange: onDateRangeChange,
             sampleType: onSampleTypeFiltersChange,
             status: onStatusFiltersChange,
+            priorityGroup: onPriorityGroupFiltersChange,
           },
     [
       statusFilterKey,
@@ -64,6 +78,7 @@ export function LabQueueFilters<S = string[]>({
       onDateRangeChange,
       onSampleTypeFiltersChange,
       onStatusFiltersChange,
+      onPriorityGroupFiltersChange,
     ],
   );
 

@@ -21,7 +21,7 @@ from app.shared.contracts.enums import (
     TestStatus,
 )
 from app.shared.schemas.status_presentation import StatusPresentation
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class TestResultValue(BaseModel):
@@ -91,7 +91,10 @@ class OrderCreate(BaseModel):
 
     patientId: int = Field(..., gt=0, description="Patient ID")
     tests: list[OrderTestCreate] = Field(
-        ..., min_length=1, description="At least one test required"
+        default_factory=list, description="Explicit catalog tests"
+    )
+    panelCodes: list[str] = Field(
+        default_factory=list, description="Orderable panel codes expanded server-side"
     )
     priority: PriorityLevel = PriorityLevel.LOW
     referentDoctorId: int | None = Field(None, gt=0)
@@ -107,6 +110,13 @@ class OrderCreate(BaseModel):
         if len(codes) != len(set(codes)):
             raise ValueError("Duplicate test codes not allowed")
         return v
+
+    @model_validator(mode="after")
+    def require_tests_or_panels(self) -> OrderCreate:
+        """Accept explicit tests, panel codes, or both."""
+        if not self.tests and not self.panelCodes:
+            raise ValueError("At least one test or panel is required")
+        return self
 
 
 class OrderUpdate(BaseModel):

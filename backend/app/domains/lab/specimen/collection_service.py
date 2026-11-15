@@ -11,6 +11,7 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from app.domains.lab.models.sample import Sample
+from app.domains.lab.specimen.accession import assign_accession_number
 from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import PriorityLevel, SampleStatus, SampleType
 from app.shared.contracts.lab_contract import MAX_RECOLLECTION_ATTEMPTS
@@ -79,6 +80,7 @@ class SampleCollectionService:
         )
         self.db.add(sample)
         self.db.flush()
+        assign_accession_number(self.db, sample)
         return sample
 
     def request_recollection(
@@ -139,6 +141,7 @@ class SampleCollectionService:
         )
         self.db.add(new_sample)
         self.db.flush()
+        assign_accession_number(self.db, new_sample)
 
         source_sample.recollectionSampleId = new_sample.sampleId
         source_sample.updatedBy = str(user_id)

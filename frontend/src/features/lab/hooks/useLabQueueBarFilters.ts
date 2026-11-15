@@ -35,6 +35,8 @@ export interface LabQueueBarState {
   setSampleTypeFilters: (value: string[]) => void;
   statusFilters: SampleStatus[] | TestStatus[] | PriorityLevel[];
   setStatusFilters: (value: SampleStatus[] | TestStatus[] | PriorityLevel[]) => void;
+  priorityGroupFilters: string[];
+  setPriorityGroupFilters: (value: string[]) => void;
   debouncedSearch: string;
   trimmedSearch: string;
   isSampleLookup: boolean;
@@ -72,6 +74,9 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
       [...readBarFiltersFromUrl().statusFilters] as
         SampleStatus[] | TestStatus[] | PriorityLevel[],
   );
+  const [priorityGroupFilters, setPriorityGroupFilters] = useState<string[]>(
+    () => [...readBarFiltersFromUrl().priorityGroupFilters],
+  );
 
   const debouncedSearch = useDebouncedValue(searchQuery, LAB_CONFIG.SEARCH_DEBOUNCE_MS);
   const trimmedSearch = debouncedSearch.trim();
@@ -94,8 +99,21 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
             : trimmedSearch || undefined,
         dateRange,
         sampleTypeFilters,
+        priority:
+          workflowType === 'validationReview'
+            ? (statusFilters as string[])
+            : undefined,
+        priorityGroup: priorityGroupFilters,
       }),
-    [workflowType, isSampleLookup, trimmedSearch, dateRange, sampleTypeFilters],
+    [
+      workflowType,
+      isSampleLookup,
+      trimmedSearch,
+      dateRange,
+      sampleTypeFilters,
+      statusFilters,
+      priorityGroupFilters,
+    ],
   );
 
   const skipSearchFilter =
@@ -140,6 +158,7 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
     setStatusFilters(
       [...next.statusFilters] as SampleStatus[] | TestStatus[] | PriorityLevel[],
     );
+    setPriorityGroupFilters([...next.priorityGroupFilters]);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [searchParams, workflowType, filterConfig.defaultStatuses, debouncedSearch, searchQuery]);
 
@@ -159,6 +178,7 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
             dateRange,
             sampleTypeFilters,
             statusFilters: statusFilters as string[],
+            priorityGroupFilters,
           },
           workflowType,
         );
@@ -171,6 +191,7 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
     dateRange,
     sampleTypeFilters,
     statusFilters,
+    priorityGroupFilters,
     workflowType,
     setSearchParams,
   ]);
@@ -184,6 +205,8 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
     setSampleTypeFilters,
     statusFilters,
     setStatusFilters,
+    priorityGroupFilters,
+    setPriorityGroupFilters,
     debouncedSearch,
     trimmedSearch,
     isSampleLookup,

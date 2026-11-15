@@ -134,6 +134,36 @@ class APIClient {
   async delete<T>(endpoint: string, options?: { signal?: AbortSignal }): Promise<T> {
     return this.request<T>('DELETE', endpoint, undefined, options);
   }
+
+  /**
+   * Fetch a binary payload (PDF/zip). Does not JSON-parse the body.
+   */
+  async getBlob(
+    endpoint: string,
+    params?: Record<string, string>,
+    options?: { method?: 'GET' | 'POST'; body?: unknown }
+  ): Promise<Blob> {
+    let url = endpoint;
+    if (params) {
+      url = `${endpoint}?${new URLSearchParams(params).toString()}`;
+    }
+    const headers = buildAuthHeaders({ ...this.headers }, this.getToken);
+    if (options?.body) {
+      headers['Content-Type'] = 'application/json';
+    } else {
+      delete headers['Content-Type'];
+    }
+    const response = await fetch(`${this.baseURL}${url}`, {
+      method: options?.method ?? 'GET',
+      headers,
+      body: options?.body ? JSON.stringify(options.body) : undefined,
+      cache: 'no-store',
+    });
+    if (!response.ok) {
+      throw await parseErrorResponse(response);
+    }
+    return response.blob();
+  }
 }
 
 export const apiClient = new APIClient();

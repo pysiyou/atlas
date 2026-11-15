@@ -166,6 +166,10 @@
         "requireEmergencyContact": { 
           "type": "boolean",
           "description": "Require emergency contact for patients"
+        },
+        "enableAutoVerification": {
+          "type": "boolean",
+          "description": "Auto-validate analyzer results that are fully normal"
         }
       }
     },

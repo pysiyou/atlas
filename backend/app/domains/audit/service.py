@@ -630,6 +630,21 @@ class AuditEmitter:
             context=EventContext(patientId=patient_id),
         )
 
+    def patient_created_forced(
+        self,
+        patient_id: int,
+        user_id: int,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        self._emit(
+            EventType.PATIENT_CREATE_FORCED,
+            "patient",
+            patient_id,
+            user_id,
+            context=EventContext(patientId=patient_id),
+            metadata=metadata,
+        )
+
     def patient_updated(
         self, patient_id: int, user_id: int, changes: dict[str, Any] | None = None
     ) -> None:
@@ -826,6 +841,27 @@ class AuditEmitter:
             user_id,
             context=self._order_context(order_id),
             metadata=metadata,
+        )
+
+    def sample_aliquot_created(
+        self,
+        sample_id: int,
+        parent_sample_id: int,
+        order_id: int,
+        user_id: int,
+        *,
+        aliquot_index: int,
+    ) -> None:
+        self._emit(
+            EventType.LABORATORY_SAMPLE_ALIQUOT,
+            "sample",
+            sample_id,
+            user_id,
+            context=self._order_context(order_id),
+            metadata={
+                "parent_sample_id": parent_sample_id,
+                "aliquot_index": aliquot_index,
+            },
         )
 
     def sample_collected(
@@ -1081,6 +1117,23 @@ class AuditEmitter:
             metadata={"test_code": test_code, **(metadata or {})},
         )
 
+    def validation_auto(
+        self,
+        order_id: int,
+        order_test_id: int,
+        test_code: str,
+        user_id: int,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        self._emit(
+            EventType.LABORATORY_VALIDATION_AUTO,
+            "order_test",
+            order_test_id,
+            user_id,
+            context=self._order_context(order_id, test_id=order_test_id),
+            metadata={"test_code": test_code, **(metadata or {})},
+        )
+
     def validation_rejected(
         self,
         order_id: int,
@@ -1230,6 +1283,21 @@ class AuditEmitter:
             user_id,
             context=self._order_context(order_id),
             metadata=metadata,
+        )
+
+    def reporting_emailed(
+        self,
+        order_id: int,
+        user_id: int,
+        recipients: list[str],
+    ) -> None:
+        self._emit(
+            EventType.REPORTING_EMAIL,
+            "order",
+            order_id,
+            user_id,
+            context=self._order_context(order_id),
+            metadata={"recipients": recipients},
         )
 
     def user_login(self, user_id: int) -> None:

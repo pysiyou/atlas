@@ -19,6 +19,7 @@ interface EditPatientModalProps {
   onClose: () => void;
   patient?: Patient;
   mode: 'create' | 'edit';
+  onCreated?: (patient: Patient) => void;
 }
 
 interface TabNavigationProps {
@@ -42,6 +43,7 @@ export function EditPatientModal({
   onClose,
   patient,
   mode,
+  onCreated,
 }: EditPatientModalProps) {
   const {
     form,
@@ -53,7 +55,11 @@ export function EditPatientModal({
     modalTitle,
     subtitle,
     submitLabel,
-  } = useEditPatientForm({ patient, mode, onClose });
+    duplicateMatches,
+    onSelectExisting,
+    onForceCreate,
+    onDismissDuplicates,
+  } = useEditPatientForm({ patient, mode, onClose, onCreated });
 
   return (
     <ErrorBoundary>
@@ -78,6 +84,35 @@ export function EditPatientModal({
           <FormProvider {...form}>
             <form id="patient-form" onSubmit={handleSubmit} className="max-w-full space-y-space-6">
               <TabNavigation tabs={[...tabs]} activeTab={activeTab} onTabChange={setActiveTab} />
+              {duplicateMatches.length > 0 ? (
+                <div className="rounded-md border border-border-default p-space-4 space-y-space-3">
+                  <p className="text-sm">Possible existing patients match this identity.</p>
+                  <ul className="space-y-space-2">
+                    {duplicateMatches.map(match => (
+                      <li key={match.id}>
+                        <button
+                          type="button"
+                          className="w-full text-left px-space-3 py-space-2 hover:bg-surface-page rounded-md"
+                          onClick={() => onSelectExisting(match as Patient)}
+                        >
+                          <span className="font-medium">{match.fullName}</span>
+                          <span className="ml-space-2 text-sm opacity-70">
+                            {match.mrn ?? `PAT${String(match.id).padStart(4, '0')}`} · {match.phone}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="flex gap-space-2">
+                    <button type="button" className="text-sm underline" onClick={onDismissDuplicates}>
+                      Edit details
+                    </button>
+                    <button type="button" className="text-sm underline" onClick={onForceCreate}>
+                      Create anyway
+                    </button>
+                  </div>
+                </div>
+              ) : null}
               <PatientFormTabs
                 activeTab={activeTab}
                 existingAffiliation={patient?.affiliation}

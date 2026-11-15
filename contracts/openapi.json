@@ -63,6 +63,68 @@
         }
       }
     },
+    "/api/v1/auth/setup": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get Setup Status",
+        "description": "Public: whether the first administrator still needs to be created in the UI.",
+        "operationId": "get_setup_status_api_v1_auth_setup_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetupStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Create First Administrator",
+        "description": "Public once: create the first administrator from the login screen.\n\nRejected with 409 after any user exists. Later accounts are created by an\nadministrator in User management.",
+        "operationId": "create_first_administrator_api_v1_auth_setup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirstAdminSetupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "tags": [
@@ -889,11 +951,25 @@
           "patients"
         ],
         "summary": "Create Patient",
-        "description": "Create a new patient.",
+        "description": "Create a new patient. Returns 409 with matches when duplicates exist unless forceCreate.",
         "operationId": "create_patient_api_v1_patients_post",
         "security": [
           {
             "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "forceCreate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Create even when identity matches exist",
+              "default": false,
+              "title": "Forcecreate"
+            },
+            "description": "Create even when identity matches exist"
           }
         ],
         "requestBody": {
@@ -1405,6 +1481,205 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TestResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/panels": {
+      "get": {
+        "tags": [
+          "panels"
+        ],
+        "summary": "List Panels",
+        "description": "List orderable panels (taxonomy tags inverted into member bundles).",
+        "operationId": "list_panels_api_v1_panels_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "activeOnly",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Activeonly"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CatalogPanelResponse"
+                  },
+                  "title": "Response List Panels Api V1 Panels Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "panels"
+        ],
+        "summary": "Create Panel",
+        "operationId": "create_panel_api_v1_panels_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CatalogPanelCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogPanelResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/panels/{code}": {
+      "get": {
+        "tags": [
+          "panels"
+        ],
+        "summary": "Get Panel",
+        "operationId": "get_panel_api_v1_panels__code__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogPanelResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "panels"
+        ],
+        "summary": "Update Panel",
+        "operationId": "update_panel_api_v1_panels__code__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Code"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CatalogPanelUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogPanelResponse"
                 }
               }
             }
@@ -3043,6 +3318,68 @@
         }
       }
     },
+    "/api/v1/lab/samples/{sampleId}/aliquots": {
+      "post": {
+        "tags": [
+          "lab"
+        ],
+        "summary": "Create Sample Aliquots",
+        "description": "Create child aliquot tubes from a collected parent sample.",
+        "operationId": "create_sample_aliquots_api_v1_lab_samples__sampleId__aliquots_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Sampleid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SampleAliquotCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SampleResponse"
+                  },
+                  "title": "Response Create Sample Aliquots Api V1 Lab Samples  Sampleid  Aliquots Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/lab/results/pending-escalation": {
       "get": {
         "tags": [
@@ -3399,14 +3736,54 @@
             "schema": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/PriorityLevel"
+                  "type": "string"
                 },
                 {
                   "type": "null"
                 }
               ],
+              "description": "Comma-separated priority levels",
               "title": "Priority"
+            },
+            "description": "Comma-separated priority levels"
+          },
+          {
+            "name": "priorityGroup",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "stat",
+                    "routine"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Prioritygroup"
             }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Catalog test category",
+              "title": "Category"
+            },
+            "description": "Catalog test category"
           },
           {
             "name": "dateFrom",
@@ -3544,14 +3921,54 @@
             "schema": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/PriorityLevel"
+                  "type": "string"
                 },
                 {
                   "type": "null"
                 }
               ],
+              "description": "Comma-separated priority levels",
               "title": "Priority"
+            },
+            "description": "Comma-separated priority levels"
+          },
+          {
+            "name": "priorityGroup",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "stat",
+                    "routine"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Prioritygroup"
             }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Catalog test category",
+              "title": "Category"
+            },
+            "description": "Catalog test category"
           },
           {
             "name": "dateFrom",
@@ -3689,14 +4106,54 @@
             "schema": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/PriorityLevel"
+                  "type": "string"
                 },
                 {
                   "type": "null"
                 }
               ],
+              "description": "Comma-separated priority levels",
               "title": "Priority"
+            },
+            "description": "Comma-separated priority levels"
+          },
+          {
+            "name": "priorityGroup",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "stat",
+                    "routine"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Prioritygroup"
             }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Catalog test category",
+              "title": "Category"
+            },
+            "description": "Catalog test category"
           },
           {
             "name": "dateFrom",
@@ -3758,6 +4215,115 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationWorklistResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lab/worklists/worksheet": {
+      "get": {
+        "tags": [
+          "lab"
+        ],
+        "summary": "Get Bench Worksheet",
+        "description": "Printable entry-stage worksheet grouped by test code.",
+        "operationId": "get_bench_worksheet_api_v1_lab_worklists_worksheet_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "testCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Testcode"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Comma-separated priority levels",
+              "title": "Priority"
+            },
+            "description": "Comma-separated priority levels"
+          },
+          {
+            "name": "priorityGroup",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "stat",
+                    "routine"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Prioritygroup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorksheetResponse"
                 }
               }
             }
@@ -5213,6 +5779,195 @@
           }
         }
       }
+    },
+    "/api/v1/reports/orders/{orderId}/pdf": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Download Order Report Pdf",
+        "operationId": "download_order_report_pdf_api_v1_reports_orders__orderId__pdf_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Orderid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/orders/{orderId}/email": {
+      "post": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Email Order Report",
+        "operationId": "email_order_report_api_v1_reports_orders__orderId__email_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Orderid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportEmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/batch/pdf": {
+      "post": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Batch Download Pdfs",
+        "description": "Return concatenated PDFs as a zip-like sequential payload of per-order files.\n\nClients should prefer per-order GET /pdf; this endpoint archives each order\nand returns the last generated file when a single id is supplied, or a\nsimple application/zip of all PDFs for multiple ids.",
+        "operationId": "batch_download_pdfs_api_v1_reports_batch_pdf_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/reports/batch/email": {
+      "post": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Batch Email Reports",
+        "operationId": "batch_email_reports_api_v1_reports_batch_email_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -6001,6 +6756,183 @@
         ],
         "title": "BoardAttentionItem"
       },
+      "CatalogPanelCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "memberTestCodes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Membertestcodes"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "isActive": {
+            "type": "boolean",
+            "title": "Isactive",
+            "default": true
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "memberTestCodes",
+          "code"
+        ],
+        "title": "CatalogPanelCreate",
+        "description": "Create a named panel of catalog tests."
+      },
+      "CatalogPanelResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "memberTestCodes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Membertestcodes"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "isActive": {
+            "type": "boolean",
+            "title": "Isactive",
+            "default": true
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "memberTestCodes",
+          "code"
+        ],
+        "title": "CatalogPanelResponse",
+        "description": "Persisted panel row."
+      },
+      "CatalogPanelUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "memberTestCodes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Membertestcodes"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "isActive": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Isactive"
+          }
+        },
+        "type": "object",
+        "title": "CatalogPanelUpdate",
+        "description": "Partial panel update."
+      },
       "ClaimStatus": {
         "type": "string",
         "enum": [
@@ -6054,6 +6986,33 @@
             },
             "type": "array",
             "title": "Testcodes"
+          },
+          "accessionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessionnumber"
+          },
+          "isAliquot": {
+            "type": "boolean",
+            "title": "Isaliquot",
+            "default": false
+          },
+          "parentSampleId": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parentsampleid"
           },
           "isRecollection": {
             "type": "boolean",
@@ -6996,6 +7955,17 @@
             "type": "string",
             "title": "Sampletype"
           },
+          "accessionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessionnumber"
+          },
           "priority": {
             "$ref": "#/components/schemas/PriorityLevel"
           },
@@ -7396,6 +8366,41 @@
           "escalatedTestId"
         ],
         "title": "EscalationResolveResponse"
+      },
+      "FirstAdminSetupRequest": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "name"
+        ],
+        "title": "FirstAdminSetupRequest",
+        "description": "Public first-account payload. Role is always administrator."
       },
       "Gender": {
         "type": "string",
@@ -8279,9 +9284,16 @@
               "$ref": "#/components/schemas/OrderTestCreate"
             },
             "type": "array",
-            "minItems": 1,
             "title": "Tests",
-            "description": "At least one test required"
+            "description": "Explicit catalog tests"
+          },
+          "panelCodes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Panelcodes",
+            "description": "Orderable panel codes expanded server-side"
           },
           "priority": {
             "$ref": "#/components/schemas/PriorityLevel",
@@ -8340,8 +9352,7 @@
         },
         "type": "object",
         "required": [
-          "patientId",
-          "tests"
+          "patientId"
         ],
         "title": "OrderCreate",
         "description": "Schema for creating a new order."
@@ -9831,6 +10842,17 @@
             "type": "integer",
             "title": "Id"
           },
+          "mrn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mrn"
+          },
           "registrationDate": {
             "type": "string",
             "format": "date-time",
@@ -11319,6 +12341,49 @@
         ],
         "title": "RemedyType"
       },
+      "ReportBatchRequest": {
+        "properties": {
+          "orderIds": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "minItems": 1,
+            "title": "Orderids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "orderIds"
+        ],
+        "title": "ReportBatchRequest",
+        "description": "Batch PDF/email of completed reportable orders."
+      },
+      "ReportEmailRequest": {
+        "properties": {
+          "includePatient": {
+            "type": "boolean",
+            "title": "Includepatient",
+            "default": true
+          },
+          "includePhysician": {
+            "type": "boolean",
+            "title": "Includephysician",
+            "default": true
+          },
+          "extraRecipients": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Extrarecipients"
+          }
+        },
+        "type": "object",
+        "title": "ReportEmailRequest",
+        "description": "Send the order PDF to the patient and/or referent physician."
+      },
       "ReportQualityIssueRequest": {
         "properties": {
           "target": {
@@ -11569,6 +12634,42 @@
           "decision"
         ],
         "title": "ResultValidationRequest"
+      },
+      "SampleAliquotCreateRequest": {
+        "properties": {
+          "count": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Count"
+          },
+          "aliquotVolume": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Aliquotvolume"
+          },
+          "testCodes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testcodes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "count",
+          "aliquotVolume"
+        ],
+        "title": "SampleAliquotCreateRequest",
+        "description": "Split remaining volume of a collected parent into child tubes."
       },
       "SampleCollectRequest": {
         "properties": {
@@ -11852,6 +12953,55 @@
             "title": "Recollectionattempt",
             "default": 1
           },
+          "accessionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessionnumber"
+          },
+          "parentSampleId": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parentsampleid"
+          },
+          "isAliquot": {
+            "type": "boolean",
+            "title": "Isaliquot",
+            "default": false
+          },
+          "aliquotIndex": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aliquotindex"
+          },
+          "aliquotVolume": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aliquotvolume"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -11915,6 +13065,20 @@
           "other"
         ],
         "title": "SampleType"
+      },
+      "SetupStatusResponse": {
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "title": "Required"
+          }
+        },
+        "type": "object",
+        "required": [
+          "required"
+        ],
+        "title": "SetupStatusResponse",
+        "description": "Whether the login screen should collect the first administrator."
       },
       "StatusPresentation": {
         "properties": {
@@ -13089,6 +14253,17 @@
             "type": "string",
             "title": "Sampletype"
           },
+          "accessionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessionnumber"
+          },
           "priority": {
             "$ref": "#/components/schemas/PriorityLevel"
           },
@@ -13489,6 +14664,102 @@
           "hasPrev"
         ],
         "title": "WorklistPagination"
+      },
+      "WorksheetGroup": {
+        "properties": {
+          "testCode": {
+            "type": "string",
+            "title": "Testcode"
+          },
+          "testName": {
+            "type": "string",
+            "title": "Testname"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/WorksheetRow"
+            },
+            "type": "array",
+            "title": "Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "testCode",
+          "testName",
+          "rows"
+        ],
+        "title": "WorksheetGroup"
+      },
+      "WorksheetResponse": {
+        "properties": {
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/WorksheetGroup"
+            },
+            "type": "array",
+            "title": "Groups"
+          }
+        },
+        "type": "object",
+        "required": [
+          "groups"
+        ],
+        "title": "WorksheetResponse"
+      },
+      "WorksheetRow": {
+        "properties": {
+          "orderTestId": {
+            "type": "integer",
+            "title": "Ordertestid"
+          },
+          "orderId": {
+            "type": "integer",
+            "title": "Orderid"
+          },
+          "patientName": {
+            "type": "string",
+            "title": "Patientname"
+          },
+          "accessionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accessionnumber"
+          },
+          "sampleType": {
+            "type": "string",
+            "title": "Sampletype"
+          },
+          "priority": {
+            "$ref": "#/components/schemas/PriorityLevel"
+          },
+          "testCode": {
+            "type": "string",
+            "title": "Testcode"
+          },
+          "testName": {
+            "type": "string",
+            "title": "Testname"
+          }
+        },
+        "type": "object",
+        "required": [
+          "orderTestId",
+          "orderId",
+          "patientName",
+          "sampleType",
+          "priority",
+          "testCode",
+          "testName"
+        ],
+        "title": "WorksheetRow",
+        "description": "One bench-worksheet line for a single order test."
       }
     },
     "securitySchemes": {

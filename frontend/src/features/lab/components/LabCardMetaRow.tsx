@@ -182,6 +182,18 @@ export function RecollectionRequestedMeta({
   );
 }
 
-export function BarcodeMeta({ sampleId }: { sampleId: number }) {
-  return <span className={FG.monoCaptionMuted}>{displayId.sample(sampleId)}</span>;
+export function BarcodeMeta({
+  sampleId,
+  accessionNumber,
+}: {
+  sampleId: number;
+  accessionNumber?: string | null;
+}) {
+  const accession = displayId.accession(accessionNumber);
+  return (
+    <span className={FG.monoCaptionMuted}>
+      {displayId.sample(sampleId)}
+      {accession ? ` · ${accession}` : ''}
+    </span>
+  );
 }

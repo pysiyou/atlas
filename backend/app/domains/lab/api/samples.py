@@ -1,5 +1,6 @@
 """Lab sample routes."""
 
+from app.domains.audit.service import AuditEmitter
 from app.domains.lab.deps import (
     get_lab_operations_service,
     get_lab_worklist_service,
@@ -7,9 +8,14 @@ from app.domains.lab.deps import (
 )
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.monitor.worklist_service import LabWorklistService
-from app.domains.lab.schemas.sample import SampleCollectRequest, SampleResponse
+from app.domains.lab.schemas.sample import (
+    SampleAliquotCreateRequest,
+    SampleCollectRequest,
+    SampleResponse,
+)
 from app.domains.lab.schemas.worklists import CollectionWorklistItem
 from app.domains.lab.specimen import SpecimenQueryService
+from app.domains.lab.specimen.aliquots import create_aliquots
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
@@ -96,3 +102,24 @@ def collect_sample(
         container_color=collect_data.actualContainerColor.value,
         collection_notes=collect_data.collectionNotes,
     )
+
+
+@router.post("/samples/{sampleId}/aliquots", response_model=list[SampleResponse])
+def create_sample_aliquots(
+    sampleId: int,
+    payload: SampleAliquotCreateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_sample_collector),
+):
+    """Create child aliquot tubes from a collected parent sample."""
+    children = create_aliquots(
+        db,
+        parent_id=sampleId,
+        count=payload.count,
+        aliquot_volume=payload.aliquotVolume,
+        test_codes=payload.testCodes,
+        user_id=current_user.id,
+        emitter=AuditEmitter(db),
+    )
+    db.commit()
+    return [_sample_response(db, child) for child in children]

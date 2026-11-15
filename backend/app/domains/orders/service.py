@@ -7,6 +7,7 @@ from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Payment
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.billing.service import BillingService
+from app.domains.catalog.models.catalog_panel import CatalogPanel
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.public import (
@@ -291,6 +292,41 @@ class OrderService:
             }
         )
 
+    def _expand_order_line_items(
+        self, order_data: OrderCreate
+    ) -> tuple[list[tuple[str, float]], float]:
+        """Expand panel codes, dedupe with explicit tests, and price from panel or members."""
+        codes: list[str] = [item.testCode for item in order_data.tests]
+        panel_price_by_member: dict[str, float] = {}
+        for panel_code in order_data.panelCodes or []:
+            panel = (
+                self.db.query(CatalogPanel)
+                .filter(CatalogPanel.code == panel_code, CatalogPanel.isActive.is_(True))
+                .first()
+            )
+            if not panel:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"CatalogPanel {panel_code} not found",
+                )
+            members = [str(code) for code in (panel.memberTestCodes or []) if code]
+            if panel.price is not None and members:
+                share = float(panel.price) / len(members)
+                for member in members:
+                    panel_price_by_member[member] = share
+            for member in members:
+                if member not in codes:
+                    codes.append(member)
+        catalog_by_code = self._catalog_tests_by_code(codes)
+        test_entries: list[tuple[str, float]] = []
+        total_price = 0.0
+        for code in codes:
+            test = catalog_by_code[code]
+            price = panel_price_by_member.get(code, float(test.price))
+            total_price += price
+            test_entries.append((code, price))
+        return test_entries, total_price
+
     def _catalog_tests_by_code(self, codes: list[str]) -> dict[str, CatalogTest]:
         """Load catalog rows for the given codes once; 404 if any code is missing."""
         unique_codes = list(dict.fromkeys(codes))
@@ -528,15 +564,7 @@ class OrderService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Patient {order_data.patientId} not found",
             )
-        catalog_by_code = self._catalog_tests_by_code(
-            [test_data.testCode for test_data in order_data.tests]
-        )
-        total_price = 0.0
-        test_entries = []
-        for test_data in order_data.tests:
-            test = catalog_by_code[test_data.testCode]
-            total_price += test.price
-            test_entries.append((test.code, test.price))
+        test_entries, total_price = self._expand_order_line_items(order_data)
 
         self._resolve_referent_doctor_id(order_data.referentDoctorId)
 

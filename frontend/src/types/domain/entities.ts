@@ -76,6 +76,7 @@ export interface MedicalHistory {
 
 export interface Patient {
   id: number; // Integer ID, displayed as PAT{id}
+  mrn?: string | null;
   fullName: string;
   dateOfBirth: string;
   gender: Gender;
@@ -308,6 +309,11 @@ interface BaseSample {
   originalSampleCollectedAt?: string;
   recollectionReason?: string;
   recollectionAttempt?: number;
+  accessionNumber?: string | null;
+  parentSampleId?: number | null;
+  isAliquot?: boolean;
+  aliquotIndex?: number | null;
+  aliquotVolume?: number | null;
   createdAt: string;
   createdBy: string;
   updatedAt: string;

@@ -41,6 +41,29 @@ from sqlalchemy import String, and_, case, cast, desc, exists, func, or_
 from sqlalchemy.orm import Session
 
 COLLECTION_SAMPLE_LOOKUP_MIN_LEN = 3
+ROUTINE_PRIORITIES = (PriorityLevel.LOW, PriorityLevel.MEDIUM, PriorityLevel.HIGH)
+
+
+def resolve_worklist_priorities(
+    *,
+    priorities: list[PriorityLevel] | None,
+    priority_group: str | None,
+) -> list[PriorityLevel] | None:
+    """Intersect explicit priorities with STAT/Routine aliases (urgent vs the rest)."""
+    selected = list(priorities or [])
+    group: tuple[PriorityLevel, ...] | None = None
+    if priority_group == "stat":
+        group = (PriorityLevel.URGENT,)
+    elif priority_group == "routine":
+        group = ROUTINE_PRIORITIES
+    if selected and group:
+        filtered = [item for item in selected if item in group]
+        return filtered
+    if selected:
+        return selected
+    if group:
+        return list(group)
+    return None
 
 
 def _apply_worklist_window_filters(
@@ -87,6 +110,7 @@ def _collection_search_filter(search_term: str):
     if compact.isdigit():
         predicates.append(Sample.sampleId.cast(String).ilike(f"%{compact}%"))
         predicates.append(cast(Order.orderId, String).ilike(f"%{compact}%"))
+    predicates.append(Sample.accessionNumber.ilike(f"%{term}%"))
     return or_(*predicates)
 
 
@@ -116,6 +140,7 @@ def _order_test_worklist_search_filter(search_term: str):
                 cast(OrderTest.sampleId, String).ilike(f"%{compact}%"),
             ]
         )
+    predicates.append(Sample.accessionNumber.ilike(f"%{term}%"))
     return or_(*predicates)
 
 
@@ -248,6 +273,9 @@ class LabWorklistService:
             **referent_doctor_projection(order),
             "testName": test_name,
             "testCategory": test_category,
+            "accessionNumber": sample.accessionNumber,
+            "isAliquot": bool(sample.isAliquot),
+            "parentSampleId": sample.parentSampleId,
             "isRecollection": bool(sample.isRecollection),
             "originalSampleId": sample.originalSampleId,
             "originalSampleCollectedAt": self._original_sample_collected_at(sample, parents),
@@ -317,15 +345,18 @@ class LabWorklistService:
         self,
         *,
         extra_filters: tuple,
-        priority: PriorityLevel | None,
+        priorities: list[PriorityLevel] | None,
         date_from: date | None,
         date_to: date | None,
         sample_types: list[str] | None,
         search: str | None,
+        category: str | None = None,
     ):
         query = order_test_stage_query(self.db).filter(*extra_filters)
-        if priority:
-            query = query.filter(Order.priority == priority)
+        if priorities:
+            query = query.filter(Order.priority.in_(priorities))
+        if category:
+            query = query.filter(CatalogTest.category == category)
         query = _apply_worklist_window_filters(
             query,
             order_date_col=Order.orderDate,
@@ -345,10 +376,11 @@ class LabWorklistService:
         page: int = 1,
         page_size: int = 50,
         search: str | None = None,
-        priority: PriorityLevel | None = None,
+        priorities: list[PriorityLevel] | None = None,
         date_from: date | None = None,
         date_to: date | None = None,
         sample_types: list[str] | None = None,
+        category: str | None = None,
     ) -> dict[str, Any]:
         search_term = search.strip() if search else ""
         if len(search_term) < COLLECTION_SAMPLE_LOOKUP_MIN_LEN:
@@ -358,8 +390,18 @@ class LabWorklistService:
             query = query.filter(_collection_search_filter(search_term))
         else:
             query = query.filter(Sample.status == SampleStatus.PENDING)
-        if priority:
-            query = query.filter(Sample.priority == priority)
+        if priorities:
+            query = query.filter(Sample.priority.in_(priorities))
+        if category:
+            query = query.filter(
+                exists().where(
+                    and_(
+                        OrderTest.sampleId == Sample.sampleId,
+                        OrderTest.testCode == CatalogTest.code,
+                        CatalogTest.category == category,
+                    )
+                )
+            )
         query = _apply_worklist_window_filters(
             query,
             order_date_col=Order.orderDate,
@@ -419,11 +461,7 @@ class LabWorklistService:
         from fastapi import HTTPException
         from fastapi import status as http_status
 
-        row = (
-            collection_base_query(self.db)
-            .filter(Sample.sampleId == sample_id)
-            .first()
-        )
+        row = collection_base_query(self.db).filter(Sample.sampleId == sample_id).first()
         if not row:
             raise HTTPException(
                 status_code=http_status.HTTP_404_NOT_FOUND,
@@ -471,18 +509,20 @@ class LabWorklistService:
         page: int = 1,
         page_size: int = 50,
         search: str | None = None,
-        priority: PriorityLevel | None = None,
+        priorities: list[PriorityLevel] | None = None,
         date_from: date | None = None,
         date_to: date | None = None,
         sample_types: list[str] | None = None,
+        category: str | None = None,
     ) -> dict[str, Any]:
         query, _search_term = self._order_test_worklist_query(
             extra_filters=(OrderTest.status == TestStatus.SAMPLE_COLLECTED,),
-            priority=priority,
+            priorities=priorities,
             date_from=date_from,
             date_to=date_to,
             sample_types=sample_types,
             search=search,
+            category=category,
         )
         total = query.count()
         start = (page - 1) * page_size
@@ -511,6 +551,7 @@ class LabWorklistService:
                     "testName": test.name,
                     "sampleId": ot.sampleId,
                     "sampleType": test.sampleType or "",
+                    "accessionNumber": sample.accessionNumber if sample else None,
                     "priority": order.priority,
                     "status": ot.status,
                     "collectedAt": sample.collectedAt if sample else None,
@@ -529,27 +570,70 @@ class LabWorklistService:
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
+    def list_worksheet(
+        self,
+        *,
+        test_code: str | None = None,
+        category: str | None = None,
+        priorities: list[PriorityLevel] | None = None,
+    ) -> dict[str, Any]:
+        """Entry-stage tests grouped by testCode for a printable bench worksheet."""
+        extra = [OrderTest.status == TestStatus.SAMPLE_COLLECTED]
+        if test_code:
+            extra.append(OrderTest.testCode == test_code)
+        query, _ = self._order_test_worklist_query(
+            extra_filters=tuple(extra),
+            priorities=priorities,
+            date_from=None,
+            date_to=None,
+            sample_types=None,
+            search=None,
+            category=category,
+        )
+        rows = query.order_by(OrderTest.testCode.asc(), Order.orderDate.asc()).limit(500).all()
+        grouped: dict[str, dict[str, Any]] = {}
+        for ot, order, patient, test, sample in rows:
+            bucket = grouped.setdefault(
+                ot.testCode,
+                {"testCode": ot.testCode, "testName": test.name, "rows": []},
+            )
+            bucket["rows"].append(
+                {
+                    "orderTestId": ot.id,
+                    "orderId": order.orderId,
+                    "patientName": patient.fullName,
+                    "accessionNumber": sample.accessionNumber if sample else None,
+                    "sampleType": test.sampleType or "",
+                    "priority": order.priority,
+                    "testCode": ot.testCode,
+                    "testName": test.name,
+                }
+            )
+        return {"groups": list(grouped.values())}
+
     def list_validation(
         self,
         *,
         page: int = 1,
         page_size: int = 50,
         search: str | None = None,
-        priority: PriorityLevel | None = None,
+        priorities: list[PriorityLevel] | None = None,
         date_from: date | None = None,
         date_to: date | None = None,
         sample_types: list[str] | None = None,
+        category: str | None = None,
     ) -> dict[str, Any]:
         query, _search_term = self._order_test_worklist_query(
             extra_filters=(
                 OrderTest.status == TestStatus.RESULTED,
                 OrderTest.resultValidatedAt.is_(None),
             ),
-            priority=priority,
+            priorities=priorities,
             date_from=date_from,
             date_to=date_to,
             sample_types=sample_types,
             search=search,
+            category=category,
         )
         total = query.count()
         start = (page - 1) * page_size
@@ -580,6 +664,8 @@ class LabWorklistService:
                     "testCode": ot.testCode,
                     "testName": test.name,
                     "sampleType": test.sampleType or "",
+                    "accessionNumber": sample.accessionNumber if sample else None,
+                    "sampleId": ot.sampleId,
                     "priority": order.priority,
                     "status": ot.status,
                     "resultEnteredAt": ot.resultEnteredAt,
@@ -588,7 +674,6 @@ class LabWorklistService:
                     "turnaroundHours": test.turnaroundTimeHours,
                     "hasCriticalValues": bool(ot.hasCriticalValues),
                     "testCategory": test.category,
-                    "sampleId": ot.sampleId,
                     "sampleStatus": sample.status if sample else None,
                     "results": ot.results,
                     "flags": ot.flags,

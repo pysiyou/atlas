@@ -8,7 +8,7 @@ from datetime import date
 from typing import Any, Literal, TypeVar
 
 from app.domains.lab.deps import get_lab_worklist_service
-from app.domains.lab.monitor.worklist_service import LabWorklistService
+from app.domains.lab.monitor.worklist_service import LabWorklistService, resolve_worklist_priorities
 from app.domains.lab.schemas.worklists import (
     CollectionWorklistItem,
     CollectionWorklistResponse,
@@ -22,6 +22,7 @@ from app.domains.lab.schemas.worklists import (
     ValidationWorklistResponse,
     WorklistPagination,
     WorklistResponse,
+    WorksheetResponse,
 )
 from app.domains.users.models import User
 from app.platform.http.dependencies import require_lab_tech, require_sample_collector
@@ -88,20 +89,22 @@ def _paginated_filterable_worklist(
     list_fn: Callable[..., dict[str, Any]],
     item_model: type[TItem],
     search: str | None,
-    priority: PriorityLevel | None,
+    priorities: list[PriorityLevel] | None,
     date_from: date | None,
     date_to: date | None,
     sample_type: str | None,
+    category: str | None,
 ) -> WorklistResponse:
     with log_lab_read(log_name, page=page, page_size=page_size) as metrics:
         result = list_fn(
             page=page,
             page_size=page_size,
             search=search,
-            priority=priority,
+            priorities=priorities,
             date_from=date_from,
             date_to=date_to,
             sample_types=parse_csv_values(sample_type) or None,
+            category=category,
         )
         metrics["rows_loaded"] = result.get("rows_loaded")
         metrics["rows_returned"] = len(result["items"])
@@ -109,20 +112,34 @@ def _paginated_filterable_worklist(
     return _worklist_response(items, result["pagination"])
 
 
+def _parse_priorities(
+    priority: str | None,
+    priority_group: str | None,
+) -> list[PriorityLevel] | None:
+    wires = parse_csv_values(priority) or None
+    parsed: list[PriorityLevel] | None = None
+    if wires:
+        parsed = [PriorityLevel(item) for item in wires]
+    return resolve_worklist_priorities(priorities=parsed, priority_group=priority_group)
+
+
 def _stage_worklist_kwargs(
     *,
     search: str | None,
-    priority: PriorityLevel | None,
+    priority: str | None,
+    priority_group: str | None,
     date_from: date | None,
     date_to: date | None,
     sample_type: str | None,
+    category: str | None,
 ) -> dict[str, Any]:
     return {
         "search": search,
-        "priority": priority,
+        "priorities": _parse_priorities(priority, priority_group),
         "date_from": date_from,
         "date_to": date_to,
         "sample_type": sample_type,
+        "category": category,
     }
 
 
@@ -131,7 +148,9 @@ def get_collection_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
     search: str | None = None,
-    priority: PriorityLevel | None = None,
+    priority: str | None = Query(None, description="Comma-separated priority levels"),
+    priorityGroup: Literal["stat", "routine"] | None = Query(None),
+    category: str | None = Query(None, description="Catalog test category"),
     dateFrom: date | None = Query(None),
     dateTo: date | None = Query(None),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
@@ -147,9 +166,11 @@ def get_collection_worklist(
         **_stage_worklist_kwargs(
             search=search,
             priority=priority,
+            priority_group=priorityGroup,
             date_from=dateFrom,
             date_to=dateTo,
             sample_type=sampleType,
+            category=category,
         ),
     )
 
@@ -159,7 +180,9 @@ def get_entry_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
     search: str | None = None,
-    priority: PriorityLevel | None = None,
+    priority: str | None = Query(None, description="Comma-separated priority levels"),
+    priorityGroup: Literal["stat", "routine"] | None = Query(None),
+    category: str | None = Query(None, description="Catalog test category"),
     dateFrom: date | None = Query(None),
     dateTo: date | None = Query(None),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
@@ -175,9 +198,11 @@ def get_entry_worklist(
         **_stage_worklist_kwargs(
             search=search,
             priority=priority,
+            priority_group=priorityGroup,
             date_from=dateFrom,
             date_to=dateTo,
             sample_type=sampleType,
+            category=category,
         ),
     )
 
@@ -187,7 +212,9 @@ def get_validation_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
     search: str | None = None,
-    priority: PriorityLevel | None = None,
+    priority: str | None = Query(None, description="Comma-separated priority levels"),
+    priorityGroup: Literal["stat", "routine"] | None = Query(None),
+    category: str | None = Query(None, description="Catalog test category"),
     dateFrom: date | None = Query(None),
     dateTo: date | None = Query(None),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
@@ -203,10 +230,29 @@ def get_validation_worklist(
         **_stage_worklist_kwargs(
             search=search,
             priority=priority,
+            priority_group=priorityGroup,
             date_from=dateFrom,
             date_to=dateTo,
             sample_type=sampleType,
+            category=category,
         ),
+    )
+
+
+@router.get("/worklists/worksheet", response_model=WorksheetResponse)
+def get_bench_worksheet(
+    testCode: str | None = None,
+    category: str | None = None,
+    priority: str | None = Query(None, description="Comma-separated priority levels"),
+    priorityGroup: Literal["stat", "routine"] | None = Query(None),
+    service: LabWorklistService = Depends(get_lab_worklist_service),
+    _user: User = Depends(require_lab_tech),
+):
+    """Printable entry-stage worksheet grouped by test code."""
+    return service.list_worksheet(
+        test_code=testCode,
+        category=category,
+        priorities=_parse_priorities(priority, priorityGroup),
     )
 
 

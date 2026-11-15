@@ -11,7 +11,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     SampleType,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class SampleBase(BaseModel):
@@ -29,6 +29,14 @@ class SampleCollectRequest(BaseModel):
     actualContainerType: ContainerType
     actualContainerColor: ContainerTopColor
     collectionNotes: str | None = None
+
+
+class SampleAliquotCreateRequest(BaseModel):
+    """Split remaining volume of a collected parent into child tubes."""
+
+    count: int = Field(..., ge=1, le=20)
+    aliquotVolume: float = Field(..., gt=0)
+    testCodes: list[str] | None = None
 
 
 class SampleResponse(SampleBase):
@@ -54,6 +62,11 @@ class SampleResponse(SampleBase):
     originalSampleCollectedAt: datetime | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
+    accessionNumber: str | None = None
+    parentSampleId: int | None = None
+    isAliquot: bool = False
+    aliquotIndex: int | None = None
+    aliquotVolume: float | None = None
     createdAt: datetime
     createdBy: str
     updatedAt: datetime

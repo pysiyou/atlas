@@ -56,6 +56,16 @@ class Settings(BaseSettings):
         default=3600, description="TTL for static data like tests (seconds)"
     )
 
+    REPORTS_DIR: str = Field(default="./storage/reports", description="Directory for issued PDFs")
+    UPLOADS_DIR: str = Field(default="./storage/uploads", description="Directory for uploads")
+
+    SMTP_HOST: str = Field(default="", description="SMTP hostname; empty disables email")
+    SMTP_PORT: int = Field(default=587, description="SMTP port")
+    SMTP_USER: str = Field(default="", description="SMTP username")
+    SMTP_PASSWORD: str = Field(default="", description="SMTP password")
+    SMTP_FROM: str = Field(default="", description="From address for lab reports")
+    SMTP_STARTTLS: bool = Field(default=True, description="Use STARTTLS for SMTP")
+
     @property
     def cors_origins_list(self) -> list[str]:
         origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]

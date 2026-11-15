@@ -169,7 +169,11 @@ def _choose_active_sample(existing: list[Sample]) -> Sample | None:
 
     Rejected/collected tubes are historical — never reuse them when syncing tests.
     """
-    pending = [s for s in existing if s.status == SampleStatus.PENDING and s.collectedAt is None]
+    pending = [
+        s
+        for s in existing
+        if s.status == SampleStatus.PENDING and s.collectedAt is None and not s.isAliquot
+    ]
     if not pending:
         return None
     recollection = [s for s in pending if s.isRecollection]
@@ -189,6 +193,7 @@ def _dedupe_pending_samples(
             s.sampleId != keep.sampleId
             and s.status == SampleStatus.PENDING
             and s.collectedAt is None
+            and not s.isAliquot
             and _sample_type_matches(s, keep.sampleType)
         ):
             _reassign_order_tests_to_sample(
@@ -245,6 +250,8 @@ def _delete_pending_samples_for_order(order_id: int, db: Session, keep_sample_ty
         .all()
     )
     for s in to_delete:
+        if s.isAliquot:
+            continue
         if s.sampleType not in keep_sample_types:
             db.delete(s)
 

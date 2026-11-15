@@ -90,6 +90,8 @@ export function useLabQueueFilterBarProps(
       statusFilters: bar.statusFilters,
       onStatusFiltersChange: bar.setStatusFilters,
       statusFilterKey,
+      priorityGroupFilters: bar.priorityGroupFilters,
+      onPriorityGroupFiltersChange: bar.setPriorityGroupFilters,
     }),
     [bar, statusFilterKey],
   );

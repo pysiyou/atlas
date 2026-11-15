@@ -43,11 +43,12 @@ def serialize_patient_full(patient: Patient) -> dict:
 
 
 def _patient_search_filter(search_term: str):
-    """Collection-style name/id lookup plus phone substring match."""
+    """Collection-style name/id/MRN lookup plus phone substring match."""
     term = search_term.strip()
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
         Patient.phone.contains(term),
+        Patient.mrn.ilike(f"%{term}%"),
     ]
     patient_id = parse_display_id_from_search(term, "PAT")
     if patient_id is not None:
@@ -57,6 +58,10 @@ def _patient_search_filter(search_term: str):
         predicates.append(cast(Patient.id, String).ilike(f"%{compact}%"))
         if compact != term:
             predicates.append(Patient.phone.contains(compact))
+    mrn_from_search = parse_display_id_from_search(term, "MRN")
+    if mrn_from_search is not None:
+        predicates.append(Patient.id == mrn_from_search)
+        predicates.append(Patient.mrn.ilike(f"%{mrn_from_search}%"))
     return or_(*predicates)
 
 
@@ -198,7 +203,29 @@ class PatientService:
             self.db.commit()
         return serialize_patient_full(patient)
 
-    def create(self, patient_data: PatientCreate, user_id: int) -> dict:
+    def _find_duplicate_matches(self, patient_data: PatientCreate) -> list[Patient]:
+        """Exact name+DOB matches, plus same-phone matches, de-duplicated."""
+        name_dob = (
+            self.db.query(Patient)
+            .filter(
+                func.lower(Patient.fullName) == patient_data.fullName.strip().lower(),
+                Patient.dateOfBirth == patient_data.dateOfBirth,
+            )
+            .all()
+        )
+        phone = self.db.query(Patient).filter(Patient.phone == patient_data.phone.strip()).all()
+        seen: set[int] = set()
+        matches: list[Patient] = []
+        for row in name_dob + phone:
+            if row.id in seen:
+                continue
+            seen.add(row.id)
+            matches.append(row)
+        return matches
+
+    def create(
+        self, patient_data: PatientCreate, user_id: int, *, force_create: bool = False
+    ) -> dict:
         # Check workflow: requireEmergencyContact
         require_emergency = client_config.workflows.get("requireEmergencyContact", True)
         if require_emergency:
@@ -208,7 +235,18 @@ class PatientService:
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Emergency contact information is required (name and phone).",
                 )
-        
+
+        duplicates = self._find_duplicate_matches(patient_data)
+        if duplicates and not force_create:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "error_code": "DUPLICATE_PATIENT",
+                    "message": "Possible existing patient records match this identity.",
+                    "matches": [serialize_patient(row) for row in duplicates],
+                },
+            )
+
         medical_history_data = (
             patient_data.medicalHistory.model_dump()
             if patient_data.medicalHistory
@@ -232,7 +270,16 @@ class PatientService:
         )
         self.db.add(patient)
         self.db.flush()
-        self.emitter.patient_created(patient.id, user_id)
+        if not patient.mrn:
+            patient.mrn = f"MRN-{patient.id:08d}"
+        if force_create and duplicates:
+            self.emitter.patient_created_forced(
+                patient.id,
+                user_id,
+                metadata={"matched_ids": [row.id for row in duplicates]},
+            )
+        else:
+            self.emitter.patient_created(patient.id, user_id)
         self.db.commit()
         self.db.refresh(patient)
         return serialize_patient_full(patient)

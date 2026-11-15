@@ -19,7 +19,6 @@ LABORATORY_SUBKIND_PREFIXES: dict[str, str] = {
     "laboratory:result": "laboratory.result.",
     "laboratory:validation": "laboratory.validation.",
     "laboratory:escalation": "laboratory.escalation.",
-    "laboratory:quality": "laboratory.quality.",
     "laboratory:analyzer": "laboratory.analyzer.",
 }
 
@@ -59,7 +58,6 @@ ALL_KIND_IDS: frozenset[str] = frozenset(
         "laboratory:result",
         "laboratory:validation",
         "laboratory:escalation",
-        "laboratory:quality",
         "laboratory:analyzer",
     }
 )

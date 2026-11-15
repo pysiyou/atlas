@@ -25,6 +25,7 @@ class ErrorResponse(BaseModel):
     error_code: str
     message: str
     details: list[ErrorDetail] | None = None
+    matches: list[dict] | None = None
 
 
 class MessageResponse(BaseModel):

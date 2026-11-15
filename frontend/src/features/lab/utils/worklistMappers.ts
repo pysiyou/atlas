@@ -13,6 +13,11 @@ import type {
 
 /** Map a collection worklist API row to a queue card/modal row (no synthetic Order/Patient). */
 export function worklistItemToQueueRow(item: CollectionWorklistItem): CollectionQueueRow {
+  const extras = item as CollectionWorklistItem & {
+    accessionNumber?: string | null;
+    isAliquot?: boolean;
+    parentSampleId?: number | null;
+  };
   const isCollectedLike = item.status === 'collected' || item.status === 'rejected';
   const sample = {
     sampleId: item.sampleId,
@@ -29,6 +34,9 @@ export function worklistItemToQueueRow(item: CollectionWorklistItem): Collection
     originalSampleCollectedAt: item.originalSampleCollectedAt ?? undefined,
     recollectionReason: item.recollectionReason ?? undefined,
     recollectionAttempt: item.recollectionAttempt ?? 1,
+    accessionNumber: extras.accessionNumber ?? undefined,
+    isAliquot: extras.isAliquot ?? false,
+    parentSampleId: extras.parentSampleId ?? undefined,
     createdBy: '',
     updatedBy: '',
     createdAt: item.orderDate,

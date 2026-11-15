@@ -127,13 +127,28 @@ export function worklistServerFilters(options: {
   search?: string;
   dateRange: [Date, Date] | null;
   sampleTypeFilters: string[];
-}): { search?: string; dateFrom?: string; dateTo?: string; sampleType?: string } {
+  priority?: string[];
+  priorityGroup?: string[];
+  category?: string;
+}): {
+  search?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  sampleType?: string;
+  priority?: string;
+  priorityGroup?: string;
+  category?: string;
+} {
   const bounds = inclusiveDateRangeBounds(options.dateRange);
+  const groups = options.priorityGroup?.filter(item => item === 'stat' || item === 'routine') ?? [];
   return {
     search: options.search?.trim() || undefined,
     dateFrom: bounds ? toIsoDateParam(bounds.start) : undefined,
     dateTo: bounds ? toIsoDateParam(bounds.end) : undefined,
     sampleType: options.sampleTypeFilters.length ? options.sampleTypeFilters.join(',') : undefined,
+    priority: options.priority?.length ? options.priority.join(',') : undefined,
+    priorityGroup: groups.length === 1 ? groups[0] : undefined,
+    category: options.category?.trim() || undefined,
   };
 }
 

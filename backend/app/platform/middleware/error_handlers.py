@@ -68,12 +68,21 @@ async def http_exception_handler(request: Request, exc: HTTPException) -> JSONRe
         500: "INTERNAL_ERROR",
     }
     error_code = error_code_map.get(exc.status_code, "ERROR")
+    matches = None
+    message = exc.detail if isinstance(exc.detail, str) else str(exc.detail)
+    if isinstance(exc.detail, dict):
+        error_code = str(exc.detail.get("error_code") or error_code)
+        message = str(exc.detail.get("message") or message)
+        raw_matches = exc.detail.get("matches")
+        if isinstance(raw_matches, list):
+            matches = raw_matches
 
     return JSONResponse(
         status_code=exc.status_code,
         content=ErrorResponse(
             error_code=error_code,
-            message=exc.detail if isinstance(exc.detail, str) else str(exc.detail),
+            message=message,
+            matches=matches,
         ).model_dump(),
     )
 

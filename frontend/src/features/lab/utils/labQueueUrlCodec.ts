@@ -19,6 +19,7 @@ export const LAB_QUEUE_BAR_URL_KEYS = [
   'sampleType',
   'status',
   'priority',
+  'priorityGroup',
 ] as const;
 
 export type LabQueueBarUrlKey = (typeof LAB_QUEUE_BAR_URL_KEYS)[number];
@@ -29,6 +30,8 @@ export interface LabQueueBarFilters {
   sampleTypeFilters: string[];
   /** Status (collection/entry) or priority (validation) multi-select values. */
   statusFilters: string[];
+  /** STAT/Routine alias over urgent vs the rest. */
+  priorityGroupFilters: string[];
 }
 
 function parseIsoDateRange(dateFrom: string | null, dateTo: string | null): [Date, Date] | null {
@@ -69,12 +72,14 @@ export function decodeLabQueueBarFilters(
   const rawStatus = searchParams.get(statusKey);
   const statusFilters =
     rawStatus === null ? [...defaultStatusFilters] : parseCsvParam(rawStatus);
+  const priorityGroupFilters = parseCsvParam(searchParams.get('priorityGroup'));
 
   return {
     searchQuery,
     dateRange,
     sampleTypeFilters,
     statusFilters,
+    priorityGroupFilters,
   };
 }
 
@@ -111,6 +116,9 @@ export function writeLabQueueBarFilters(
   const statusKey = statusUrlKey(workflowType);
   if (filters.statusFilters.length > 0) {
     params.set(statusKey, filters.statusFilters.join(','));
+  }
+  if (filters.priorityGroupFilters.length > 0) {
+    params.set('priorityGroup', filters.priorityGroupFilters.join(','));
   }
 }
 

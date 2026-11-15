@@ -42,7 +42,7 @@ export const VALIDATION_REVIEW_WORKLIST_PROFILE: LabQueueSecondaryFilterProfile<
     },
   },
   sortByPriority: true,
-  applyStatusFilter: true,
+  applyStatusFilter: false,
 };
 
 export const VALIDATION_REVIEW_ESCALATION_PROFILE: LabQueueSecondaryFilterProfile<

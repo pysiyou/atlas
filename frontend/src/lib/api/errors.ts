@@ -47,6 +47,7 @@ export async function parseErrorResponse(response: Response): Promise<ApiError> 
   let message = response.statusText || 'Request failed';
   let code: string | undefined;
   let details: ApiErrorDetail[] | undefined;
+  let matches: unknown[] | undefined;
 
   try {
     const body = await response.json();
@@ -62,12 +63,15 @@ export async function parseErrorResponse(response: Response): Promise<ApiError> 
       if (Array.isArray(record.details)) {
         details = record.details as ApiErrorDetail[];
       }
+      if (Array.isArray(record.matches)) {
+        matches = record.matches;
+      }
     }
   } catch {
     // Use statusText
   }
 
-  return { message, code, status: response.status, details };
+  return { message, code, status: response.status, details, matches };
 }
 
 export async function parseSuccessResponse<T>(response: Response): Promise<T> {

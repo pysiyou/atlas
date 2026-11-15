@@ -82,33 +82,74 @@ export function LabRelatedSamplesPanel({
   );
 
   const others = related.filter(s => s.sampleId !== sample.sampleId);
-  if (others.length === 0) {
+  const aliquots = orderSamples.filter(
+    s => s.isAliquot && (s.parentSampleId === sample.sampleId || s.sampleId === sample.parentSampleId)
+  );
+  const aliquotOthers = aliquots.filter(s => s.sampleId !== sample.sampleId);
+
+  if (others.length === 0 && aliquotOthers.length === 0) {
     return null;
   }
 
   return (
-    <Panel preset="panel.compact.fullWidth" title={panels.shared.relatedSamples}>
-      <ul className={`space-y-space-2 ${text({ role: 'body' })}`}>
-        {others.map(s => (
-          <li
-            key={s.sampleId}
-            className="flex flex-wrap items-baseline justify-between gap-x-space-3 gap-y-space-1"
-          >
-            <div className="flex flex-wrap items-baseline gap-x-space-2">
-              <span className="font-medium">{displayId.sample(s.sampleId)}</span>
-              <span className={text({ role: 'body', intent: 'muted' })}>{formatStatusBadgeLabel(s.status)}</span>
-              {s.isRecollection ? <span className={text({ role: 'body', intent: 'muted' })}>Recollection</span> : null}
-            </div>
-            <button
-              type="button"
-              className={INLINE_LINK_BUTTON}
-              onClick={() => onOpenSample(s.sampleId)}
-            >
-              View
-            </button>
-          </li>
-        ))}
-      </ul>
-    </Panel>
+    <>
+      {others.length > 0 ? (
+        <Panel preset="panel.compact.fullWidth" title={panels.shared.relatedSamples}>
+          <ul className={`space-y-space-2 ${text({ role: 'body' })}`}>
+            {others.map(s => (
+              <li
+                key={s.sampleId}
+                className="flex flex-wrap items-baseline justify-between gap-x-space-3 gap-y-space-1"
+              >
+                <div className="flex flex-wrap items-baseline gap-x-space-2">
+                  <span className="font-medium">{displayId.sample(s.sampleId)}</span>
+                  {s.accessionNumber ? (
+                    <span className={text({ role: 'body', intent: 'muted' })}>{s.accessionNumber}</span>
+                  ) : null}
+                  <span className={text({ role: 'body', intent: 'muted' })}>{formatStatusBadgeLabel(s.status)}</span>
+                  {s.isRecollection ? <span className={text({ role: 'body', intent: 'muted' })}>Recollection</span> : null}
+                </div>
+                <button
+                  type="button"
+                  className={INLINE_LINK_BUTTON}
+                  onClick={() => onOpenSample(s.sampleId)}
+                >
+                  View
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      ) : null}
+      {aliquotOthers.length > 0 ? (
+        <Panel preset="panel.compact.fullWidth" title="Aliquots">
+          <ul className={`space-y-space-2 ${text({ role: 'body' })}`}>
+            {aliquotOthers.map(s => (
+              <li
+                key={s.sampleId}
+                className="flex flex-wrap items-baseline justify-between gap-x-space-3 gap-y-space-1"
+              >
+                <div className="flex flex-wrap items-baseline gap-x-space-2">
+                  <span className="font-medium">{displayId.sample(s.sampleId)}</span>
+                  {s.accessionNumber ? (
+                    <span className={text({ role: 'body', intent: 'muted' })}>{s.accessionNumber}</span>
+                  ) : null}
+                  <span className={text({ role: 'body', intent: 'muted' })}>
+                    Aliquot {s.aliquotIndex ?? ''}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className={INLINE_LINK_BUTTON}
+                  onClick={() => onOpenSample(s.sampleId)}
+                >
+                  View
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      ) : null}
+    </>
   );
 }
