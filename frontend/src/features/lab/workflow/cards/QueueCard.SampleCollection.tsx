@@ -8,8 +8,13 @@ import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';
-import type { ContainerType, TestSummary } from '@/types';
-import type { SampleCollectionQueueItem } from '@/types';
+import type {
+  ContainerType,
+  Sample,
+  SampleCollectionQueueItem,
+  SampleRequirement,
+  TestSummary,
+} from '@/types';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleCollectionPopover } from '../../collection/SampleCollectionPopover';
@@ -21,14 +26,31 @@ import { QueueCard, QueueCardMobile, QueueCardPanel, QueueCardTestList } from '.
 import {
   SampleCollectionCardLeftColumn,
   type SampleCollectionCardLeftColumnProps,
-  type SampleCollectionCardSharedData,
 } from '../shared/QueueCardLeftColumn';
 import { getSampleCollectionViewModel } from './queueCard.sampleCollection.viewModel';
 import { useLabCopy } from '@/strings';
 
-export type { SampleCollectionCardLeftColumnProps, SampleCollectionCardSharedData };
+export type { SampleCollectionCardLeftColumnProps };
 
 export { SampleCollectionCardLeftColumn };
+
+/** Shared view-model for desktop/mobile collection cards (not left-column UI). */
+export interface SampleCollectionCardSharedData {
+  display: SampleCollectionQueueItem;
+  sample: Sample;
+  requirement: SampleRequirement;
+  onCollect: (
+    display: SampleCollectionQueueItem,
+    volume: number,
+    notes?: string,
+    selectedColor?: string,
+    containerType?: ContainerType
+  ) => void;
+  patientName: string;
+  testNames: string[];
+  handleCardClick: (e?: React.MouseEvent) => void;
+  isCollecting: boolean;
+}
 
 export interface SampleCollectionCardProps {
   display: SampleCollectionQueueItem;

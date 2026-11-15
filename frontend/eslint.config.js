@@ -323,7 +323,6 @@ export default defineConfig([
     files: [
       'src/utils/presentation.ts',
       'src/features/reports/utils/reportPDFBody.ts',
-      'src/features/lab/workflow/shared/QueueCardLeftColumn.tsx',
       'src/features/lab/workflow/modals/DetailModal.ResultEntry.tsx',
       'src/features/lab/workflow/modals/DetailModal.SampleCollection.tsx',
       'src/features/lab/workflow/modals/DetailModal.TestDetail.tsx',

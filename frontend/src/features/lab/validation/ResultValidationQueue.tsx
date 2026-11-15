@@ -25,7 +25,7 @@ import { getValidationFilterConfig } from '../constants';
 import { useClientConfig } from '@/app/clientConfigContext';
 import { ErrorBoundary } from '@/feedback';
 import { useClientListChrome } from '@/hooks';
-import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
+import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
 import type { ValidationQueueRow } from '../types/queues';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
@@ -140,11 +140,8 @@ export function ResultValidationQueue() {
     <ErrorBoundary>
       <LabWorkflowQueueMultiSectionLayout
         aria-busy={dataLoading || waitingOnInitialLoad || undefined}
-        filterRow={
-          <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
-            <LabQueueFilters config={validationFilterConfig} {...filterBarProps} />
-          </LabQueueFilterRow>
-        }
+        filterRow={<LabQueueFilters config={validationFilterConfig} {...filterBarProps} />}
+        footer={<LabWorklistPaginationNotice pagination={pagination} onPageChange={goToPage} />}
       >
         {waitingOnInitialLoad ? (
           <QueueListPlaceholder />

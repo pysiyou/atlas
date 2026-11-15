@@ -14,7 +14,7 @@ import { worklistItemToEntryRow } from '../utils/worklistMappers';
 import type { EntryQueueRow } from '../types/queues';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
-import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
+import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { getEntryFilterConfig } from '../constants';
 import { useClientConfig } from '@/app/clientConfigContext';
 import { getEmptyCopy } from '@/strings';
@@ -137,11 +137,8 @@ export function ResultEntryQueue() {
         getItemKey={(row, idx) => `entry-${(row as EntryQueueRow).orderTestId}-${idx}`}
         emptyTitle={getEmptyCopy().pendingResults.title}
         emptyDescription={getEmptyCopy().pendingResults.description}
-        filterRow={
-          <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
-            <LabQueueFilters config={entryFilterConfig} {...filterBarProps} />
-          </LabQueueFilterRow>
-        }
+        filterRow={<LabQueueFilters config={entryFilterConfig} {...filterBarProps} />}
+        footer={<LabWorklistPaginationNotice pagination={pagination} onPageChange={goToPage} />}
       />
     </ErrorBoundary>
   );

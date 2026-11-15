@@ -5,7 +5,7 @@
 import { createContext, type ReactNode, useContext } from 'react';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from './LabWorkflowLeftColumn';
-import type { LabIdentityContext } from './LabIdentityRow';
+import { LabIdentityRow, type LabIdentityContext } from './LabIdentityRow';
 
 export type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 export { LabAuditLineView, LabAuditBlock } from './LabWorkflowHeader.parts';
@@ -70,7 +70,11 @@ export function LabModalHeader({
 
   return (
     <header className="min-w-0 w-full">
-      <LabWorkflowLeftColumn context={context} alerts={alerts} auditLines={auditLines} />
+      <LabWorkflowLeftColumn
+        identity={<LabIdentityRow context={context} compact className="min-w-0" />}
+        alerts={alerts}
+        auditLines={auditLines}
+      />
     </header>
   );
 }

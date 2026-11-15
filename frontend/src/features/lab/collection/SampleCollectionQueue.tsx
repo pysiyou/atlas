@@ -17,7 +17,7 @@ import { useSubmitSampleCollection } from './useSubmitSampleCollection';
 import { SampleCollectionCard } from '../workflow';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
-import { LabQueueFilterRow } from '../components/LabQueueFilterRow';
+import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { getCollectionFilterConfig } from '../constants';
 import { useClientConfig } from '@/app/clientConfigContext';
 import { worklistItemToQueueRow } from '../utils/worklistMappers';
@@ -107,11 +107,8 @@ export function SampleCollectionQueue() {
                 )
               : getEmptyCopy().pendingCollections.description
         }
-        filterRow={
-          <LabQueueFilterRow pagination={pagination} onPageChange={goToPage}>
-            <LabQueueFilters config={collectionFilterConfig} {...filterBarProps} />
-          </LabQueueFilterRow>
-        }
+        filterRow={<LabQueueFilters config={collectionFilterConfig} {...filterBarProps} />}
+        footer={<LabWorklistPaginationNotice pagination={pagination} onPageChange={goToPage} />}
       />
     </ErrorBoundary>
   );

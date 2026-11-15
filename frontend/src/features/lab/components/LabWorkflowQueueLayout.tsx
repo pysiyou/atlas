@@ -1,7 +1,7 @@
 /**
  * LabWorkflowQueueLayout - Shared layout for lab workflow pages
  *
- * Structure: filterRow (e.g. LabQueueFilters) then a virtualized list of cards.
+ * Structure: filterRow, virtualized cards, optional pinned footer (range caption).
  */
 
 import React, { type ReactNode, useRef } from 'react';
@@ -30,16 +30,19 @@ export function QueueListPlaceholder(): React.ReactElement {
 }
 
 /**
- * Multi-section queue tab (validation): shared filter row + scroll region.
+ * Multi-section queue tab (validation): shared filter row, scroll region, optional footer.
  * Single virtualized lists use {@link LabWorkflowQueueLayout} instead.
  */
 export function LabWorkflowQueueMultiSectionLayout({
   filterRow,
+  footer,
   children,
   scrollClassName = WORKSPACE.contentInset,
   'aria-busy': ariaBusy,
 }: {
   filterRow: ReactNode;
+  /** Pinned below the scroll region (e.g. worklist range caption). */
+  footer?: ReactNode;
   children: ReactNode;
   scrollClassName?: string;
   'aria-busy'?: boolean;
@@ -47,6 +50,7 @@ export function LabWorkflowQueueMultiSectionLayout({
   return (
     <LabWorkflowQueueScaffold
       filterRow={filterRow}
+      footer={footer}
       scrollClassName={scrollClassName}
       aria-busy={ariaBusy}
     >
@@ -58,12 +62,15 @@ export function LabWorkflowQueueMultiSectionLayout({
 /** Filter row + scroll region shared by workflow queues. */
 export function LabWorkflowQueueScaffold({
   filterRow,
+  footer,
   children,
   scrollClassName = WORKSPACE.contentInset,
   scrollRef,
   'aria-busy': ariaBusy,
 }: {
   filterRow: ReactNode;
+  /** Pinned below the scroll region (e.g. worklist range caption). */
+  footer?: ReactNode;
   children: ReactNode;
   scrollClassName?: string;
   scrollRef?: React.Ref<HTMLDivElement>;
@@ -75,6 +82,7 @@ export function LabWorkflowQueueScaffold({
       <div ref={scrollRef} className={`flex-1 min-h-0 overflow-y-auto ${scrollClassName}`}>
         {children}
       </div>
+      {footer ? <div className="shrink-0">{footer}</div> : null}
     </div>
   );
 }
@@ -92,6 +100,8 @@ interface LabWorkflowQueueLayoutProps<T> {
   emptyDescription: string;
   /** Filter row (e.g. LabQueueFilters). Parent filters items before passing here. */
   filterRow: ReactNode;
+  /** Pinned below the scroll region (e.g. worklist range caption). */
+  footer?: ReactNode;
   /** Parent-controlled initial load (one fill until items are ready). */
   loading?: boolean;
 }
@@ -103,6 +113,7 @@ export function LabWorkflowQueueLayout<T>({
   emptyTitle,
   emptyDescription,
   filterRow,
+  footer,
   loading = false,
 }: LabWorkflowQueueLayoutProps<T>): React.ReactElement {
   const hasItems = items.length > 0;
@@ -119,6 +130,7 @@ export function LabWorkflowQueueLayout<T>({
   return (
     <LabWorkflowQueueScaffold
       filterRow={filterRow}
+      footer={footer}
       scrollRef={parentRef}
       scrollClassName={
         loading || !hasItems

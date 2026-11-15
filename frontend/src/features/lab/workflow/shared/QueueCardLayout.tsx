@@ -10,7 +10,7 @@ import { RecordId } from '@/features/shared';
 import { LabHeaderCompactContext } from '../../components/LabWorkflowHeader';
 import type { LabAuditLine } from '../../constants/labWorkflowAuditLines';
 import { LabWorkflowLeftColumn } from '../../components/LabWorkflowLeftColumn';
-import type { LabIdentityContext } from '../../components/LabIdentityRow';
+import { LabIdentityRow, type LabIdentityContext } from '../../components/LabIdentityRow';
 import {
   text,
   WORKLIST_CARD_SURFACE,
@@ -51,7 +51,7 @@ export function QueueCardHeader({
     >
       {leftColumn ?? (
         <LabWorkflowLeftColumn
-          context={context!}
+          identity={<LabIdentityRow context={context!} compact className="min-w-0" />}
           alerts={alerts}
           auditLines={auditLines}
         />
