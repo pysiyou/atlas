@@ -7,7 +7,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { EmptyState } from '@/components/display';
 
 import type { IconKey } from '@/icons';
-import { PANEL_EMPTY_STATE, DENSE_EMPTY_STATE } from '@/copy';
+import { PANEL_EMPTY_STATE, DENSE_EMPTY_STATE } from '@/strings';
 import { DEFAULT_EMPTY_TITLE, DEFAULT_EMPTY_DESCRIPTION } from '@/utils/constants';
 import { cn } from '@/utils';
 import type { ColumnConfig, SortConfig, TableVariant } from './types';

@@ -1,20 +1,17 @@
+import type { OrderPaymentView } from '../types';
+import type { CardComponentProps } from '@/components/data-table';
+import { useInvalidatePayments } from '../api/payments';
+import { hasRecordedPayment, isFullyPaid } from '../utils/paymentStatus';
+import { PaymentButton } from './PaymentButton';
 import { Avatar } from '@/components/primitives';
 import { ListCard } from '@/components/surfaces';
-import { RecordId } from '@/features/shared';
-import { renderTableSecondaryRecordId } from '@/utils/PresentationRenders';
-import { OrderStatusBadge } from '@/features/orders';
-import { StatusValueBadge } from '@/features/shared';
-import type { CardComponentProps } from '@/components/data-table';
-import { getBillableTests, renderOrderTestsBlock } from '@/features/orders';
 import { useTestNameLookup } from '@/features/catalog';
-import { formatCurrency, formatDateTime } from '@/utils';
-import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/TableColumnRenders';
-import type { OrderPaymentView } from '../types';
-import { PaymentButton } from './PaymentButton';
-import { hasRecordedPayment, isFullyPaid } from '../utils/paymentStatus';
-import { useInvalidatePayments } from '../api/payments';
+import { getBillableTests, OrderStatusBadge, renderOrderTestsBlock } from '@/features/orders';
+import { RecordId, StatusValueBadge } from '@/features/shared';
 import { INTERACTIVE, PRICE_DISPLAY } from '@/theme/recipes';
-
+import { formatCurrency, formatDateTime } from '@/utils';
+import { renderTableSecondaryRecordId } from '@/utils/PresentationRenders';
+import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/TableColumnRenders';
 
 /**
  * Mobile card for payments list — aligned with PaymentTable columns (amount, status, date, tests summary).

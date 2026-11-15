@@ -8,7 +8,7 @@ import {
   type FeedbackId,
   type FeedbackVariant,
 } from '@/types/generated/feedback';
-import { isApiError } from '@/lib/api/errors';
+import { isApiError } from '@/lib/api';
 import { getErrorMessage } from '@/utils/errors';
 import { applyFeedbackTerminology, resolveFeedbackTitle } from './terminology';
 import { showToast } from './toast';

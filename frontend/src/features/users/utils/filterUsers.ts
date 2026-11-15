@@ -1,7 +1,7 @@
-import type { FilterValues } from '@/components/filters/types';
-import type { UserRole } from '@/types';
 import type { UserAdminRecord } from '../api/usersAdmin';
 import type { UserAccountStatusFilter } from '../constants/userFilterConfig';
+import type { FilterValues } from '@/components/filters/types';
+import type { UserRole } from '@/types';
 import { isUserActive } from './userAccountGuards';
 
 export const usersListInitialFilters: FilterValues = {

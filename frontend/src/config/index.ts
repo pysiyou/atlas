@@ -2,13 +2,9 @@
  * White-label client-config runtime only (`config/client-config.json` via API).
  *
  * ## Import rules
- * - `@/config` — load, terminology (`t`), feature/workflow flags, branding views.
- * - `@/icons`, `@/strings` (UI copy from `config/ui-strings.json`; `@/copy` re-exports), `@/app/routes`, `@/app/navigation`, `@/theme/panelPresets` — product code.
- * - React: `app/clientConfigContext.ts`, `app/ClientConfigProvider.tsx`.
- *
- * ## Repo files (`config/` — each pair is `*.schema.json` + `*.json`)
- * - Client: `client-config.schema.json`, `client-config.json` → `types.ts` via `npm run codegen:client-config`.
- * - UI strings: `ui-strings.schema.json`, `ui-strings.json` (see `@/strings`).
+ * - `@/config` — client-config load, terminology, flags, branding views.
+ * - `@/strings` — UI copy from `config/ui-strings.json`.
+ * - `@/icons`, `@/app/routes`, `@/app/navigation`, `@/theme/panelPresets` — other product modules.
  */
 
 export type { ClientConfig } from './types';

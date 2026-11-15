@@ -1,13 +1,13 @@
-import { motion } from 'framer-motion';
-import { CHROME } from '@/theme/recipes';
-import { cn } from '@/utils';
+import type { SidebarNavItem, SidebarSettingsLink, SidebarSettingsTrigger } from './useSidebarMenu';
 import type { AuthUser } from '@/types';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNav } from './SidebarNav';
-import type { SidebarNavItem, SidebarSettingsLink, SidebarSettingsTrigger } from './useSidebarMenu';
-import { ThemeSwitch } from '@/components/inputs';
 import { SidebarProfile } from './SidebarProfile';
 import { SIDEBAR_MOTION } from '@/app/navigation';
+import { ThemeSwitch } from '@/components/inputs';
+import { CHROME } from '@/theme/recipes';
+import { cn } from '@/utils';
+import { motion } from 'framer-motion';
 
 export interface SidebarContentProps {
   isCollapsed: boolean;

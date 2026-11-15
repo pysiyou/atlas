@@ -1,7 +1,7 @@
-import { cva, type VariantProps } from 'class-variance-authority';
-import { BUTTON_TYPE } from '../type';
 import { CONTROL } from '../control';
 import { RADIUS } from '../spacing';
+import { BUTTON_TYPE } from '../type';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 const buttonChrome =
   `inline-flex shrink-0 items-center justify-center font-normal whitespace-nowrap overflow-hidden cursor-pointer transition-colors duration-200 ${CONTROL.focusVisible} disabled:opacity-50 disabled:cursor-not-allowed`;

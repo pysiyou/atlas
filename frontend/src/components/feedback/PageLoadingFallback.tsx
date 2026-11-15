@@ -14,7 +14,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { TableLoadingPlaceholder } from '@/components/data-table/TableLoadingPlaceholder';
 import { PANEL, WORKSPACE } from '@/theme/recipes';
 import { ROUTES } from '@/app/routes';
-import { getModuleListTitles } from '@/copy';
+import { getModuleListTitles } from '@/strings';
 
 function pathWithoutTrailingSlash(pathname: string): string {
   if (pathname.length > 1 && pathname.endsWith('/')) {

@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
-import { Avatar, RemovableTag, TagChip } from '@/components/primitives';
-import { getEmptyCopy } from '@/copy';
-
-import { cn, formatPhoneNumber } from '@/utils';
-import { text, FG } from '@/theme/recipes';
 import type { Patient } from '@/types';
-import { IconKeys } from '@/icons';
 import { SearchResultsPopoverShell } from '@/components/overlays/SearchResultsPopoverShell';
+import { Avatar, RemovableTag, TagChip } from '@/components/primitives';
+import { IconKeys } from '@/icons';
+import { getEmptyCopy } from '@/strings';
+import { FG, text } from '@/theme/recipes';
+import { cn, formatPhoneNumber } from '@/utils';
+import React, { useRef, useState } from 'react';
 import {
+
   SearchTagInputChrome,
   SELECTED_SEARCH_CHIP_CLASS,
 } from '@/components/overlays/SearchTagInputChrome';

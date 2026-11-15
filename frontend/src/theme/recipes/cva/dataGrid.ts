@@ -1,5 +1,5 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { text } from './text';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 export const dataGrid = cva('w-full min-w-[20rem] table-fixed border-collapse text-left', {
   variants: {

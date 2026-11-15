@@ -1,6 +1,6 @@
-import { type ElementType, type HTMLAttributes } from 'react';
 import { SPACING } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
+import { type ElementType, type HTMLAttributes } from 'react';
 
 const GAP_CLASS: Record<string, string> = {
   hairline: SPACING.gapHairline,

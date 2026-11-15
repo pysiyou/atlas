@@ -1,15 +1,15 @@
-import React from 'react';
-import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { actionButtonPreset, Avatar, IconButton } from '@/components/primitives';
+import type { CardComponentProps } from '@/components/data-table';
+import type { Patient } from '@/types';
+import { formatPatientSexAgeLine } from '../utils/patientFormatters';
+import { PatientGenderBadge } from './PatientGenderBadge';
 import { CardFooter, MetadataGrid, MetadataItem, Stack } from '@/components/layout';
+import { actionButtonPreset, Avatar, IconButton } from '@/components/primitives';
 import { ListCard } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
-import { PatientGenderBadge } from './PatientGenderBadge';
-import type { CardComponentProps } from '@/components/data-table';
+import { ModalType, useModal } from '@/lib/context/ModalContext';
+import { getModuleListTitles } from '@/strings';
 import { formatPhoneNumber } from '@/utils';
-import { formatPatientSexAgeLine } from '../utils/patientFormatters';
-import type { Patient } from '@/types';
-import { getModuleListTitles } from '@/copy';
+import React from 'react';
 
 /**
  * PatientCard Component

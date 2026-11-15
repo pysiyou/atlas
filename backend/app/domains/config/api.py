@@ -6,11 +6,10 @@ Exposes white-label configuration to frontend.
 import json
 from typing import Any
 
+from app.platform.client_config import CONFIG_FILE, client_config
+from app.platform.client_config_models import ClientConfigModel
 from fastapi import APIRouter
 from pydantic import BaseModel, ValidationError
-
-from app.platform.client_config import client_config, CONFIG_FILE
-from app.platform.client_config_models import ClientConfigModel
 
 router = APIRouter()
 

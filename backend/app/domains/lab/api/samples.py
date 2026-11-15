@@ -1,14 +1,14 @@
 """Lab sample routes."""
 
-from app.domains.lab.models.sample import Sample
-from app.domains.lab.monitor.worklist_service import LabWorklistService
-from app.domains.lab.schemas.sample import SampleCollectRequest, SampleResponse
-from app.domains.lab.schemas.worklists import CollectionWorklistItem
 from app.domains.lab.deps import (
     get_lab_operations_service,
     get_lab_worklist_service,
     get_specimen_query_service,
 )
+from app.domains.lab.models.sample import Sample
+from app.domains.lab.monitor.worklist_service import LabWorklistService
+from app.domains.lab.schemas.sample import SampleCollectRequest, SampleResponse
+from app.domains.lab.schemas.worklists import CollectionWorklistItem
 from app.domains.lab.specimen import SpecimenQueryService
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User

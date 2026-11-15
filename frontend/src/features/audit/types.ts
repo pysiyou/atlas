@@ -2,7 +2,7 @@
  * Event log view models — aligned with backend AuditEventResponse (camelCase).
  */
 
-import type { InlineHighlightProps } from '@/components/primitives/InlineHighlight';
+import type { InlineHighlightProps } from '@/components/primitives';
 import { tCap, tLower } from '@/config';
 import type { UserRole } from '@/types';
 import type {

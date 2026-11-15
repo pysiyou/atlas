@@ -1,15 +1,16 @@
+import type { AuthUser, UserRole } from '@/types';
+import { authAPI, bindAuthClientHandlers } from '@/lib/api';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AuthUser, UserRole } from '@/types';
-import { authAPI, bindAuthClientHandlers } from '@/lib/api/auth';
 import {
+
   clearSessionExpired,
   feedbackTitle,
   markSessionExpired,
   notify,
 } from '@/feedback';
-import { getQueryClient } from '@/lib/query/client';
-import { clearPersistedQueryCache } from '@/lib/query/persistor';
+import { getQueryClient } from '@/lib/query';
+import { clearPersistedQueryCache } from '@/lib/query';
 import { clearAllLabDrafts } from '@/features/lab/state/labDraftStore';
 
 interface AuthState {

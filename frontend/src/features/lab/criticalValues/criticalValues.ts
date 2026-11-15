@@ -2,12 +2,12 @@
  * Critical values API, React Query hooks, and record mapping.
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/lib/api/client';
-import { operationResponseSchema, parseApiResponse } from '@/lib/api/schemas/responses.schema';
+import { apiClient } from '@/lib/api';
+import { operationResponseSchema, parseApiResponse } from '@/lib/api';
 import type { ApiCriticalValueResponse } from '@/lib/api/types';
 import { useAuthStore } from '@/app/authStore';
 import { queryKeys } from '@/lib/query';
-import { invalidateCriticalValueQueries } from '@/lib/query/invalidate';
+import { invalidateCriticalValueQueries } from '@/lib/query';
 import type { LabModalWorkItem } from '../types/labQueueChrome';
 import { LAB_PATHS } from '../constants/labConstants';
 

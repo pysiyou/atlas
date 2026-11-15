@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import type { FilterControl as FilterControlConfig } from './types';
+import type { ReactNode } from 'react';
 import { FilterControl, type FilterControlSurface } from './FilterControl';
 
 export function renderFilterControl(

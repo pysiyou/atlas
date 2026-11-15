@@ -1,8 +1,8 @@
 /**
  * Samples API service — pure HTTP, no React.
  */
-import { apiClient } from '@/lib/api/client';
-import { WORKFLOW_QUERY_LIMIT } from '@/lib/api/constants';
+import { apiClient } from '@/lib/api';
+import { WORKFLOW_QUERY_LIMIT } from '@/lib/api';
 import type { Sample, SampleStatus, ContainerType, ContainerTopColor } from '@/types';
 import {
   CONTAINER_TOP_COLOR_VALUES,
@@ -12,7 +12,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useEntityLookup, parseNumericKey } from '@/hooks';
 import { queryKeys, cacheConfig, getQueryClient, useAuthQueryEnabled } from '@/lib/query';
-import { invalidateCollectionQueries } from '@/lib/query/invalidate';
+import { invalidateCollectionQueries } from '@/lib/query';
 import { LAB_PATHS } from '../constants/labConstants';
 import type { CollectionWorklistItem } from './worklists';
 

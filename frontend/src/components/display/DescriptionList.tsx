@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Badge, type BadgeVariant } from '@/components/primitives';
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import type { IconKey } from '@/icons';
 import { Text } from '@/components/layout/Text';
 import { SPACING, text } from '@/theme/recipes';

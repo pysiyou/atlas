@@ -1,7 +1,7 @@
 /**
  * Audit event log read API + row normalization.
  */
-import { apiClient } from '@/lib/api/client';
+import { apiClient } from '@/lib/api';
 import type { EventLogActorSnapshot, EventLogChanges, EventLogRecord } from './types';
 
 export interface AuditEventQueryParams {

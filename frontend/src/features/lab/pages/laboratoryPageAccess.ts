@@ -1,5 +1,5 @@
-import type { UserRole } from '@/types';
 import type { LabTabId } from '../constants/labConstants';
+import type { UserRole } from '@/types';
 
 const LAB_TECH_ROLES: UserRole[] = ['administrator', 'lab-technician', 'lab-technician-plus'];
 const COLLECTION_ROLES: UserRole[] = [

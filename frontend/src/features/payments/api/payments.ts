@@ -1,21 +1,21 @@
 /**
  * Payment API service — pure HTTP, no React.
  */
-import { apiClient } from '@/lib/api/client';
-import { WORKFLOW_QUERY_LIMIT } from '@/lib/api/constants';
-import { paymentResponseSchema, parseApiResponse } from '@/lib/api/schemas/responses.schema';
+import { apiClient } from '@/lib/api';
+import { WORKFLOW_QUERY_LIMIT } from '@/lib/api';
+import { paymentResponseSchema, parseApiResponse } from '@/lib/api';
 import type { ApiPaymentResponse } from '@/lib/api/types';
 import type { Payment, PaymentMethod } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import {
   invalidateOrderQueries,
   useInvalidateQueryKey,
   invalidatePaymentDetailQueries,
   patchOrderSummaryInPaginatedCaches,
-} from '@/lib/query/invalidate';
+} from '@/lib/query';
 import { usePaginatedOrders, type OrdersFilters } from '@/features/orders';
 import { buildOrderPaymentViewsFromOrders } from '../utils/orderPaymentViews';
 

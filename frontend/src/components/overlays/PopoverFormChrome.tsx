@@ -7,7 +7,7 @@ import React from 'react';
 import type { FC, ReactNode } from 'react';
 import { FooterInfo } from '@/components/display/FooterInfo';
 import { actionButtonPreset, Button } from '@/components/primitives';
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import { DialogHeader, DialogFooter } from './DialogChrome';
 import { IconKeys } from '@/icons';
 import { cn } from '@/utils';

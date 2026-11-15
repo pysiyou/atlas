@@ -1,6 +1,6 @@
 /**
  * App-layer error message extraction and classification (`getErrorMessage`, login errors).
- * HTTP/API error parsing and `ApiError` guards: `@/lib/api/errors`.
+ * HTTP/API error parsing and `ApiError` guards: `@/lib/api`.
  */
 
 import type { FeedbackId } from '@/types/generated/feedback';

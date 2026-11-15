@@ -1,7 +1,7 @@
 /**
  * Lab worklist API service — server-paginated queues.
  */
-import { apiClient } from '@/lib/api/client';
+import { apiClient } from '@/lib/api';
 import type {
   CollectionWorklistItem,
   DashboardWorklistItem,

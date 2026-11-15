@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/primitives';
-import { Popover } from '@/components/overlays';
-import { cn, displayId } from '@/utils';
-import { text, inputBase } from '@/theme/recipes';
-import { PopoverFormChrome, RadioCard } from '@/components/overlays';
+import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types';
 import type { FeedbackId } from '@/types/generated/feedback';
-import type { CriticalReadBackPayload } from '@/types';
-import type { EscalationResolutionAction } from '@/types';
 import { RETEST_PATH_RADIO_COPY } from '../constants/qualityIssuePopoverCopy';
 import { ResolutionPopover } from './EscalationResolutionPopover.Chrome';
+import { Popover, PopoverFormChrome, RadioCard } from '@/components/overlays';
+import { Button } from '@/components/primitives';
+import { inputBase, text } from '@/theme/recipes';
+import { cn, displayId } from '@/utils';
+import { useEffect, useState } from 'react';
 
 export { ResolutionPopover } from './EscalationResolutionPopover.Chrome';
 

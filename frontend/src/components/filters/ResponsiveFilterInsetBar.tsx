@@ -1,11 +1,11 @@
-import { useState, type ReactNode } from 'react';
-import { actionButtonPreset, Badge, Button } from '@/components/primitives';
-import { Modal, ModalPageShell } from '@/components/overlays';
+import type { IconKey } from '@/icons';
 import { FilterModalFooter } from '@/components/filters/FilterModalFooter';
+import { Modal, ModalPageShell } from '@/components/overlays';
+import { actionButtonPreset, Badge, Button } from '@/components/primitives';
+import { isBreakpointAtMost, useBreakpoint } from '@/hooks';
 import { FILTER } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
-import type { IconKey } from '@/icons';
+import { type ReactNode, useState } from 'react';
 
 export interface ResponsiveFilterInsetBarProps {
   activeFilterCount: number;

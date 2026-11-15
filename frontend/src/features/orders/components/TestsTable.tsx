@@ -6,7 +6,7 @@
 import { useCallback, useMemo } from 'react';
 import { DataTable } from '@/components/data-table';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
+import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/strings';
 
 import { useTestCatalog } from '@/features/catalog';
 import { ModalType, useModal } from '@/lib/context/ModalContext';

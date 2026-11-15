@@ -1,9 +1,9 @@
-import { getBrandingPresentation } from '@/config';
-import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
-import { IconKeys } from '@/icons';
-import { text, CHROME, RADIUS } from '@/theme/recipes';
-import { cn } from '@/utils';
 import { BrandLogo } from '@/components/branding/BrandLogo';
+import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
+import { getBrandingPresentation } from '@/config';
+import { IconKeys } from '@/icons';
+import { CHROME, RADIUS, text } from '@/theme/recipes';
+import { cn } from '@/utils';
 
 export interface SidebarHeaderProps {
   isCollapsed: boolean;

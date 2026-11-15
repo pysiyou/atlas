@@ -2,7 +2,7 @@
  * Lab monitor table — union of tests updated today (UTC) and still-running pipeline tests.
  */
 import { useCallback, useMemo } from 'react';
-import { getEmptyCopy } from '@/copy';
+import { getEmptyCopy } from '@/strings';
 import { DataTable } from '@/components/data-table';
 import { Panel } from '@/components/surfaces/Panel';
 import { useDashboardWorklistToday } from '../api/worklists';

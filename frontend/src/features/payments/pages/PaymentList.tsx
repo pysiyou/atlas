@@ -13,7 +13,7 @@ import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
 import { useTestNameLookup } from '@/features/catalog';
 import { usePaginatedPaymentOrders } from '../api/payments';
-import { DEFAULT_LIST_PAGE_SIZE, LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE, LIST_PAGE_SIZE_OPTIONS } from '@/lib/api';
 import { useServerListChrome } from '@/hooks';
 import { dateSearchServerParams } from '@/utils';
 import type { PaymentStatus } from '@/types';

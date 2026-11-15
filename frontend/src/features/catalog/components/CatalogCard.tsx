@@ -1,12 +1,10 @@
-import { ListCard } from '@/components/surfaces';
-import { RecordId } from '@/features/shared';
-import { StatusValueBadge } from '@/features/shared';
 import type { CardComponentProps } from '@/components/data-table';
-import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import type { TestSummary } from '@/types';
+import { ListCard } from '@/components/surfaces';
+import { RecordId, StatusValueBadge } from '@/features/shared';
+import { BADGE, PRICE_DISPLAY, text } from '@/theme/recipes';
+import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatSynonymsPreview } from '@/utils/presentation';
-import { text, BADGE, PRICE_DISPLAY } from '@/theme/recipes';
-
 
 /**
  * CatalogCard Component

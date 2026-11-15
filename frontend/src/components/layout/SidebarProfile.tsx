@@ -1,11 +1,10 @@
-import { Avatar } from '@/components/primitives/Avatar';
-import { Icon } from '@/components/primitives/Icon';
+import type { AuthUser } from '@/types';
 import { Popover, type PopoverPlacement } from '@/components/overlays/Popover';
+import { Avatar, Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
+import { CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, text, TONE } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { formatStatus } from '@/utils/string';
-import type { AuthUser } from '@/types';
-import { text, CHROME, CONTROL, MENU_ITEM_TYPE, RADIUS, TONE } from '@/theme/recipes';
 
 export interface SidebarProfileProps {
   currentUser: AuthUser;

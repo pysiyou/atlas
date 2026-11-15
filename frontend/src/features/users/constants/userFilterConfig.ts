@@ -3,7 +3,7 @@
  */
 import type { FilterConfig } from '@/components/filters/types';
 import { IconKeys } from '@/icons';
-import { getSharedFilterPlaceholders } from '@/copy';
+import { getSharedFilterPlaceholders } from '@/strings';
 
 const SHARED_FILTER_PLACEHOLDERS = getSharedFilterPlaceholders();
 import { USER_ROLE_CONFIG, USER_ROLE_VALUES, type UserRole } from '@/types';

@@ -3,7 +3,7 @@
  * Used by Badge and feature formatters — not primitive styling.
  */
 
-import type { BadgeColor } from '@/components/primitives/badgeTypes';
+import type { BadgeColor } from '@/components/primitives';
 
 export const ORDER_STATUS_BADGE_COLORS: Record<string, BadgeColor> = {
   ordered: 'info',

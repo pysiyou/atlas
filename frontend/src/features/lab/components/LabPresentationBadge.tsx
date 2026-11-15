@@ -3,7 +3,7 @@
  */
 
 import { BadgeStack, type BadgeStackProps } from '@/components/display/BadgeStack';
-import type { BadgeColor } from '@/components/primitives/badgeTypes';
+import type { BadgeColor } from '@/components/primitives';
 import {
   PRESENTATION_BADGE_VARIANTS,
   PRESENTATION_DISPLAY_LABELS,

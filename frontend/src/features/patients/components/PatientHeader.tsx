@@ -10,7 +10,7 @@ import type { Patient } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPopover } from './AffiliationPopover';
 import { IconKeys } from '@/icons';
-import { getModuleListTitles } from '@/copy';
+import { getModuleListTitles } from '@/strings';
 
 export interface PatientHeaderProps {
   patient: Patient;

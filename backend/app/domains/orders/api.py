@@ -2,6 +2,7 @@
 from datetime import date
 from typing import Literal
 
+from app.domains.orders.models import Order
 from app.domains.orders.schemas import (
     OrderCreate,
     OrderDetailResponse,
@@ -11,7 +12,6 @@ from app.domains.orders.schemas import (
     OrderSummaryResponse,
     OrderUpdate,
 )
-from app.domains.orders.models import Order
 from app.domains.orders.service import OrderService
 from app.domains.users.models import User
 from app.platform.database import get_db
@@ -149,6 +149,7 @@ def approve_order(
     Only needed when requireDoctorApproval is enabled in client config.
     """
     from datetime import UTC, datetime
+
     from app.platform.client_config import client_config
     
     require_approval = client_config.workflows.get("requireDoctorApproval", False)

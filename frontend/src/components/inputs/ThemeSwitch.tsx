@@ -1,7 +1,7 @@
-import { Icon, IconKeys } from '@/components/primitives';
-import { useActiveThemeMode, setThemeMode } from '@/theme';
-import type { ThemeMode } from '@/theme';
 import type { IconKey } from '@/icons';
+import type { ThemeMode } from '@/theme';
+import { Icon, IconKeys } from '@/components/primitives';
+import { setThemeMode, useActiveThemeMode } from '@/theme';
 import { CHROME, CONTROL, RADIUS, THEME_SWITCH_TYPE } from '@/theme/recipes';
 import { cn } from '@/utils';
 

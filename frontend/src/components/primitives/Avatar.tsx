@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import { AVATAR_TYPE, RADIUS, text } from '@/theme/recipes';
 import { cn, getInitials } from '@/utils';
+import React, { useState } from 'react';
 
 export interface AvatarProps {
   primaryText: string;

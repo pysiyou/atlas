@@ -14,18 +14,6 @@ export const typeUtilityRestrictedSyntax = [
     message:
       'Use <Text role="…" /> or text({ role, intent }) from @/theme/recipes, not raw type-* utilities.',
   },
-  {
-    selector: 'MemberExpression[object.name="DETAIL_TYPE"]',
-    message: 'DETAIL_TYPE was removed — use text({ role }) or <Text role="…" />.',
-  },
-  {
-    selector: 'MemberExpression[object.name="WORKLIST_CARD_TYPE"]',
-    message: 'WORKLIST_CARD_TYPE was removed — use text({ role }) or <Text role="…" />.',
-  },
-  {
-    selector: 'MemberExpression[object.name="TYPE"]',
-    message: 'TYPE was removed — use text({ role, intent }) or <Text role="…" />.',
-  },
 ]
 
 export const typeScaleRestrictedSyntax = [

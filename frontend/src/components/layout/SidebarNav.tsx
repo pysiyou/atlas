@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { SidebarNavIcon } from './SidebarNavIcon';
+import { SidebarSettingsMenu } from './SidebarSettingsMenu';
 import { CHROME } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { SidebarSettingsMenu } from './SidebarSettingsMenu';
-import { SidebarNavIcon } from './SidebarNavIcon';
+import { NavLink } from 'react-router-dom';
 import type {
+
   SidebarNavItem,
   SidebarSettingsLink,
   SidebarSettingsTrigger,

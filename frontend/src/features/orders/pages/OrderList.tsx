@@ -12,7 +12,7 @@ import { Button } from '@/components/primitives';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
 import { OrderFilters } from '../components/OrderFilters';
 import { createOrderTableConfig } from '../config/OrderTable.config';
-import { DEFAULT_LIST_PAGE_SIZE, LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE, LIST_PAGE_SIZE_OPTIONS } from '@/lib/api';
 import { useServerListChrome } from '@/hooks';
 import { dateSearchServerParams } from '@/utils';
 import { usePageFilters } from '@/hooks';

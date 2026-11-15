@@ -1,7 +1,7 @@
 /**
  * Admin users API — full UserResponse list and create/update (administrator only).
  */
-import { apiClient } from '@/lib/api/client';
+import { apiClient } from '@/lib/api';
 import type { components } from '@/lib/api/types';
 import { queryKeys } from '@/lib/query';
 import { useAuthStore } from '@/app/authStore';

@@ -1,8 +1,8 @@
-import React from 'react';
-import { EMPTY } from '@/theme/recipes';
-import { Icon } from '@/components/primitives/Icon';
 import type { IconKey } from '@/icons';
+import { Icon } from '@/components/primitives';
+import { EMPTY } from '@/theme/recipes';
 import { cn } from '@/utils';
+import React from 'react';
 
 /**
  * Unified empty UI for tables, panels, sections, and feeds.

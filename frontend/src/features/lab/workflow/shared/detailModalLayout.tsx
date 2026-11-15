@@ -11,7 +11,7 @@ import { DescriptionList, FooterInfo, ModalContextSubtitle } from '@/components/
 
 import { IconKeys } from '@/icons';
 import type { DescriptionListItemConfig } from '@/components/display';
-import { useUserLookup } from '@/lib/api/users';
+import { useUserLookup } from '@/lib/api';
 import {
   LabHeaderCompactContext,
   LabModalHeader,

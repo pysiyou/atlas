@@ -1,7 +1,7 @@
 /** Debounce, server list pagination state, entity lookup. */
 
 import { useCallback, useEffect, useMemo, useState, type SetStateAction } from 'react';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 
 export function useDebouncedValue<T>(value: T, delayMs: number): T {
   const [debounced, setDebounced] = useState(value);

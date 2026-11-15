@@ -13,7 +13,7 @@ import { ListView } from '@/components/surfaces';
 import { Button } from '@/components/primitives';
 import { PatientFilters } from '../components/PatientFilters';
 import { createPatientTableConfig } from '../config/PatientTable.config';
-import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
+import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api';
 import { useServerListChrome } from '@/hooks';
 import { AGE_RANGE_MIN, AGE_RANGE_MAX } from '../constants';
 import type { PatientContext, Gender } from '@/types';

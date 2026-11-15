@@ -4,7 +4,7 @@
 
 import { Link } from 'react-router-dom';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
+import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/strings';
 
 import { RecordId } from '@/features/shared';
 import { Panel } from '@/components/surfaces';

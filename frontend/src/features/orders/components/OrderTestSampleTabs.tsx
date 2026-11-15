@@ -5,7 +5,7 @@
 
 import { useMemo, useState } from 'react';
 import { Panel } from '@/components/surfaces';
-import { useUserLookup } from '@/lib/api/users';
+import { useUserLookup } from '@/lib/api';
 import { OrderTestDescriptionItemGrid } from '../utils/OrderTestDescriptionColumns';
 import { splitDescriptionItemsIntoTwoColumns } from '../utils/orderTestDescriptionLayout';
 import type { Sample, Test } from '@/types';

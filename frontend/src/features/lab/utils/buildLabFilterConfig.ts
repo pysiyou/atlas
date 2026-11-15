@@ -3,7 +3,7 @@
  */
 
 import type { FilterConfig, FilterControlConfig } from '@/components/filters';
-import { getSharedFilterPlaceholders } from '@/copy';
+import { getSharedFilterPlaceholders } from '@/strings';
 import { tCap } from '@/config';
 import { IconKeys } from '@/icons';
 import { LAB_CONFIG } from '../constants';

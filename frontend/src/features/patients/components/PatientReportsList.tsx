@@ -5,7 +5,7 @@
 
 import { actionButtonPreset, Icon, IconButton } from '@/components/primitives';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/copy';
+import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/strings';
 
 import { RecordId } from '@/features/shared';
 import { formatDateTime } from '@/utils';

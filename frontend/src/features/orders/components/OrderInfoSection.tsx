@@ -15,7 +15,7 @@ import {
   getOrderStatusIcon,
   IconKeys,
 } from '@/icons';
-import { useUserLookup } from '@/lib/api/users';
+import { useUserLookup } from '@/lib/api';
 import { useTestNameLookup } from '@/features/catalog';
 import { getBillableTests } from '../utils/orderCalculator';
 import { renderOrderTestsBlock } from '@/features/shared/EntityPresentation';

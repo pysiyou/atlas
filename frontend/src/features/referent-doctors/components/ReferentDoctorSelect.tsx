@@ -1,11 +1,11 @@
+import { Input } from '@/components/inputs';
+import { Icon, RemovableTag, TagChip } from '@/components/primitives';
+import { getEmptyCopy } from '@/strings';
+import { cn, formatPhoneNumber } from '@/utils';
 import { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
-import { Icon, RemovableTag, TagChip } from '@/components/primitives';
-import { Input } from '@/components/inputs';
-import { getEmptyCopy } from '@/copy';
-
-import { cn, formatPhoneNumber } from '@/utils';
 import {
+
   text,
   inputContainerBase,
   inputContainerError,

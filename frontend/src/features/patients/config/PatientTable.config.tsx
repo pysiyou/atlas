@@ -1,7 +1,8 @@
+import type { TableViewConfig } from '@/components/data-table';
 import type { NavigateFunction } from 'react-router-dom';
 import { PatientGenderBadge } from '../components/PatientGenderBadge';
-import type { TableViewConfig } from '@/components/data-table';
 import {
+
   buildViews,
   createBadgeColumn,
   createDateTimeColumn,
@@ -18,7 +19,7 @@ import type { PatientContext } from '@/types';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { PatientCard } from '../components/PatientCard';
 import { TABLE_TYPE } from '@/theme/recipes';
-import { getPatientTableColumnHeaders } from '@/copy';
+import { getPatientTableColumnHeaders } from '@/strings';
 
 const PATIENT_VIEWS = {
   full: ['id', 'fullName', 'contact', 'gender', 'orders', 'registrationDate', 'affiliation'],

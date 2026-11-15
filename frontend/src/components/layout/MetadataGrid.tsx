@@ -1,8 +1,8 @@
-import { type ReactNode } from 'react';
-import { cn } from '@/utils/cn';
 import { ListMarker } from './ListMarker';
 import { Stack } from './Stack';
 import { Text } from './Text';
+import { cn } from '@/utils/cn';
+import { type ReactNode } from 'react';
 
 export interface MetadataItemProps {
   children: ReactNode;

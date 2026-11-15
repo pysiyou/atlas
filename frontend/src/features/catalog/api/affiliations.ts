@@ -1,9 +1,9 @@
 /**
  * Affiliation pricing API — catalog domain (HTTP + React Query).
  */
-import { apiClient } from '@/lib/api/client';
-import { expectArray } from '@/lib/api/errors';
-import { REFERENCE_DATA_LIMIT } from '@/lib/api/constants';
+import { apiClient } from '@/lib/api';
+import { expectArray } from '@/lib/api';
+import { REFERENCE_DATA_LIMIT } from '@/lib/api';
 import type { AffiliationPricing } from '@/types';
 import type { AffiliationDuration } from '@/types';
 import { useQuery } from '@tanstack/react-query';

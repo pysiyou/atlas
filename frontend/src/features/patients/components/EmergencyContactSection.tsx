@@ -1,14 +1,13 @@
-import { useMemo } from 'react';
-import { useController } from 'react-hook-form';
+import type { FilterOption } from '@/components/overlays';
+import { usePatientFormSection } from '../hooks/usePatientFormSection';
+import { patientFieldError } from '../patientFormFieldError';
 import { Input } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
-import type { FilterOption } from '@/components/overlays';
-import { RELATIONSHIP_VALUES, RELATIONSHIP_CONFIG, type Relationship } from '@/types';
 import { IconKeys } from '@/icons';
-import { FORM_FIELD_LABEL } from '@/theme/recipes';
-import { FIELD_ERROR, TONE } from '@/theme/recipes';
-import { patientFieldError } from '../patientFormFieldError';
-import { usePatientFormSection } from '../hooks/usePatientFormSection';
+import { FIELD_ERROR, FORM_FIELD_LABEL, TONE } from '@/theme/recipes';
+import { RELATIONSHIP_CONFIG, RELATIONSHIP_VALUES, type Relationship } from '@/types';
+import { useMemo } from 'react';
+import { useController } from 'react-hook-form';
 
 export function EmergencyContactSection() {
   const { control, errors } = usePatientFormSection();

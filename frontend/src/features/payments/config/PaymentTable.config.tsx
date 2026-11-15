@@ -1,15 +1,16 @@
+import type { TableViewConfig } from '@/components/data-table';
 import type { NavigateFunction } from 'react-router-dom';
+import { buildViews } from '@/components/data-table';
 import { getBillableTests } from '@/features/orders';
 import { StatusValueBadge } from '@/features/shared';
-import type { TableViewConfig } from '@/components/data-table';
-import { buildViews } from '@/components/data-table';
 import {
+
   ORDER_TABLE_VIEW_KEYS_PAYMENT,
   createOrderSharedColumns,
   renderOrderDateCell,
   renderOrderId,
 } from '@/features/orders';
-import { getOrderTableColumnHeaders } from '@/copy';
+import { getOrderTableColumnHeaders } from '@/strings';
 import { PaymentButton } from '../components/PaymentButton';
 import { PaymentCard } from '../components/PaymentCard';
 import type { OrderPaymentView } from '../types';

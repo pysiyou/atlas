@@ -2,7 +2,7 @@
  * Default leading icons for filter controls when config omits `icon`.
  */
 import React from 'react';
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import { IconKeys, type IconKey } from '@/icons';
 import type { FilterControl } from './types';
 

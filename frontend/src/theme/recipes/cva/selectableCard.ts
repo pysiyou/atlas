@@ -1,5 +1,5 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { RADIUS, SHADOW } from '../spacing';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 export const selectableCard = cva(
   `group relative border-2 ${RADIUS.menu} p-space-5 cursor-pointer transition-all duration-200`,

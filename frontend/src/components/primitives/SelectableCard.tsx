@@ -1,6 +1,6 @@
-import { type HTMLAttributes, type ReactNode } from 'react';
 import { selectableCard, type SelectableCardRecipeProps } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
+import { type HTMLAttributes, type ReactNode } from 'react';
 
 export interface SelectableCardProps
   extends Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'>,

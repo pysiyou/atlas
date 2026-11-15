@@ -1,16 +1,16 @@
-import { Controller, type Control } from 'react-hook-form';
+import type { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
+import type { OrderFormInput } from '../schemas/order.schema';
 import type { Patient, PriorityLevel } from '@/types';
+import { OrderPaymentSection } from './OrderPaymentSection';
+import { PatientSelect } from './PatientSelect';
+import { TestSelect } from './TestSelect';
 import { Textarea } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
-import { IconKeys } from '@/icons';
-import type { OrderFormInput } from '../schemas/order.schema';
-import { PatientSelect } from './PatientSelect';
-import { TestSelect } from './TestSelect';
 import { ReferentDoctorSelect } from '@/features/referent-doctors';
-import { OrderPaymentSection } from './OrderPaymentSection';
+import { IconKeys } from '@/icons';
 import { FIELD_ERROR } from '@/theme/recipes';
-import type { useOrderUpsertModal } from '../hooks/useOrderUpsertModal';
+import { Controller, type Control } from 'react-hook-form';
 
 interface OrderUpsertFormFieldsProps {
   control: Control<OrderFormInput>;

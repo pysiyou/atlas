@@ -11,7 +11,7 @@
  */
 
 import { useClientConfig } from '@/app/clientConfigContext';
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import { parseIconKey, type IconKey } from '@/icons';
 
 function logoPathToIconKey(logoPath: string): IconKey | null {

@@ -1,7 +1,7 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { RADIUS, SHADOW } from '../spacing';
 import { TONE } from '../tone';
 import { text } from './text';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 export const metricTile = cva(
   `${RADIUS.surface} border px-space-3 py-space-2-5 flex flex-col gap-space-1-5 min-h-[4.5rem] transition-colors duration-150`,

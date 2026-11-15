@@ -3,7 +3,7 @@
  * Shared pagination sizes, display limits, empty-state copy, and typography aliases.
  */
 
-import { getEmptyCopy, emptySubtitle, emptyTitle } from '@/copy';
+import { getEmptyCopy, emptySubtitle, emptyTitle } from '@/strings';
 import { IconKeys } from '@/icons';
 
 // =============================================================================

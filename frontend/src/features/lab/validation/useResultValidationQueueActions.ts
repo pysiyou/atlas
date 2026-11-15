@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
-import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { PendingEscalationItem } from '../api/results';
+import { ModalType, useModal } from '@/lib/context/ModalContext';
+import { useCallback } from 'react';
 
 interface UseResultValidationQueueActionsParams {
   canResolveEscalation: boolean;

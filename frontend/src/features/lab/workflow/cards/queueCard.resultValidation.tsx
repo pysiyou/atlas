@@ -7,7 +7,7 @@ import { useMemo, type FC } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
-import { useUserLookup } from '@/lib/api/users';
+import { useUserLookup } from '@/lib/api';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { QualityIssuePopover } from '../../components';
 import { ResultsParameterGrid } from '../../components/ResultsParameterGrid';

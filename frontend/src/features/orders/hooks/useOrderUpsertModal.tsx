@@ -17,7 +17,7 @@ import { usePatient, usePatientSearch } from '@/features/patients';
 import type { ReferentDoctor } from '@/features/referent-doctors';
 import { useCreatePayment } from '@/features/payments';
 import { useOrder } from '../api/orders';
-import { getModuleListTitles } from '@/copy';
+import { getModuleListTitles } from '@/strings';
 
 export interface UseOrderUpsertModalParams {
   isOpen: boolean;

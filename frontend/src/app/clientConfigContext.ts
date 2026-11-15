@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'react';
 import type { ClientConfig } from '@/config';
+import { createContext, useContext } from 'react';
 
 export type ConfigStatus = 'loading' | 'ready' | 'error';
 

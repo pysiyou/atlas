@@ -8,7 +8,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from pydantic import ValidationError
 
@@ -28,7 +28,7 @@ class ClientConfig:
 
     def __init__(self):
         self._config: Optional[ClientConfigModel] = None
-        self._raw_dict: Dict[str, Any] = {}
+        self._raw_dict: dict[str, Any] = {}
         self._load_config()
 
     def _load_config(self):
@@ -52,43 +52,43 @@ class ClientConfig:
             raise
 
     @property
-    def company(self) -> Dict[str, Any]:
+    def company(self) -> dict[str, Any]:
         """Company information"""
         if self._config:
             return self._config.company.model_dump(by_alias=True, exclude_none=False)
         return {}
 
     @property
-    def branding(self) -> Dict[str, Any]:
+    def branding(self) -> dict[str, Any]:
         """Branding and visual identity"""
         if self._config:
             return self._config.branding.model_dump(by_alias=True, exclude_none=False)
         return {}
 
     @property
-    def terminology(self) -> Dict[str, str]:
+    def terminology(self) -> dict[str, str]:
         """Custom terminology mappings"""
         return self._config.terminology if self._config else {}
 
     @property
-    def features(self) -> Dict[str, bool]:
+    def features(self) -> dict[str, bool]:
         """Feature flags"""
         return self._config.features if self._config else {}
 
     @property
-    def workflows(self) -> Dict[str, bool]:
+    def workflows(self) -> dict[str, bool]:
         """Workflow configuration"""
         return self._config.workflows if self._config else {}
 
     @property
-    def reports(self) -> Optional[Dict[str, Any]]:
+    def reports(self) -> Optional[dict[str, Any]]:
         """Report configuration"""
         if self._config and self._config.reports:
             return self._config.reports.model_dump(by_alias=True, exclude_none=False)
         return None
 
     @property
-    def marketing(self) -> Optional[Dict[str, Any]]:
+    def marketing(self) -> Optional[dict[str, Any]]:
         """Marketing configuration"""
         if self._config and self._config.marketing:
             return self._config.marketing.model_dump(by_alias=True, exclude_none=False)
@@ -98,7 +98,7 @@ class ClientConfig:
         """Get any config value by key"""
         return self._raw_dict.get(key, default)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Return full config as dictionary"""
         return self._raw_dict.copy()
 

@@ -1,9 +1,9 @@
 /**
  * Report listing API — reportable orders from server projection.
  */
-import { apiClient } from '@/lib/api/client';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
-import { withPaginatedParams } from '@/lib/api/pagination';
+import { apiClient } from '@/lib/api';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
+import { withPaginatedParams } from '@/lib/api';
 import type { ApiReportableOrderItem } from '@/lib/api/types';
 import type { Order } from '@/types';
 import type { PaginatedResponse } from '@/types';

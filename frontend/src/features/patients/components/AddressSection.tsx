@@ -1,7 +1,7 @@
-import { useController } from 'react-hook-form';
-import { Input } from '@/components/inputs';
-import { patientFieldError } from '../patientFormFieldError';
 import { usePatientFormSection } from '../hooks/usePatientFormSection';
+import { patientFieldError } from '../patientFormFieldError';
+import { Input } from '@/components/inputs';
+import { useController } from 'react-hook-form';
 
 export function AddressSection() {
   const { control, errors } = usePatientFormSection();

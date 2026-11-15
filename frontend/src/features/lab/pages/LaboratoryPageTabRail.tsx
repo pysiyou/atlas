@@ -1,8 +1,8 @@
+import type { LabTabId } from '../constants/labConstants';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/primitives';
-import { cn } from '@/utils';
-import type { LabTabId } from '../constants/labConstants';
 import { SEGMENTED_CONTROL } from '@/theme/recipes';
+import { cn } from '@/utils';
 
 export interface LaboratoryPageTabDef {
   id: LabTabId;

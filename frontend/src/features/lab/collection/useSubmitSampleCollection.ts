@@ -5,7 +5,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { logger } from '@/utils/logger';
 import { getErrorDetails, isLikelyNetworkOrTimeout } from '@/utils/errors';
-import { invalidateCollectionQueries } from '@/lib/query/invalidate';
+import { invalidateCollectionQueries } from '@/lib/query';
 import { notify } from '@/feedback';
 import type { ContainerType, ContainerTopColor } from '@/types';
 import type { SampleCollectionQueueItem } from '@/types';

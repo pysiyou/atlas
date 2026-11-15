@@ -1,11 +1,10 @@
-import React from 'react';
-import { text } from '@/theme/recipes';
-import { Popover } from '@/components/overlays';
-import { FooterInfo } from '@/components/display';
-
 import type { Affiliation } from '@/types';
 import { AffiliationInfo } from './AffiliationInfoSection';
+import { FooterInfo } from '@/components/display';
+import { Popover } from '@/components/overlays';
 import { IconKeys } from '@/icons';
+import { text } from '@/theme/recipes';
+import React from 'react';
 
 interface AffiliationPopoverProps {
   affiliation?: Affiliation;

@@ -11,7 +11,7 @@ import { OrderStatusBadge } from '@/features/orders';
 import { ReportRowActionsMenu } from './ReportRowActionsMenu';
 import { INTERACTIVE, text } from '@/theme/recipes';
 import { EntityStack, renderCardDateTimeSecondary } from '@/features/shared/EntityPresentation';
-import { useReportableOrderPresentation } from '@/hooks';
+import { useReportableOrderPresentation } from '@/features/shared/presentationHooks';
 import { cn } from '@/utils';
 import { renderTruncatedListPreview } from '@/utils/TruncatedListPreviewRender';
 

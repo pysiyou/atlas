@@ -3,9 +3,9 @@
  * Order HTTP + query/mutation hooks.
  * Convention: `*API` objects are pure fetch; `use*` hooks wrap TanStack Query (same file).
  */
-import { apiClient } from '@/lib/api/client';
-import { withPaginatedParams } from '@/lib/api/pagination';
-import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { apiClient } from '@/lib/api';
+import { withPaginatedParams } from '@/lib/api';
+import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import type { ApiOrderSummaryResponse } from '@/lib/api/types';
 import type { Order, OrderStatus, PaymentMethod, PaymentStatus, Patient, Invoice } from '@/types';
 import type { PaginatedResponse, PaginationMeta } from '@/types';
@@ -15,7 +15,7 @@ import { useCallback } from 'react';
 import { useResettablePage } from '@/hooks';
 import { usePaginatedPageSize } from '@/hooks';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
-import { invalidateOrderQueries } from '@/lib/query/invalidate';
+import { invalidateOrderQueries } from '@/lib/query';
 import { notify } from '@/feedback';
 import { orderCreateSchema, orderUpdateSchema, orderSchema } from '@/features/orders/schemas/order.schema';
 import { formInputToPayload } from '../utils/formTransformers';

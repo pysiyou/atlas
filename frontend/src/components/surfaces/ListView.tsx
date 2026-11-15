@@ -8,10 +8,10 @@ import { type ReactNode } from 'react';
 import { DataTable, type TableViewConfig } from '@/components/data-table';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '@/components/data-table';
 import { EmptyState } from '@/components/display';
-import { PANEL_EMPTY_STATE } from '@/copy';
+import { PANEL_EMPTY_STATE } from '@/strings';
 
 import { PageHeader } from '@/components/layout';
-import { emptyTitle } from '@/copy';
+import { emptyTitle } from '@/strings';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
 import type { ListViewPaginationConfig, PaginationConfig, SortConfig } from '@/components/data-table';
 import { PANEL, WORKSPACE } from '@/theme/recipes';

@@ -1,5 +1,5 @@
-import React from 'react';
 import { text } from '@/theme/recipes';
+import React from 'react';
 
 export interface CircularProgressProps {
   /** Size of the circular progress in pixels */

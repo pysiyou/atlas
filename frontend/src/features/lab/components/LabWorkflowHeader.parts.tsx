@@ -2,7 +2,7 @@
 
 import { cn, formatDateTime } from '@/utils';
 import { RecordId } from '@/features/shared';
-import { useUserLookup } from '@/lib/api/users';
+import { useUserLookup } from '@/lib/api';
 import { text, WORKLIST_EMPHASIZED_INLINE, WORKLIST_HEADER } from '@/theme/recipes';
 import type { LabAuditLine } from '../constants/labWorkflowAuditLines';
 

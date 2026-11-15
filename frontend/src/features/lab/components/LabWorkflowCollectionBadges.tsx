@@ -1,9 +1,10 @@
-import React from 'react';
 import type { BadgeSize } from '@/components/primitives';
-import type { ContainerType, ContainerTopColor, Sample, RejectedSample } from '@/types';
-import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
+import type { ContainerTopColor, ContainerType, RejectedSample, Sample } from '@/types';
 import { buildCollectionOperationalMetaItems } from '../utils/collectionOperationalMetaItems';
+import { WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
+import React from 'react';
 import {
+
   LabPriorityBadge,
   SampleStatusBadge,
   SampleTypeBadge,

@@ -1,8 +1,8 @@
 import type { IconKey } from '@/icons';
-import { t } from '@/config';
-import { getFilteredNavMenuDefinitions, getFilteredSettingsPopoverLinkDefinitions, SETTINGS_POPOVER_TRIGGER } from '@/app/navigation';
-import { useClientConfig } from '@/app/clientConfigContext';
 import type { UserRole } from '@/types';
+import { useClientConfig } from '@/app/clientConfigContext';
+import { getFilteredNavMenuDefinitions, getFilteredSettingsPopoverLinkDefinitions, SETTINGS_POPOVER_TRIGGER } from '@/app/navigation';
+import { t } from '@/config';
 
 export interface SidebarNavItem {
   path: string;

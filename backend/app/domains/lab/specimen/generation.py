@@ -6,12 +6,12 @@ from typing import TYPE_CHECKING, Any
 
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.models.sample import Sample
+from app.domains.lab.rules.test_status_sets import INACTIVE_LINEAGE_STATUSES
 from app.domains.lab.specimen.collection_service import (
     SampleCollectionService,
     _normalize_sample_type,
     _sample_type_matches,
 )
-from app.domains.lab.rules.test_status_sets import INACTIVE_LINEAGE_STATUSES
 from app.domains.orders.models import Order, OrderTest
 from app.shared.contracts.enums import PriorityLevel, SampleStatus, TestStatus
 from sqlalchemy.orm import Session

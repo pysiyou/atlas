@@ -1,10 +1,10 @@
 /**
  * Tests API service — slim list for names/search, full documents by code.
  */
-import { apiClient } from '@/lib/api/client';
-import { expectArray } from '@/lib/api/errors';
+import { apiClient } from '@/lib/api';
+import { expectArray } from '@/lib/api';
 import type { ApiTestResponse, ApiTestSummaryResponse } from '@/lib/api/types';
-import { REFERENCE_DATA_LIMIT } from '@/lib/api/constants';
+import { REFERENCE_DATA_LIMIT } from '@/lib/api';
 import type {
   ContainerTopColor,
   ContainerType,
@@ -24,7 +24,7 @@ import {
   uniqueSortedTestCodes,
 } from '../testLookup';
 import { cacheConfig, getQueryClient, queryKeys, useAuthQueryEnabled } from '@/lib/query';
-import { useInvalidateQueryKey } from '@/lib/query/invalidate';
+import { useInvalidateQueryKey } from '@/lib/query';
 
 interface GetTestsParams {
   category?: TestCategory;

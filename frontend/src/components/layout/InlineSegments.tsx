@@ -1,7 +1,7 @@
-import { type ReactNode } from 'react';
-import { text, IDENTITY_INLINE } from '@/theme/recipes';
-import { cn } from '@/utils/cn';
 import { InlineSeparator } from './ListMarker';
+import { IDENTITY_INLINE, text } from '@/theme/recipes';
+import { cn } from '@/utils/cn';
+import { type ReactNode } from 'react';
 
 export type InlineSegment =
   | {

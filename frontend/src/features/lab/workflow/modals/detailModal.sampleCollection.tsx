@@ -8,7 +8,7 @@ import { queryKeys } from '@/lib/query';
 import { sampleAPI, useCollectSample, useSampleWorkContext } from '../../api/samples';
 import type { ContainerType } from '@/types';
 import { uniqueSortedTestCodes, useTestCatalog, useTestsByCodes } from '@/features/catalog';
-import { useUserLookup } from '@/lib/api/users';
+import { useUserLookup } from '@/lib/api';
 import { useOrder } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import { getTestNames } from '@/features/catalog/testLookup';

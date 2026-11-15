@@ -1,7 +1,7 @@
 /**
  * User management table columns.
  */
-import { Badge } from '@/components/primitives/Badge';
+import { Badge } from '@/components/primitives';
 import type { TableViewConfig } from '@/components/data-table';
 import {
   buildViews,

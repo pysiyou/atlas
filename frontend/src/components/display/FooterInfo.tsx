@@ -5,7 +5,7 @@
  * an optional label is available for screen readers.
  */
 
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import type { IconKey } from '@/icons';
 
 interface FooterInfoProps {

@@ -1,12 +1,12 @@
 """Lab critical value notification routes."""
 
+from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.quality.critical_notifications import CriticalNotificationService
 from app.domains.lab.schemas.critical_values import (
     AcknowledgeRequest,
     CriticalValueResponse,
     NotifyRequest,
 )
-from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db

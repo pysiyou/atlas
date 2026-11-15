@@ -11,7 +11,7 @@ import { buildCriticalValueRecord } from '../../criticalValues/criticalValues';
 import {
   invalidateAfterLabMutation,
   invalidatePendingEscalationQueries,
-} from '@/lib/query/invalidate';
+} from '@/lib/query';
 import { useEscalationResolution } from '../../validation/useEscalationResolution';
 import {
   EscalationResolutionBody,

@@ -1,10 +1,8 @@
-import React from 'react';
 import { EmptyState } from '@/components/display';
-import { PANEL_EMPTY_STATE } from '@/copy';
-
-import { FG, FORM_FIELD_LABEL, text } from '@/theme/recipes';
-import { OVERLAY, RADIUS } from '@/theme/recipes';
+import { PANEL_EMPTY_STATE } from '@/strings';
+import { FG, FORM_FIELD_LABEL, OVERLAY, RADIUS, text } from '@/theme/recipes';
 import { DEFAULT_EMPTY_DESCRIPTION_SEARCH } from '@/utils/constants';
+import React from 'react';
 
 const POPOVER_SHELL_CLASS = [
   `absolute left-0 right-0 top-full z-50 mt-space-1 ${FG.popoverAnchor}`,

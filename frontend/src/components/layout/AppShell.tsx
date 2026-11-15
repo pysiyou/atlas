@@ -12,7 +12,7 @@ import { useBreakpoint, isBreakpointAtLeast } from '@/hooks';
 import { AppChromeMountContext } from './AppChromeMount';
 import { useToastMountRef } from '@/feedback';
 import { Sidebar } from './Sidebar';
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import { CHROME, RADIUS, SHADOW, SURFACE, WORKSPACE } from '@/theme/recipes';
 import { cn } from '@/utils';

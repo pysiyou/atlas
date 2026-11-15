@@ -1,6 +1,6 @@
-import { apiClient } from '@/lib/api/client';
-import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useDebouncedValue } from '@/hooks';
+import { apiClient } from '@/lib/api';
+import { cacheConfig, queryKeys, useAuthQueryEnabled } from '@/lib/query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface ReferentDoctor {

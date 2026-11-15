@@ -6,7 +6,7 @@
 import React, { useMemo, type FC } from 'react';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
-import { useUserLookup } from '@/lib/api/users';
+import { useUserLookup } from '@/lib/api';
 import { useLabWorkflowCardClickGuard } from '../../hooks';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';

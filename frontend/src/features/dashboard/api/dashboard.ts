@@ -1,7 +1,7 @@
 /**
  * Dashboard aggregate API.
  */
-import { apiClient } from '@/lib/api/client';
+import { apiClient } from '@/lib/api';
 import type { Order } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/authStore';

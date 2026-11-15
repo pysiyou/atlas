@@ -1,6 +1,6 @@
-import { z } from 'zod';
 import { USER_ROLE_VALUES } from '@/types/generated/enums';
 import { zEnumFromValues } from '@/types/zod';
+import { z } from 'zod';
 
 export const userUpsertFormSchema = z.object({
   username: z.string(),

@@ -1,15 +1,14 @@
-import React, { useMemo } from 'react';
-import { useController } from 'react-hook-form';
-import { Input, DateInput } from '@/components/inputs';
-import { MultiSelectFilter } from '@/components/overlays';
 import type { FilterOption } from '@/components/overlays';
-import { GENDER_VALUES, GENDER_CONFIG, type Gender } from '@/types';
-import { createFilterOptions } from '@/utils/filtering';
-import { IconKeys } from '@/icons';
-import { FORM_FIELD_LABEL } from '@/theme/recipes';
-import { FIELD_ERROR, TONE } from '@/theme/recipes';
-import { patientFieldError } from '../patientFormFieldError';
 import { usePatientFormSection } from '../hooks/usePatientFormSection';
+import { patientFieldError } from '../patientFormFieldError';
+import { DateInput, Input } from '@/components/inputs';
+import { MultiSelectFilter } from '@/components/overlays';
+import { IconKeys } from '@/icons';
+import { FIELD_ERROR, FORM_FIELD_LABEL, TONE } from '@/theme/recipes';
+import { GENDER_CONFIG, GENDER_VALUES, type Gender } from '@/types';
+import { createFilterOptions } from '@/utils/filtering';
+import { useController } from 'react-hook-form';
+import React, { useMemo } from 'react';
 
 export function DemographicsSection() {
   const { control, errors } = usePatientFormSection();

@@ -1,5 +1,5 @@
-import type { FieldErrors } from 'react-hook-form';
 import type { PatientFormInput } from './schemas/patientFormSchemas';
+import type { FieldErrors } from 'react-hook-form';
 
 const GENERAL_PREFIXES = [
   'fullName',

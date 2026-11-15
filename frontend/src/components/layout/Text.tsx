@@ -1,6 +1,6 @@
-import React, { type ElementType } from 'react';
 import { text, type TextRecipeProps } from '@/theme/recipes';
 import { cn } from '@/utils/cn';
+import React, { type ElementType } from 'react';
 
 export interface TextProps extends TextRecipeProps {
   as?: ElementType;

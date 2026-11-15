@@ -4,7 +4,7 @@ import { IconKeys } from '@/icons';
 import { GENERATED_LAB_CONSTANTS } from '@/types/generated/policies';
 import { ROUTES } from '@/app/routes';
 import type { TestStatus } from '@/types/generated/enums';
-import type { BadgeColor } from '@/components/primitives/badgeTypes';
+import type { BadgeColor } from '@/components/primitives';
 import { getLabCopy } from '@/strings';
 
 export { getLabCopy };

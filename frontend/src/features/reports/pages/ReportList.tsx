@@ -7,7 +7,7 @@ import { usePageFilters } from '@/hooks';
 import { useServerListChrome } from '@/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
-import { useUserLookup } from '@/lib/api/users';
+import { useUserLookup } from '@/lib/api';
 import { createSampleLookupForOrder } from '@/features/lab/cross';
 import { reportsAPI, toReportableOrder, usePaginatedReportableOrders } from '../api/reports';
 import { ListView } from '@/components/surfaces';
@@ -20,7 +20,7 @@ import { prepareReportData, downloadLabReport } from '../utils/prepareReportData
 import { canPrintReport } from '../utils/reportEligibility';
 import { dateSearchServerParams, formatDate } from '@/utils';
 import { notify } from '@/feedback';
-import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api/constants';
+import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api';
 import { useModuleListTitles } from '@/hooks';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */

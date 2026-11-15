@@ -8,7 +8,7 @@ import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { OrderTest } from '@/types';
 import type { TestDetailInteraction } from '@/lib/context/modalTypes';
 import type { QualityIssueResult } from '@/types';
-import { invalidateAfterLabMutation } from '@/lib/query/invalidate';
+import { invalidateAfterLabMutation } from '@/lib/query';
 import { useValidateResults } from '../../api/results';
 import { useLabDraftStore } from '../../state/labDraftStore';
 import { notify } from '@/feedback';

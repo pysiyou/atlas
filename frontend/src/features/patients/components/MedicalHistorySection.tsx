@@ -1,8 +1,8 @@
-import React from 'react';
-import { useController } from 'react-hook-form';
-import { Textarea, TagInput } from '@/components/inputs';
-import { Checkbox } from '@/components/primitives';
 import { usePatientFormSection } from '../hooks/usePatientFormSection';
+import { TagInput, Textarea } from '@/components/inputs';
+import { Checkbox } from '@/components/primitives';
+import { useController } from 'react-hook-form';
+import React from 'react';
 
 function normalizeTagList(value: string[] | string | null | undefined): string[] {
   if (Array.isArray(value)) {

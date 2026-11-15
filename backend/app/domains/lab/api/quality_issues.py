@@ -1,15 +1,14 @@
 """Lab quality issue routes."""
 
+from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.schemas.lab import (
     QualityIssueOptions,
     QualityIssueResponse,
     QualityIssueResult,
     ReportQualityIssueRequest,
 )
-from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
-from app.platform.database import get_db
 from app.platform.http.dependencies import assert_quality_issue_target_access, get_current_user
 from app.shared.contracts.enums import QualityIssueTargetType
 from fastapi import APIRouter, Depends, HTTPException, Query

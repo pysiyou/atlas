@@ -3,7 +3,7 @@
  */
 import { useMemo } from 'react';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/copy';
+import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/strings';
 
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from './monitorModel';

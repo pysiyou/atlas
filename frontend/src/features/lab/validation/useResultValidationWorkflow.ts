@@ -7,7 +7,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { invalidateAfterLabMutation } from '@/lib/query/invalidate';
+import { invalidateAfterLabMutation } from '@/lib/query';
 import { useValidateResults } from '../api/results';
 import { notifyQualityIssueSuccess } from './qualityIssueToastMessages';
 import { notify } from '@/feedback';

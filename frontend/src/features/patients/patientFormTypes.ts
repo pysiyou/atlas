@@ -1,6 +1,6 @@
-import type { UseFormSetValue } from 'react-hook-form';
 import type { PatientFormInput } from './schemas/patientFormSchemas';
 import type { Affiliation } from '@/types';
+import type { UseFormSetValue } from 'react-hook-form';
 
 export interface PatientAffiliationSectionProps {
   setValue: UseFormSetValue<PatientFormInput>;

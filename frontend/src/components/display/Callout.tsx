@@ -6,7 +6,7 @@ import React from 'react';
  * Extracted from Card.tsx to separate concerns.
  */
 
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import { FEEDBACK_ICON_KEYS } from '@/icons';
 import type { IconKey } from '@/icons';
 import { text, RADIUS, TONE } from '@/theme/recipes';

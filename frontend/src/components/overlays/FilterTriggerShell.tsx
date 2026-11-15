@@ -5,7 +5,7 @@ import React from 'react';
  * Used by DatePicker, AgeFilter, PriceRangeControl, SingleSelectControl, MultiSelectFilter.
  */
 
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import { inputTrigger, inputTriggerOpen, filterTriggerText, inputClearButton } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { IconKeys } from '@/icons';

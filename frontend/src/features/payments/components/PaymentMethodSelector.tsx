@@ -2,7 +2,7 @@
  * PaymentMethodSelector - Single source of truth for payment method selection UI.
  */
 
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import type { PaymentMethod } from '@/types';
 import type { PaymentMethodOption } from '@/features/payments/constants/paymentMethods';

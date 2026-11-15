@@ -1,5 +1,5 @@
-import type { FieldError, FieldErrors } from 'react-hook-form';
 import type { PatientFormInput } from './schemas/patientFormSchemas';
+import type { FieldError, FieldErrors } from 'react-hook-form';
 
 /** Resolve a nested react-hook-form error message by dot path (e.g. `address.street`). */
 export function patientFieldError(

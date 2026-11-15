@@ -5,13 +5,19 @@ on:
     paths:
       - 'frontend/**'
       - 'config/ui-strings.json'
+      - 'config/ui-strings.schema.json'
       - 'config/client-config.json'
+      - 'config/client-config.schema.json'
+      - 'scripts/validate-*.mjs'
       - '.github/workflows/frontend.yml'
   pull_request:
     paths:
       - 'frontend/**'
       - 'config/ui-strings.json'
+      - 'config/ui-strings.schema.json'
       - 'config/client-config.json'
+      - 'config/client-config.schema.json'
+      - 'scripts/validate-*.mjs'
       - '.github/workflows/frontend.yml'
 
 defaults:
@@ -29,6 +35,8 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+      - run: npm run validate:client-config
+      - run: npm run validate:ui-strings
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build

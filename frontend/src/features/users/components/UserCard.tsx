@@ -1,11 +1,11 @@
-import { ListCard } from '@/components/surfaces';
-import type { CardComponentProps } from '@/components/data-table';
-import { Badge } from '@/components/primitives/Badge';
-import { text } from '@/theme/recipes';
-import { USER_ROLE_CONFIG, type UserRole } from '@/types';
-import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 import type { UserAdminRecord } from '../api/usersAdmin';
+import type { CardComponentProps } from '@/components/data-table';
 import { isUserActive } from '../utils/userAccountGuards';
+import { Badge } from '@/components/primitives';
+import { ListCard } from '@/components/surfaces';
+import { text } from '@/theme/recipes';
+import { type UserRole, USER_ROLE_CONFIG } from '@/types';
+import { resolveStatusBadgeColor } from '@/utils/statusBadge';
 
 /**
  * Mobile card for the user management table.

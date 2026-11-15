@@ -1,5 +1,6 @@
 """Lab result entry and validation routes."""
 
+from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.results import ResultQueryService
 from app.domains.lab.schemas.lab import (
     AmendmentRequest,
@@ -9,7 +10,6 @@ from app.domains.lab.schemas.lab import (
     ResultEntryRequest,
     ResultValidationRequest,
 )
-from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db

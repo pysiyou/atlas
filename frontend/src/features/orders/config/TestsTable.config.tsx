@@ -1,6 +1,7 @@
+import type { CardComponentProps, TableViewConfig } from '@/components/data-table';
 import type { ComponentType } from 'react';
-import type { TableViewConfig, CardComponentProps } from '@/components/data-table';
 import {
+
   buildViews,
   createBadgeColumn,
   createDateTimeColumn,
@@ -15,7 +16,6 @@ import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
 import type { OrderTest, TestSummary } from '@/types';
 import { text, BADGE, TABLE_TYPE, RADIUS } from '@/theme/recipes';
 import { renderNavigableSampleId, renderOrderTestIdentity } from '@/features/shared/EntityPresentation';
-
 
 const SIMPLE_VIEWS = {
   full: ['test', 'category', 'status'],

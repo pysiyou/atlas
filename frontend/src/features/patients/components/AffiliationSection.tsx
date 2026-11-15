@@ -1,17 +1,16 @@
-import { useCallback } from 'react';
-import { useWatch } from 'react-hook-form';
-import { Badge, Button, Checkbox } from '@/components/primitives';
-import { useAsyncAction } from '@/hooks';
+import type { PatientAffiliationSectionProps } from '../patientFormTypes';
 import type { AffiliationDuration } from '@/types';
-import { AFFILIATION_DURATION_OPTIONS } from '@/types';
-import { formatDate } from '@/utils';
-import { text, FORM_FIELD_LABEL, FG } from '@/theme/recipes';
+import { usePatientFormSection } from '../hooks/usePatientFormSection';
+import { patientFieldError } from '../patientFormFieldError';
 import { isAffiliationActive } from '../utils/patientHelpers';
 import { AffiliationPlanSelector } from './AffiliationPlanSelector';
-import { FIELD_ERROR, RADIUS, SHADOW, SURFACE, TONE } from '@/theme/recipes';
-import type { PatientAffiliationSectionProps } from '../patientFormTypes';
-import { patientFieldError } from '../patientFormFieldError';
-import { usePatientFormSection } from '../hooks/usePatientFormSection';
+import { Badge, Button, Checkbox } from '@/components/primitives';
+import { useAsyncAction } from '@/hooks';
+import { FG, FIELD_ERROR, FORM_FIELD_LABEL, RADIUS, SHADOW, SURFACE, text, TONE } from '@/theme/recipes';
+import { AFFILIATION_DURATION_OPTIONS } from '@/types';
+import { formatDate } from '@/utils';
+import { useCallback } from 'react';
+import { useWatch } from 'react-hook-form';
 
 export function AffiliationSection({
   setValue,

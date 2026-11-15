@@ -4,7 +4,8 @@ Pydantic Models for Client Configuration
 Provides type-safe validation for white-label configuration loaded from client-config.json.
 Each deployment has its own config file with validated structure.
 """
-from typing import Any, Dict, Optional
+from typing import Any, Optional
+
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -102,9 +103,9 @@ class ClientConfigModel(BaseModel):
     """
     company: CompanyConfig
     branding: BrandingConfig
-    terminology: Dict[str, str] = Field(default_factory=dict)
-    features: Dict[str, bool] = Field(default_factory=dict)
-    workflows: Dict[str, bool] = Field(default_factory=dict)
+    terminology: dict[str, str] = Field(default_factory=dict)
+    features: dict[str, bool] = Field(default_factory=dict)
+    workflows: dict[str, bool] = Field(default_factory=dict)
     reports: Optional[ReportsConfig] = None
     marketing: Optional[MarketingConfig] = None
     
@@ -112,6 +113,6 @@ class ClientConfigModel(BaseModel):
         populate_by_name = True
         extra = "allow"  # Allow additional fields for future extensions
     
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API responses"""
         return self.model_dump(by_alias=True, exclude_none=False)

@@ -1,5 +1,5 @@
-import { Icon } from '@/components/primitives';
 import type { IconKey } from '@/icons';
+import { Icon } from '@/components/primitives';
 import { ICON_SIZE } from '@/theme/recipes';
 
 export function SidebarNavIcon({ iconKey }: { iconKey: IconKey }) {

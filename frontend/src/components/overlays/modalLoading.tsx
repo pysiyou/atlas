@@ -5,7 +5,7 @@
 import { Panel } from '@/components/surfaces';
 import { LAYOUT } from '@/theme/recipes';
 import { MODAL_WORKFLOW_BODY_STACK } from './ModalPageShell';
-import { getModuleListTitles } from '@/copy';
+import { getModuleListTitles } from '@/strings';
 import { tCap } from '@/config';
 
 export type ModalLoadingVariant = 'default' | 'workflow' | 'form';

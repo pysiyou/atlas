@@ -1,10 +1,9 @@
-import { useMemo, useCallback } from 'react';
-
-import { Icon } from '@/components/primitives/Icon';
 import { SHOW_ALL_PAGE_SIZE } from '@/components/data-table/constants';
-import { cn } from '@/utils';
+import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import { CONTROL, PAGINATION_TYPE, RADIUS, TABLE_TYPE } from '@/theme/recipes';
+import { cn } from '@/utils';
+import { useCallback, useMemo } from 'react';
 
 export interface PaginationProps {
   currentPage: number;

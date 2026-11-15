@@ -6,9 +6,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebouncedValue } from '@/hooks';
 import { parseNumericKey } from '@/hooks';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api/constants';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
-import { useInvalidateQueryKey, invalidateOrderDetailQuery } from '@/lib/query/invalidate';
+import { useInvalidateQueryKey, invalidateOrderDetailQuery } from '@/lib/query';
 import { orderAPI } from '../api/orders';
 import type { Order } from '@/types';
 

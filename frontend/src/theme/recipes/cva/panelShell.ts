@@ -1,5 +1,5 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { PANEL_SHELL } from '../panel';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 const shellByVariant = {
   page: PANEL_SHELL.page.shell,

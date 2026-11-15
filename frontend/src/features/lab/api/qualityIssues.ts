@@ -1,7 +1,7 @@
 /**
  * Quality issues API service — pure HTTP, no React.
  */
-import { apiClient } from '@/lib/api/client';
+import { apiClient } from '@/lib/api';
 import type { ApiQualityIssueOptions, ApiQualityIssueResult } from '@/lib/api/types';
 import type {
   QualityIssueOptions,
@@ -11,7 +11,7 @@ import type {
 import type { QualityIssueTargetType } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
-import { invalidateAfterLabMutation } from '@/lib/query/invalidate';
+import { invalidateAfterLabMutation } from '@/lib/query';
 import { LAB_PATHS } from '../constants/labConstants';
 
 export const qualityIssuesAPI = {

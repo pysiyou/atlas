@@ -3,7 +3,7 @@
  */
 
 import { type HTMLAttributes, type ReactNode } from 'react';
-import { Icon } from '@/components/primitives/Icon';
+import { Icon } from '@/components/primitives';
 import { IconKeys, TOAST_ICON_KEYS } from '@/icons';
 import { RADIUS, TOAST_TYPE, text } from '@/theme/recipes';
 import { cn } from '@/utils';

@@ -1,11 +1,10 @@
-import type jsPDF from 'jspdf';
-import type { OrderTest, Patient, Test, TestParameter, TestResult } from '@/types';
-import type { LabReportPayload, ReportableOrder } from '@/types';
-import { RESULT_NOT_AVAILABLE } from '@/types';
+import type { LabReportPayload, OrderTest, Patient, ReportableOrder, Test, TestParameter, TestResult } from '@/types';
 import { getBrandingPresentation } from '@/config';
+import { RESULT_NOT_AVAILABLE } from '@/types';
 import { isDateInInclusiveRange } from '@/utils/date';
-import { calculateAge } from '@/utils/string';
 import { getActiveOrderTests } from '@/utils/presentation';
+import { calculateAge } from '@/utils/string';
+import type jsPDF from 'jspdf';
 
 interface SampleLookup {
   (sampleId: number): { status: string; collectedAt?: string; collectedBy?: string } | undefined;

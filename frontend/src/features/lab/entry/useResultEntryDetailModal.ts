@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
-import { useModal, ModalType } from '@/lib/context/ModalContext';
 import type { EntryQueueRow } from '../types/queues';
 import { isLabActionAllowed } from '../utils/queueDisplay';
+import { ModalType, useModal } from '@/lib/context/ModalContext';
+import { useCallback } from 'react';
 
 /**
  * Opens the result-entry modal with only the order-test id.
