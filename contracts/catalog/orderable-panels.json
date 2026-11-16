@@ -33,6 +33,7 @@
     },
     {
       "id": "COAG",
+      "loinc_code": "34529-8",
       "name": "Coagulation Panel",
       "description": ""
     },
@@ -78,6 +79,7 @@
     },
     {
       "id": "LYTES",
+      "loinc_code": "24326-1",
       "name": "Electrolyte Panel",
       "description": ""
     },
@@ -113,6 +115,7 @@
     },
     {
       "id": "HEP",
+      "loinc_code": "24363-4",
       "name": "Hepatitis Panel",
       "description": ""
     },
@@ -133,6 +136,7 @@
     },
     {
       "id": "IRON",
+      "loinc_code": "50190-8",
       "name": "Iron Studies Panel",
       "description": ""
     },
@@ -143,11 +147,13 @@
     },
     {
       "id": "LIPID",
+      "loinc_code": "24331-1",
       "name": "Lipid Panel",
       "description": ""
     },
     {
       "id": "LFT",
+      "loinc_code": "24325-3",
       "name": "Liver Function Panel",
       "description": ""
     },
@@ -158,11 +164,13 @@
     },
     {
       "id": "MDIFF",
+      "loinc_code": "24318-8",
       "name": "Manual Differential Panel",
       "description": ""
     },
     {
       "id": "CMP",
+      "loinc_code": "24323-8",
       "name": "Metabolic Panel",
       "description": ""
     },
@@ -203,11 +211,13 @@
     },
     {
       "id": "RENAL",
+      "loinc_code": "24362-6",
       "name": "Renal Panel",
       "description": ""
     },
     {
       "id": "UAPANEL",
+      "loinc_code": "24356-8",
       "name": "Routine Urinalysis Panel",
       "description": ""
     },
@@ -238,6 +248,7 @@
     },
     {
       "id": "TFT",
+      "loinc_code": "24348-5",
       "name": "Thyroid Function Panel",
       "description": ""
     },

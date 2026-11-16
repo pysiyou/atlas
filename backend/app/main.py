@@ -31,8 +31,11 @@ async def lifespan(app: FastAPI):
 
         db = SessionLocal()
         try:
+            from app.domains.catalog.test_catalog_service import TestCatalogService
+
             panel_svc = CatalogPanelService(db)
             panel_svc.sync_test_panel_ids_from_contract()
+            TestCatalogService(db).sync_parameter_loinc_from_contract()
             panel_svc.seed_from_catalog_tests()
         finally:
             db.close()

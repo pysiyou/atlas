@@ -36,10 +36,23 @@ function pyStr(value) {
   return JSON.stringify(value);
 }
 
+/**
+ * Optional order-level LOINC for generated Python (`None` when absent).
+ *
+ * @param {{ loinc_code?: string }} panel Panel registry row.
+ * @returns {string} Python literal.
+ */
+function pyLoinc(panel) {
+  if (typeof panel.loinc_code !== 'string' || panel.loinc_code.length === 0) {
+    return 'None';
+  }
+  return pyStr(panel.loinc_code);
+}
+
 const pyEntries = panels
   .map(
     p =>
-      `    ${pyStr(p.id)}: OrderablePanelDef(id=${pyStr(p.id)}, name=${pyStr(p.name)}, description=${pyStr(p.description ?? '')}),`
+      `    ${pyStr(p.id)}: OrderablePanelDef(id=${pyStr(p.id)}, name=${pyStr(p.name)}, description=${pyStr(p.description ?? '')}, loinc_code=${pyLoinc(p)}),`
   )
   .join('\n');
 
@@ -58,6 +71,7 @@ class OrderablePanelDef:
     id: str
     name: str
     description: str
+    loinc_code: str | None = None
 
 
 ORDERABLE_PANEL_BY_ID: dict[str, OrderablePanelDef] = {
@@ -78,10 +92,23 @@ def resolve_orderable_panel_label(panel_id: str) -> str:
 
 fs.writeFileSync(pyOut, py);
 
+/**
+ * Optional order-level LOINC fragment for a generated TypeScript entry.
+ *
+ * @param {{ loinc_code?: string }} panel Panel registry row.
+ * @returns {string}
+ */
+function tsLoincFragment(panel) {
+  if (typeof panel.loinc_code !== 'string' || panel.loinc_code.length === 0) {
+    return '';
+  }
+  return `, loinc_code: ${JSON.stringify(panel.loinc_code)}`;
+}
+
 const tsEntries = panels
   .map(
     p =>
-      `  ${JSON.stringify(p.id)}: { id: ${JSON.stringify(p.id)}, name: ${JSON.stringify(p.name)}, description: ${JSON.stringify(p.description ?? '')} },`
+      `  ${JSON.stringify(p.id)}: { id: ${JSON.stringify(p.id)}, name: ${JSON.stringify(p.name)}, description: ${JSON.stringify(p.description ?? '')}${tsLoincFragment(p)} },`
   )
   .join('\n');
 
@@ -94,6 +121,8 @@ export interface OrderablePanelDef {
   id: OrderablePanelId;
   name: string;
   description: string;
+  /** Order-level LOINC panel code when mapped (e.g. 57021-8). */
+  loinc_code?: string;
 }
 
 export const ORDERABLE_PANEL_BY_ID: Record<OrderablePanelId, OrderablePanelDef> = {

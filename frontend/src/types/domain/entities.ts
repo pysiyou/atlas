@@ -487,6 +487,8 @@ export interface SampleRequirements {
 export interface ResultItem {
   item_code: string;
   item_name: string;
+  /** Observation-level LOINC for this reportable parameter. */
+  loinc_code?: string;
   value_type: ValueType;
   unit: string;
   decimals_suggested?: number;
@@ -506,6 +508,8 @@ export interface TestCatalogEntry {
   category: string;
   panels?: string[];
   loinc_codes?: string[];
+  /** LOINC ORDER_OBS for a single-parameter orderable test. */
+  order_obs?: 'observation' | 'both';
   method_common?: string;
   turnaround_time_hours: number;
   sample: SampleRequirements;
@@ -578,6 +582,8 @@ export interface TestParameter {
   criticalLow?: number;
   criticalHigh?: number;
   decimalPlaces?: number;
+  /** Observation-level LOINC for this parameter (from result_items.loinc_code). */
+  loincCode?: string;
 
   // New fields from catalog result_items
   valueType?: ValueType; // NUMERIC, SELECT, TEXT

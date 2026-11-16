@@ -44,6 +44,19 @@ const EMPTY_SUMMARY_BY_CODE = new Map<string, TestSummary>();
 const EMPTY_FULL_TESTS: Test[] = [];
 const EMPTY_FULL_BY_CODE = new Map<string, Test>();
 
+/**
+ * Observation LOINC from a catalog result item (`loinc_code` or camelCase `loincCode`).
+ */
+function resultItemLoincCode(item: ResultItem): string | undefined {
+  const record = item as ResultItem & { loincCode?: unknown };
+  const raw = record.loinc_code ?? record.loincCode;
+  if (typeof raw !== 'string') {
+    return undefined;
+  }
+  const trimmed = raw.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
 function mapResultItemsToParameters(resultItems?: ResultItem[]): TestParameter[] | undefined {
   if (!resultItems || resultItems.length === 0) return undefined;
 
@@ -77,6 +90,7 @@ function mapResultItemsToParameters(resultItems?: ResultItem[]): TestParameter[]
       name: item.item_name,
       unit: item.unit || '',
       type,
+      loincCode: resultItemLoincCode(item),
       referenceRange,
       valueType: item.value_type,
       catalogReferenceRange: item.reference_range,

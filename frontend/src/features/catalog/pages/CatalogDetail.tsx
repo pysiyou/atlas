@@ -13,7 +13,7 @@ import { DetailPageShell, PageHeader } from '@/components/layout';
 import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { formatRejectionCriteriaList } from '@/features/lab/cross';
-import { SPACING } from '@/theme/recipes';
+import { SPACING, TABLE_TYPE } from '@/theme/recipes';
 import { feedbackTitle } from '@/feedback';
 import {
   capitalize,
@@ -23,7 +23,8 @@ import {
   formatDateTime,
   formatTurnaroundTime,
 } from '@/utils';
-import type { Test } from '@/types';
+import type { ReactNode } from 'react';
+import type { Test, TestParameter } from '@/types';
 import { resolveOrderablePanelLabel } from '@/types/generated/orderablePanels';
 import { useModuleListTitles } from '@/strings';
 
@@ -62,6 +63,33 @@ function formatReferenceRangeLine(
     label: `Range ${index + 1}${genderStr}${ageStr}`,
     value: `${rangeStr}${criticalStr}`,
   };
+}
+
+/**
+ * Left-column identifier for a result parameter: observation LOINC, else mnemonic.
+ */
+function parameterRowLabel(param: TestParameter): string {
+  const loinc = param.loincCode?.trim();
+  return loinc && loinc.length > 0 ? loinc : param.code;
+}
+
+/**
+ * Parameter name, unit, range, and internal mnemonic when the row is keyed by LOINC.
+ */
+function formatParameterValue(param: TestParameter): ReactNode {
+  const summary = `${param.name}${param.unit ? ` (${param.unit})` : ''}${param.referenceRange ? ` — ${param.referenceRange}` : ''}`;
+  const loinc = param.loincCode?.trim();
+  if (!loinc || loinc === param.code) {
+    return summary;
+  }
+  return (
+    <div className="flex flex-col gap-space-1">
+      <div>{summary}</div>
+      <div className={TABLE_TYPE.meta}>
+        <RecordId>{param.code}</RecordId>
+      </div>
+    </div>
+  );
 }
 
 /** Build the overview / sample / pricing / parameter tables for a catalog test. */
@@ -137,8 +165,8 @@ function buildCatalogDetailTables(test: Test): TableInput[] {
       title: 'Result Parameters',
       meta: String(test.parameters.length),
       rows: test.parameters.map(param => ({
-        label: param.code,
-        value: `${param.name}${param.unit ? ` (${param.unit})` : ''}${param.referenceRange ? ` — ${param.referenceRange}` : ''}`,
+        label: parameterRowLabel(param),
+        value: formatParameterValue(param),
       })),
     });
   }

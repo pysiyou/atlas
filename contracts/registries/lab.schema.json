@@ -127,11 +127,11 @@
         "remedyPresentation"
       ],
       "properties": {
-        "validation": { "$ref": "#/$defs/remedyContextPolicy" },
-        "sampleUnfinished": { "$ref": "#/$defs/remedyContextPolicy" },
+        "validation": { "$ref": "#/definitions/remedyContextPolicy" },
+        "sampleUnfinished": { "$ref": "#/definitions/remedyContextPolicy" },
         "successToasts": {
           "type": "array",
-          "items": { "$ref": "#/$defs/successToastRule" }
+          "items": { "$ref": "#/definitions/successToastRule" }
         },
         "defaultSuccessToast": { "type": "string" },
         "remedyPresentation": {
@@ -139,8 +139,8 @@
           "additionalProperties": {
             "type": "object",
             "properties": {
-              "validation": { "$ref": "#/$defs/remedyPresentationFields" },
-              "sample": { "$ref": "#/$defs/remedyPresentationFields" }
+              "validation": { "$ref": "#/definitions/remedyPresentationFields" },
+              "sample": { "$ref": "#/definitions/remedyPresentationFields" }
             },
             "additionalProperties": false
           }
@@ -149,7 +149,7 @@
       "additionalProperties": false
     }
   },
-  "$defs": {
+  "definitions": {
     "remedyContextPolicy": {
       "type": "object",
       "required": ["allowedRemedies", "displayOrder"],

@@ -1,4 +1,5 @@
 {
+  "$schema": "./test-catalog.schema.json",
   "tests": [
     {
       "test_code": "CBC",
@@ -13,7 +14,12 @@
         "HEMFULL"
       ],
       "loinc_codes": [
-        "57021-8"
+        "6690-2",
+        "789-8",
+        "718-7",
+        "4544-3",
+        "787-2",
+        "777-3"
       ],
       "method_common": "Automated hematology analyzer (Sysmex, Mindray)",
       "turnaround_time_hours": 2,
@@ -37,9 +43,10 @@
       "result_items": [
         {
           "item_code": "WBC",
+          "loinc_code": "6690-2",
           "item_name": "White Blood Cell Count",
           "value_type": "NUMERIC",
-          "unit": "\u00d710\u2079/L",
+          "unit": "×10⁹/L",
           "decimals_suggested": 2,
           "reference_range": {
             "adult_general": {
@@ -62,9 +69,10 @@
         },
         {
           "item_code": "RBC",
+          "loinc_code": "789-8",
           "item_name": "Red Blood Cell Count",
           "value_type": "NUMERIC",
-          "unit": "\u00d710\u00b9\u00b2/L",
+          "unit": "×10¹²/L",
           "decimals_suggested": 2,
           "reference_range": {
             "adult_male": {
@@ -91,6 +99,7 @@
         },
         {
           "item_code": "HGB",
+          "loinc_code": "718-7",
           "item_name": "Hemoglobin",
           "value_type": "NUMERIC",
           "unit": "g/dL",
@@ -120,6 +129,7 @@
         },
         {
           "item_code": "HCT",
+          "loinc_code": "4544-3",
           "item_name": "Hematocrit",
           "value_type": "NUMERIC",
           "unit": "%",
@@ -148,6 +158,7 @@
         },
         {
           "item_code": "MCV",
+          "loinc_code": "787-2",
           "item_name": "Mean Corpuscular Volume",
           "value_type": "NUMERIC",
           "unit": "fL",
@@ -168,9 +179,10 @@
         },
         {
           "item_code": "PLAT",
+          "loinc_code": "777-3",
           "item_name": "Platelet Count",
           "value_type": "NUMERIC",
-          "unit": "\u00d710\u2079/L",
+          "unit": "×10⁹/L",
           "decimals_suggested": 0,
           "reference_range": {
             "adult_general": {
@@ -233,7 +245,8 @@
         "ANEMIA"
       ],
       "loinc_codes": [
-        "4695-3"
+        "17849-1",
+        "60474-4"
       ],
       "method_common": "Automated flow cytometry or manual supravital staining",
       "turnaround_time_hours": 4,
@@ -257,6 +270,7 @@
       "result_items": [
         {
           "item_code": "RETPLAT_PCT",
+          "loinc_code": "17849-1",
           "item_name": "Reticulocytes (% of RBC)",
           "value_type": "NUMERIC",
           "unit": "%",
@@ -274,9 +288,10 @@
         },
         {
           "item_code": "RETCOUNT_ABS",
+          "loinc_code": "60474-4",
           "item_name": "Reticulocytes (Absolute Count)",
           "value_type": "NUMERIC",
-          "unit": "\u00d710\u2079/L",
+          "unit": "×10⁹/L",
           "decimals_suggested": 1,
           "reference_range": {
             "adult_general": {
@@ -331,7 +346,8 @@
         "MDIFF"
       ],
       "loinc_codes": [
-        "15286-3"
+        "18314-5",
+        "17784-0"
       ],
       "method_common": "Microscopy - Wright-Giemsa staining",
       "turnaround_time_hours": 3,
@@ -355,6 +371,7 @@
       "result_items": [
         {
           "item_code": "SMEAR_FINDINGS",
+          "loinc_code": "18314-5",
           "item_name": "Morphological Findings",
           "value_type": "TEXT",
           "unit": "",
@@ -369,6 +386,7 @@
         },
         {
           "item_code": "PARASITES_SEEN",
+          "loinc_code": "17784-0",
           "item_name": "Parasites Detected",
           "value_type": "SELECT",
           "unit": "",
@@ -434,6 +452,7 @@
       "loinc_codes": [
         "4537-7"
       ],
+      "order_obs": "both",
       "method_common": "Westergren method (1-hour reading)",
       "turnaround_time_hours": 2,
       "sample": {
@@ -455,6 +474,7 @@
       "result_items": [
         {
           "item_code": "ESR_1HR",
+          "loinc_code": "4537-7",
           "item_name": "ESR (1 hour)",
           "value_type": "NUMERIC",
           "unit": "mm/h",
@@ -518,7 +538,8 @@
         "TXFUSE"
       ],
       "loinc_codes": [
-        "883-4"
+        "883-9",
+        "10331-7"
       ],
       "method_common": "Gel card or tube technique; forward and reverse grouping",
       "turnaround_time_hours": 1,
@@ -542,6 +563,7 @@
       "result_items": [
         {
           "item_code": "ABO_GROUP",
+          "loinc_code": "883-9",
           "item_name": "ABO Blood Group",
           "value_type": "SELECT",
           "unit": "",
@@ -562,6 +584,7 @@
         },
         {
           "item_code": "RH_STATUS",
+          "loinc_code": "10331-7",
           "item_name": "Rh (RhD) Status",
           "value_type": "SELECT",
           "unit": "",
@@ -621,8 +644,9 @@
         "DMSCR"
       ],
       "loinc_codes": [
-        "1558-5"
+        "1558-6"
       ],
+      "order_obs": "both",
       "method_common": "Hexokinase enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -644,6 +668,7 @@
       "result_items": [
         {
           "item_code": "GLU_FAST",
+          "loinc_code": "1558-6",
           "item_name": "Fasting Glucose",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -713,6 +738,7 @@
       "loinc_codes": [
         "2345-7"
       ],
+      "order_obs": "both",
       "method_common": "Hexokinase enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -733,6 +759,7 @@
       "result_items": [
         {
           "item_code": "GLU_RANDOM",
+          "loinc_code": "2345-7",
           "item_name": "Random Glucose",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -802,6 +829,7 @@
       "loinc_codes": [
         "4548-4"
       ],
+      "order_obs": "both",
       "method_common": "HPLC or immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -822,6 +850,7 @@
       "result_items": [
         {
           "item_code": "HBA1C",
+          "loinc_code": "4548-4",
           "item_name": "HbA1c",
           "value_type": "NUMERIC",
           "unit": "%",
@@ -883,6 +912,7 @@
       "loinc_codes": [
         "2160-0"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method (preferred)",
       "turnaround_time_hours": 1,
       "sample": {
@@ -903,6 +933,7 @@
       "result_items": [
         {
           "item_code": "CREAT",
+          "loinc_code": "2160-0",
           "item_name": "Serum Creatinine",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -976,6 +1007,7 @@
       "loinc_codes": [
         "3094-0"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method (urease)",
       "turnaround_time_hours": 1,
       "sample": {
@@ -996,6 +1028,7 @@
       "result_items": [
         {
           "item_code": "BUN",
+          "loinc_code": "3094-0",
           "item_name": "Blood Urea Nitrogen",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -1064,6 +1097,7 @@
       "loinc_codes": [
         "33914-3"
       ],
+      "order_obs": "both",
       "method_common": "Calculated from serum creatinine (CKD-EPI recommended)",
       "turnaround_time_hours": 0,
       "sample": {
@@ -1084,9 +1118,10 @@
       "result_items": [
         {
           "item_code": "EGFR_VALUE",
+          "loinc_code": "33914-3",
           "item_name": "eGFR",
           "value_type": "NUMERIC",
-          "unit": "mL/min/1.73m\u00b2",
+          "unit": "mL/min/1.73m²",
           "decimals_suggested": 1,
           "reference_range": {
             "adult_general": {
@@ -1149,6 +1184,7 @@
       "loinc_codes": [
         "2951-2"
       ],
+      "order_obs": "both",
       "method_common": "Ion-selective electrode (ISE)",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1169,6 +1205,7 @@
       "result_items": [
         {
           "item_code": "NA",
+          "loinc_code": "2951-2",
           "item_name": "Sodium",
           "value_type": "NUMERIC",
           "unit": "mEq/L (mmol/L)",
@@ -1238,6 +1275,7 @@
       "loinc_codes": [
         "2823-3"
       ],
+      "order_obs": "both",
       "method_common": "Ion-selective electrode (ISE)",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1259,6 +1297,7 @@
       "result_items": [
         {
           "item_code": "K",
+          "loinc_code": "2823-3",
           "item_name": "Potassium",
           "value_type": "NUMERIC",
           "unit": "mEq/L (mmol/L)",
@@ -1329,6 +1368,7 @@
       "loinc_codes": [
         "2075-0"
       ],
+      "order_obs": "both",
       "method_common": "Ion-selective electrode (ISE)",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1349,6 +1389,7 @@
       "result_items": [
         {
           "item_code": "CL",
+          "loinc_code": "2075-0",
           "item_name": "Chloride",
           "value_type": "NUMERIC",
           "unit": "mEq/L (mmol/L)",
@@ -1412,8 +1453,9 @@
         "LYTES"
       ],
       "loinc_codes": [
-        "2028-9"
+        "1963-8"
       ],
+      "order_obs": "both",
       "method_common": "Calculation or direct ISE measurement",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1434,6 +1476,7 @@
       "result_items": [
         {
           "item_code": "HCO3",
+          "loinc_code": "1963-8",
           "item_name": "Bicarbonate (HCO3)",
           "value_type": "NUMERIC",
           "unit": "mEq/L (mmol/L)",
@@ -1496,8 +1539,9 @@
         "MINERAL"
       ],
       "loinc_codes": [
-        "2000-8"
+        "17861-6"
       ],
+      "order_obs": "both",
       "method_common": "Spectrophotometry (colorimetric)",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1518,6 +1562,7 @@
       "result_items": [
         {
           "item_code": "CA_TOTAL",
+          "loinc_code": "17861-6",
           "item_name": "Total Calcium",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -1586,6 +1631,7 @@
       "loinc_codes": [
         "19123-9"
       ],
+      "order_obs": "both",
       "method_common": "Spectrophotometry",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1606,6 +1652,7 @@
       "result_items": [
         {
           "item_code": "MG",
+          "loinc_code": "19123-9",
           "item_name": "Magnesium",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -1668,8 +1715,9 @@
         "MINERAL"
       ],
       "loinc_codes": [
-        "2777-7"
+        "2777-1"
       ],
+      "order_obs": "both",
       "method_common": "Colorimetric method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1690,6 +1738,7 @@
       "result_items": [
         {
           "item_code": "PHOS",
+          "loinc_code": "2777-1",
           "item_name": "Inorganic Phosphate",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -1754,6 +1803,7 @@
       "loinc_codes": [
         "1742-6"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1774,6 +1824,7 @@
       "result_items": [
         {
           "item_code": "ALT",
+          "loinc_code": "1742-6",
           "item_name": "ALT (SGPT)",
           "value_type": "NUMERIC",
           "unit": "U/L",
@@ -1846,6 +1897,7 @@
       "loinc_codes": [
         "1920-8"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1866,6 +1918,7 @@
       "result_items": [
         {
           "item_code": "AST",
+          "loinc_code": "1920-8",
           "item_name": "AST (SGOT)",
           "value_type": "NUMERIC",
           "unit": "U/L",
@@ -1937,8 +1990,9 @@
         "LFT"
       ],
       "loinc_codes": [
-        "1743-4"
+        "6768-6"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -1959,6 +2013,7 @@
       "result_items": [
         {
           "item_code": "ALP",
+          "loinc_code": "6768-6",
           "item_name": "Alkaline Phosphatase",
           "value_type": "NUMERIC",
           "unit": "U/L",
@@ -2023,6 +2078,7 @@
       "loinc_codes": [
         "2324-2"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2043,6 +2099,7 @@
       "result_items": [
         {
           "item_code": "GGT",
+          "loinc_code": "2324-2",
           "item_name": "GGT",
           "value_type": "NUMERIC",
           "unit": "U/L",
@@ -2107,6 +2164,7 @@
       "loinc_codes": [
         "1975-2"
       ],
+      "order_obs": "both",
       "method_common": "Van den Bergh colorimetric method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2128,6 +2186,7 @@
       "result_items": [
         {
           "item_code": "BILI_TOTAL",
+          "loinc_code": "1975-2",
           "item_name": "Total Bilirubin",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -2197,6 +2256,7 @@
       "loinc_codes": [
         "1968-7"
       ],
+      "order_obs": "both",
       "method_common": "Van den Bergh method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2217,6 +2277,7 @@
       "result_items": [
         {
           "item_code": "BILI_DIRECT",
+          "loinc_code": "1968-7",
           "item_name": "Direct Bilirubin",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -2279,8 +2340,9 @@
         "LFT"
       ],
       "loinc_codes": [
-        "1863-0"
+        "1751-7"
       ],
+      "order_obs": "both",
       "method_common": "Dye-binding method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2301,6 +2363,7 @@
       "result_items": [
         {
           "item_code": "ALB",
+          "loinc_code": "1751-7",
           "item_name": "Albumin",
           "value_type": "NUMERIC",
           "unit": "g/dL",
@@ -2365,6 +2428,7 @@
       "loinc_codes": [
         "2885-2"
       ],
+      "order_obs": "both",
       "method_common": "Biuret colorimetric method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2385,6 +2449,7 @@
       "result_items": [
         {
           "item_code": "TOTAL_PROTEIN",
+          "loinc_code": "2885-2",
           "item_name": "Total Protein",
           "value_type": "NUMERIC",
           "unit": "g/dL",
@@ -2449,6 +2514,7 @@
       "loinc_codes": [
         "2093-3"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2470,6 +2536,7 @@
       "result_items": [
         {
           "item_code": "CHOL_TOTAL",
+          "loinc_code": "2093-3",
           "item_name": "Total Cholesterol",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -2534,6 +2601,7 @@
       "loinc_codes": [
         "2085-9"
       ],
+      "order_obs": "both",
       "method_common": "Direct immunochemical method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2554,6 +2622,7 @@
       "result_items": [
         {
           "item_code": "HDL",
+          "loinc_code": "2085-9",
           "item_name": "HDL Cholesterol",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -2622,6 +2691,7 @@
       "loinc_codes": [
         "2089-1"
       ],
+      "order_obs": "both",
       "method_common": "Direct immunochemical or calculated",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2642,6 +2712,7 @@
       "result_items": [
         {
           "item_code": "LDL",
+          "loinc_code": "2089-1",
           "item_name": "LDL Cholesterol",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -2706,6 +2777,7 @@
       "loinc_codes": [
         "2571-8"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2727,6 +2799,7 @@
       "result_items": [
         {
           "item_code": "TG",
+          "loinc_code": "2571-8",
           "item_name": "Triglycerides",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -2791,6 +2864,7 @@
       "loinc_codes": [
         "1798-8"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2811,6 +2885,7 @@
       "result_items": [
         {
           "item_code": "AMYLASE",
+          "loinc_code": "1798-8",
           "item_name": "Amylase",
           "value_type": "NUMERIC",
           "unit": "U/L",
@@ -2874,6 +2949,7 @@
       "loinc_codes": [
         "3040-3"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -2894,6 +2970,7 @@
       "result_items": [
         {
           "item_code": "LIPASE",
+          "loinc_code": "3040-3",
           "item_name": "Lipase",
           "value_type": "NUMERIC",
           "unit": "U/L",
@@ -2958,6 +3035,7 @@
       "loinc_codes": [
         "1988-5"
       ],
+      "order_obs": "both",
       "method_common": "High-sensitivity immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -2978,6 +3056,7 @@
       "result_items": [
         {
           "item_code": "CRP",
+          "loinc_code": "1988-5",
           "item_name": "C-Reactive Protein",
           "value_type": "NUMERIC",
           "unit": "mg/L",
@@ -3038,6 +3117,7 @@
       "loinc_codes": [
         "10839-9"
       ],
+      "order_obs": "both",
       "method_common": "High-sensitivity troponin immunoassay",
       "turnaround_time_hours": 1,
       "sample": {
@@ -3059,6 +3139,7 @@
       "result_items": [
         {
           "item_code": "TROPONIN_I",
+          "loinc_code": "10839-9",
           "item_name": "Troponin I",
           "value_type": "NUMERIC",
           "unit": "pg/mL",
@@ -3126,8 +3207,9 @@
         "ACS"
       ],
       "loinc_codes": [
-        "2157-6"
+        "32673-6"
       ],
+      "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -3148,6 +3230,7 @@
       "result_items": [
         {
           "item_code": "CKMB",
+          "loinc_code": "32673-6",
           "item_name": "CK-MB",
           "value_type": "NUMERIC",
           "unit": "U/L",
@@ -3208,6 +3291,7 @@
       "loinc_codes": [
         "2498-4"
       ],
+      "order_obs": "both",
       "method_common": "Colorimetric method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -3229,9 +3313,10 @@
       "result_items": [
         {
           "item_code": "IRON",
+          "loinc_code": "2498-4",
           "item_name": "Serum Iron",
           "value_type": "NUMERIC",
-          "unit": "\u03bcg/dL",
+          "unit": "μg/dL",
           "decimals_suggested": 0,
           "reference_range": {
             "adult_male": {
@@ -3292,6 +3377,7 @@
       "loinc_codes": [
         "2276-4"
       ],
+      "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -3312,6 +3398,7 @@
       "result_items": [
         {
           "item_code": "FERRITIN",
+          "loinc_code": "2276-4",
           "item_name": "Ferritin",
           "value_type": "NUMERIC",
           "unit": "ng/mL",
@@ -3376,6 +3463,7 @@
       "loinc_codes": [
         "2500-7"
       ],
+      "order_obs": "both",
       "method_common": "Colorimetric",
       "turnaround_time_hours": 2,
       "sample": {
@@ -3396,9 +3484,10 @@
       "result_items": [
         {
           "item_code": "TIBC",
+          "loinc_code": "2500-7",
           "item_name": "TIBC",
           "value_type": "NUMERIC",
-          "unit": "\u03bcg/dL",
+          "unit": "μg/dL",
           "decimals_suggested": 0,
           "reference_range": {
             "adult_general": {
@@ -3454,8 +3543,9 @@
         "MACANEM"
       ],
       "loinc_codes": [
-        "2132-8"
+        "2132-9"
       ],
+      "order_obs": "both",
       "method_common": "Electrochemiluminescence immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -3476,6 +3566,7 @@
       "result_items": [
         {
           "item_code": "VIT_B12",
+          "loinc_code": "2132-9",
           "item_name": "Vitamin B12",
           "value_type": "NUMERIC",
           "unit": "pg/mL",
@@ -3533,8 +3624,9 @@
         "MACANEM"
       ],
       "loinc_codes": [
-        "2157-0"
+        "2284-8"
       ],
+      "order_obs": "both",
       "method_common": "Microbiologic assay or immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -3556,6 +3648,7 @@
       "result_items": [
         {
           "item_code": "FOLATE_LEVEL",
+          "loinc_code": "2284-8",
           "item_name": "Folate",
           "value_type": "NUMERIC",
           "unit": "ng/mL",
@@ -3613,8 +3706,9 @@
         "BONE"
       ],
       "loinc_codes": [
-        "14635-7"
+        "62292-8"
       ],
+      "order_obs": "both",
       "method_common": "LC-MS or immunoassay",
       "turnaround_time_hours": 3,
       "sample": {
@@ -3636,6 +3730,7 @@
       "result_items": [
         {
           "item_code": "VIT_D_25OH",
+          "loinc_code": "62292-8",
           "item_name": "25-Hydroxy Vitamin D",
           "value_type": "NUMERIC",
           "unit": "ng/mL",
@@ -3692,7 +3787,8 @@
         "COAG"
       ],
       "loinc_codes": [
-        "34714-6"
+        "5902-2",
+        "6301-6"
       ],
       "method_common": "Clot-based method",
       "turnaround_time_hours": 2,
@@ -3715,6 +3811,7 @@
       "result_items": [
         {
           "item_code": "PT_SEC",
+          "loinc_code": "5902-2",
           "item_name": "Prothrombin Time (seconds)",
           "value_type": "NUMERIC",
           "unit": "seconds",
@@ -3735,6 +3832,7 @@
         },
         {
           "item_code": "INR",
+          "loinc_code": "6301-6",
           "item_name": "International Normalized Ratio",
           "value_type": "NUMERIC",
           "unit": "ratio",
@@ -3803,8 +3901,9 @@
         "COAG"
       ],
       "loinc_codes": [
-        "1994-3"
+        "14979-9"
       ],
+      "order_obs": "both",
       "method_common": "Clot-based method",
       "turnaround_time_hours": 2,
       "sample": {
@@ -3826,6 +3925,7 @@
       "result_items": [
         {
           "item_code": "APTT",
+          "loinc_code": "14979-9",
           "item_name": "aPTT",
           "value_type": "NUMERIC",
           "unit": "seconds",
@@ -3895,8 +3995,9 @@
         "DIC"
       ],
       "loinc_codes": [
-        "3349-0"
+        "3255-7"
       ],
+      "order_obs": "both",
       "method_common": "Clauss method",
       "turnaround_time_hours": 2,
       "sample": {
@@ -3917,6 +4018,7 @@
       "result_items": [
         {
           "item_code": "FIBRINOGEN",
+          "loinc_code": "3255-7",
           "item_name": "Fibrinogen",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -3980,8 +4082,9 @@
         "VTE"
       ],
       "loinc_codes": [
-        "3896-5"
+        "48065-7"
       ],
+      "order_obs": "both",
       "method_common": "Latex agglutination or immunoassay",
       "turnaround_time_hours": 1,
       "sample": {
@@ -4002,9 +4105,10 @@
       "result_items": [
         {
           "item_code": "DDIMER",
+          "loinc_code": "48065-7",
           "item_name": "D-dimer",
           "value_type": "NUMERIC",
-          "unit": "\u03bcg/mL",
+          "unit": "μg/mL",
           "decimals_suggested": 1,
           "reference_range": {
             "adult_general": {
@@ -4063,7 +4167,18 @@
         "UAPANEL"
       ],
       "loinc_codes": [
-        "24357-6"
+        "5778-6",
+        "5767-9",
+        "5811-5",
+        "5803-2",
+        "5804-0",
+        "5792-7",
+        "5794-3",
+        "5799-2",
+        "5802-4",
+        "5821-4",
+        "13945-1",
+        "5769-5"
       ],
       "method_common": "Dipstick + microscopy",
       "turnaround_time_hours": 2,
@@ -4086,6 +4201,7 @@
       "result_items": [
         {
           "item_code": "UA_COLOR",
+          "loinc_code": "5778-6",
           "item_name": "Color",
           "value_type": "SELECT",
           "unit": "",
@@ -4108,6 +4224,7 @@
         },
         {
           "item_code": "UA_CLARITY",
+          "loinc_code": "5767-9",
           "item_name": "Clarity",
           "value_type": "SELECT",
           "unit": "",
@@ -4128,6 +4245,7 @@
         },
         {
           "item_code": "UA_GRAVITY",
+          "loinc_code": "5811-5",
           "item_name": "Specific Gravity",
           "value_type": "NUMERIC",
           "unit": "density",
@@ -4148,6 +4266,7 @@
         },
         {
           "item_code": "UA_pH",
+          "loinc_code": "5803-2",
           "item_name": "pH",
           "value_type": "NUMERIC",
           "unit": "pH units",
@@ -4168,6 +4287,7 @@
         },
         {
           "item_code": "UA_PROTEIN",
+          "loinc_code": "5804-0",
           "item_name": "Protein",
           "value_type": "SELECT",
           "unit": "",
@@ -4190,6 +4310,7 @@
         },
         {
           "item_code": "UA_GLUCOSE",
+          "loinc_code": "5792-7",
           "item_name": "Glucose",
           "value_type": "SELECT",
           "unit": "",
@@ -4211,6 +4332,7 @@
         },
         {
           "item_code": "UA_BLOOD",
+          "loinc_code": "5794-3",
           "item_name": "Blood/Hemoglobin",
           "value_type": "SELECT",
           "unit": "",
@@ -4232,6 +4354,7 @@
         },
         {
           "item_code": "UA_LEUK",
+          "loinc_code": "5799-2",
           "item_name": "Leukocyte Esterase",
           "value_type": "SELECT",
           "unit": "",
@@ -4253,6 +4376,7 @@
         },
         {
           "item_code": "UA_NITRITE",
+          "loinc_code": "5802-4",
           "item_name": "Nitrite",
           "value_type": "SELECT",
           "unit": "",
@@ -4271,6 +4395,7 @@
         },
         {
           "item_code": "UA_WBC",
+          "loinc_code": "5821-4",
           "item_name": "WBC (Microscopy)",
           "value_type": "NUMERIC",
           "unit": "/lpf",
@@ -4287,6 +4412,7 @@
         },
         {
           "item_code": "UA_RBC",
+          "loinc_code": "13945-1",
           "item_name": "RBC (Microscopy)",
           "value_type": "NUMERIC",
           "unit": "/lpf",
@@ -4303,6 +4429,7 @@
         },
         {
           "item_code": "UA_BACTERIA",
+          "loinc_code": "5769-5",
           "item_name": "Bacteria (Microscopy)",
           "value_type": "SELECT",
           "unit": "",
@@ -4365,6 +4492,7 @@
       "loinc_codes": [
         "2106-3"
       ],
+      "order_obs": "both",
       "method_common": "Immunochromatographic rapid test",
       "turnaround_time_hours": 0.25,
       "sample": {
@@ -4386,6 +4514,7 @@
       "result_items": [
         {
           "item_code": "URINE_HCG",
+          "loinc_code": "2106-3",
           "item_name": "hCG (Urine)",
           "value_type": "SELECT",
           "unit": "",
@@ -4443,8 +4572,9 @@
         "PREG"
       ],
       "loinc_codes": [
-        "2118-8"
+        "21198-7"
       ],
+      "order_obs": "both",
       "method_common": "Immunoassay (chemiluminescent)",
       "turnaround_time_hours": 2,
       "sample": {
@@ -4465,6 +4595,7 @@
       "result_items": [
         {
           "item_code": "BHCG_QUANT",
+          "loinc_code": "21198-7",
           "item_name": "Beta-hCG (Quantitative)",
           "value_type": "NUMERIC",
           "unit": "mIU/mL",
@@ -4533,6 +4664,7 @@
       "loinc_codes": [
         "3016-3"
       ],
+      "order_obs": "both",
       "method_common": "3rd generation immunoassay or higher",
       "turnaround_time_hours": 2,
       "sample": {
@@ -4553,6 +4685,7 @@
       "result_items": [
         {
           "item_code": "TSH",
+          "loinc_code": "3016-3",
           "item_name": "TSH",
           "value_type": "NUMERIC",
           "unit": "mIU/L",
@@ -4619,6 +4752,7 @@
       "loinc_codes": [
         "3024-7"
       ],
+      "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -4639,6 +4773,7 @@
       "result_items": [
         {
           "item_code": "FT4",
+          "loinc_code": "3024-7",
           "item_name": "Free Thyroxine",
           "value_type": "NUMERIC",
           "unit": "ng/dL (pmol/L)",
@@ -4704,8 +4839,9 @@
         "HIV"
       ],
       "loinc_codes": [
-        "57013-6"
+        "56888-1"
       ],
+      "order_obs": "both",
       "method_common": "EIA or CIA; WHO-recommended algorithm",
       "turnaround_time_hours": 2,
       "sample": {
@@ -4727,6 +4863,7 @@
       "result_items": [
         {
           "item_code": "HIV_SCREEN",
+          "loinc_code": "56888-1",
           "item_name": "HIV 1/2 Combo (Screen)",
           "value_type": "SELECT",
           "unit": "",
@@ -4787,8 +4924,9 @@
         "HIV"
       ],
       "loinc_codes": [
-        "34701-0"
+        "44873-8"
       ],
+      "order_obs": "observation",
       "method_common": "Immunoblot or HIV-1 RNA real-time PCR",
       "turnaround_time_hours": 5,
       "sample": {
@@ -4810,6 +4948,7 @@
       "result_items": [
         {
           "item_code": "HIV_CONFIRM",
+          "loinc_code": "44873-8",
           "item_name": "HIV Confirmation Result",
           "value_type": "SELECT",
           "unit": "",
@@ -4869,8 +5008,9 @@
         "HIVMGMT"
       ],
       "loinc_codes": [
-        "20415-4"
+        "20447-9"
       ],
+      "order_obs": "both",
       "method_common": "Real-time RT-PCR",
       "turnaround_time_hours": 24,
       "sample": {
@@ -4892,6 +5032,7 @@
       "result_items": [
         {
           "item_code": "HIV_VL",
+          "loinc_code": "20447-9",
           "item_name": "HIV-1 Viral Load",
           "value_type": "NUMERIC",
           "unit": "copies/mL",
@@ -4952,6 +5093,7 @@
       "loinc_codes": [
         "5195-3"
       ],
+      "order_obs": "both",
       "method_common": "ELISA or RDT",
       "turnaround_time_hours": 2,
       "sample": {
@@ -4972,6 +5114,7 @@
       "result_items": [
         {
           "item_code": "HBSAG",
+          "loinc_code": "5195-3",
           "item_name": "HBsAg",
           "value_type": "SELECT",
           "unit": "",
@@ -5029,8 +5172,9 @@
         "HEP"
       ],
       "loinc_codes": [
-        "5196-1"
+        "13952-7"
       ],
+      "order_obs": "both",
       "method_common": "ELISA",
       "turnaround_time_hours": 2,
       "sample": {
@@ -5051,6 +5195,7 @@
       "result_items": [
         {
           "item_code": "ANTIHBC",
+          "loinc_code": "13952-7",
           "item_name": "Anti-HBc",
           "value_type": "SELECT",
           "unit": "",
@@ -5107,8 +5252,9 @@
         "HEP"
       ],
       "loinc_codes": [
-        "5194-6"
+        "5193-8"
       ],
+      "order_obs": "both",
       "method_common": "ELISA",
       "turnaround_time_hours": 2,
       "sample": {
@@ -5129,6 +5275,7 @@
       "result_items": [
         {
           "item_code": "ANTIHBS",
+          "loinc_code": "5193-8",
           "item_name": "Anti-HBs",
           "value_type": "SELECT",
           "unit": "",
@@ -5141,7 +5288,7 @@
           ],
           "reference_range": {
             "adult_general": {
-              "text": "Negative (non-immune); \u226510 mIU/mL positive indicates immunity"
+              "text": "Negative (non-immune); ≥10 mIU/mL positive indicates immunity"
             }
           }
         }
@@ -5185,8 +5332,9 @@
         "HEP"
       ],
       "loinc_codes": [
-        "7905-9"
+        "16128-1"
       ],
+      "order_obs": "both",
       "method_common": "3rd generation ELISA",
       "turnaround_time_hours": 2,
       "sample": {
@@ -5207,6 +5355,7 @@
       "result_items": [
         {
           "item_code": "ANTIHCV",
+          "loinc_code": "16128-1",
           "item_name": "Anti-HCV",
           "value_type": "SELECT",
           "unit": "",
@@ -5268,8 +5417,9 @@
         "STI"
       ],
       "loinc_codes": [
-        "5289-3"
+        "20507-0"
       ],
+      "order_obs": "both",
       "method_common": "Rapid plasma reagin (RPR) or VDRL",
       "turnaround_time_hours": 1,
       "sample": {
@@ -5290,6 +5440,7 @@
       "result_items": [
         {
           "item_code": "RPR_VDRL_RESULT",
+          "loinc_code": "20507-0",
           "item_name": "RPR/VDRL Result",
           "value_type": "SELECT",
           "unit": "",
@@ -5348,8 +5499,9 @@
         "SYPH"
       ],
       "loinc_codes": [
-        "14032-3"
+        "8041-6"
       ],
+      "order_obs": "both",
       "method_common": "TPHA, TPPA, or FTA-Abs",
       "turnaround_time_hours": 2,
       "sample": {
@@ -5370,6 +5522,7 @@
       "result_items": [
         {
           "item_code": "TPHA_TPPA_RESULT",
+          "loinc_code": "8041-6",
           "item_name": "TPHA/TPPA Result",
           "value_type": "SELECT",
           "unit": "",
@@ -5427,8 +5580,9 @@
         "ULCER"
       ],
       "loinc_codes": [
-        "5213-8"
+        "16126-5"
       ],
+      "order_obs": "both",
       "method_common": "ELISA or rapid test",
       "turnaround_time_hours": 2,
       "sample": {
@@ -5449,6 +5603,7 @@
       "result_items": [
         {
           "item_code": "HPYLORI_IGG",
+          "loinc_code": "16126-5",
           "item_name": "H. pylori IgG",
           "value_type": "SELECT",
           "unit": "",
@@ -5507,7 +5662,8 @@
         "PREGSER"
       ],
       "loinc_codes": [
-        "6317-8"
+        "22580-5",
+        "25542-2"
       ],
       "method_common": "ELISA or IFA",
       "turnaround_time_hours": 2,
@@ -5529,6 +5685,7 @@
       "result_items": [
         {
           "item_code": "TOXO_IGG",
+          "loinc_code": "22580-5",
           "item_name": "Toxoplasma IgG",
           "value_type": "SELECT",
           "unit": "",
@@ -5547,6 +5704,7 @@
         },
         {
           "item_code": "TOXO_IGM",
+          "loinc_code": "25542-2",
           "item_name": "Toxoplasma IgM",
           "value_type": "SELECT",
           "unit": "",
@@ -5604,7 +5762,8 @@
         "IMMCOMP"
       ],
       "loinc_codes": [
-        "6639-2"
+        "5124-3",
+        "5126-8"
       ],
       "method_common": "ELISA or chemiluminescence",
       "turnaround_time_hours": 2,
@@ -5626,6 +5785,7 @@
       "result_items": [
         {
           "item_code": "CMV_IGG",
+          "loinc_code": "5124-3",
           "item_name": "CMV IgG",
           "value_type": "SELECT",
           "unit": "",
@@ -5644,6 +5804,7 @@
         },
         {
           "item_code": "CMV_IGM",
+          "loinc_code": "5126-8",
           "item_name": "CMV IgM",
           "value_type": "SELECT",
           "unit": "",
@@ -5701,7 +5862,9 @@
         "INFACUTE"
       ],
       "loinc_codes": [
-        "5304-0"
+        "30340-4",
+        "30339-6",
+        "7883-2"
       ],
       "method_common": "ELISA",
       "turnaround_time_hours": 2,
@@ -5723,6 +5886,7 @@
       "result_items": [
         {
           "item_code": "EBV_VCA_IGM",
+          "loinc_code": "30340-4",
           "item_name": "EBV VCA-IgM",
           "value_type": "SELECT",
           "unit": "",
@@ -5741,6 +5905,7 @@
         },
         {
           "item_code": "EBV_VCA_IGG",
+          "loinc_code": "30339-6",
           "item_name": "EBV VCA-IgG",
           "value_type": "SELECT",
           "unit": "",
@@ -5759,6 +5924,7 @@
         },
         {
           "item_code": "EBV_EBNA",
+          "loinc_code": "7883-2",
           "item_name": "EBV EBNA",
           "value_type": "SELECT",
           "unit": "",
@@ -5816,8 +5982,9 @@
         "PRENATAL"
       ],
       "loinc_codes": [
-        "5320-6"
+        "40667-8"
       ],
+      "order_obs": "both",
       "method_common": "ELISA",
       "turnaround_time_hours": 2,
       "sample": {
@@ -5838,6 +6005,7 @@
       "result_items": [
         {
           "item_code": "RUBELLA_IGG",
+          "loinc_code": "40667-8",
           "item_name": "Rubella IgG",
           "value_type": "SELECT",
           "unit": "",
@@ -5850,7 +6018,7 @@
           ],
           "reference_range": {
             "adult_general": {
-              "text": "Positive/Immune (\u226510 IU/mL or per assay cut-off)"
+              "text": "Positive/Immune (≥10 IU/mL or per assay cut-off)"
             }
           }
         }
@@ -5895,13 +6063,14 @@
         "FEVER"
       ],
       "loinc_codes": [
-        "9142-9"
+        "70569-9"
       ],
+      "order_obs": "both",
       "method_common": "Rapid immunochromatographic test",
       "turnaround_time_hours": 0.25,
       "sample": {
         "sample_type": "Whole Blood (capillary or venous)",
-        "container": "Finger prick or EDTA, 5-10 \u03bcL",
+        "container": "Finger prick or EDTA, 5-10 μL",
         "minimum_volume_ml": 0.005,
         "fasting_required": false,
         "collection_notes": "Follow WHO pre-qualification requirements",
@@ -5918,6 +6087,7 @@
       "result_items": [
         {
           "item_code": "MALARIA_RDT",
+          "loinc_code": "70569-9",
           "item_name": "Malaria RDT Result",
           "value_type": "SELECT",
           "unit": "",
@@ -5953,7 +6123,7 @@
       "container_top_colors": [
         "purple"
       ],
-      "sample_volume_description": "10\u03bcL",
+      "sample_volume_description": "10μL",
       "price": 50,
       "validation_rejection_criteria": [
         "contaminated",
@@ -5981,13 +6151,14 @@
         "FEVER"
       ],
       "loinc_codes": [
-        "80307-4"
+        "32206-5"
       ],
+      "order_obs": "both",
       "method_common": "Microscopy - Wright-Giemsa staining",
       "turnaround_time_hours": 2,
       "sample": {
         "sample_type": "Whole Blood",
-        "container": "Glass slide or EDTA, 5-10 \u03bcL",
+        "container": "Glass slide or EDTA, 5-10 μL",
         "minimum_volume_ml": 0.01,
         "fasting_required": false,
         "collection_notes": "Prepare within 30 minutes",
@@ -6004,6 +6175,7 @@
       "result_items": [
         {
           "item_code": "MALARIA_MICRO",
+          "loinc_code": "32206-5",
           "item_name": "Malaria Species & Density",
           "value_type": "TEXT",
           "unit": "",
@@ -6032,7 +6204,7 @@
       "container_top_colors": [
         "purple"
       ],
-      "sample_volume_description": "10\u03bcL",
+      "sample_volume_description": "10μL",
       "price": 50,
       "validation_rejection_criteria": [
         "contaminated",
@@ -6059,7 +6231,8 @@
         "HBPATH"
       ],
       "loinc_codes": [
-        "4576-3"
+        "6864-3",
+        "49316-3"
       ],
       "method_common": "HPLC or isoelectric focusing",
       "turnaround_time_hours": 4,
@@ -6082,6 +6255,7 @@
       "result_items": [
         {
           "item_code": "SICKLE_SCREEN",
+          "loinc_code": "6864-3",
           "item_name": "Sickle Cell Screening",
           "value_type": "SELECT",
           "unit": "",
@@ -6100,6 +6274,7 @@
         },
         {
           "item_code": "HB_PHENOTYPE",
+          "loinc_code": "49316-3",
           "item_name": "Hemoglobin Phenotype",
           "value_type": "SELECT",
           "unit": "",
@@ -6162,8 +6337,9 @@
         "HEMOLYS"
       ],
       "loinc_codes": [
-        "5803-2"
+        "2356-4"
       ],
+      "order_obs": "both",
       "method_common": "Quantitative enzymatic assay or Fluorescent Spot Test",
       "turnaround_time_hours": 2,
       "sample": {
@@ -6185,6 +6361,7 @@
       "result_items": [
         {
           "item_code": "G6PD_RESULT",
+          "loinc_code": "2356-4",
           "item_name": "G6PD Status",
           "value_type": "SELECT",
           "unit": "",
@@ -6245,8 +6422,9 @@
         "DIARRHEA"
       ],
       "loinc_codes": [
-        "12504-5"
+        "10704-5"
       ],
+      "order_obs": "both",
       "method_common": "Microscopy of fresh/preserved stool",
       "turnaround_time_hours": 2,
       "sample": {
@@ -6268,6 +6446,7 @@
       "result_items": [
         {
           "item_code": "PARASITES_FOUND",
+          "loinc_code": "10704-5",
           "item_name": "Parasites Identified",
           "value_type": "TEXT",
           "unit": "",
@@ -6323,8 +6502,9 @@
         "TB"
       ],
       "loinc_codes": [
-        "12475-8"
+        "647-8"
       ],
+      "order_obs": "both",
       "method_common": "Ziehl-Neelsen staining or fluorescence microscopy",
       "turnaround_time_hours": 1,
       "sample": {
@@ -6346,6 +6526,7 @@
       "result_items": [
         {
           "item_code": "AFB_RESULT",
+          "loinc_code": "647-8",
           "item_name": "AFB Smear Result",
           "value_type": "SELECT",
           "unit": "",
@@ -6411,8 +6592,10 @@
         "DRTB"
       ],
       "loinc_codes": [
-        "80327-7"
+        "85362-2",
+        "33634-7"
       ],
+      "order_obs": "both",
       "method_common": "Real-time PCR",
       "turnaround_time_hours": 2,
       "sample": {
@@ -6433,6 +6616,7 @@
       "result_items": [
         {
           "item_code": "GENEXPERT_MTB",
+          "loinc_code": "85362-2",
           "item_name": "MTB Detection & RIF Resistance",
           "value_type": "SELECT",
           "unit": "",
@@ -6493,7 +6677,8 @@
         "INFECT"
       ],
       "loinc_codes": [
-        "9008-3"
+        "19090-0",
+        "630-4"
       ],
       "method_common": "Quantitative culture + AST",
       "turnaround_time_hours": 48,
@@ -6515,6 +6700,7 @@
       "result_items": [
         {
           "item_code": "URINE_COUNT",
+          "loinc_code": "19090-0",
           "item_name": "Colony Count",
           "value_type": "NUMERIC",
           "unit": "CFU/mL",
@@ -6531,6 +6717,7 @@
         },
         {
           "item_code": "URINE_ORGANISM",
+          "loinc_code": "630-4",
           "item_name": "Organism",
           "value_type": "TEXT",
           "unit": "",
@@ -6611,6 +6798,7 @@
       "loinc_codes": [
         "625-4"
       ],
+      "order_obs": "both",
       "method_common": "Culture on selective media",
       "turnaround_time_hours": 48,
       "sample": {
@@ -6631,6 +6819,7 @@
       "result_items": [
         {
           "item_code": "STOOL_ORGANISM",
+          "loinc_code": "625-4",
           "item_name": "Organism",
           "value_type": "TEXT",
           "unit": "",
@@ -6707,8 +6896,9 @@
         "SEPSIS"
       ],
       "loinc_codes": [
-        "27853-3"
+        "600-7"
       ],
+      "order_obs": "both",
       "method_common": "Automated blood culture system or manual broth",
       "turnaround_time_hours": 24,
       "sample": {
@@ -6730,6 +6920,7 @@
       "result_items": [
         {
           "item_code": "BLOOD_CULTURE",
+          "loinc_code": "600-7",
           "item_name": "Culture Outcome",
           "value_type": "SELECT",
           "unit": "",
@@ -6813,8 +7004,9 @@
         "COVID"
       ],
       "loinc_codes": [
-        "96163-4"
+        "94500-6"
       ],
+      "order_obs": "both",
       "method_common": "Real-time RT-qPCR",
       "turnaround_time_hours": 4,
       "sample": {
@@ -6836,6 +7028,7 @@
       "result_items": [
         {
           "item_code": "SARSCOV2_PCR",
+          "loinc_code": "94500-6",
           "item_name": "SARS-CoV-2 RNA (RT-PCR)",
           "value_type": "SELECT",
           "unit": "",
@@ -6894,8 +7087,9 @@
         "COVID"
       ],
       "loinc_codes": [
-        "96119-6"
+        "95209-3"
       ],
+      "order_obs": "both",
       "method_common": "Lateral flow immunochromatographic assay",
       "turnaround_time_hours": 0.25,
       "sample": {
@@ -6917,6 +7111,7 @@
       "result_items": [
         {
           "item_code": "SARSCOV2_AG",
+          "loinc_code": "95209-3",
           "item_name": "SARS-CoV-2 Antigen (RDT)",
           "value_type": "SELECT",
           "unit": "",
@@ -6975,7 +7170,8 @@
         "FEVER"
       ],
       "loinc_codes": [
-        "33879-7"
+        "25338-5",
+        "29676-4"
       ],
       "method_common": "ELISA, RDT, or RT-PCR",
       "turnaround_time_hours": 2,
@@ -6997,6 +7193,7 @@
       "result_items": [
         {
           "item_code": "DENGUE_IGM",
+          "loinc_code": "25338-5",
           "item_name": "Dengue IgM",
           "value_type": "SELECT",
           "unit": "",
@@ -7015,6 +7212,7 @@
         },
         {
           "item_code": "DENGUE_IGG",
+          "loinc_code": "29676-4",
           "item_name": "Dengue IgG",
           "value_type": "SELECT",
           "unit": "",
@@ -7072,13 +7270,14 @@
         "FEVER"
       ],
       "loinc_codes": [
-        "81324-6"
+        "57934-2"
       ],
+      "order_obs": "both",
       "method_common": "Rapid immunochromatographic assay",
       "turnaround_time_hours": 0.5,
       "sample": {
         "sample_type": "Serum or whole blood",
-        "container": "SST or capillary drop, 2-5 \u03bcL",
+        "container": "SST or capillary drop, 2-5 μL",
         "minimum_volume_ml": 2,
         "fasting_required": false,
         "rejection_criteria": [
@@ -7094,6 +7293,7 @@
       "result_items": [
         {
           "item_code": "CHIKV_IGM",
+          "loinc_code": "57934-2",
           "item_name": "Chikungunya IgM",
           "value_type": "SELECT",
           "unit": "",
@@ -7124,7 +7324,7 @@
       "container_top_colors": [
         "red"
       ],
-      "sample_volume_description": "5\u03bcL",
+      "sample_volume_description": "5μL",
       "price": 50,
       "validation_rejection_criteria": [
         "contaminated",
@@ -7151,8 +7351,9 @@
         "TXFUSE"
       ],
       "loinc_codes": [
-        "5808-8"
+        "1250-0"
       ],
+      "order_obs": "observation",
       "method_common": "Gel card or tube agglutination",
       "turnaround_time_hours": 1,
       "sample": {
@@ -7174,6 +7375,7 @@
       "result_items": [
         {
           "item_code": "CROSS_MATCH",
+          "loinc_code": "1250-0",
           "item_name": "Cross-Match Compatibility",
           "value_type": "SELECT",
           "unit": "",
@@ -7232,8 +7434,9 @@
         "PSASCR"
       ],
       "loinc_codes": [
-        "2025-8"
+        "2857-1"
       ],
+      "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -7255,6 +7458,7 @@
       "result_items": [
         {
           "item_code": "PSA",
+          "loinc_code": "2857-1",
           "item_name": "PSA",
           "value_type": "NUMERIC",
           "unit": "ng/mL",
@@ -7312,6 +7516,7 @@
       "loinc_codes": [
         "2039-6"
       ],
+      "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -7332,6 +7537,7 @@
       "result_items": [
         {
           "item_code": "CEA",
+          "loinc_code": "2039-6",
           "item_name": "CEA",
           "value_type": "NUMERIC",
           "unit": "ng/mL",
@@ -7392,8 +7598,9 @@
         "NUTRI"
       ],
       "loinc_codes": [
-        "2987-5"
+        "14338-8"
       ],
+      "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
       "sample": {
@@ -7414,6 +7621,7 @@
       "result_items": [
         {
           "item_code": "PREALBUM",
+          "loinc_code": "14338-8",
           "item_name": "Prealbumin",
           "value_type": "NUMERIC",
           "unit": "mg/dL",
@@ -7471,6 +7679,7 @@
       "loinc_codes": [
         "2524-7"
       ],
+      "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
       "sample": {
@@ -7492,6 +7701,7 @@
       "result_items": [
         {
           "item_code": "LACTATE",
+          "loinc_code": "2524-7",
           "item_name": "Lactate",
           "value_type": "NUMERIC",
           "unit": "mmol/L",
@@ -7548,8 +7758,9 @@
         "HBPATH"
       ],
       "loinc_codes": [
-        "4576-3"
+        "49322-1"
       ],
+      "order_obs": "observation",
       "method_common": "HPLC (high performance liquid chromatography)",
       "turnaround_time_hours": 4,
       "sample": {
@@ -7571,6 +7782,7 @@
       "result_items": [
         {
           "item_code": "HB_HPLC",
+          "loinc_code": "49322-1",
           "item_name": "Hemoglobin HPLC Profile",
           "value_type": "TEXT",
           "unit": "",
@@ -7625,8 +7837,9 @@
         "MPROTEIN"
       ],
       "loinc_codes": [
-        "2820-9"
+        "12851-2"
       ],
+      "order_obs": "both",
       "method_common": "Capillary or cellulose acetate electrophoresis",
       "turnaround_time_hours": 3,
       "sample": {
@@ -7647,6 +7860,7 @@
       "result_items": [
         {
           "item_code": "SPEP_RESULT",
+          "loinc_code": "12851-2",
           "item_name": "Protein Fraction Profile",
           "value_type": "TEXT",
           "unit": "",
@@ -7701,8 +7915,9 @@
         "UTI"
       ],
       "loinc_codes": [
-        "32705-2"
+        "19090-0"
       ],
+      "order_obs": "both",
       "method_common": "Quantitative culture on blood agar",
       "turnaround_time_hours": 48,
       "sample": {
@@ -7723,6 +7938,7 @@
       "result_items": [
         {
           "item_code": "URINE_CFU",
+          "loinc_code": "19090-0",
           "item_name": "Colony-Forming Units",
           "value_type": "NUMERIC",
           "unit": "CFU/mL",
@@ -7742,7 +7958,7 @@
         "SRC002"
       ],
       "confidence": "HIGH",
-      "notes": "\u226510^5 CFU/mL diagnostic for UTI in symptomatic patients",
+      "notes": "≥10^5 CFU/mL diagnostic for UTI in symptomatic patients",
       "mapped_category": "microbiology",
       "mapped_sample_type": "urine",
       "container_types": [
@@ -7780,7 +7996,8 @@
         "FEVER"
       ],
       "loinc_codes": [
-        "6317-8"
+        "41216-3",
+        "41217-1"
       ],
       "method_common": "ELISA or plaque reduction neutralization test",
       "turnaround_time_hours": 3,
@@ -7802,6 +8019,7 @@
       "result_items": [
         {
           "item_code": "YF_IGM",
+          "loinc_code": "41216-3",
           "item_name": "Yellow Fever IgM",
           "value_type": "SELECT",
           "unit": "",
@@ -7820,6 +8038,7 @@
         },
         {
           "item_code": "YF_IGG",
+          "loinc_code": "41217-1",
           "item_name": "Yellow Fever IgG",
           "value_type": "SELECT",
           "unit": "",
