@@ -125,6 +125,8 @@ export type FeedbackId =
   | "lab.validation.approve.error"
   | "lab.validation.approve.networkAmbiguous"
   | "lab.validation.approve.success"
+  | "lab.validation.criticalSeen.label"
+  | "lab.validation.criticalSeen.required"
   | "lab.validation.testUnavailable"
   | "lab.worklist.loadFailed"
   | "order.create.error"
@@ -270,7 +272,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   "lab.qualityIssue.dialog.actions.retest": { channel: "inline", variant: "info", title: "Retest on same {{sample}}" },
   "lab.qualityIssue.dialog.actions.retestDescription": { channel: "inline", variant: "info", title: "Run the {{test}} again on the specimen already collected." },
   "lab.qualityIssue.dialog.actions.retestHint": { channel: "inline", variant: "warning", title: "(supervisor approval required)" },
-  "lab.qualityIssue.dialog.actions.retestLimit": { channel: "inline", variant: "warning", title: "Re-test limit reached. Submitting will escalate to a supervisor for approval." },
+  "lab.qualityIssue.dialog.actions.retestLimit": { channel: "inline", variant: "warning", title: "Re-test limit reached on this sample. Choose recollection or cancel." },
   "lab.qualityIssue.dialog.error.cancel": { channel: "inline", variant: "info", title: "Cancel" },
   "lab.qualityIssue.dialog.error.retry": { channel: "inline", variant: "info", title: "Retry" },
   "lab.qualityIssue.dialog.escalation.reasonLabel": { channel: "inline", variant: "danger", title: "Rejection Reason" },
@@ -298,6 +300,8 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   "lab.validation.approve.error": { channel: "toast", variant: "error", title: "Failed to validate results", subtitle: "The validation request failed. Please try again or contact support if the issue persists.", brief: "failed" },
   "lab.validation.approve.networkAmbiguous": { channel: "toast", variant: "warning", title: "Action may have completed", subtitle: "The request did not complete. Please refresh the page to see the latest status.", brief: "pending" },
   "lab.validation.approve.success": { channel: "toast", variant: "success", title: "Results approved", subtitle: "These results have been approved and are now final. The {{order}} status has been updated.", brief: "validated" },
+  "lab.validation.criticalSeen.label": { channel: "inline", variant: "warning", title: "I have seen this critical result" },
+  "lab.validation.criticalSeen.required": { channel: "toast", variant: "error", title: "Confirm critical result", subtitle: "Check that you have seen the critical result before approving.", brief: "required" },
   "lab.validation.testUnavailable": { channel: "toast", variant: "error", title: "{{testCap}} record unavailable", subtitle: "Refresh the page and try again.", brief: "failed" },
   "lab.worklist.loadFailed": { channel: "toast", variant: "danger", title: "Failed to load the lab worklist", brief: "failed" },
   "order.create.error": { channel: "toast", variant: "error", title: "Failed to create {{order}}", brief: "failed" },

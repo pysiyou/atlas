@@ -10,7 +10,7 @@
       ],
       "category": "Hematology",
       "panels": [
-        "Complete Hematology Panel"
+        "complete_hematology_panel"
       ],
       "loinc_codes": [
         "57021-8"
@@ -230,7 +230,7 @@
       ],
       "category": "Hematology",
       "panels": [
-        "Anemia Workup Panel"
+        "anemia_workup_panel"
       ],
       "loinc_codes": [
         "4695-3"
@@ -328,7 +328,7 @@
       ],
       "category": "Hematology",
       "panels": [
-        "Manual Differential Panel"
+        "manual_differential_panel"
       ],
       "loinc_codes": [
         "15286-3"
@@ -429,7 +429,7 @@
       ],
       "category": "Hematology",
       "panels": [
-        "Inflammatory Markers Panel"
+        "inflammatory_markers_panel"
       ],
       "loinc_codes": [
         "4537-7"
@@ -515,7 +515,7 @@
       ],
       "category": "Hematology - Transfusion Medicine",
       "panels": [
-        "Transfusion Screening Panel"
+        "transfusion_screening_panel"
       ],
       "loinc_codes": [
         "883-4"
@@ -617,8 +617,8 @@
       ],
       "category": "Clinical Chemistry",
       "panels": [
-        "Metabolic Panel",
-        "Diabetes Screening"
+        "metabolic_panel",
+        "diabetes_screening"
       ],
       "loinc_codes": [
         "1558-5"
@@ -708,7 +708,7 @@
       ],
       "category": "Clinical Chemistry",
       "panels": [
-        "Diabetes Screening Panel"
+        "diabetes_screening_panel"
       ],
       "loinc_codes": [
         "2345-7"
@@ -797,7 +797,7 @@
       ],
       "category": "Clinical Chemistry",
       "panels": [
-        "Diabetes Management Panel"
+        "diabetes_management_panel"
       ],
       "loinc_codes": [
         "4548-4"
@@ -877,8 +877,8 @@
       ],
       "category": "Clinical Chemistry - Renal Function",
       "panels": [
-        "Renal Panel",
-        "Metabolic Panel"
+        "renal_panel",
+        "metabolic_panel"
       ],
       "loinc_codes": [
         "2160-0"
@@ -970,8 +970,8 @@
       ],
       "category": "Clinical Chemistry - Renal Function",
       "panels": [
-        "Renal Panel",
-        "Metabolic Panel"
+        "renal_panel",
+        "metabolic_panel"
       ],
       "loinc_codes": [
         "3094-0"
@@ -1059,7 +1059,7 @@
       ],
       "category": "Clinical Chemistry - Renal Function",
       "panels": [
-        "Renal Panel"
+        "renal_panel"
       ],
       "loinc_codes": [
         "33914-3"
@@ -1143,8 +1143,8 @@
       ],
       "category": "Clinical Chemistry - Electrolytes",
       "panels": [
-        "Electrolyte Panel",
-        "Metabolic Panel"
+        "electrolyte_panel",
+        "metabolic_panel"
       ],
       "loinc_codes": [
         "2951-2"
@@ -1233,7 +1233,7 @@
       ],
       "category": "Clinical Chemistry - Electrolytes",
       "panels": [
-        "Electrolyte Panel"
+        "electrolyte_panel"
       ],
       "loinc_codes": [
         "2823-3"
@@ -1324,7 +1324,7 @@
       ],
       "category": "Clinical Chemistry - Electrolytes",
       "panels": [
-        "Electrolyte Panel"
+        "electrolyte_panel"
       ],
       "loinc_codes": [
         "2075-0"
@@ -1409,7 +1409,7 @@
       ],
       "category": "Clinical Chemistry - Acid-Base",
       "panels": [
-        "Electrolyte Panel"
+        "electrolyte_panel"
       ],
       "loinc_codes": [
         "2028-9"
@@ -1493,7 +1493,7 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
-        "Mineral Panel"
+        "mineral_panel"
       ],
       "loinc_codes": [
         "2000-8"
@@ -1581,7 +1581,7 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
-        "Mineral Panel"
+        "mineral_panel"
       ],
       "loinc_codes": [
         "19123-9"
@@ -1665,7 +1665,7 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
-        "Mineral Panel"
+        "mineral_panel"
       ],
       "loinc_codes": [
         "2777-7"
@@ -1749,7 +1749,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "Liver Function Panel"
+        "liver_function_panel"
       ],
       "loinc_codes": [
         "1742-6"
@@ -1841,7 +1841,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "Liver Function Panel"
+        "liver_function_panel"
       ],
       "loinc_codes": [
         "1920-8"
@@ -1934,7 +1934,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "Liver Function Panel"
+        "liver_function_panel"
       ],
       "loinc_codes": [
         "1743-4"
@@ -2018,7 +2018,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "Liver Function Panel"
+        "liver_function_panel"
       ],
       "loinc_codes": [
         "2324-2"
@@ -2102,7 +2102,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "Liver Function Panel"
+        "liver_function_panel"
       ],
       "loinc_codes": [
         "1975-2"
@@ -2192,7 +2192,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "Liver Function Panel"
+        "liver_function_panel"
       ],
       "loinc_codes": [
         "1968-7"
@@ -2276,7 +2276,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "Liver Function Panel"
+        "liver_function_panel"
       ],
       "loinc_codes": [
         "1863-0"
@@ -2360,7 +2360,7 @@
       ],
       "category": "Clinical Chemistry - Protein Metabolism",
       "panels": [
-        "Metabolic Panel"
+        "metabolic_panel"
       ],
       "loinc_codes": [
         "2885-2"
@@ -2444,7 +2444,7 @@
       ],
       "category": "Clinical Chemistry - Lipid Panel",
       "panels": [
-        "Lipid Panel"
+        "lipid_panel"
       ],
       "loinc_codes": [
         "2093-3"
@@ -2529,7 +2529,7 @@
       ],
       "category": "Clinical Chemistry - Lipid Panel",
       "panels": [
-        "Lipid Panel"
+        "lipid_panel"
       ],
       "loinc_codes": [
         "2085-9"
@@ -2617,7 +2617,7 @@
       ],
       "category": "Clinical Chemistry - Lipid Panel",
       "panels": [
-        "Lipid Panel"
+        "lipid_panel"
       ],
       "loinc_codes": [
         "2089-1"
@@ -2701,7 +2701,7 @@
       ],
       "category": "Clinical Chemistry - Lipid Panel",
       "panels": [
-        "Lipid Panel"
+        "lipid_panel"
       ],
       "loinc_codes": [
         "2571-8"
@@ -2786,7 +2786,7 @@
       ],
       "category": "Clinical Chemistry - Pancreatic Enzymes",
       "panels": [
-        "Acute Pancreatitis Panel"
+        "acute_pancreatitis_panel"
       ],
       "loinc_codes": [
         "1798-8"
@@ -2869,7 +2869,7 @@
       ],
       "category": "Clinical Chemistry - Pancreatic Enzymes",
       "panels": [
-        "Acute Pancreatitis Panel"
+        "acute_pancreatitis_panel"
       ],
       "loinc_codes": [
         "3040-3"
@@ -2953,7 +2953,7 @@
       ],
       "category": "Clinical Chemistry - Inflammation",
       "panels": [
-        "Inflammatory Markers Panel"
+        "inflammatory_markers_panel"
       ],
       "loinc_codes": [
         "1988-5"
@@ -3033,7 +3033,7 @@
       ],
       "category": "Clinical Chemistry - Cardiac",
       "panels": [
-        "Acute Coronary Syndrome Panel"
+        "acute_coronary_syndrome_panel"
       ],
       "loinc_codes": [
         "10839-9"
@@ -3123,7 +3123,7 @@
       ],
       "category": "Clinical Chemistry - Cardiac",
       "panels": [
-        "Acute Coronary Syndrome Panel"
+        "acute_coronary_syndrome_panel"
       ],
       "loinc_codes": [
         "2157-6"
@@ -3203,7 +3203,7 @@
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
-        "Iron Studies Panel"
+        "iron_studies_panel"
       ],
       "loinc_codes": [
         "2498-4"
@@ -3287,7 +3287,7 @@
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
-        "Iron Studies Panel"
+        "iron_studies_panel"
       ],
       "loinc_codes": [
         "2276-4"
@@ -3371,7 +3371,7 @@
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
-        "Iron Studies Panel"
+        "iron_studies_panel"
       ],
       "loinc_codes": [
         "2500-7"
@@ -3451,7 +3451,7 @@
       ],
       "category": "Clinical Chemistry - Nutrition",
       "panels": [
-        "Macrocytic Anemia Workup Panel"
+        "macrocytic_anemia_workup_panel"
       ],
       "loinc_codes": [
         "2132-8"
@@ -3530,7 +3530,7 @@
       ],
       "category": "Clinical Chemistry - Nutrition",
       "panels": [
-        "Macrocytic Anemia Workup Panel"
+        "macrocytic_anemia_workup_panel"
       ],
       "loinc_codes": [
         "2157-0"
@@ -3610,7 +3610,7 @@
       ],
       "category": "Clinical Chemistry - Nutrition",
       "panels": [
-        "Bone Metabolism Panel"
+        "bone_metabolism_panel"
       ],
       "loinc_codes": [
         "14635-7"
@@ -3689,7 +3689,7 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "Coagulation Panel"
+        "coagulation_panel"
       ],
       "loinc_codes": [
         "34714-6"
@@ -3800,7 +3800,7 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "Coagulation Panel"
+        "coagulation_panel"
       ],
       "loinc_codes": [
         "1994-3"
@@ -3891,8 +3891,8 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "Coagulation Panel",
-        "DIC Panel"
+        "coagulation_panel",
+        "dic_panel"
       ],
       "loinc_codes": [
         "3349-0"
@@ -3977,7 +3977,7 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "Thromboembolism Panel"
+        "thromboembolism_panel"
       ],
       "loinc_codes": [
         "3896-5"
@@ -4060,7 +4060,7 @@
       ],
       "category": "Urinalysis",
       "panels": [
-        "Routine Urinalysis Panel"
+        "routine_urinalysis_panel"
       ],
       "loinc_codes": [
         "24357-6"
@@ -4360,7 +4360,7 @@
       ],
       "category": "Urinalysis / Endocrinology",
       "panels": [
-        "Pregnancy Panel"
+        "pregnancy_panel"
       ],
       "loinc_codes": [
         "2106-3"
@@ -4440,7 +4440,7 @@
       ],
       "category": "Endocrinology / Reproductive",
       "panels": [
-        "Pregnancy Panel"
+        "pregnancy_panel"
       ],
       "loinc_codes": [
         "2118-8"
@@ -4528,7 +4528,7 @@
       ],
       "category": "Endocrinology - Thyroid",
       "panels": [
-        "Thyroid Function Panel"
+        "thyroid_function_panel"
       ],
       "loinc_codes": [
         "3016-3"
@@ -4614,7 +4614,7 @@
       ],
       "category": "Endocrinology - Thyroid",
       "panels": [
-        "Thyroid Function Panel"
+        "thyroid_function_panel"
       ],
       "loinc_codes": [
         "3024-7"
@@ -4701,7 +4701,7 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "HIV Testing Panel"
+        "hiv_testing_panel"
       ],
       "loinc_codes": [
         "57013-6"
@@ -4784,7 +4784,7 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "HIV Testing Panel"
+        "hiv_testing_panel"
       ],
       "loinc_codes": [
         "34701-0"
@@ -4866,7 +4866,7 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "HIV Management Panel"
+        "hiv_management_panel"
       ],
       "loinc_codes": [
         "20415-4"
@@ -4947,7 +4947,7 @@
       ],
       "category": "Serology / Infectious Disease - Hepatitis B",
       "panels": [
-        "Hepatitis Panel"
+        "hepatitis_panel"
       ],
       "loinc_codes": [
         "5195-3"
@@ -5026,7 +5026,7 @@
       ],
       "category": "Serology / Infectious Disease - Hepatitis B",
       "panels": [
-        "Hepatitis Panel"
+        "hepatitis_panel"
       ],
       "loinc_codes": [
         "5196-1"
@@ -5104,7 +5104,7 @@
       ],
       "category": "Serology / Infectious Disease - Hepatitis B",
       "panels": [
-        "Hepatitis Panel"
+        "hepatitis_panel"
       ],
       "loinc_codes": [
         "5194-6"
@@ -5182,7 +5182,7 @@
       ],
       "category": "Serology / Infectious Disease - Hepatitis C",
       "panels": [
-        "Hepatitis Panel"
+        "hepatitis_panel"
       ],
       "loinc_codes": [
         "7905-9"
@@ -5264,8 +5264,8 @@
       ],
       "category": "Serology / Infectious Disease - Syphilis",
       "panels": [
-        "Syphilis Diagnosis Panel",
-        "STI Panel"
+        "syphilis_diagnosis_panel",
+        "sti_panel"
       ],
       "loinc_codes": [
         "5289-3"
@@ -5345,7 +5345,7 @@
       ],
       "category": "Serology / Infectious Disease - Syphilis",
       "panels": [
-        "Syphilis Diagnosis Panel"
+        "syphilis_diagnosis_panel"
       ],
       "loinc_codes": [
         "14032-3"
@@ -5424,7 +5424,7 @@
       ],
       "category": "Serology / Infectious Disease - H. pylori",
       "panels": [
-        "Gastric Ulcer Workup"
+        "gastric_ulcer_workup"
       ],
       "loinc_codes": [
         "5213-8"
@@ -5504,7 +5504,7 @@
       ],
       "category": "Serology / Infectious Disease - Parasitic",
       "panels": [
-        "Pregnancy Serology Panel"
+        "pregnancy_serology_panel"
       ],
       "loinc_codes": [
         "6317-8"
@@ -5601,7 +5601,7 @@
       ],
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
-        "Immunocompromised Patient Workup"
+        "immunocompromised_patient_workup"
       ],
       "loinc_codes": [
         "6639-2"
@@ -5698,7 +5698,7 @@
       ],
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
-        "Acute Infection Workup"
+        "acute_infection_workup"
       ],
       "loinc_codes": [
         "5304-0"
@@ -5813,7 +5813,7 @@
       ],
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
-        "Prenatal Serology Panel"
+        "prenatal_serology_panel"
       ],
       "loinc_codes": [
         "5320-6"
@@ -5892,7 +5892,7 @@
       ],
       "category": "Parasitology / Infectious Disease - Malaria",
       "panels": [
-        "Fever Workup Panel"
+        "fever_workup_panel"
       ],
       "loinc_codes": [
         "9142-9"
@@ -5978,7 +5978,7 @@
       ],
       "category": "Parasitology / Infectious Disease - Malaria",
       "panels": [
-        "Fever Workup Panel"
+        "fever_workup_panel"
       ],
       "loinc_codes": [
         "80307-4"
@@ -6056,7 +6056,7 @@
       ],
       "category": "Hematology - Hemoglobinopathy",
       "panels": [
-        "Hemoglobinopathy Panel"
+        "hemoglobinopathy_panel"
       ],
       "loinc_codes": [
         "4576-3"
@@ -6159,7 +6159,7 @@
       ],
       "category": "Hematology - Enzymatic Defects",
       "panels": [
-        "Hemolysis Workup Panel"
+        "hemolysis_workup_panel"
       ],
       "loinc_codes": [
         "5803-2"
@@ -6242,7 +6242,7 @@
       ],
       "category": "Parasitology / Microbiology",
       "panels": [
-        "Diarrhea Workup Panel"
+        "diarrhea_workup_panel"
       ],
       "loinc_codes": [
         "12504-5"
@@ -6320,7 +6320,7 @@
       ],
       "category": "Microbiology - Mycobacteriology / TB",
       "panels": [
-        "TB Diagnosis Panel"
+        "tb_diagnosis_panel"
       ],
       "loinc_codes": [
         "12475-8"
@@ -6407,8 +6407,8 @@
       ],
       "category": "Microbiology - Molecular / TB",
       "panels": [
-        "TB Diagnosis Panel",
-        "Drug-Resistant TB Panel"
+        "tb_diagnosis_panel",
+        "drug_resistant_tb_panel"
       ],
       "loinc_codes": [
         "80327-7"
@@ -6490,7 +6490,7 @@
       ],
       "category": "Microbiology - Culture",
       "panels": [
-        "Infection Workup Panel"
+        "infection_workup_panel"
       ],
       "loinc_codes": [
         "9008-3"
@@ -6606,7 +6606,7 @@
       ],
       "category": "Microbiology - Culture / Gastrointestinal",
       "panels": [
-        "Diarrhea Workup Panel"
+        "diarrhea_workup_panel"
       ],
       "loinc_codes": [
         "625-4"
@@ -6704,7 +6704,7 @@
       ],
       "category": "Microbiology - Culture / Sepsis",
       "panels": [
-        "Sepsis Workup Panel"
+        "sepsis_workup_panel"
       ],
       "loinc_codes": [
         "27853-3"
@@ -6810,7 +6810,7 @@
       ],
       "category": "Virology / Infectious Disease - COVID-19",
       "panels": [
-        "COVID-19 Diagnosis Panel"
+        "covid_19_diagnosis_panel"
       ],
       "loinc_codes": [
         "96163-4"
@@ -6891,7 +6891,7 @@
       ],
       "category": "Virology / Infectious Disease - COVID-19",
       "panels": [
-        "COVID-19 Diagnosis Panel"
+        "covid_19_diagnosis_panel"
       ],
       "loinc_codes": [
         "96119-6"
@@ -6972,7 +6972,7 @@
       ],
       "category": "Virology / Infectious Disease - Dengue",
       "panels": [
-        "Fever Workup Panel"
+        "fever_workup_panel"
       ],
       "loinc_codes": [
         "33879-7"
@@ -7069,7 +7069,7 @@
       ],
       "category": "Virology / Infectious Disease - Chikungunya",
       "panels": [
-        "Fever Workup Panel"
+        "fever_workup_panel"
       ],
       "loinc_codes": [
         "81324-6"
@@ -7148,7 +7148,7 @@
       ],
       "category": "Hematology - Transfusion Medicine",
       "panels": [
-        "Transfusion Screening Panel"
+        "transfusion_screening_panel"
       ],
       "loinc_codes": [
         "5808-8"
@@ -7229,7 +7229,7 @@
       ],
       "category": "Oncology / Tumor Markers",
       "panels": [
-        "Prostate Cancer Screening"
+        "prostate_cancer_screening"
       ],
       "loinc_codes": [
         "2025-8"
@@ -7307,7 +7307,7 @@
       ],
       "category": "Oncology / Tumor Markers",
       "panels": [
-        "Colon Cancer Markers"
+        "colon_cancer_markers"
       ],
       "loinc_codes": [
         "2039-6"
@@ -7389,7 +7389,7 @@
       ],
       "category": "Clinical Chemistry - Nutritional Status",
       "panels": [
-        "Nutritional Assessment Panel"
+        "nutritional_assessment_panel"
       ],
       "loinc_codes": [
         "2987-5"
@@ -7466,7 +7466,7 @@
       ],
       "category": "Clinical Chemistry - Acid-Base",
       "panels": [
-        "Lactic Acidosis Panel"
+        "lactic_acidosis_panel"
       ],
       "loinc_codes": [
         "2524-7"
@@ -7545,7 +7545,7 @@
       ],
       "category": "Hematology - Hemoglobinopathy",
       "panels": [
-        "Hemoglobinopathy Panel"
+        "hemoglobinopathy_panel"
       ],
       "loinc_codes": [
         "4576-3"
@@ -7622,7 +7622,7 @@
       ],
       "category": "Clinical Chemistry - Protein Fractionation",
       "panels": [
-        "Monoclonal Protein Panel"
+        "monoclonal_protein_panel"
       ],
       "loinc_codes": [
         "2820-9"
@@ -7698,7 +7698,7 @@
       ],
       "category": "Microbiology - Quantitative Urine",
       "panels": [
-        "UTI Management Panel"
+        "uti_management_panel"
       ],
       "loinc_codes": [
         "32705-2"
@@ -7777,7 +7777,7 @@
       ],
       "category": "Virology / Infectious Disease - Arboviruses",
       "panels": [
-        "Fever Workup Panel"
+        "fever_workup_panel"
       ],
       "loinc_codes": [
         "6317-8"

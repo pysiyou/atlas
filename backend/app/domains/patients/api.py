@@ -96,12 +96,3 @@ def update_patient(
 ):
     """Update patient information."""
     return PatientService(db).update(patientId, patient_data, current_user.id)
-
-
-@router.delete("/patients/{patientId}", status_code=204)
-def delete_patient(
-    patientId: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
-):
-    """Delete a patient."""
-    PatientService(db).delete(patientId, current_user.id)
-    return None

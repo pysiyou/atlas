@@ -1,26 +1,60 @@
-"""Orderable catalog panel CRUD and seed-from-test-tags."""
+"""Orderable catalog panels — contract registry plus membership from test catalog."""
 from __future__ import annotations
 
+import json
 import logging
-import re
+from pathlib import Path
 
 from app.domains.catalog.models.catalog_panel import CatalogPanel
 from app.domains.catalog.models.catalog_test import CatalogTest
-from app.domains.catalog.schemas.panel import CatalogPanelCreate, CatalogPanelUpdate
-from fastapi import HTTPException, status
+from app.shared.contracts.orderable_panels import ORDERABLE_PANEL_BY_ID, ORDERABLE_PANEL_IDS
 from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 
 
-def _slug_panel_code(name: str) -> str:
-    """Stable uppercase code from a panel display name."""
-    slug = re.sub(r"[^A-Za-z0-9]+", "_", name.strip()).strip("_").upper()
-    return slug[:50] or "PANEL"
+def _repo_root() -> Path:
+    """Atlas repo root (parent of backend/)."""
+    return Path(__file__).resolve().parents[4]
+
+
+def _load_panel_membership_from_contract() -> dict[str, list[str]]:
+    """
+    Build panel id → member test codes from contracts/test-catalog.json.
+
+    Tests reference panels by registry id only; typos fail validation in CI.
+    """
+    catalog_path = _repo_root() / "contracts" / "test-catalog.json"
+    if not catalog_path.is_file():
+        logger.warning("test-catalog.json not found; skipping panel membership load")
+        return {}
+
+    payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+    members_by_id: dict[str, list[str]] = {}
+    for entry in payload.get("tests") or []:
+        if not isinstance(entry, dict):
+            continue
+        test_code = entry.get("test_code")
+        if not isinstance(test_code, str) or not test_code.strip():
+            continue
+        panel_ids = entry.get("panels") or []
+        if not isinstance(panel_ids, list):
+            continue
+        for raw in panel_ids:
+            if not isinstance(raw, str) or not raw.strip():
+                continue
+            panel_id = raw.strip()
+            if panel_id not in ORDERABLE_PANEL_IDS:
+                logger.warning("test %s references unknown panel id %s", test_code, panel_id)
+                continue
+            members_by_id.setdefault(panel_id, [])
+            if test_code not in members_by_id[panel_id]:
+                members_by_id[panel_id].append(test_code)
+    return members_by_id
 
 
 class CatalogPanelService:
-    """CRUD plus one-time invert of CatalogTest.panels taxonomy tags."""
+    """List orderable panels and sync DB rows from the contract registry."""
 
     def __init__(self, db: Session):
         self.db = db
@@ -31,97 +65,89 @@ class CatalogPanelService:
             query = query.filter(CatalogPanel.isActive.is_(True))
         return query.order_by(CatalogPanel.name.asc()).all()
 
-    def get_by_code(self, code: str) -> CatalogPanel:
-        panel = self.db.query(CatalogPanel).filter(CatalogPanel.code == code).first()
-        if not panel:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"CatalogPanel {code} not found",
-            )
-        return panel
+    def sync_test_panel_ids_from_contract(self) -> int:
+        """Copy panel id arrays from test-catalog.json onto matching catalog test rows."""
+        catalog_path = _repo_root() / "contracts" / "test-catalog.json"
+        if not catalog_path.is_file():
+            return 0
 
-    def create(self, data: CatalogPanelCreate) -> CatalogPanel:
-        existing = self.db.query(CatalogPanel).filter(CatalogPanel.code == data.code).first()
-        if existing:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"CatalogPanel with code {data.code} already exists",
-            )
-        self._assert_member_codes(data.memberTestCodes)
-        panel = CatalogPanel(
-            code=data.code,
-            name=data.name,
-            memberTestCodes=list(data.memberTestCodes),
-            price=data.price,
-            isActive=data.isActive,
-        )
-        self.db.add(panel)
-        self.db.commit()
-        self.db.refresh(panel)
-        return panel
+        payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+        panel_ids_by_test: dict[str, list[str]] = {}
+        for entry in payload.get("tests") or []:
+            if not isinstance(entry, dict):
+                continue
+            test_code = entry.get("test_code")
+            panels = entry.get("panels")
+            if not isinstance(test_code, str) or not isinstance(panels, list):
+                continue
+            panel_ids_by_test[test_code] = [p for p in panels if isinstance(p, str) and p.strip()]
 
-    def update(self, code: str, data: CatalogPanelUpdate) -> CatalogPanel:
-        panel = self.get_by_code(code)
-        payload = data.model_dump(exclude_unset=True)
-        if "memberTestCodes" in payload and payload["memberTestCodes"] is not None:
-            self._assert_member_codes(payload["memberTestCodes"])
-        for key, value in payload.items():
-            setattr(panel, key, value)
-        self.db.commit()
-        self.db.refresh(panel)
-        return panel
+        updated = 0
+        for row in self.db.query(CatalogTest).filter(CatalogTest.code.in_(panel_ids_by_test.keys())).all():
+            desired = panel_ids_by_test.get(row.code, [])
+            if row.panels != desired:
+                row.panels = desired
+                updated += 1
+        if updated:
+            self.db.commit()
+            logger.info("Synced panel ids onto %s catalog tests from contract", updated)
+        return updated
 
     def seed_from_catalog_tests(self) -> int:
         """
-        Invert CatalogTest.panels string tags into catalog_panels rows.
+        Upsert catalog_panels from the registry and test-catalog membership.
 
-        Idempotent: existing panel codes are left unchanged. New tags get a row
-        whose members are every active test listing that tag.
+        Panel ``code`` is the registry id (e.g. ``hepatitis_panel``).
         """
-        tests = self.db.query(CatalogTest).filter(CatalogTest.isActive.is_(True)).all()
-        members_by_name: dict[str, list[str]] = {}
-        for test in tests:
-            tags = test.panels if isinstance(test.panels, list) else []
-            for tag in tags:
-                if not isinstance(tag, str) or not tag.strip():
-                    continue
-                name = tag.strip()
-                members_by_name.setdefault(name, [])
-                if test.code not in members_by_name[name]:
-                    members_by_name[name].append(test.code)
-        if not members_by_name:
+        members_by_id = _load_panel_membership_from_contract()
+        if not members_by_id:
             return 0
 
-        existing_codes = {row.code for row in self.db.query(CatalogPanel.code).all()}
-        created = 0
-        for name, codes in members_by_name.items():
-            code = _slug_panel_code(name)
-            if code in existing_codes:
-                continue
-            self.db.add(
-                CatalogPanel(
-                    code=code,
-                    name=name,
-                    memberTestCodes=codes,
-                    price=None,
-                    isActive=True,
-                )
-            )
-            existing_codes.add(code)
-            created += 1
-        if created:
-            self.db.commit()
-            logger.info("Seeded %s catalog panels from test taxonomy tags", created)
-        return created
-
-    def _assert_member_codes(self, codes: list[str]) -> None:
-        found = {
-            row.code
-            for row in self.db.query(CatalogTest.code).filter(CatalogTest.code.in_(codes)).all()
+        existing = {
+            row.code: row for row in self.db.query(CatalogPanel).all()
         }
-        missing = [code for code in codes if code not in found]
-        if missing:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Unknown member test codes: {', '.join(missing)}",
+        touched = 0
+        for panel_id, member_codes in members_by_id.items():
+            definition = ORDERABLE_PANEL_BY_ID.get(panel_id)
+            if not definition:
+                continue
+            row = existing.get(panel_id)
+            if row is None:
+                self.db.add(
+                    CatalogPanel(
+                        code=panel_id,
+                        name=definition.name,
+                        description=definition.description or None,
+                        memberTestCodes=member_codes,
+                        price=None,
+                        isActive=True,
+                    )
+                )
+                touched += 1
+                continue
+            changed = False
+            if row.name != definition.name:
+                row.name = definition.name
+                changed = True
+            desc = definition.description or None
+            if row.description != desc:
+                row.description = desc
+                changed = True
+            if row.memberTestCodes != member_codes:
+                row.memberTestCodes = member_codes
+                changed = True
+            if changed:
+                touched += 1
+
+        legacy_codes = [code for code in existing if code not in ORDERABLE_PANEL_IDS]
+        if legacy_codes:
+            self.db.query(CatalogPanel).filter(CatalogPanel.code.in_(legacy_codes)).delete(
+                synchronize_session=False
             )
+            touched += len(legacy_codes)
+            logger.info("Removed %s legacy slug catalog panels", len(legacy_codes))
+
+        if touched:
+            self.db.commit()
+            logger.info("Synced %s orderable catalog panels from contract", touched)
+        return touched

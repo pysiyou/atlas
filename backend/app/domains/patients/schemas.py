@@ -280,7 +280,6 @@ class PatientResponse(PatientBase):
     phone: str = Field(..., min_length=1, max_length=20)
     emergencyContact: EmergencyContactResponse
     id: int
-    mrn: str | None = None
     registrationDate: datetime
     createdBy: str
     createdAt: datetime

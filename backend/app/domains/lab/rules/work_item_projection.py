@@ -34,7 +34,7 @@ from pydantic import BaseModel, Field
 
 MonitorAttentionStage = Literal["collection", "entry", "validation", "escalation"]
 
-PipelineStage = Literal["collection", "entry", "validation", "escalation", "completed", "cancelled"]
+PipelineStage = Literal["collection", "entry", "validation", "completed", "cancelled"]
 
 
 class LabWorklistAllowedActions(BaseModel):

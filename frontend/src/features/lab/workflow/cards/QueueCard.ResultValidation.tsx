@@ -3,7 +3,7 @@
  */
 /* eslint-disable react-refresh/only-export-components -- queue card + colocated data hook */
 
-import { useMemo, type FC } from 'react';
+import { useMemo, useState, type FC } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
@@ -27,13 +27,14 @@ import { QueueCard, QueueCardMobile } from '../shared/QueueCardLayout';
 import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import { useLabCopy } from '@/strings';
+import { CriticalSeenConfirm } from '../../validation/CriticalSeenConfirm';
 
 export interface ResultValidationCardProps {
   row: ValidationQueueRow;
   commentKey: string;
   comments: string;
   onCommentsChange: (commentKey: string, value: string) => void;
-  onApprove: () => void;
+  onApprove: (criticalSeen?: boolean) => void;
   onReject: (result: QualityIssueResult) => void;
   onClick: () => void;
   isApproving?: boolean;
@@ -44,7 +45,7 @@ export interface ResultValidationCardSharedData {
   row: ValidationQueueRow;
   chromeRow: LabOrderTestQueueRow;
   patientName: string;
-  onApprove: () => void;
+  onApprove: (criticalSeen?: boolean) => void;
   onReject: ResultValidationCardProps['onReject'];
   isApproving: boolean;
   handleCardClick: () => void;
@@ -53,6 +54,9 @@ export interface ResultValidationCardSharedData {
   rejection: ReturnType<typeof retestContextFromRow>;
   canValidate: boolean;
   canReject: boolean;
+  hasCriticalValues: boolean;
+  criticalSeen: boolean;
+  setCriticalSeen: (checked: boolean) => void;
 }
 
 export function useResultValidationCardData(
@@ -66,6 +70,8 @@ export function useResultValidationCardData(
   const canReject = isLabActionAllowed(row.allowedActions, 'reject');
   const rejection = useMemo(() => retestContextFromRow(chromeRow), [chromeRow]);
   const sampleRejection = useSampleRejectionDisplay(chromeRow);
+  const hasCriticalValues = Boolean(row.hasCriticalValues);
+  const [criticalSeen, setCriticalSeen] = useState(false);
 
   if (!row.results) return null;
 
@@ -82,6 +88,9 @@ export function useResultValidationCardData(
     rejection,
     canValidate,
     canReject,
+    hasCriticalValues,
+    criticalSeen,
+    setCriticalSeen,
   };
 }
 
@@ -120,11 +129,15 @@ function ResultValidationCardDesktop({
   canValidate,
   canReject,
   patientName,
+  hasCriticalValues,
+  criticalSeen,
+  setCriticalSeen,
 }: ResultValidationCardSharedData) {
   const labCopy = useLabCopy();
   const { showAttemptIndicator } = rejection;
   const { leftColumn, badges } = useResultValidationCardHeader(chromeRow, patientName);
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
+  const approveDisabled = !canValidate || (hasCriticalValues && !criticalSeen);
 
   return (
     <QueueCard
@@ -148,10 +161,10 @@ function ResultValidationCardDesktop({
             size="sm"
             title={labCopy.actions.approveResults}
             isLoading={isApproving}
-            disabled={!canValidate}
+            disabled={approveDisabled}
             onClick={e => {
               e.stopPropagation();
-              onApprove();
+              onApprove(criticalSeen);
             }}
           >
             Approve
@@ -165,6 +178,20 @@ function ResultValidationCardDesktop({
               <SampleRejectedBanner sampleId={sampleId} sampleRejectionReason={sampleRejectionReason} />
             </div>
           )}
+          {hasCriticalValues ? (
+            <div
+              className="mb-space-3"
+              onClick={e => e.stopPropagation()}
+              onKeyDown={e => e.stopPropagation()}
+            >
+              <CriticalSeenConfirm
+                id={`critical-seen-${row.orderTestId}`}
+                checked={criticalSeen}
+                onChange={setCriticalSeen}
+                disabled={isApproving}
+              />
+            </div>
+          ) : null}
           <ResultsParameterGrid
             results={row.results!}
             flags={row.flags ?? undefined}
@@ -191,11 +218,15 @@ function ResultValidationCardMobile({
   rejection,
   canValidate,
   canReject,
+  hasCriticalValues,
+  criticalSeen,
+  setCriticalSeen,
 }: ResultValidationCardSharedData) {
   const labCopy = useLabCopy();
   const { showAttemptIndicator } = rejection;
   const { leftColumn } = useResultValidationCardHeader(chromeRow, patientName);
   const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
+  const approveDisabled = !canValidate || (hasCriticalValues && !criticalSeen);
 
   return (
     <Card
@@ -236,10 +267,10 @@ function ResultValidationCardMobile({
               size="sm"
               title={labCopy.actions.approveResults}
               isLoading={isApproving}
-              disabled={!canValidate}
+              disabled={approveDisabled}
               onClick={e => {
                 e.stopPropagation();
-                onApprove();
+                onApprove(criticalSeen);
               }}
             >
               Approve
@@ -247,6 +278,20 @@ function ResultValidationCardMobile({
           </>
         }
       >
+        {hasCriticalValues ? (
+          <div
+            className="mb-space-2"
+            onClick={e => e.stopPropagation()}
+            onKeyDown={e => e.stopPropagation()}
+          >
+            <CriticalSeenConfirm
+              id={`critical-seen-mobile-${row.orderTestId}`}
+              checked={criticalSeen}
+              onChange={setCriticalSeen}
+              disabled={isApproving}
+            />
+          </div>
+        ) : null}
         <ResultsParameterGrid
           results={row.results!}
           flags={row.flags ?? undefined}

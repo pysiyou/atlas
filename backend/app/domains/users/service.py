@@ -204,16 +204,3 @@ class UserService:
                 detail="Failed to update user",
             )
         return user
-
-    def delete(self, user_id: int, actor_user_id: int) -> None:
-        user = self.get_by_id(user_id)
-        try:
-            self.db.delete(user)
-            self.db.commit()
-        except Exception:
-            self.db.rollback()
-            logger.exception("Failed to delete user %s", user_id)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to delete user",
-            )

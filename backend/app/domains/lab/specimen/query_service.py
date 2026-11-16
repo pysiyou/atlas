@@ -45,14 +45,6 @@ class SpecimenQueryService:
             return create_paginated_response(serialized, total, skip_to_page(skip, limit), limit)
         return serialized
 
-    def list_pending(self) -> list:
-        return (
-            self.db.query(Sample)
-            .filter(Sample.status == SampleStatus.PENDING)
-            .order_by(Sample.updatedAt.desc())
-            .all()
-        )
-
     def get_by_id(self, sample_id: int) -> Sample:
         from fastapi import HTTPException
         from fastapi import status as http_status

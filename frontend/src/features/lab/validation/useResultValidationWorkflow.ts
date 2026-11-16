@@ -27,7 +27,8 @@ export interface ResultValidationWorkflowController {
     orderTestId: number,
     orderId: number | string,
     approve: boolean,
-    rejectionResult?: QualityIssueResult
+    rejectionResult?: QualityIssueResult,
+    criticalSeen?: boolean
   ) => Promise<void>;
   openValidationModal: (row: ValidationQueueRow) => void;
   validateMutation: ReturnType<typeof useValidateResults>;
@@ -70,7 +71,8 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
       orderTestId: number,
       orderId: number | string,
       approve: boolean,
-      rejectionResult?: QualityIssueResult
+      rejectionResult?: QualityIssueResult,
+      criticalSeen?: boolean
     ): Promise<void> => {
       if (queueLoading) return;
 
@@ -85,6 +87,7 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
             orderId: orderIdStr,
             orderTestId,
             validationNotes: useLabDraftStore.getState().getValidationComments(orderTestId) || undefined,
+            criticalSeen,
           });
           notify.show('lab.validation.approve.success');
           clearValidationComments(orderTestId);

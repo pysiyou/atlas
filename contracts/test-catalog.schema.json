@@ -11,6 +11,12 @@
     }
   },
   "$defs": {
+    "orderablePanelId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 1,
+      "maxLength": 60
+    },
     "rejectionReasonId": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9_]*$",
@@ -34,6 +40,11 @@
         "validation_rejection_criteria": {
           "type": "array",
           "items": { "$ref": "#/$defs/rejectionReasonId" }
+        },
+        "panels": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/orderablePanelId" },
+          "uniqueItems": true
         }
       },
       "additionalProperties": true

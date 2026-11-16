@@ -22,9 +22,9 @@ import { TABLE_TYPE } from '@/theme/recipes';
 import { getPatientTableColumnHeaders } from '@/strings';
 
 const PATIENT_VIEWS = {
-  full: ['id', 'mrn', 'fullName', 'contact', 'gender', 'orders', 'registrationDate', 'affiliation'],
-  medium: ['id', 'mrn', 'fullName', 'contact', 'gender', 'orders', 'registrationDate'],
-  compact: ['id', 'mrn', 'fullName', 'contact', 'gender'],
+  full: ['id', 'fullName', 'contact', 'gender', 'orders', 'registrationDate', 'affiliation'],
+  medium: ['id', 'fullName', 'contact', 'gender', 'orders', 'registrationDate'],
+  compact: ['id', 'fullName', 'contact', 'gender'],
 } as const;
 
 export const createPatientTableConfig = (
@@ -41,14 +41,6 @@ export const createPatientTableConfig = (
         accessor: patient => patient.id,
       }
     ),
-    mrn: {
-      key: 'mrn',
-      header: 'MRN',
-      width: TABLE_COLUMN_WIDTH.supporting,
-      sortable: true,
-      accessor: (patient: PatientContext) => patient.mrn ?? '',
-      render: (patient: PatientContext) => patient.mrn ?? '—',
-    },
     fullName: {
       key: 'fullName',
       header: 'Name',

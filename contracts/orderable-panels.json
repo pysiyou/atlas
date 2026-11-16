@@ -1,0 +1,255 @@
+{
+  "$schema": "./orderable-panels.schema.json",
+  "panels": [
+    {
+      "id": "acute_coronary_syndrome_panel",
+      "name": "Acute Coronary Syndrome Panel",
+      "description": ""
+    },
+    {
+      "id": "acute_infection_workup",
+      "name": "Acute Infection Workup",
+      "description": ""
+    },
+    {
+      "id": "acute_pancreatitis_panel",
+      "name": "Acute Pancreatitis Panel",
+      "description": ""
+    },
+    {
+      "id": "anemia_workup_panel",
+      "name": "Anemia Workup Panel",
+      "description": ""
+    },
+    {
+      "id": "bone_metabolism_panel",
+      "name": "Bone Metabolism Panel",
+      "description": ""
+    },
+    {
+      "id": "covid_19_diagnosis_panel",
+      "name": "COVID-19 Diagnosis Panel",
+      "description": ""
+    },
+    {
+      "id": "coagulation_panel",
+      "name": "Coagulation Panel",
+      "description": ""
+    },
+    {
+      "id": "colon_cancer_markers",
+      "name": "Colon Cancer Markers",
+      "description": ""
+    },
+    {
+      "id": "complete_hematology_panel",
+      "name": "Complete Hematology Panel",
+      "description": ""
+    },
+    {
+      "id": "dic_panel",
+      "name": "DIC Panel",
+      "description": ""
+    },
+    {
+      "id": "diabetes_management_panel",
+      "name": "Diabetes Management Panel",
+      "description": ""
+    },
+    {
+      "id": "diabetes_screening",
+      "name": "Diabetes Screening",
+      "description": ""
+    },
+    {
+      "id": "diabetes_screening_panel",
+      "name": "Diabetes Screening Panel",
+      "description": ""
+    },
+    {
+      "id": "diarrhea_workup_panel",
+      "name": "Diarrhea Workup Panel",
+      "description": ""
+    },
+    {
+      "id": "drug_resistant_tb_panel",
+      "name": "Drug-Resistant TB Panel",
+      "description": ""
+    },
+    {
+      "id": "electrolyte_panel",
+      "name": "Electrolyte Panel",
+      "description": ""
+    },
+    {
+      "id": "fever_workup_panel",
+      "name": "Fever Workup Panel",
+      "description": ""
+    },
+    {
+      "id": "gastric_ulcer_workup",
+      "name": "Gastric Ulcer Workup",
+      "description": ""
+    },
+    {
+      "id": "hiv_management_panel",
+      "name": "HIV Management Panel",
+      "description": ""
+    },
+    {
+      "id": "hiv_testing_panel",
+      "name": "HIV Testing Panel",
+      "description": ""
+    },
+    {
+      "id": "hemoglobinopathy_panel",
+      "name": "Hemoglobinopathy Panel",
+      "description": ""
+    },
+    {
+      "id": "hemolysis_workup_panel",
+      "name": "Hemolysis Workup Panel",
+      "description": ""
+    },
+    {
+      "id": "hepatitis_panel",
+      "name": "Hepatitis Panel",
+      "description": ""
+    },
+    {
+      "id": "immunocompromised_patient_workup",
+      "name": "Immunocompromised Patient Workup",
+      "description": ""
+    },
+    {
+      "id": "infection_workup_panel",
+      "name": "Infection Workup Panel",
+      "description": ""
+    },
+    {
+      "id": "inflammatory_markers_panel",
+      "name": "Inflammatory Markers Panel",
+      "description": ""
+    },
+    {
+      "id": "iron_studies_panel",
+      "name": "Iron Studies Panel",
+      "description": ""
+    },
+    {
+      "id": "lactic_acidosis_panel",
+      "name": "Lactic Acidosis Panel",
+      "description": ""
+    },
+    {
+      "id": "lipid_panel",
+      "name": "Lipid Panel",
+      "description": ""
+    },
+    {
+      "id": "liver_function_panel",
+      "name": "Liver Function Panel",
+      "description": ""
+    },
+    {
+      "id": "macrocytic_anemia_workup_panel",
+      "name": "Macrocytic Anemia Workup Panel",
+      "description": ""
+    },
+    {
+      "id": "manual_differential_panel",
+      "name": "Manual Differential Panel",
+      "description": ""
+    },
+    {
+      "id": "metabolic_panel",
+      "name": "Metabolic Panel",
+      "description": ""
+    },
+    {
+      "id": "mineral_panel",
+      "name": "Mineral Panel",
+      "description": ""
+    },
+    {
+      "id": "monoclonal_protein_panel",
+      "name": "Monoclonal Protein Panel",
+      "description": ""
+    },
+    {
+      "id": "nutritional_assessment_panel",
+      "name": "Nutritional Assessment Panel",
+      "description": ""
+    },
+    {
+      "id": "pregnancy_panel",
+      "name": "Pregnancy Panel",
+      "description": ""
+    },
+    {
+      "id": "pregnancy_serology_panel",
+      "name": "Pregnancy Serology Panel",
+      "description": ""
+    },
+    {
+      "id": "prenatal_serology_panel",
+      "name": "Prenatal Serology Panel",
+      "description": ""
+    },
+    {
+      "id": "prostate_cancer_screening",
+      "name": "Prostate Cancer Screening",
+      "description": ""
+    },
+    {
+      "id": "renal_panel",
+      "name": "Renal Panel",
+      "description": ""
+    },
+    {
+      "id": "routine_urinalysis_panel",
+      "name": "Routine Urinalysis Panel",
+      "description": ""
+    },
+    {
+      "id": "sti_panel",
+      "name": "STI Panel",
+      "description": ""
+    },
+    {
+      "id": "sepsis_workup_panel",
+      "name": "Sepsis Workup Panel",
+      "description": ""
+    },
+    {
+      "id": "syphilis_diagnosis_panel",
+      "name": "Syphilis Diagnosis Panel",
+      "description": ""
+    },
+    {
+      "id": "tb_diagnosis_panel",
+      "name": "TB Diagnosis Panel",
+      "description": ""
+    },
+    {
+      "id": "thromboembolism_panel",
+      "name": "Thromboembolism Panel",
+      "description": ""
+    },
+    {
+      "id": "thyroid_function_panel",
+      "name": "Thyroid Function Panel",
+      "description": ""
+    },
+    {
+      "id": "transfusion_screening_panel",
+      "name": "Transfusion Screening Panel",
+      "description": ""
+    },
+    {
+      "id": "uti_management_panel",
+      "name": "UTI Management Panel",
+      "description": ""
+    }
+  ]
+}

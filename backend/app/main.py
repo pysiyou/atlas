@@ -30,7 +30,9 @@ async def lifespan(app: FastAPI):
 
         db = SessionLocal()
         try:
-            CatalogPanelService(db).seed_from_catalog_tests()
+            panel_svc = CatalogPanelService(db)
+            panel_svc.sync_test_panel_ids_from_contract()
+            panel_svc.seed_from_catalog_tests()
         finally:
             db.close()
     except Exception:

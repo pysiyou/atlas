@@ -1,9 +1,9 @@
-"""Read models for result entry and escalation queues."""
+"""Read models for result entry and order-test context."""
 from sqlalchemy.orm import Session, joinedload
 
 
 class ResultQueryService:
-    """Read/query operations for result entry and escalation views."""
+    """Read/query operations for result entry and order-test context."""
 
     def __init__(self, db: Session):
         self.db = db
@@ -21,49 +21,6 @@ class ResultQueryService:
                 "denyMessage": projection.denyMessage,
             }
         )
-
-    def get_pending_escalation(self) -> list:
-        from app.domains.lab.models.sample import Sample
-        from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
-        from app.domains.lab.rules.order_test_lab_loader import lab_projections_for_orders
-        from app.domains.orders.models import Order, OrderTest
-        from app.shared.contracts.enums import TestStatus
-
-        tests = (
-            self.db.query(OrderTest)
-            .filter(OrderTest.status == TestStatus.ESCALATED)
-            .options(
-                joinedload(OrderTest.order).joinedload(Order.patient),
-                joinedload(OrderTest.order).joinedload(Order.referentDoctor),
-                joinedload(OrderTest.order).selectinload(Order.tests),
-                joinedload(OrderTest.test),
-            )
-            .all()
-        )
-        sample_ids = [t.sampleId for t in tests if t.sampleId]
-        samples_by_id = {}
-        if sample_ids:
-            for s in self.db.query(Sample).filter(Sample.sampleId.in_(sample_ids)).all():
-                samples_by_id[s.sampleId] = s
-
-        test_ids = [t.id for t in tests]
-        tickets_by_test = load_open_tickets_by_order_test_id(self.db, test_ids)
-
-        unique_orders: list = []
-        seen_order_ids: set[int] = set()
-        for test in tests:
-            order = test.order
-            if order is not None and order.orderId not in seen_order_ids:
-                seen_order_ids.add(order.orderId)
-                unique_orders.append(order)
-        projections_by_order = lab_projections_for_orders(self.db, unique_orders)
-        items = []
-        for t in tests:
-            item = self._enrich_order_test(t, samples_by_id, tickets_by_test)
-            order = t.order
-            projection = projections_by_order.get(order.orderId, {}).get(t.id) if order else None
-            items.append(self._with_lab_projection(item, projection))
-        return items
 
     def get_order_test_context(self, order_test_id: int):
         from app.domains.lab.models.escalation import EscalationTicket

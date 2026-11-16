@@ -327,6 +327,18 @@
       "subtitle": "Refresh the page and try again.",
       "brief": "failed"
     },
+    "lab.validation.criticalSeen.label": {
+      "channel": "inline",
+      "variant": "warning",
+      "title": "I have seen this critical result"
+    },
+    "lab.validation.criticalSeen.required": {
+      "channel": "toast",
+      "variant": "error",
+      "title": "Confirm critical result",
+      "subtitle": "Check that you have seen the critical result before approving.",
+      "brief": "required"
+    },
     "lab.escalation.permissionDenied": {
       "channel": "toast",
       "variant": "error",
@@ -905,7 +917,7 @@
     "lab.qualityIssue.dialog.actions.retestLimit": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Re-test limit reached. Submitting will escalate to a supervisor for approval."
+      "title": "Re-test limit reached on this sample. Choose recollection or cancel."
     },
     "lab.qualityIssue.dialog.actions.retestHint": {
       "channel": "inline",

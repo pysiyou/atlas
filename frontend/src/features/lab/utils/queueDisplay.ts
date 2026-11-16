@@ -118,9 +118,8 @@ function stageFromPipeline(pipelineStage?: string): OrderTestQueueStage | null {
     case 'entry':
       return 'awaiting_results';
     case 'validation':
-      return 'awaiting_validation';
     case 'escalation':
-      return 'awaiting_supervisor';
+      return 'awaiting_validation';
     case 'completed':
       return 'completed';
     case 'cancelled':

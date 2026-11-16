@@ -1,4 +1,4 @@
-"""Lab result entry, validation, and amendment commands."""
+"""Lab result entry and validation commands."""
 from __future__ import annotations
 
 from datetime import UTC, datetime
@@ -8,12 +8,10 @@ from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.results.delta_check import DeltaCheckService
 from app.domains.lab.results.flags import ResultFlag
 from app.domains.lab.results.reflex import ReflexEngine
-from app.domains.lab.rules.state_machines import TestStateMachine
 from app.domains.orders.models import Order, OrderTest
 from app.platform.utils.common import parse_numeric_result_value
 from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import (
-    EscalationReasonCode,
     RemedyType,
     ResultStatus,
     SampleStatus,
@@ -166,6 +164,7 @@ class ResultCommandHandler:
                 for w in delta_warnings
             ]
 
+        # Criticals stay RESULTED so they appear on the validation card (not a ticket).
         if has_critical:
             critical_flags = self._svc.flag_calculator.get_critical_flags(flags)
             crit_json = self._svc.flag_calculator.flags_to_json(critical_flags)
@@ -176,18 +175,7 @@ class ResultCommandHandler:
                 user_id,
                 metadata={"critical_values": crit_json, "results": results_serializable},
             )
-            self._svc.escalation.escalate_test(
-                order_test,
-                EscalationReasonCode.CRIT_VAL,
-                user_id,
-                metadata={
-                    "criticalValues": crit_json,
-                    "results": results_serializable,
-                },
-                from_status=TestStatus.SAMPLE_COLLECTED,
-            )
-        else:
-            order_test.status = TestStatus.RESULTED
+        order_test.status = TestStatus.RESULTED
 
         self._svc.emitter.result_entered(
             order_id,
@@ -252,20 +240,34 @@ class ResultCommandHandler:
         order_test_id: int,
         user_id: int,
         validation_notes: str | None = None,
+        critical_seen: bool = False,
     ) -> OrderTest:
         order_test = self._svc._get_order_test(
             order_test_id, status=TestStatus.RESULTED, for_update=True
         )  # Add row lock
         order_id = order_test.orderId
 
-        # Note: The status filter above ensures order_test.status == RESULTED,
-        # so no need for additional escalation check here.
-
         from app.domains.lab.rules.eligibility import assert_can_validate
         from app.platform.client_config import client_config
 
         user_id_str = str(user_id)
         assert_can_validate(order_test, validator_id=user_id_str)
+
+        if order_test.hasCriticalValues and not critical_seen:
+            raise LabOperationError(
+                "Confirm you have seen the critical result before approving.",
+                status_code=400,
+                error_code="CRITICAL_SEEN_REQUIRED",
+            )
+        if order_test.hasCriticalValues:
+            order_test.criticalAcknowledgedAt = datetime.now(UTC)
+            self._svc.emitter.result_critical_acknowledged(
+                order_id,
+                order_test.id,
+                order_test.testCode,
+                user_id,
+                metadata={"source": "validation_confirm"},
+            )
 
         require_dual = client_config.workflows.get("requireDualValidation", False)
         is_second_signoff = (
@@ -360,50 +362,3 @@ class ResultCommandHandler:
             notes=validation_notes,
             preferred_remedy=preferred_remedy,
         )
-
-    def request_amendment(
-        self,
-        order_test_id: int,
-        user_id: int,
-        amendment_reason: str,
-        proposed_results: dict[str, Any] | None = None,
-        notes: str | None = None,
-    ) -> OrderTest:
-        """
-        Request amendment for a validated test result.
-        Creates AMEND-RES escalation for supervisor review.
-        """
-        order_test = self._svc._get_order_test(
-            order_test_id, status=TestStatus.VALIDATED, for_update=True
-        )
-
-        # Validate transition from VALIDATED to ESCALATED
-        can_escalate, reason = TestStateMachine.can_transition(
-            TestStatus.VALIDATED, TestStatus.ESCALATED
-        )
-        if not can_escalate:
-            raise LabOperationError(reason, status_code=400)
-
-        # Prepare metadata with amendment details
-        metadata = {
-            "amendmentReason": amendment_reason,
-            "originalResults": order_test.results,
-            "originalValidatedAt": order_test.resultValidatedAt.isoformat()
-            if order_test.resultValidatedAt
-            else None,
-            "originalValidatedBy": order_test.validatedBy,
-            "requestNotes": notes,
-        }
-        if proposed_results:
-            metadata["proposedResults"] = proposed_results
-
-        # Create escalation ticket
-        self._svc.escalation.escalate_test(
-            order_test,
-            EscalationReasonCode.AMEND_RES,
-            user_id,
-            metadata=metadata,
-            from_status=TestStatus.VALIDATED,
-        )
-
-        return order_test

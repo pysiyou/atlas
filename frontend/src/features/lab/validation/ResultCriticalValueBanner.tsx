@@ -52,7 +52,7 @@ export function ResultCriticalValueBanner({
           ))}
         </div>
         <p className={`${text({ role: 'caption' })} pl-space-6`}>
-          Physician will be automatically notified upon approval
+          Confirm you have seen this result before approving.
         </p>
       </div>
     </Alert>

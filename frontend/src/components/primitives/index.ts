@@ -15,6 +15,7 @@ export { actionButtonPreset, type ActionButtonPreset } from './buttonPresets';
 export * from './Checkbox';
 export * from './CheckboxList';
 export * from './CircularProgress';
+export * from './FormNotesField';
 export { Icon, type IconProps } from './Icon';
 export type { IconAsset, IconKey } from '@/icons';
 export { IconKeys, parseIconKey, resolveIconKey } from '@/icons';

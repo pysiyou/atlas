@@ -3,7 +3,6 @@
 from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.schemas.lab import (
     QualityIssueOptions,
-    QualityIssueResponse,
     QualityIssueResult,
     ReportQualityIssueRequest,
 )
@@ -11,7 +10,7 @@ from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
 from app.platform.http.dependencies import assert_quality_issue_target_access, get_current_user
 from app.shared.contracts.enums import QualityIssueTargetType
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 
 router = APIRouter()
 
@@ -42,41 +41,3 @@ def report_quality_issue(
         notes=body.notes,
         preferred_remedy=body.preferredRemedy,
     )
-
-
-@router.get("/quality-issues", response_model=list[QualityIssueResponse])
-def list_quality_issues(
-    orderId: int | None = None,
-    sampleId: int | None = None,
-    orderTestId: int | None = None,
-    service: LabOperationsService = Depends(get_lab_operations_service),
-    current_user: User = Depends(get_current_user),
-):
-    if orderTestId:
-        issues = service.quality.get_issues_for_test(orderTestId)
-    elif sampleId:
-        issues = service.quality.get_issues_for_sample(sampleId)
-    elif orderId:
-        issues = service.quality.get_issues_for_order(orderId)
-    else:
-        raise HTTPException(status_code=400, detail="Provide orderId, sampleId, or orderTestId")
-
-    return [
-        QualityIssueResponse(
-            id=i.id,
-            orderId=i.orderId,
-            orderTestId=i.orderTestId,
-            sampleId=i.sampleId,
-            testCode=i.testCode,
-            stage=i.stage.value,
-            domain=i.domain.value,
-            reason=i.reason,
-            notes=i.notes,
-            remedy=i.remedy.value,
-            createdTestId=i.createdTestId,
-            createdSampleId=i.createdSampleId,
-            createdBy=i.createdBy,
-            createdAt=i.createdAt.isoformat(),
-        )
-        for i in issues
-    ]

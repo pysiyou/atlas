@@ -83,7 +83,14 @@ def sample_options(svc: QualityIssueService, sample_id: int) -> QualityIssueOpti
     )
 
     allowed = sample_unfinished_remedy_types() if unfinished > 0 else []
-    suggested = RemedyType.REQUEST_RECOLLECTION if unfinished > 0 else None
+    if unfinished > 0 and recollection_remaining <= 0:
+        allowed = [r for r in allowed if r != RemedyType.REQUEST_RECOLLECTION]
+    suggested = None
+    if unfinished > 0:
+        if RemedyType.REQUEST_RECOLLECTION in allowed:
+            suggested = RemedyType.REQUEST_RECOLLECTION
+        elif allowed:
+            suggested = allowed[0]
 
     parts: list[str] = []
     if unfinished > 0:
@@ -134,9 +141,11 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
     retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_used - 1)
 
     sample_rejected = False
+    recollection_remaining = 0
     if order_test.sampleId:
         sample = svc.get_sample(order_test.sampleId)
         sample_rejected = sample.status == SampleStatus.REJECTED
+        recollection_remaining = svc.collection.attempts_remaining_after(sample)
 
     criteria_service = RejectionCriteriaService(svc.db)
     criteria = criteria_service.get_validation_criteria_for_test(order_test.testCode)
@@ -144,25 +153,35 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
     has_specimen = any(item.domain == "specimen" for item in criteria_items)
     has_analytical = any(item.domain == "analytical" for item in criteria_items)
 
-    if sample_rejected:
-        suggested = RemedyType.REQUEST_RECOLLECTION
-        allowed = [r for r in validation_remedy_types() if r != RemedyType.RETRY_SAME_SAMPLE]
-    elif has_specimen and not has_analytical and order_test.sampleId:
-        suggested = RemedyType.REQUEST_RECOLLECTION
-        allowed = validation_remedy_types()
-    elif has_analytical and not has_specimen:
-        suggested = RemedyType.RETRY_SAME_SAMPLE
-        allowed = validation_remedy_types()
-    else:
-        suggested = RemedyType.RETRY_SAME_SAMPLE
-        allowed = validation_remedy_types()
+    allowed = list(validation_remedy_types())
+    if sample_rejected or retest_remaining <= 0:
+        allowed = [r for r in allowed if r != RemedyType.RETRY_SAME_SAMPLE]
+    if recollection_remaining <= 0 or not order_test.sampleId:
+        allowed = [r for r in allowed if r != RemedyType.REQUEST_RECOLLECTION]
 
-    message_parts = [
-        "Rejecting sends this test to a supervisor to approve retest, recollection, or cancellation.",
-    ]
+    if sample_rejected and RemedyType.REQUEST_RECOLLECTION in allowed:
+        suggested = RemedyType.REQUEST_RECOLLECTION
+    elif has_specimen and not has_analytical and RemedyType.REQUEST_RECOLLECTION in allowed:
+        suggested = RemedyType.REQUEST_RECOLLECTION
+    elif RemedyType.RETRY_SAME_SAMPLE in allowed:
+        suggested = RemedyType.RETRY_SAME_SAMPLE
+    elif allowed:
+        suggested = allowed[0]
+    else:
+        suggested = None
+
+    message_parts: list[str] = []
     if sample_rejected:
         message_parts.append(
-            "Linked sample is already rejected — supervisor may authorize recollection."
+            "Linked sample is already rejected — retest on the same sample is not available."
+        )
+    if retest_remaining <= 0:
+        message_parts.append("Re-test limit reached — recollect or cancel.")
+    if recollection_remaining <= 0:
+        message_parts.append("Recollection limit reached — retest or cancel.")
+    if not message_parts:
+        message_parts.append(
+            "Choose retest on the same sample, recollection, or cancel this test."
         )
 
     return QualityIssueOptions(
@@ -177,7 +196,8 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
         suggestedRemedy=suggested,
         retestAttemptsUsed=retest_used,
         retestAttemptsRemaining=retest_remaining,
-        willEscalate=True,
+        recollectionAttemptsRemaining=recollection_remaining,
+        willEscalate=False,
         previewRemedy=suggested,
         previewMessage=" ".join(message_parts),
         hasSpecimenCriteria=has_specimen,

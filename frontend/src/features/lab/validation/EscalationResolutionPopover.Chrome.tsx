@@ -3,10 +3,8 @@
  */
 
 import React, { type ReactNode } from 'react';
-import { Button } from '@/components/primitives';
+import { Button, FormNotesField } from '@/components/primitives';
 import { Popover, PopoverFormChrome } from '@/components/overlays';
-import { cn } from '@/utils';
-import { inputBase } from '@/theme/recipes';
 
 interface ResolutionPopoverProps {
   resolving: boolean;
@@ -16,6 +14,7 @@ interface ResolutionPopoverProps {
   title: string;
   subtitle: string;
   textareaId: string;
+  notesLabel?: string;
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
@@ -37,6 +36,7 @@ export function ResolutionPopover({
   title,
   subtitle,
   textareaId,
+  notesLabel = 'Notes',
   placeholder,
   value,
   onChange,
@@ -80,19 +80,15 @@ export function ResolutionPopover({
             disabled={disabled}
           >
             {children}
-            <div>
-              <label className="sr-only" htmlFor={textareaId}>
-                {subtitle}
-              </label>
-              <textarea
-                id={textareaId}
-                className={cn(inputBase, 'min-h-[80px] resize-none')}
-                placeholder={placeholder}
-                value={value}
-                onChange={e => onChange(e.target.value)}
-                maxLength={1000}
-              />
-            </div>
+            <FormNotesField
+              id={textareaId}
+              label={notesLabel}
+              placeholder={placeholder}
+              value={value}
+              onChange={onChange}
+              maxLength={1000}
+              rows={4}
+            />
           </PopoverFormChrome>
         </div>
       )}

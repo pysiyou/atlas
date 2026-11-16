@@ -43,12 +43,11 @@ def serialize_patient_full(patient: Patient) -> dict:
 
 
 def _patient_search_filter(search_term: str):
-    """Collection-style name/id/MRN lookup plus phone substring match."""
+    """Collection-style name/id (PAT display id) lookup plus phone substring match."""
     term = search_term.strip()
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
         Patient.phone.contains(term),
-        Patient.mrn.ilike(f"%{term}%"),
     ]
     patient_id = parse_display_id_from_search(term, "PAT")
     if patient_id is not None:
@@ -58,10 +57,6 @@ def _patient_search_filter(search_term: str):
         predicates.append(cast(Patient.id, String).ilike(f"%{compact}%"))
         if compact != term:
             predicates.append(Patient.phone.contains(compact))
-    mrn_from_search = parse_display_id_from_search(term, "MRN")
-    if mrn_from_search is not None:
-        predicates.append(Patient.id == mrn_from_search)
-        predicates.append(Patient.mrn.ilike(f"%{mrn_from_search}%"))
     return or_(*predicates)
 
 
@@ -270,8 +265,6 @@ class PatientService:
         )
         self.db.add(patient)
         self.db.flush()
-        if not patient.mrn:
-            patient.mrn = f"MRN-{patient.id:08d}"
         if force_create and duplicates:
             self.emitter.patient_created_forced(
                 patient.id,
@@ -283,17 +276,6 @@ class PatientService:
         self.db.commit()
         self.db.refresh(patient)
         return serialize_patient_full(patient)
-
-    def delete(self, patient_id: int, user_id: int) -> None:
-        patient = self.db.query(Patient).filter(Patient.id == patient_id).first()
-        if not patient:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Patient {patient_id} not found",
-            )
-        self.emitter.patient_deleted(patient_id, user_id)
-        self.db.delete(patient)
-        self.db.commit()
 
     def update(self, patient_id: int, patient_data: PatientUpdate, user_id: int) -> dict:
         patient = self.db.query(Patient).filter(Patient.id == patient_id).first()

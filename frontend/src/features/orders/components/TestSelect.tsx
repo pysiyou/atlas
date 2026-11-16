@@ -195,6 +195,7 @@ function TestSelectPopover({
           <p className={`${text({ role: 'body' })} font-normal truncate`}>{panel.name}</p>
           <p className={`${text({ role: 'caption' })} truncate`}>
             Panel · {panel.memberTestCodes.length} tests
+            {panel.description?.trim() ? ` · ${panel.description.trim()}` : ''}
           </p>
         </div>
       </button>

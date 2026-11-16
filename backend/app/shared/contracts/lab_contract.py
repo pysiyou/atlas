@@ -72,7 +72,6 @@ PIPELINE_STAGES: tuple[str, ...] = (
     "collection",
     "entry",
     "validation",
-    "escalation",
     "completed",
     "cancelled",
 )

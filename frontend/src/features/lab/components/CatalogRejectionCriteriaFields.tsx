@@ -3,6 +3,7 @@
  */
 
 import { Alert } from '@/components/display';
+import { FormNotesField } from '@/components/primitives';
 
 import { cn } from '@/utils';
 import { text, inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
@@ -49,10 +50,10 @@ export function CatalogRejectionCriteriaFields({
   }
 
   return (
-    <>
+    <div className="flex w-full min-w-0 flex-col gap-space-3">
       {showReason && (
-        <div>
-          <label className={`${FORM_FIELD_LABEL} mb-space-1`}>
+        <div className="w-full min-w-0">
+          <label className={`${FORM_FIELD_LABEL} mb-space-1 block`}>
             {reasonLabel} <span className={TONE.danger.fg}>*</span>
           </label>
           <select
@@ -71,17 +72,13 @@ export function CatalogRejectionCriteriaFields({
       )}
 
       {showNotes && (
-        <div>
-          <label className={`${FORM_FIELD_LABEL} mb-space-1`}>{notesLabel}</label>
-          <textarea
-            rows={notesRows}
-            placeholder="Optional additional details..."
-            value={rejectionNotes}
-            onChange={e => onNotesChange(e.target.value)}
-            className={cn(inputBase, 'resize-none')}
-          />
-        </div>
+        <FormNotesField
+          label={notesLabel}
+          rows={notesRows}
+          value={rejectionNotes}
+          onChange={onNotesChange}
+        />
       )}
-    </>
+    </div>
   );
 }

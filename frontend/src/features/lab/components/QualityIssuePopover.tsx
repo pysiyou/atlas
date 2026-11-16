@@ -1,6 +1,5 @@
 /**
- * QualityIssuePopover - Popover for reporting quality issues on test results.
- * Validator chooses rejection reason only; supervisor approves remedy on escalation.
+ * QualityIssuePopover — reject a resulted test and pick retest, recollect, or cancel.
  */
 
 import React, { useState } from 'react';
@@ -19,6 +18,9 @@ import {
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { QualityIssuePopoverLoadingView, QualityIssuePopoverErrorView } from './QualityIssuePopoverStates';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
+import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
+import type { RemedyOption } from '../constants/qualityIssuePopoverCopy';
+import type { RemedyType } from '@/types';
 
 /** Re-export views for consumers that render them directly */
 export { QualityIssuePopoverLoadingView, QualityIssuePopoverErrorView } from './QualityIssuePopoverStates';
@@ -32,12 +34,15 @@ export interface QualityIssuePopoverState {
   rejectionNotes: string;
   allowedCriteria: string[];
   criteriaLoading: boolean;
+  remedyOptions: RemedyOption[];
+  preferredRemedy: RemedyType | '';
 }
 
 /** Grouped actions for form body. */
 export interface QualityIssueFormActions {
   onReasonChange: (value: string) => void;
   onNotesChange: (value: string) => void;
+  onPreferredRemedyChange: (value: RemedyType) => void;
 }
 
 interface QualityIssuePopoverFormBodyProps {
@@ -56,8 +61,10 @@ export function QualityIssuePopoverFormBody({
     rejectionNotes,
     allowedCriteria,
     criteriaLoading,
+    remedyOptions,
+    preferredRemedy,
   } = state;
-  const { onReasonChange, onNotesChange } = actions;
+  const { onReasonChange, onNotesChange, onPreferredRemedyChange } = actions;
   const copy =
     formCopy ?? {
       alert: null,
@@ -86,6 +93,12 @@ export function QualityIssuePopoverFormBody({
         onNotesChange={onNotesChange}
         reasonLabel={copy.reasonLabel}
         showNotes={false}
+      />
+
+      <QualityIssueRemedyPicker
+        options={remedyOptions}
+        value={preferredRemedy}
+        onChange={onPreferredRemedyChange}
       />
 
       <CatalogRejectionCriteriaFields
@@ -126,6 +139,9 @@ function QualityIssuePopoverContent({
     setRejectionReason,
     rejectionNotes,
     setRejectionNotes,
+    preferredRemedy,
+    setPreferredRemedy,
+    remedyOptions,
     isConfirmDisabled,
     isLoading,
     isRejecting,
@@ -166,16 +182,19 @@ function QualityIssuePopoverContent({
       <QualityIssuePopoverFormBody
         state={{
           error,
-          escalationRequired: true,
+          escalationRequired: formCopy?.escalationRequired ?? false,
           formCopy,
           rejectionReason,
           rejectionNotes,
           allowedCriteria: options?.allowedCriteria ?? [],
           criteriaLoading: isLoading,
+          remedyOptions,
+          preferredRemedy,
         }}
         actions={{
           onReasonChange: setRejectionReason,
           onNotesChange: setRejectionNotes,
+          onPreferredRemedyChange: setPreferredRemedy,
         }}
       />
     </LabFormPopoverChrome>

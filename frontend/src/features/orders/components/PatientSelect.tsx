@@ -4,7 +4,7 @@ import { Avatar, RemovableTag, TagChip } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import { getEmptyCopy } from '@/strings';
 import { FG, text } from '@/theme/recipes';
-import { cn, formatPhoneNumber } from '@/utils';
+import { cn, displayId, formatPhoneNumber } from '@/utils';
 import React, { useRef, useState } from 'react';
 import {
 
@@ -39,7 +39,7 @@ function PatientSelectedChip({ patient }: { patient: Patient }) {
           {patient.fullName}
         </span>
         <span className={`${text({ role: 'caption' })} font-normal truncate`}>
-          {[patient.mrn, contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
+          {[displayId.patient(patient.id), contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
         </span>
       </div>
     </>
@@ -208,7 +208,7 @@ export function PatientSelect({
                           {patient.fullName}
                         </p>
                         <p className={`${text({ role: 'caption' })} truncate`}>
-                          {[patient.mrn, contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
+                          {[displayId.patient(patient.id), contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
                         </p>
                       </div>
                     </button>

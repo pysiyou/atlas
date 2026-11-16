@@ -1,7 +1,7 @@
 /**
  * Modal callbacks for TestDetailModal (keeps component under max-lines-per-function).
  */
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAsyncAction } from '@/hooks';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
@@ -31,6 +31,11 @@ export function useTestDetailModalActions({
   const validateMutation = useValidateResults();
   const getValidationComments = useLabDraftStore(s => s.getValidationComments);
   const clearValidationComments = useLabDraftStore(s => s.clearValidationComments);
+  const [criticalSeen, setCriticalSeen] = useState(false);
+
+  useEffect(() => {
+    setCriticalSeen(false);
+  }, [orderTestId]);
 
   const approveHandler = useCallback(
     async (_signal: AbortSignal) => {
@@ -41,6 +46,7 @@ export function useTestDetailModalActions({
           orderId: orderIdStr,
           orderTestId,
           validationNotes: getValidationComments(orderTestId) || undefined,
+          criticalSeen,
         });
         clearValidationComments(orderTestId);
         onClose();
@@ -63,6 +69,7 @@ export function useTestDetailModalActions({
       getValidationComments,
       clearValidationComments,
       onClose,
+      criticalSeen,
     ]
   );
   const { execute: handleApprove, isPending: isApproving } = useAsyncAction(approveHandler, {
@@ -119,5 +126,7 @@ export function useTestDetailModalActions({
     handleCriticalValueUpdated,
     openLinkedTest,
     handleViewFullSample,
+    criticalSeen,
+    setCriticalSeen,
   };
 }

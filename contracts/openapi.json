@@ -41,28 +41,6 @@
         }
       }
     },
-    "/api/v1/config/validate": {
-      "get": {
-        "tags": [
-          "config"
-        ],
-        "summary": "Validate Config",
-        "description": "Validate `client-config.json` with the same Pydantic model used at startup.",
-        "operationId": "validate_config_api_v1_config_validate_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConfigValidationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/auth/setup": {
       "get": {
         "tags": [
@@ -1104,45 +1082,6 @@
             }
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "patients"
-        ],
-        "summary": "Delete Patient",
-        "description": "Delete a patient.",
-        "operationId": "delete_patient_api_v1_patients__patientId__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "patientId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Patientid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/api/v1/tests": {
@@ -1219,50 +1158,6 @@
                     "$ref": "#/components/schemas/TestSummaryResponse"
                   },
                   "title": "Response Get Tests Api V1 Tests Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "tests"
-        ],
-        "summary": "Create Test",
-        "operationId": "create_test_api_v1_tests_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TestCreate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TestResponse"
                 }
               }
             }
@@ -1441,61 +1336,6 @@
             }
           }
         }
-      },
-      "put": {
-        "tags": [
-          "tests"
-        ],
-        "summary": "Update Test",
-        "operationId": "update_test_api_v1_tests__testCode__put",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "testCode",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Testcode"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TestUpdate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TestResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/api/v1/panels": {
@@ -1534,152 +1374,6 @@
                     "$ref": "#/components/schemas/CatalogPanelResponse"
                   },
                   "title": "Response List Panels Api V1 Panels Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "panels"
-        ],
-        "summary": "Create Panel",
-        "operationId": "create_panel_api_v1_panels_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CatalogPanelCreate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CatalogPanelResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/panels/{code}": {
-      "get": {
-        "tags": [
-          "panels"
-        ],
-        "summary": "Get Panel",
-        "operationId": "get_panel_api_v1_panels__code__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "code",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Code"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CatalogPanelResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "panels"
-        ],
-        "summary": "Update Panel",
-        "operationId": "update_panel_api_v1_panels__code__put",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "code",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Code"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CatalogPanelUpdate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CatalogPanelResponse"
                 }
               }
             }
@@ -2139,148 +1833,6 @@
             }
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "orders"
-        ],
-        "summary": "Delete Order",
-        "operationId": "delete_order_api_v1_orders__orderId__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Orderid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/orders/{orderId}/payment": {
-      "patch": {
-        "tags": [
-          "orders"
-        ],
-        "summary": "Update Order Payment Status",
-        "operationId": "update_order_payment_status_api_v1_orders__orderId__payment_patch",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Orderid"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderPaymentUpdate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/orders/{orderId}/report": {
-      "post": {
-        "tags": [
-          "orders"
-        ],
-        "summary": "Mark As Reported",
-        "operationId": "mark_as_reported_api_v1_orders__orderId__report_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Orderid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderReportResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/api/v1/orders/{orderId}/approve": {
@@ -2549,51 +2101,6 @@
       }
     },
     "/api/v1/users/{user_id}": {
-      "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Get User",
-        "operationId": "get_user_api_v1_users__user_id__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "User Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
       "put": {
         "tags": [
           "users"
@@ -2633,254 +2140,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Delete User",
-        "operationId": "delete_user_api_v1_users__user_id__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "User Id"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/payments": {
-      "get": {
-        "tags": [
-          "payments"
-        ],
-        "summary": "Get Payments",
-        "operationId": "get_payments_api_v1_payments_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Orderid"
-            }
-          },
-          {
-            "name": "orderIds",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "Comma-separated order IDs",
-              "title": "Orderids"
-            },
-            "description": "Comma-separated order IDs"
-          },
-          {
-            "name": "paymentMethod",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/PaymentMethod"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Paymentmethod"
-            }
-          },
-          {
-            "name": "skip",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "Number of records to skip",
-              "default": 0,
-              "title": "Skip"
-            },
-            "description": "Number of records to skip"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 10000,
-              "minimum": 1,
-              "description": "Max records to return",
-              "default": 50,
-              "title": "Limit"
-            },
-            "description": "Max records to return"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PaymentResponse"
-                  },
-                  "title": "Response Get Payments Api V1 Payments Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "payments"
-        ],
-        "summary": "Create Payment",
-        "operationId": "create_payment_api_v1_payments_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PaymentCreate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaymentResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/payments/{paymentId}": {
-      "get": {
-        "tags": [
-          "payments"
-        ],
-        "summary": "Get Payment",
-        "operationId": "get_payment_api_v1_payments__paymentId__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "paymentId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Paymentid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaymentResponse"
                 }
               }
             }
@@ -2949,6 +2208,52 @@
         }
       }
     },
+    "/api/v1/payments": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Create Payment",
+        "operationId": "create_payment_api_v1_payments_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/affiliations/pricing": {
       "get": {
         "tags": [
@@ -2971,51 +2276,6 @@
             "HTTPBearer": []
           }
         ]
-      }
-    },
-    "/api/v1/affiliations/pricing/{duration}": {
-      "get": {
-        "tags": [
-          "affiliations"
-        ],
-        "summary": "Get Affiliation Price",
-        "operationId": "get_affiliation_price_api_v1_affiliations_pricing__duration__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "duration",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Duration"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/api/v1/lab/samples": {
@@ -3134,36 +2394,6 @@
             }
           }
         }
-      }
-    },
-    "/api/v1/lab/samples/pending": {
-      "get": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Get Pending Samples",
-        "operationId": "get_pending_samples_api_v1_lab_samples_pending_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/SampleResponse"
-                  },
-                  "type": "array",
-                  "title": "Response Get Pending Samples Api V1 Lab Samples Pending Get"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
       }
     },
     "/api/v1/lab/samples/{sampleId}/work-context": {
@@ -3380,36 +2610,6 @@
         }
       }
     },
-    "/api/v1/lab/results/pending-escalation": {
-      "get": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Get Pending Escalation",
-        "operationId": "get_pending_escalation_api_v1_lab_results_pending_escalation_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/PendingEscalationItemResponse"
-                  },
-                  "type": "array",
-                  "title": "Response Get Pending Escalation Api V1 Lab Results Pending Escalation Get"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
-      }
-    },
     "/api/v1/lab/results/order-tests/{orderTestId}": {
       "get": {
         "tags": [
@@ -3549,118 +2749,6 @@
             "content": {
               "application/json": {
                 "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/lab/results/order-tests/{orderTestId}/request-amendment": {
-      "post": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Request Amendment",
-        "operationId": "request_amendment_api_v1_lab_results_order_tests__orderTestId__request_amendment_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderTestId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Ordertestid"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AmendmentRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/lab/results/order-tests/{orderTestId}/escalation/resolve": {
-      "post": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Resolve Escalation",
-        "operationId": "resolve_escalation_api_v1_lab_results_order_tests__orderTestId__escalation_resolve_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderTestId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Ordertestid"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EscalationResolveRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EscalationResolveResponse"
-                }
               }
             }
           },
@@ -4679,64 +3767,6 @@
         ]
       }
     },
-    "/api/v1/lab/critical-values/all": {
-      "get": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Get All Critical Values",
-        "operationId": "get_all_critical_values_api_v1_lab_critical_values_all_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "acknowledged",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Acknowledged"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CriticalValueResponse"
-                  },
-                  "title": "Response Get All Critical Values Api V1 Lab Critical Values All Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/lab/critical-values/{test_id}/notify": {
       "post": {
         "tags": [
@@ -4831,57 +3861,6 @@
             "content": {
               "application/json": {
                 "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/lab/orders/{order_id}/critical-values": {
-      "get": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Get Order Critical Values",
-        "operationId": "get_order_critical_values_api_v1_lab_orders__order_id__critical_values_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "order_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Order Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CriticalValueResponse"
-                  },
-                  "title": "Response Get Order Critical Values Api V1 Lab Orders  Order Id  Critical Values Get"
-                }
               }
             }
           },
@@ -5113,20 +4092,15 @@
         ],
         "summary": "Report Quality Issue",
         "operationId": "report_quality_issue_api_v1_lab_quality_issues_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ReportQualityIssueRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -5135,393 +4109,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QualityIssueResult"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "List Quality Issues",
-        "operationId": "list_quality_issues_api_v1_lab_quality_issues_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Orderid"
-            }
-          },
-          {
-            "name": "sampleId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Sampleid"
-            }
-          },
-          {
-            "name": "orderTestId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "integer"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Ordertestid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/QualityIssueResponse"
-                  },
-                  "title": "Response List Quality Issues Api V1 Lab Quality Issues Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/invoices/order/{orderId}": {
-      "get": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "List Invoices For Order",
-        "operationId": "list_invoices_for_order_api_v1_invoices_order__orderId__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Orderid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/InvoiceResponse"
-                  },
-                  "title": "Response List Invoices For Order Api V1 Invoices Order  Orderid  Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Create Invoice For Order",
-        "operationId": "create_invoice_for_order_api_v1_invoices_order__orderId__post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Orderid"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvoiceResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/invoices/{invoiceId}": {
-      "get": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Get Invoice",
-        "operationId": "get_invoice_api_v1_invoices__invoiceId__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "invoiceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Invoiceid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvoiceResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/invoices/{invoiceId}/void": {
-      "post": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Void Invoice",
-        "operationId": "void_invoice_api_v1_invoices__invoiceId__void_post",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "invoiceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Invoiceid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/InvoiceVoidRequest"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "title": "Body"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvoiceResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/insurance-claims/order/{orderId}": {
-      "get": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "List Claims For Order",
-        "operationId": "list_claims_for_order_api_v1_insurance_claims_order__orderId__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Orderid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/InsuranceClaimResponse"
-                  },
-                  "title": "Response List Claims For Order Api V1 Insurance Claims Order  Orderid  Get"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/insurance-claims": {
-      "post": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Submit Insurance Claim",
-        "operationId": "submit_insurance_claim_api_v1_insurance_claims_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InsuranceClaimCreate"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InsuranceClaimResponse"
                 }
               }
             }
@@ -5998,67 +4585,6 @@
           "critical"
         ],
         "title": "AgeBuckets"
-      },
-      "AmendmentRequest": {
-        "properties": {
-          "amendmentReason": {
-            "type": "string",
-            "maxLength": 1000,
-            "minLength": 1,
-            "title": "Amendmentreason"
-          },
-          "proposedResults": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/TestResultValue"
-                    },
-                    {
-                      "additionalProperties": true,
-                      "type": "object"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "integer"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Proposedresults"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 1000
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          }
-        },
-        "type": "object",
-        "required": [
-          "amendmentReason"
-        ],
-        "title": "AmendmentRequest"
       },
       "AnalyzerResultRequest": {
         "properties": {
@@ -6612,55 +5138,6 @@
         ],
         "title": "BoardAttentionItem"
       },
-      "CatalogPanelCreate": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
-            "title": "Name"
-          },
-          "memberTestCodes": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "minItems": 1,
-            "title": "Membertestcodes"
-          },
-          "price": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Price"
-          },
-          "isActive": {
-            "type": "boolean",
-            "title": "Isactive",
-            "default": true
-          },
-          "code": {
-            "type": "string",
-            "maxLength": 50,
-            "minLength": 1,
-            "title": "Code"
-          }
-        },
-        "type": "object",
-        "required": [
-          "name",
-          "memberTestCodes",
-          "code"
-        ],
-        "title": "CatalogPanelCreate",
-        "description": "Create a named panel of catalog tests."
-      },
       "CatalogPanelResponse": {
         "properties": {
           "name": {
@@ -6668,6 +5145,18 @@
             "maxLength": 200,
             "minLength": 1,
             "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
           },
           "memberTestCodes": {
             "items": {
@@ -6731,74 +5220,6 @@
         ],
         "title": "CatalogPanelResponse",
         "description": "Persisted panel row."
-      },
-      "CatalogPanelUpdate": {
-        "properties": {
-          "name": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 200,
-                "minLength": 1
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Name"
-          },
-          "memberTestCodes": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Membertestcodes"
-          },
-          "price": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Price"
-          },
-          "isActive": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Isactive"
-          }
-        },
-        "type": "object",
-        "title": "CatalogPanelUpdate",
-        "description": "Partial panel update."
-      },
-      "ClaimStatus": {
-        "type": "string",
-        "enum": [
-          "submitted",
-          "processing",
-          "approved",
-          "denied",
-          "paid"
-        ],
-        "title": "ClaimStatus"
       },
       "CollectionWorklistItem": {
         "properties": {
@@ -6921,7 +5342,6 @@
                   "collection",
                   "entry",
                   "validation",
-                  "escalation",
                   "completed",
                   "cancelled"
                 ]
@@ -7212,48 +5632,6 @@
         ],
         "title": "CollectionWorklistResponse"
       },
-      "ConfigValidationResult": {
-        "properties": {
-          "valid": {
-            "type": "boolean",
-            "title": "Valid"
-          },
-          "errors": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Errors",
-            "default": []
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings",
-            "default": []
-          },
-          "config": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Config"
-          }
-        },
-        "type": "object",
-        "required": [
-          "valid"
-        ],
-        "title": "ConfigValidationResult",
-        "description": "Result of config validation."
-      },
       "ContainerTopColor": {
         "type": "string",
         "enum": [
@@ -7279,39 +5657,6 @@
           "cup"
         ],
         "title": "ContainerType"
-      },
-      "CriticalReadBackPayload": {
-        "properties": {
-          "providerName": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
-            "title": "Providername"
-          },
-          "providerContact": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
-            "title": "Providercontact"
-          },
-          "notifiedAt": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Notifiedat"
-          },
-          "readBackConfirmed": {
-            "type": "boolean",
-            "title": "Readbackconfirmed"
-          }
-        },
-        "type": "object",
-        "required": [
-          "providerName",
-          "providerContact",
-          "notifiedAt",
-          "readBackConfirmed"
-        ],
-        "title": "CriticalReadBackPayload"
       },
       "CriticalValueResponse": {
         "properties": {
@@ -7958,7 +6303,6 @@
                   "collection",
                   "entry",
                   "validation",
-                  "escalation",
                   "completed",
                   "cancelled"
                 ]
@@ -8117,112 +6461,6 @@
         "type": "object",
         "title": "EscalationActionFlags"
       },
-      "EscalationResolveRequest": {
-        "properties": {
-          "action": {
-            "type": "string",
-            "enum": [
-              "force_validate",
-              "authorize_retest",
-              "authorize_recollect",
-              "apply_amendment",
-              "cancel_test"
-            ],
-            "title": "Action",
-            "description": "'force_validate' | 'authorize_retest' | 'authorize_recollect' | 'apply_amendment' | 'cancel_test'"
-          },
-          "validationNotes": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 1000
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Validationnotes"
-          },
-          "readBack": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/CriticalReadBackPayload"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "rejectionReason": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 1000,
-                "minLength": 1
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rejectionreason"
-          }
-        },
-        "type": "object",
-        "required": [
-          "action"
-        ],
-        "title": "EscalationResolveRequest"
-      },
-      "EscalationResolveResponse": {
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "title": "Success"
-          },
-          "action": {
-            "type": "string",
-            "title": "Action"
-          },
-          "message": {
-            "type": "string",
-            "title": "Message"
-          },
-          "escalatedTestId": {
-            "type": "integer",
-            "title": "Escalatedtestid"
-          },
-          "newTestId": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Newtestid"
-          },
-          "newSampleId": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Newsampleid"
-          }
-        },
-        "type": "object",
-        "required": [
-          "success",
-          "action",
-          "message",
-          "escalatedTestId"
-        ],
-        "title": "EscalationResolveResponse"
-      },
       "FirstAdminSetupRequest": {
         "properties": {
           "username": {
@@ -8302,153 +6540,6 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
-      },
-      "InsuranceClaimCreate": {
-        "properties": {
-          "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "invoiceId": {
-            "type": "integer",
-            "title": "Invoiceid"
-          },
-          "insuranceProvider": {
-            "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
-            "title": "Insuranceprovider"
-          },
-          "insuranceNumber": {
-            "type": "string",
-            "maxLength": 100,
-            "minLength": 1,
-            "title": "Insurancenumber"
-          },
-          "claimAmount": {
-            "type": "number",
-            "exclusiveMinimum": 0.0,
-            "title": "Claimamount"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          }
-        },
-        "type": "object",
-        "required": [
-          "orderId",
-          "invoiceId",
-          "insuranceProvider",
-          "insuranceNumber",
-          "claimAmount"
-        ],
-        "title": "InsuranceClaimCreate"
-      },
-      "InsuranceClaimResponse": {
-        "properties": {
-          "claimId": {
-            "type": "integer",
-            "title": "Claimid"
-          },
-          "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "invoiceId": {
-            "type": "integer",
-            "title": "Invoiceid"
-          },
-          "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "insuranceProvider": {
-            "type": "string",
-            "title": "Insuranceprovider"
-          },
-          "insuranceNumber": {
-            "type": "string",
-            "title": "Insurancenumber"
-          },
-          "claimAmount": {
-            "type": "number",
-            "title": "Claimamount"
-          },
-          "approvedAmount": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Approvedamount"
-          },
-          "claimStatus": {
-            "$ref": "#/components/schemas/ClaimStatus"
-          },
-          "submittedDate": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Submitteddate"
-          },
-          "processedDate": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Processeddate"
-          },
-          "denialReason": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Denialreason"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          }
-        },
-        "type": "object",
-        "required": [
-          "claimId",
-          "orderId",
-          "invoiceId",
-          "patientId",
-          "insuranceProvider",
-          "insuranceNumber",
-          "claimAmount",
-          "claimStatus",
-          "submittedDate"
-        ],
-        "title": "InsuranceClaimResponse"
       },
       "InvoiceItem": {
         "properties": {
@@ -8576,24 +6667,6 @@
           "updatedAt"
         ],
         "title": "InvoiceResponse"
-      },
-      "InvoiceVoidRequest": {
-        "properties": {
-          "reason": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 500
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reason"
-          }
-        },
-        "type": "object",
-        "title": "InvoiceVoidRequest"
       },
       "LabBoardCounts": {
         "properties": {
@@ -8854,7 +6927,6 @@
               "collection",
               "entry",
               "validation",
-              "escalation",
               "completed",
               "cancelled"
             ],
@@ -9478,56 +7550,6 @@
         ],
         "title": "OrderDetailResponse",
         "description": "Order plus optional related data from GET /orders/{id}?include=."
-      },
-      "OrderPaymentUpdate": {
-        "properties": {
-          "paymentStatus": {
-            "$ref": "#/components/schemas/PaymentStatus",
-            "description": "unpaid | partial | paid"
-          },
-          "amountPaid": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Amountpaid"
-          }
-        },
-        "type": "object",
-        "required": [
-          "paymentStatus"
-        ],
-        "title": "OrderPaymentUpdate",
-        "description": "Body for PATCH /orders/{orderId}/payment"
-      },
-      "OrderReportResponse": {
-        "properties": {
-          "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "status": {
-            "type": "string",
-            "title": "Status"
-          },
-          "message": {
-            "type": "string",
-            "title": "Message"
-          }
-        },
-        "type": "object",
-        "required": [
-          "orderId",
-          "status",
-          "message"
-        ],
-        "title": "OrderReportResponse",
-        "description": "Response for order report/completion confirmation."
       },
       "OrderResponse": {
         "properties": {
@@ -10698,17 +8720,6 @@
             "type": "integer",
             "title": "Id"
           },
-          "mrn": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mrn"
-          },
           "registrationDate": {
             "type": "string",
             "format": "date-time",
@@ -11682,120 +9693,6 @@
         ],
         "title": "QualityIssueOptions"
       },
-      "QualityIssueResponse": {
-        "properties": {
-          "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "orderTestId": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Ordertestid"
-          },
-          "sampleId": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sampleid"
-          },
-          "testCode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Testcode"
-          },
-          "stage": {
-            "type": "string",
-            "title": "Stage"
-          },
-          "domain": {
-            "type": "string",
-            "title": "Domain"
-          },
-          "reason": {
-            "type": "string",
-            "title": "Reason"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          },
-          "remedy": {
-            "type": "string",
-            "title": "Remedy"
-          },
-          "createdTestId": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Createdtestid"
-          },
-          "createdSampleId": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Createdsampleid"
-          },
-          "createdBy": {
-            "type": "string",
-            "title": "Createdby"
-          },
-          "createdAt": {
-            "type": "string",
-            "title": "Createdat"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "orderId",
-          "stage",
-          "domain",
-          "reason",
-          "remedy",
-          "createdBy",
-          "createdAt"
-        ],
-        "title": "QualityIssueResponse"
-      },
       "QualityIssueResult": {
         "properties": {
           "success": {
@@ -12440,6 +10337,18 @@
                 "type": "null"
               }
             ]
+          },
+          "criticalSeen": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criticalseen",
+            "description": "Required on approve when the result has critical flags."
           }
         },
         "type": "object",
@@ -12925,293 +10834,6 @@
         ],
         "title": "StatusPresentation",
         "description": "UI-facing primary status and optional secondary reason label."
-      },
-      "TestCreate": {
-        "properties": {
-          "code": {
-            "type": "string",
-            "title": "Code"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "displayName": {
-            "type": "string",
-            "title": "Displayname"
-          },
-          "category": {
-            "type": "string",
-            "title": "Category"
-          },
-          "price": {
-            "type": "number",
-            "title": "Price"
-          },
-          "turnaroundTimeHours": {
-            "type": "integer",
-            "title": "Turnaroundtimehours"
-          },
-          "sampleType": {
-            "type": "string",
-            "title": "Sampletype"
-          },
-          "containerTypes": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Containertypes"
-          },
-          "containerTopColors": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Containertopcolors"
-          },
-          "isActive": {
-            "type": "boolean",
-            "title": "Isactive",
-            "default": true
-          },
-          "synonyms": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Synonyms"
-          },
-          "sampleVolume": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Samplevolume"
-          },
-          "minimumVolume": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Minimumvolume"
-          },
-          "optimalVolume": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Optimalvolume"
-          },
-          "numberOfContainers": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Numberofcontainers"
-          },
-          "containerDescription": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Containerdescription"
-          },
-          "specialRequirements": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Specialrequirements"
-          },
-          "fastingRequired": {
-            "type": "boolean",
-            "title": "Fastingrequired",
-            "default": false
-          },
-          "collectionNotes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Collectionnotes"
-          },
-          "rejectionCriteria": {
-            "anyOf": [
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/components/schemas/RejectionCriterionItem"
-                    }
-                  ]
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rejectioncriteria"
-          },
-          "validationRejectionCriteria": {
-            "anyOf": [
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/components/schemas/RejectionCriterionItem"
-                    }
-                  ]
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Validationrejectioncriteria"
-          },
-          "referenceRanges": {
-            "anyOf": [
-              {
-                "items": {},
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Referenceranges"
-          },
-          "resultItems": {
-            "anyOf": [
-              {
-                "items": {},
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Resultitems"
-          },
-          "panels": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Panels"
-          },
-          "loincCodes": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Loinccodes"
-          },
-          "methodology": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Methodology"
-          },
-          "confidence": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Confidence"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          }
-        },
-        "type": "object",
-        "required": [
-          "code",
-          "name",
-          "displayName",
-          "category",
-          "price",
-          "turnaroundTimeHours",
-          "sampleType",
-          "containerTypes",
-          "containerTopColors"
-        ],
-        "title": "TestCreate"
       },
       "TestResponse": {
         "properties": {
@@ -13712,34 +11334,6 @@
         ],
         "title": "TestSummaryResponse",
         "description": "List/search index shape \u2014 no resultItems, ranges, or collection notes."
-      },
-      "TestUpdate": {
-        "properties": {
-          "price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Price"
-          },
-          "isActive": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Isactive"
-          }
-        },
-        "type": "object",
-        "title": "TestUpdate"
       },
       "Token": {
         "properties": {
@@ -14298,7 +11892,6 @@
                   "collection",
                   "entry",
                   "validation",
-                  "escalation",
                   "completed",
                   "cancelled"
                 ]

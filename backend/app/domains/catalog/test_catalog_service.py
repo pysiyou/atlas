@@ -1,27 +1,18 @@
 """CatalogTest catalog business logic."""
-import logging
-
-from app.domains.audit.service import AuditEmitter
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.catalog.schemas.test import (
-    TestCreate,
     TestResponse,
     TestSummaryResponse,
-    TestUpdate,
 )
 from app.platform.cache import (
     CacheKeys,
-    cache_delete,
     cache_get,
     cache_set,
     generate_cache_key,
-    invalidate_tests_cache,
 )
 from app.platform.config import settings
 from fastapi import HTTPException, Response, status
 from sqlalchemy.orm import Session
-
-logger = logging.getLogger(__name__)
 
 BY_CODES_MAX = 100
 
@@ -43,7 +34,6 @@ def order_found_tests(found: list[CatalogTest], codes: list[str]) -> list[Catalo
 class TestCatalogService:
     def __init__(self, db: Session):
         self.db = db
-        self.emitter = AuditEmitter(db)
 
     def list_tests(
         self,
@@ -105,47 +95,3 @@ class TestCatalogService:
             .limit(limit)
             .all()
         )
-
-    def create(self, test_data: TestCreate, actor_user_id: int) -> CatalogTest:
-        existing = self.db.query(CatalogTest).filter(CatalogTest.code == test_data.code).first()
-        if existing:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"CatalogTest with code {test_data.code} already exists",
-            )
-        test = CatalogTest(**test_data.model_dump())
-        try:
-            self.db.add(test)
-            self.db.flush()
-            self.emitter.catalog_test_created(test.id, test.code, actor_user_id)
-            self.db.commit()
-            self.db.refresh(test)
-        except Exception:
-            self.db.rollback()
-            logger.exception("Failed to create test %s", test_data.code)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to create test",
-            )
-        invalidate_tests_cache()
-        return test
-
-    def update(self, test_code: str, test_data: TestUpdate, actor_user_id: int) -> CatalogTest:
-        test = self.get_by_code(test_code)
-        update_data = test_data.model_dump(exclude_unset=True)
-        for field, value in update_data.items():
-            setattr(test, field, value)
-        try:
-            self.emitter.catalog_test_updated(test.id, test.code, actor_user_id)
-            self.db.commit()
-            self.db.refresh(test)
-        except Exception:
-            self.db.rollback()
-            logger.exception("Failed to update test %s", test_code)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to update test",
-            )
-        invalidate_tests_cache()
-        cache_delete(CacheKeys.TESTS_BY_CODE.format(code=test_code))
-        return test

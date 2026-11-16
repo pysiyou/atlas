@@ -20,9 +20,7 @@ export type ApiAuthUserResponse = Schemas['UserResponse'];
 export type ApiMessageResponse = Schemas['MessageResponse'];
 export type ApiQualityIssueOptions = Schemas['QualityIssueOptions'];
 export type ApiQualityIssueResult = Schemas['QualityIssueResult'];
-export type ApiQualityIssueResponse = Schemas['QualityIssueResponse'];
 export type ApiCriticalValueResponse = Schemas['CriticalValueResponse'];
-export type ApiEscalationResolveResponse = Schemas['EscalationResolveResponse'];
 
 // Lab worklists and projections (OpenAPI)
 export type CollectionWorklistItem = Schemas['CollectionWorklistItem'];

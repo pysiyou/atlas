@@ -6,7 +6,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { notify } from '@/feedback';
-import { actionButtonPreset, Button, Icon } from '@/components/primitives';
+import { actionButtonPreset, Button, FormNotesField, Icon } from '@/components/primitives';
 import { Popover, PopoverFormChrome, RadioCard } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
 
@@ -255,17 +255,11 @@ function CollectionPopoverContent({
         </div>
       </div>
 
-      {/* Notes */}
-      <div>
-        <label className={`${FORM_FIELD_LABEL} mb-space-1`}>Notes</label>
-        <textarea
-          rows={2}
-          placeholder="Add optional notes..."
-          value={notes}
-          onChange={e => setNotes(e.target.value)}
-          className={cn(inputBase, 'resize-none')}
-        />
-      </div>
+      <FormNotesField
+        value={notes}
+        onChange={setNotes}
+        placeholder="Add optional notes..."
+      />
     </PopoverFormChrome>
   );
 }

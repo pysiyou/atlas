@@ -53,7 +53,7 @@ class CatalogTest(Base):
     )  # Array of ResultItem objects from catalog
 
     # Additional catalog fields
-    panels = Column(JSON, nullable=True)  # Related test panels
+    panels = Column(JSON, nullable=True)  # Orderable panel registry ids
     loincCodes = Column("loinc_codes", JSON, nullable=True)  # LOINC codes
     methodology = Column(String, nullable=True)
     confidence = Column(String, nullable=True)  # HIGH, MEDIUM, LOW

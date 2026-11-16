@@ -45,46 +45,6 @@ class TestBase(BaseModel):
     isActive: bool = True
 
 
-class TestCreate(TestBase):
-    synonyms: list[str] | None = None
-    sampleVolume: str | None = None
-    minimumVolume: float | None = None
-    optimalVolume: float | None = None
-    numberOfContainers: int | None = None
-    containerDescription: str | None = None
-    specialRequirements: str | None = None
-    fastingRequired: bool = False
-    collectionNotes: str | None = None
-    rejectionCriteria: list[RejectionCriterionValue] | None = None
-    validationRejectionCriteria: list[RejectionCriterionValue] | None = None
-    referenceRanges: list | None = None
-    resultItems: list | None = None
-    panels: list[str] | None = None
-    loincCodes: list[str] | None = None
-    methodology: str | None = None
-    confidence: str | None = None
-    notes: str | None = None
-
-    @field_validator("rejectionCriteria", mode="before")
-    @classmethod
-    def normalize_rejection_criteria_create(
-        cls, value: list[RejectionCriterionValue] | None
-    ) -> list[RejectionCriterionItem] | None:
-        return _normalize_rejection_criteria(value)
-
-    @field_validator("validationRejectionCriteria", mode="before")
-    @classmethod
-    def normalize_validation_rejection_criteria_create(
-        cls, value: list[RejectionCriterionValue] | None
-    ) -> list[RejectionCriterionItem] | None:
-        return _normalize_rejection_criteria(value)
-
-
-class TestUpdate(BaseModel):
-    price: float | None = None
-    isActive: bool | None = None
-
-
 class TestSummaryResponse(TestBase):
     """List/search index shape — no resultItems, ranges, or collection notes."""
 

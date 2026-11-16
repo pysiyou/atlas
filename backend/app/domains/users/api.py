@@ -27,15 +27,6 @@ def get_users(
     return UserService(db).list_all()
 
 
-@router.get("/users/{user_id}", response_model=UserResponse)
-def get_user(
-    user_id: int,
-    db: Session = Depends(get_db),
-    _current_user: User = Depends(require_admin),
-):
-    return UserService(db).get_by_id(user_id)
-
-
 @router.post("/users", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create_user(
     user_data: UserCreate,
@@ -53,13 +44,3 @@ def update_user(
     current_user: User = Depends(require_admin),
 ):
     return UserService(db).update(user_id, user_data, current_user.id)
-
-
-@router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(
-    user_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(require_admin),
-):
-    UserService(db).delete(user_id, current_user.id)
-    return None

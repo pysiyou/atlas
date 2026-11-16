@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://atlas.local/contracts/orderable-panels.schema.json",
+  "title": "Atlas orderable panel registry",
+  "type": "object",
+  "required": ["panels"],
+  "properties": {
+    "panels": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/panelEntry" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "panelId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "panelEntry": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/panelId" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

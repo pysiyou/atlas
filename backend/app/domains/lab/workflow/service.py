@@ -13,11 +13,6 @@ from typing import Any, TypeVar
 from app.domains.audit.service import AuditEmitter
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.quality.critical_notifications import CriticalNotificationService
-from app.domains.lab.quality.escalation import (
-    EscalationEngine,
-    EscalationOperations,
-    EscalationResolveResult,
-)
 from app.domains.lab.quality.issues_service import QualityIssueService
 from app.domains.lab.quality.recollection_execution import RecollectionExecutionService
 from app.domains.lab.results import FlagCalculatorService, ResultValidatorService
@@ -35,7 +30,7 @@ from sqlalchemy.orm import Session
 
 T = TypeVar("T")
 
-__all__ = ["LabOperationsService", "LabOperationError", "EscalationResolveResult"]
+__all__ = ["LabOperationsService", "LabOperationError"]
 
 
 class CollectionCommandHandler:
@@ -112,11 +107,9 @@ class LabOperationsService:
     def __init__(self, db: Session):
         self.db = db
         self.emitter = AuditEmitter(db)
-        self.escalation = EscalationEngine(db, self.emitter)
         self.recollection = RecollectionExecutionService(db, quality_service=None)
         self.quality = QualityIssueService(
             db,
-            self.escalation,
             self.emitter,
             recollection_execution=self.recollection,
         )
@@ -125,7 +118,6 @@ class LabOperationsService:
         self.flag_calculator = FlagCalculatorService()
         self._collection = CollectionCommandHandler(self)
         self._results = ResultCommandHandler(self)
-        self._escalation_ops = EscalationOperations(self)
 
     def _get_sample(self, sample_id: int, for_update: bool = False) -> Sample:
         from app.domains.lab.specimen.lookup import get_sample_or_error
@@ -293,7 +285,9 @@ class LabOperationsService:
 
             logger = logging.getLogger(__name__)
             try:
-                OrderService(self.db).mark_as_reported(order_test.orderId)
+                OrderService(self.db).mark_as_reported(
+                    order_test.orderId, kwargs["user_id"]
+                )
             except Exception as exc:
                 logger.error(
                     "mark_as_reported failed after validation for order %s: %s",
@@ -306,18 +300,6 @@ class LabOperationsService:
     def reject_results(self, **kwargs):
         return self.run_lab_mutation(
             lambda: self._results.reject_results(**kwargs),
-            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
-        )
-
-    def request_amendment(self, **kwargs) -> OrderTest:
-        return self.run_lab_mutation(
-            lambda: self._results.request_amendment(**kwargs),
-            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
-        )
-
-    def resolve_escalation(self, **kwargs) -> EscalationResolveResult:
-        return self.run_lab_mutation(
-            lambda: self._escalation_ops.resolve_escalation(**kwargs),
             order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
         )
 

@@ -1,9 +1,8 @@
 /**
- * ResultValidationQueue - Result validation and supervisor exception review.
+ * ResultValidationQueue — approve, reject (retest/recollect/cancel), or confirm criticals.
  */
 
 import { useEffect, useMemo } from 'react';
-import { useAuthStore } from '@/app/authStore';
 import {
   LabWorkflowQueueMultiSectionLayout,
   QueueListPlaceholder,
@@ -16,10 +15,7 @@ import {
   useLabQueueFilterBarProps,
   useResultValidationQueueData,
 } from '../hooks';
-import {
-  VALIDATION_REVIEW_ESCALATION_PROFILE,
-  VALIDATION_REVIEW_WORKLIST_PROFILE,
-} from '../utils/labQueueSecondaryProfiles';
+import { VALIDATION_REVIEW_WORKLIST_PROFILE } from '../utils/labQueueSecondaryProfiles';
 import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { getValidationFilterConfig } from '../constants';
 import { useClientConfig } from '@/app/clientConfigContext';
@@ -31,9 +27,7 @@ import type { ValidationQueueRow } from '../types/queues';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
 import { orderTestKey } from '../utils/labSearchAndLinks';
-import { usePendingEscalation } from '../api/results';
 import { ResultValidationQueueView } from './ResultValidationQueueView';
-import { useResultValidationQueueActions } from './useResultValidationQueueActions';
 
 function getCommentKey(row: ValidationQueueRow) {
   return orderTestKey(row.orderTestId);
@@ -42,14 +36,10 @@ function getCommentKey(row: ValidationQueueRow) {
 export function ResultValidationQueue() {
   useClientConfig();
   const validationFilterConfig = getValidationFilterConfig();
-  const { hasRole } = useAuthStore();
-  const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
-  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
 
   const bar = useLabQueueBarFilters('validationReview');
   const {
     validationRows,
-    escalations,
     isLoading: dataLoading,
     isError: worklistError,
     error: worklistQueryError,
@@ -64,11 +54,6 @@ export function ResultValidationQueue() {
     error: worklistQueryError,
     refetch: refetchWorklist,
   });
-  const {
-    isLoading: escalationLoading,
-    refetch: refetchEscalation,
-    invalidatePendingEscalation,
-  } = usePendingEscalation();
   const isMobile = isBreakpointAtMost(useBreakpoint(), 'sm');
 
   const {
@@ -82,18 +67,8 @@ export function ResultValidationQueue() {
 
   useEffect(() => {
     const validationIds = validationRows.map(row => row.orderTestId);
-    const escalationIds = escalations
-      .map(item => item.id)
-      .filter((id): id is number => id != null);
-    const keepIds = [...validationIds, ...escalationIds];
-    useLabDraftStore.getState().retainValidationDrafts(keepIds);
-  }, [validationRows, escalations]);
-
-  const { openEscalationModal } = useResultValidationQueueActions({
-    canResolveEscalation,
-    invalidatePendingEscalation,
-    refetchEscalation,
-  });
+    useLabDraftStore.getState().retainValidationDrafts(validationIds);
+  }, [validationRows]);
 
   const filterBarProps = useLabQueueFilterBarProps(bar, { statusFilterKey: 'priority' });
 
@@ -118,22 +93,8 @@ export function ResultValidationQueue() {
     [validationRows, filterState, bar],
   );
 
-  const filteredEscalations = useMemo(
-    () =>
-      applyLabQueueFiltersWithProfile(
-        escalations,
-        filterState,
-        bar,
-        VALIDATION_REVIEW_ESCALATION_PROFILE,
-      ),
-    [escalations, filterState, bar],
-  );
-
-  const hasNoWorklistData = validationRows.length === 0 && escalations.length === 0;
-  const waitingOnInitialLoad =
-    hasNoWorklistData && (dataLoading || (canViewEscalations && escalationLoading));
-
-  const hasEscalated = canViewEscalations && filteredEscalations.length > 0;
+  const hasNoWorklistData = validationRows.length === 0;
+  const waitingOnInitialLoad = hasNoWorklistData && dataLoading;
   const hasValidation = filteredValidationRows.length > 0;
 
   return (
@@ -147,20 +108,18 @@ export function ResultValidationQueue() {
           <QueueListPlaceholder />
         ) : (
           <ResultValidationQueueView
-            isEmpty={!hasEscalated && !hasValidation}
-            hasEscalated={hasEscalated}
+            isEmpty={!hasValidation}
             hasValidation={hasValidation}
-            canResolveEscalation={canResolveEscalation}
             isMobile={isMobile}
-            escalations={filteredEscalations}
             validationRows={filteredValidationRows}
             comments={comments}
             pendingValidateKey={pendingValidateKey}
             isValidatePending={validateMutation.isPending}
             getCommentKey={getCommentKey}
-            onOpenEscalation={openEscalationModal}
             onCommentsChange={handleCommentsChange}
-            onApprove={(testId, orderId) => handleValidate(testId, orderId, true)}
+            onApprove={(testId, orderId, criticalSeen) =>
+              handleValidate(testId, orderId, true, undefined, criticalSeen)
+            }
             onReject={(row, result) => handleValidate(row.orderTestId, row.orderId, false, result)}
             onOpenValidation={openValidationModal}
           />

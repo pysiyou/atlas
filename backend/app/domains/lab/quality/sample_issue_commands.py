@@ -6,14 +6,11 @@ from typing import TYPE_CHECKING
 
 from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
 from app.domains.lab.schemas.lab import QualityIssueResult
-from app.domains.orders.models import OrderTest
 from app.platform.utils.exceptions import LabOperationError
 from app.shared.contracts.enums import (
-    EscalationReasonCode,
     QualityDomain,
     QualityStage,
     RemedyType,
-    TestStatus,
 )
 
 from .issue_options import sample_options
@@ -48,12 +45,13 @@ class SampleIssueCommands:
 
         remedy = preferred_remedy
         if unfinished > 0:
+            allowed = options.allowedRemedies or sample_unfinished_remedy_types()
             if remedy is None:
-                remedy = RemedyType.REQUEST_RECOLLECTION
-            if remedy not in sample_unfinished_remedy_types():
+                remedy = options.suggestedRemedy or RemedyType.CANCEL
+            if remedy not in allowed:
                 raise LabOperationError(
                     f"Invalid remedy for sample rejection: {remedy}. "
-                    f"Allowed: {[r.value for r in sample_unfinished_remedy_types()]}",
+                    f"Allowed: {[r.value for r in allowed]}",
                     status_code=400,
                 )
         else:
@@ -112,52 +110,6 @@ class SampleIssueCommands:
             escalationRequired=False,
         )
 
-    def _pick_test_for_recollection_escalation(self, sample) -> OrderTest | None:
-        linked = self._svc.linked_tests(
-            sample,
-            exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
-        )
-        for status in (TestStatus.RESULTED, TestStatus.SAMPLE_COLLECTED, TestStatus.PENDING):
-            for order_test in linked:
-                if order_test.status == status:
-                    return order_test
-        return None
-
-    def _escalate_recollection_limit(
-        self,
-        *,
-        order_test: OrderTest,
-        user_id: int,
-        reason: str,
-        notes: str | None,
-        quality_issue_id: int,
-    ) -> QualityIssueResult:
-        from app.shared.contracts.lab_contract import MAX_RECOLLECTION_ATTEMPTS
-
-        prior_status = order_test.status
-        self._svc.escalation.escalate_test(
-            order_test,
-            EscalationReasonCode.REJ_SAMP,
-            user_id,
-            metadata={"rejectionReason": reason, "rejectionNotes": notes},
-            sample_id=order_test.sampleId,
-            from_status=prior_status,
-        )
-        return QualityIssueResult(
-            success=True,
-            remedy=RemedyType.ESCALATE,
-            message=(
-                f"Maximum collection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. "
-                "Escalated to supervisor — force validate, authorize re-test, authorize re-collect, or cancel."
-            ),
-            qualityIssueId=quality_issue_id,
-            orderId=order_test.orderId,
-            testCode=order_test.testCode,
-            orderTestId=order_test.id,
-            sampleId=order_test.sampleId,
-            escalationRequired=True,
-        )
-
     def _request_recollection_from_collection(
         self,
         sample,
@@ -165,8 +117,16 @@ class SampleIssueCommands:
         reason: str,
         notes: str | None,
     ) -> QualityIssueResult:
+        from app.shared.contracts.lab_contract import MAX_RECOLLECTION_ATTEMPTS
+
         if not self._svc.recollection_execution:
             raise LabOperationError("Recollection request service not configured", status_code=500)
+        if not self._svc.collection.can_request_recollection(sample):
+            raise LabOperationError(
+                f"Maximum collection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. "
+                "Cancel unfinished tests instead.",
+                status_code=400,
+            )
 
         issue = self._svc.remedy.record_issue(
             order_id=sample.orderId,
@@ -178,21 +138,6 @@ class SampleIssueCommands:
             user_id=user_id,
             sample_id=sample.sampleId,
         )
-
-        if not self._svc.collection.can_request_recollection(sample):
-            target = self._pick_test_for_recollection_escalation(sample)
-            if not target:
-                raise LabOperationError(
-                    "Recollection limit reached but no test could be escalated.",
-                    status_code=400,
-                )
-            return self._escalate_recollection_limit(
-                order_test=target,
-                user_id=user_id,
-                reason=reason,
-                notes=notes,
-                quality_issue_id=issue.id,
-            )
 
         executed = self._svc.recollection_execution.execute_recollection(
             rejected_sample=sample,

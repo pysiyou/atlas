@@ -25,15 +25,6 @@ def get_pending_critical_values(
     return CriticalNotificationService(db).list_pending()
 
 
-@router.get("/critical-values/all")
-def get_all_critical_values(
-    acknowledged: bool | None = None,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-) -> list[CriticalValueResponse]:
-    return CriticalNotificationService(db).list_all(acknowledged)
-
-
 @router.post("/critical-values/{test_id}/notify")
 def notify_critical_value(
     test_id: int,
@@ -52,12 +43,3 @@ def acknowledge_critical_value(
     current_user: User = Depends(require_lab_tech),
 ):
     return service.acknowledge_critical_value(test_id, request, current_user.id)
-
-
-@router.get("/orders/{order_id}/critical-values")
-def get_order_critical_values(
-    order_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-) -> list[CriticalValueResponse]:
-    return CriticalNotificationService(db).list_for_order(order_id)

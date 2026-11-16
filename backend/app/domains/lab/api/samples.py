@@ -58,14 +58,6 @@ def get_samples(
     )
 
 
-@router.get("/samples/pending", response_model=list[SampleResponse])
-def get_pending_samples(
-    specimen: SpecimenQueryService = Depends(get_specimen_query_service),
-    current_user: User = Depends(get_current_user),
-):
-    return specimen.list_pending()
-
-
 @router.get("/samples/{sampleId}/work-context", response_model=CollectionWorklistItem)
 def get_sample_work_context(
     sampleId: int,

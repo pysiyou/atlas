@@ -87,7 +87,7 @@ export interface LabPipelineCounts {
 }
 
 export function getValidationTabCount(counts: LabPipelineCounts): number {
-  return counts.validation + counts.supervisor;
+  return counts.validation;
 }
 
 const EMPTY_COUNTS: LabPipelineCounts = {

@@ -6,8 +6,6 @@ from app.domains.orders.models import Order
 from app.domains.orders.schemas import (
     OrderCreate,
     OrderDetailResponse,
-    OrderPaymentUpdate,
-    OrderReportResponse,
     OrderResponse,
     OrderSummaryResponse,
     OrderUpdate,
@@ -103,39 +101,6 @@ def update_order(
     current_user: User = Depends(get_current_user),
 ):
     return OrderService(db).update_order(orderId, order_data, current_user.id)
-
-
-@router.delete("/orders/{orderId}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_order(
-    orderId: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    OrderService(db).delete_order(orderId, current_user.id)
-    return None
-
-
-@router.patch("/orders/{orderId}/payment", response_model=OrderResponse)
-def update_order_payment_status(
-    orderId: int,
-    body: OrderPaymentUpdate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    return OrderService(db).update_order_payment(
-        orderId, body.paymentStatus, body.amountPaid, current_user.id
-    )
-
-
-@router.post(
-    "/orders/{orderId}/report", response_model=OrderReportResponse, status_code=status.HTTP_200_OK
-)
-def mark_as_reported(
-    orderId: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-) -> OrderReportResponse:
-    return OrderService(db).mark_as_reported(orderId, current_user.id)
 
 
 @router.post("/orders/{orderId}/approve", status_code=status.HTTP_200_OK)

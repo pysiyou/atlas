@@ -8,6 +8,7 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any
 
+from app.domains.audit.search import format_record_display_id
 from app.domains.orders.models import Order
 from app.domains.reports.models import ReportDocument
 from app.platform.client_config import client_config
@@ -107,9 +108,11 @@ class ReportPdfService:
         )
         story.append(Spacer(1, 4 * mm))
 
+        patient_id_suffix = (
+            f" ({format_record_display_id('PAT', patient.id)})" if patient else ""
+        )
         patient_lines = [
-            f"<b>Patient</b>: {patient.fullName if patient else 'Unknown'}"
-            + (f" ({patient.mrn})" if patient and getattr(patient, "mrn", None) else ""),
+            f"<b>Patient</b>: {patient.fullName if patient else 'Unknown'}{patient_id_suffix}",
             f"<b>DOB / Sex</b>: {getattr(patient, 'dateOfBirth', '—') if patient else '—'} / "
             f"{getattr(patient.gender, 'value', patient.gender) if patient and patient.gender else '—'}",
             f"<b>Phone</b>: {getattr(patient, 'phone', '—') if patient else '—'}",

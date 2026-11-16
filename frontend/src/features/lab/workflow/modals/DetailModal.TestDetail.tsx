@@ -87,6 +87,9 @@ export function TestDetailModal({
             onApprove={view.handleApprove}
             onReject={view.handleReject}
             labUrl={view.labUrl}
+            hasCriticalValues={Boolean(view.orderTest?.hasCriticalValues)}
+            criticalSeen={view.criticalSeen}
+            onCriticalSeenChange={view.setCriticalSeen}
           />
         ) : undefined
       }
@@ -101,8 +104,7 @@ export function TestDetailModal({
           resultsPanelPreset={view.resultsPanelPreset}
           onCommentsChange={view.onCommentsChange}
           onApprove={view.handleApprove}
-          criticalRecord={view.criticalRecord}
-          onCriticalValueUpdated={view.handleCriticalValueUpdated}
+          criticalSeen={view.criticalSeen}
           ready={view.ready}
           order={view.order}
           catalogTest={view.catalogTest}

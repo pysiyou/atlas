@@ -76,7 +76,6 @@ export interface MedicalHistory {
 
 export interface Patient {
   id: number; // Integer ID, displayed as PAT{id}
-  mrn?: string | null;
   fullName: string;
   dateOfBirth: string;
   gender: Gender;

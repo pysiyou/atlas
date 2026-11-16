@@ -14,8 +14,8 @@ from sqlalchemy.engine import Engine
 logger = logging.getLogger(__name__)
 
 _PATCH_STATEMENTS: tuple[str, ...] = (
-    "ALTER TABLE patients ADD COLUMN IF NOT EXISTS mrn VARCHAR",
-    "CREATE UNIQUE INDEX IF NOT EXISTS ix_patients_mrn ON patients (mrn)",
+    "DROP INDEX IF EXISTS ix_patients_mrn",
+    "ALTER TABLE patients DROP COLUMN IF EXISTS mrn",
     "ALTER TABLE samples ADD COLUMN IF NOT EXISTS accession_number VARCHAR",
     "CREATE UNIQUE INDEX IF NOT EXISTS ix_samples_accession_number ON samples (accession_number)",
     "ALTER TABLE samples ADD COLUMN IF NOT EXISTS parent_sample_id INTEGER",
@@ -25,7 +25,7 @@ _PATCH_STATEMENTS: tuple[str, ...] = (
     "ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivered_at TIMESTAMPTZ",
     "ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivered_by VARCHAR",
     "ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_method VARCHAR",
-    "UPDATE patients SET mrn = 'MRN-' || lpad(id::text, 8, '0') WHERE mrn IS NULL",
+    "ALTER TABLE catalog_panels ADD COLUMN IF NOT EXISTS description VARCHAR",
 )
 
 

@@ -24,6 +24,7 @@ import {
   formatTurnaroundTime,
 } from '@/utils';
 import type { Test } from '@/types';
+import { resolveOrderablePanelLabel } from '@/types/generated/orderablePanels';
 import { useModuleListTitles } from '@/strings';
 
 /** Column count for the catalog detail grid. */
@@ -78,7 +79,13 @@ function buildCatalogDetailTables(test: Test): TableInput[] {
         { label: 'Methodology', value: test.methodology || '-' },
         { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms, '-') },
         { label: 'LOINC Codes', value: formatArrayWithFallback(test.loincCodes, '-') },
-        { label: 'Panels', value: formatArrayWithFallback(test.panels, '-') },
+        {
+          label: 'Panels',
+          value: formatArrayWithFallback(
+            test.panels?.map(resolveOrderablePanelLabel),
+            '-'
+          ),
+        },
         { label: 'Notes', value: test.notes || '-' },
       ],
     },

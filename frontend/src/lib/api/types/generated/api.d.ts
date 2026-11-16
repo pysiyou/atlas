@@ -43,26 +43,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/config/validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Validate Config
-         * @description Validate `client-config.json` with the same Pydantic model used at startup.
-         */
-        get: operations["validate_config_api_v1_config_validate_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/auth/setup": {
         parameters: {
             query?: never;
@@ -277,11 +257,7 @@ export interface paths {
          */
         put: operations["update_patient_api_v1_patients__patientId__put"];
         post?: never;
-        /**
-         * Delete Patient
-         * @description Delete a patient.
-         */
-        delete: operations["delete_patient_api_v1_patients__patientId__delete"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -297,8 +273,7 @@ export interface paths {
         /** Get Tests */
         get: operations["get_tests_api_v1_tests_get"];
         put?: never;
-        /** Create Test */
-        post: operations["create_test_api_v1_tests_post"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -348,8 +323,7 @@ export interface paths {
         };
         /** Get Test */
         get: operations["get_test_api_v1_tests__testCode__get"];
-        /** Update Test */
-        put: operations["update_test_api_v1_tests__testCode__put"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -370,25 +344,6 @@ export interface paths {
          */
         get: operations["list_panels_api_v1_panels_get"];
         put?: never;
-        /** Create Panel */
-        post: operations["create_panel_api_v1_panels_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/panels/{code}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Panel */
-        get: operations["get_panel_api_v1_panels__code__get"];
-        /** Update Panel */
-        put: operations["update_panel_api_v1_panels__code__put"];
         post?: never;
         delete?: never;
         options?: never;
@@ -426,41 +381,6 @@ export interface paths {
         /** Update Order */
         put: operations["update_order_api_v1_orders__orderId__put"];
         post?: never;
-        /** Delete Order */
-        delete: operations["delete_order_api_v1_orders__orderId__delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/orders/{orderId}/payment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Update Order Payment Status */
-        patch: operations["update_order_payment_status_api_v1_orders__orderId__payment_patch"];
-        trace?: never;
-    };
-    "/api/v1/orders/{orderId}/report": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Mark As Reported */
-        post: operations["mark_as_reported_api_v1_orders__orderId__report_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -548,46 +468,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get User */
-        get: operations["get_user_api_v1_users__user_id__get"];
+        get?: never;
         /** Update User */
         put: operations["update_user_api_v1_users__user_id__put"];
-        post?: never;
-        /** Delete User */
-        delete: operations["delete_user_api_v1_users__user_id__delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/payments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Payments */
-        get: operations["get_payments_api_v1_payments_get"];
-        put?: never;
-        /** Create Payment */
-        post: operations["create_payment_api_v1_payments_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/payments/{paymentId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Payment */
-        get: operations["get_payment_api_v1_payments__paymentId__get"];
-        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -612,6 +495,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Payment */
+        post: operations["create_payment_api_v1_payments_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/affiliations/pricing": {
         parameters: {
             query?: never;
@@ -629,23 +529,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/affiliations/pricing/{duration}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Affiliation Price */
-        get: operations["get_affiliation_price_api_v1_affiliations_pricing__duration__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lab/samples": {
         parameters: {
             query?: never;
@@ -655,23 +538,6 @@ export interface paths {
         };
         /** Get Samples */
         get: operations["get_samples_api_v1_lab_samples_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/samples/pending": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Pending Samples */
-        get: operations["get_pending_samples_api_v1_lab_samples_pending_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -754,23 +620,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/results/pending-escalation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Pending Escalation */
-        get: operations["get_pending_escalation_api_v1_lab_results_pending_escalation_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lab/results/order-tests/{orderTestId}": {
         parameters: {
             query?: never;
@@ -800,40 +649,6 @@ export interface paths {
         put?: never;
         /** Validate Results */
         post: operations["validate_results_api_v1_lab_results_order_tests__orderTestId__validate_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/results/order-tests/{orderTestId}/request-amendment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Request Amendment */
-        post: operations["request_amendment_api_v1_lab_results_order_tests__orderTestId__request_amendment_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/results/order-tests/{orderTestId}/escalation/resolve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Resolve Escalation */
-        post: operations["resolve_escalation_api_v1_lab_results_order_tests__orderTestId__escalation_resolve_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -996,23 +811,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/critical-values/all": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get All Critical Values */
-        get: operations["get_all_critical_values_api_v1_lab_critical_values_all_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lab/critical-values/{test_id}/notify": {
         parameters: {
             query?: never;
@@ -1041,23 +839,6 @@ export interface paths {
         put?: never;
         /** Acknowledge Critical Value */
         post: operations["acknowledge_critical_value_api_v1_lab_critical_values__test_id__acknowledge_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/orders/{order_id}/critical-values": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Order Critical Values */
-        get: operations["get_order_critical_values_api_v1_lab_orders__order_id__critical_values_get"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1139,97 +920,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Quality Issues */
-        get: operations["list_quality_issues_api_v1_lab_quality_issues_get"];
+        get?: never;
         put?: never;
         /** Report Quality Issue */
         post: operations["report_quality_issue_api_v1_lab_quality_issues_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/invoices/order/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Invoices For Order */
-        get: operations["list_invoices_for_order_api_v1_invoices_order__orderId__get"];
-        put?: never;
-        /** Create Invoice For Order */
-        post: operations["create_invoice_for_order_api_v1_invoices_order__orderId__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/invoices/{invoiceId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Invoice */
-        get: operations["get_invoice_api_v1_invoices__invoiceId__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/invoices/{invoiceId}/void": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Void Invoice */
-        post: operations["void_invoice_api_v1_invoices__invoiceId__void_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/insurance-claims/order/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Claims For Order */
-        get: operations["list_claims_for_order_api_v1_insurance_claims_order__orderId__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/insurance-claims": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Submit Insurance Claim */
-        post: operations["submit_insurance_claim_api_v1_insurance_claims_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1385,19 +1079,6 @@ export interface components {
             warning: number;
             /** Critical */
             critical: number;
-        };
-        /** AmendmentRequest */
-        AmendmentRequest: {
-            /** Amendmentreason */
-            amendmentReason: string;
-            /** Proposedresults */
-            proposedResults?: {
-                [key: string]: components["schemas"]["TestResultValue"] | {
-                    [key: string]: unknown;
-                } | string | number | null;
-            } | null;
-            /** Notes */
-            notes?: string | null;
         };
         /** AnalyzerResultRequest */
         AnalyzerResultRequest: {
@@ -1574,31 +1255,14 @@ export interface components {
             attentionType: string;
         };
         /**
-         * CatalogPanelCreate
-         * @description Create a named panel of catalog tests.
-         */
-        CatalogPanelCreate: {
-            /** Name */
-            name: string;
-            /** Membertestcodes */
-            memberTestCodes: string[];
-            /** Price */
-            price?: number | null;
-            /**
-             * Isactive
-             * @default true
-             */
-            isActive: boolean;
-            /** Code */
-            code: string;
-        };
-        /**
          * CatalogPanelResponse
          * @description Persisted panel row.
          */
         CatalogPanelResponse: {
             /** Name */
             name: string;
+            /** Description */
+            description?: string | null;
             /** Membertestcodes */
             memberTestCodes: string[];
             /** Price */
@@ -1615,25 +1279,6 @@ export interface components {
             /** Updatedat */
             updatedAt?: string | null;
         };
-        /**
-         * CatalogPanelUpdate
-         * @description Partial panel update.
-         */
-        CatalogPanelUpdate: {
-            /** Name */
-            name?: string | null;
-            /** Membertestcodes */
-            memberTestCodes?: string[] | null;
-            /** Price */
-            price?: number | null;
-            /** Isactive */
-            isActive?: boolean | null;
-        };
-        /**
-         * ClaimStatus
-         * @enum {string}
-         */
-        ClaimStatus: "submitted" | "processing" | "approved" | "denied" | "paid";
         /** CollectionWorklistItem */
         CollectionWorklistItem: {
             /** Sampleid */
@@ -1679,7 +1324,7 @@ export interface components {
              */
             recollectionAttempt: number;
             /** Pipelinestage */
-            pipelineStage?: ("collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled") | null;
+            pipelineStage?: ("collection" | "entry" | "validation" | "completed" | "cancelled") | null;
             /** Attentionreason */
             attentionReason?: string | null;
             /** Attentionlabel */
@@ -1738,28 +1383,6 @@ export interface components {
             pagination: components["schemas"]["WorklistPagination"];
         };
         /**
-         * ConfigValidationResult
-         * @description Result of config validation.
-         */
-        ConfigValidationResult: {
-            /** Valid */
-            valid: boolean;
-            /**
-             * Errors
-             * @default []
-             */
-            errors: string[];
-            /**
-             * Warnings
-             * @default []
-             */
-            warnings: string[];
-            /** Config */
-            config?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        /**
          * ContainerTopColor
          * @enum {string}
          */
@@ -1769,20 +1392,6 @@ export interface components {
          * @enum {string}
          */
         ContainerType: "tube" | "cup";
-        /** CriticalReadBackPayload */
-        CriticalReadBackPayload: {
-            /** Providername */
-            providerName: string;
-            /** Providercontact */
-            providerContact: string;
-            /**
-             * Notifiedat
-             * Format: date-time
-             */
-            notifiedAt: string;
-            /** Readbackconfirmed */
-            readBackConfirmed: boolean;
-        };
         /** CriticalValueResponse */
         CriticalValueResponse: {
             /** Id */
@@ -1977,7 +1586,7 @@ export interface components {
             /** Testcategory */
             testCategory?: string | null;
             /** Pipelinestage */
-            pipelineStage?: ("collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled") | null;
+            pipelineStage?: ("collection" | "entry" | "validation" | "completed" | "cancelled") | null;
             /** Attentionreason */
             attentionReason?: string | null;
             /** Attentionlabel */
@@ -2020,35 +1629,6 @@ export interface components {
              */
             allowForceValidate: boolean;
         };
-        /** EscalationResolveRequest */
-        EscalationResolveRequest: {
-            /**
-             * Action
-             * @description 'force_validate' | 'authorize_retest' | 'authorize_recollect' | 'apply_amendment' | 'cancel_test'
-             * @enum {string}
-             */
-            action: "force_validate" | "authorize_retest" | "authorize_recollect" | "apply_amendment" | "cancel_test";
-            /** Validationnotes */
-            validationNotes?: string | null;
-            readBack?: components["schemas"]["CriticalReadBackPayload"] | null;
-            /** Rejectionreason */
-            rejectionReason?: string | null;
-        };
-        /** EscalationResolveResponse */
-        EscalationResolveResponse: {
-            /** Success */
-            success: boolean;
-            /** Action */
-            action: string;
-            /** Message */
-            message: string;
-            /** Escalatedtestid */
-            escalatedTestId: number;
-            /** Newtestid */
-            newTestId?: number | null;
-            /** Newsampleid */
-            newSampleId?: number | null;
-        };
         /**
          * FirstAdminSetupRequest
          * @description Public first-account payload. Role is always administrator.
@@ -2079,52 +1659,6 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
-        };
-        /** InsuranceClaimCreate */
-        InsuranceClaimCreate: {
-            /** Orderid */
-            orderId: number;
-            /** Invoiceid */
-            invoiceId: number;
-            /** Insuranceprovider */
-            insuranceProvider: string;
-            /** Insurancenumber */
-            insuranceNumber: string;
-            /** Claimamount */
-            claimAmount: number;
-            /** Notes */
-            notes?: string | null;
-        };
-        /** InsuranceClaimResponse */
-        InsuranceClaimResponse: {
-            /** Claimid */
-            claimId: number;
-            /** Orderid */
-            orderId: number;
-            /** Invoiceid */
-            invoiceId: number;
-            /** Patientid */
-            patientId: number;
-            /** Insuranceprovider */
-            insuranceProvider: string;
-            /** Insurancenumber */
-            insuranceNumber: string;
-            /** Claimamount */
-            claimAmount: number;
-            /** Approvedamount */
-            approvedAmount?: number | null;
-            claimStatus: components["schemas"]["ClaimStatus"];
-            /**
-             * Submitteddate
-             * Format: date-time
-             */
-            submittedDate: string;
-            /** Processeddate */
-            processedDate?: string | null;
-            /** Denialreason */
-            denialReason?: string | null;
-            /** Notes */
-            notes?: string | null;
         };
         /** InvoiceItem */
         InvoiceItem: {
@@ -2179,11 +1713,6 @@ export interface components {
             updatedAt: string;
             /** Duedate */
             dueDate?: string | null;
-        };
-        /** InvoiceVoidRequest */
-        InvoiceVoidRequest: {
-            /** Reason */
-            reason?: string | null;
         };
         /** LabBoardCounts */
         LabBoardCounts: {
@@ -2288,7 +1817,7 @@ export interface components {
              * Pipelinestage
              * @enum {string}
              */
-            pipelineStage: "collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled";
+            pipelineStage: "collection" | "entry" | "validation" | "completed" | "cancelled";
             /** Attentionreason */
             attentionReason?: string | null;
             /** Attentionlabel */
@@ -2492,28 +2021,6 @@ export interface components {
             /** Invoices */
             invoices?: components["schemas"]["InvoiceResponse"][] | null;
             patient?: components["schemas"]["PatientResponse"] | null;
-        };
-        /**
-         * OrderPaymentUpdate
-         * @description Body for PATCH /orders/{orderId}/payment
-         */
-        OrderPaymentUpdate: {
-            /** @description unpaid | partial | paid */
-            paymentStatus: components["schemas"]["PaymentStatus"];
-            /** Amountpaid */
-            amountPaid?: number | null;
-        };
-        /**
-         * OrderReportResponse
-         * @description Response for order report/completion confirmation.
-         */
-        OrderReportResponse: {
-            /** Orderid */
-            orderId: number;
-            /** Status */
-            status: string;
-            /** Message */
-            message: string;
         };
         /** OrderResponse */
         OrderResponse: {
@@ -2906,8 +2413,6 @@ export interface components {
             affiliation?: components["schemas"]["Affiliation"] | null;
             /** Id */
             id: number;
-            /** Mrn */
-            mrn?: string | null;
             /**
              * Registrationdate
              * Format: date-time
@@ -3230,37 +2735,6 @@ export interface components {
              */
             sampleRejected: boolean;
         };
-        /** QualityIssueResponse */
-        QualityIssueResponse: {
-            /** Id */
-            id: number;
-            /** Orderid */
-            orderId: number;
-            /** Ordertestid */
-            orderTestId?: number | null;
-            /** Sampleid */
-            sampleId?: number | null;
-            /** Testcode */
-            testCode?: string | null;
-            /** Stage */
-            stage: string;
-            /** Domain */
-            domain: string;
-            /** Reason */
-            reason: string;
-            /** Notes */
-            notes?: string | null;
-            /** Remedy */
-            remedy: string;
-            /** Createdtestid */
-            createdTestId?: number | null;
-            /** Createdsampleid */
-            createdSampleId?: number | null;
-            /** Createdby */
-            createdBy: string;
-            /** Createdat */
-            createdAt: string;
-        };
         /** QualityIssueResult */
         QualityIssueResult: {
             /** Success */
@@ -3470,6 +2944,11 @@ export interface components {
             /** Rejectionreason */
             rejectionReason?: string | null;
             preferredRemedy?: components["schemas"]["RemedyType"] | null;
+            /**
+             * Criticalseen
+             * @description Required on approve when the result has critical flags.
+             */
+            criticalSeen?: boolean | null;
         };
         /**
          * SampleAliquotCreateRequest
@@ -3623,71 +3102,6 @@ export interface components {
              */
             variant: string;
         };
-        /** TestCreate */
-        TestCreate: {
-            /** Code */
-            code: string;
-            /** Name */
-            name: string;
-            /** Displayname */
-            displayName: string;
-            /** Category */
-            category: string;
-            /** Price */
-            price: number;
-            /** Turnaroundtimehours */
-            turnaroundTimeHours: number;
-            /** Sampletype */
-            sampleType: string;
-            /** Containertypes */
-            containerTypes: string[];
-            /** Containertopcolors */
-            containerTopColors: string[];
-            /**
-             * Isactive
-             * @default true
-             */
-            isActive: boolean;
-            /** Synonyms */
-            synonyms?: string[] | null;
-            /** Samplevolume */
-            sampleVolume?: string | null;
-            /** Minimumvolume */
-            minimumVolume?: number | null;
-            /** Optimalvolume */
-            optimalVolume?: number | null;
-            /** Numberofcontainers */
-            numberOfContainers?: number | null;
-            /** Containerdescription */
-            containerDescription?: string | null;
-            /** Specialrequirements */
-            specialRequirements?: string | null;
-            /**
-             * Fastingrequired
-             * @default false
-             */
-            fastingRequired: boolean;
-            /** Collectionnotes */
-            collectionNotes?: string | null;
-            /** Rejectioncriteria */
-            rejectionCriteria?: (string | components["schemas"]["RejectionCriterionItem"])[] | null;
-            /** Validationrejectioncriteria */
-            validationRejectionCriteria?: (string | components["schemas"]["RejectionCriterionItem"])[] | null;
-            /** Referenceranges */
-            referenceRanges?: unknown[] | null;
-            /** Resultitems */
-            resultItems?: unknown[] | null;
-            /** Panels */
-            panels?: string[] | null;
-            /** Loinccodes */
-            loincCodes?: string[] | null;
-            /** Methodology */
-            methodology?: string | null;
-            /** Confidence */
-            confidence?: string | null;
-            /** Notes */
-            notes?: string | null;
-        };
         /** TestResponse */
         TestResponse: {
             /** Code */
@@ -3826,13 +3240,6 @@ export interface components {
              * Format: date-time
              */
             updatedAt: string;
-        };
-        /** TestUpdate */
-        TestUpdate: {
-            /** Price */
-            price?: number | null;
-            /** Isactive */
-            isActive?: boolean | null;
         };
         /** Token */
         Token: {
@@ -4008,7 +3415,7 @@ export interface components {
             /** Testcategory */
             testCategory?: string | null;
             /** Pipelinestage */
-            pipelineStage?: ("collection" | "entry" | "validation" | "escalation" | "completed" | "cancelled") | null;
+            pipelineStage?: ("collection" | "entry" | "validation" | "completed" | "cancelled") | null;
             /** Attentionreason */
             attentionReason?: string | null;
             /** Attentionlabel */
@@ -4133,26 +3540,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
-                };
-            };
-        };
-    };
-    validate_config_api_v1_config_validate_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConfigValidationResult"];
                 };
             };
         };
@@ -4585,35 +3972,6 @@ export interface operations {
             };
         };
     };
-    delete_patient_api_v1_patients__patientId__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                patientId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_tests_api_v1_tests_get: {
         parameters: {
             query?: {
@@ -4635,39 +3993,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TestSummaryResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_test_api_v1_tests_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TestCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TestResponse"];
                 };
             };
             /** @description Validation Error */
@@ -4776,41 +4101,6 @@ export interface operations {
             };
         };
     };
-    update_test_api_v1_tests__testCode__put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                testCode: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TestUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TestResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     list_panels_api_v1_panels_get: {
         parameters: {
             query?: {
@@ -4829,105 +4119,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CatalogPanelResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_panel_api_v1_panels_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CatalogPanelCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogPanelResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_panel_api_v1_panels__code__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                code: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogPanelResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_panel_api_v1_panels__code__put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                code: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CatalogPanelUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogPanelResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5079,101 +4270,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    delete_order_api_v1_orders__orderId__delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_order_payment_status_api_v1_orders__orderId__payment_patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OrderPaymentUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrderResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    mark_as_reported_api_v1_orders__orderId__report_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OrderReportResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5356,37 +4452,6 @@ export interface operations {
             };
         };
     };
-    get_user_api_v1_users__user_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                user_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UserResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     update_user_api_v1_users__user_id__put: {
         parameters: {
             query?: never;
@@ -5422,49 +4487,13 @@ export interface operations {
             };
         };
     };
-    delete_user_api_v1_users__user_id__delete: {
+    get_payments_by_order_api_v1_payments_order__orderId__get: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                user_id: number;
+                orderId: number;
             };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_payments_api_v1_payments_get: {
-        parameters: {
-            query?: {
-                orderId?: number | null;
-                /** @description Comma-separated order IDs */
-                orderIds?: string | null;
-                paymentMethod?: components["schemas"]["PaymentMethod"] | null;
-                /** @description Number of records to skip */
-                skip?: number;
-                /** @description Max records to return */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -5522,68 +4551,6 @@ export interface operations {
             };
         };
     };
-    get_payment_api_v1_payments__paymentId__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                paymentId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaymentResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_payments_by_order_api_v1_payments_order__orderId__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaymentResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_affiliation_pricing_api_v1_affiliations_pricing_get: {
         parameters: {
             query?: never;
@@ -5600,37 +4567,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
-                };
-            };
-        };
-    };
-    get_affiliation_price_api_v1_affiliations_pricing__duration__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                duration: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -5668,26 +4604,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_pending_samples_api_v1_lab_samples_pending_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SampleResponse"][];
                 };
             };
         };
@@ -5824,26 +4740,6 @@ export interface operations {
             };
         };
     };
-    get_pending_escalation_api_v1_lab_results_pending_escalation_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PendingEscalationItemResponse"][];
-                };
-            };
-        };
-    };
     get_order_test_context_api_v1_lab_results_order_tests__orderTestId__get: {
         parameters: {
             query?: never;
@@ -5932,76 +4828,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    request_amendment_api_v1_lab_results_order_tests__orderTestId__request_amendment_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderTestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AmendmentRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    resolve_escalation_api_v1_lab_results_order_tests__orderTestId__escalation_resolve_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderTestId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EscalationResolveRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EscalationResolveResponse"];
                 };
             };
             /** @description Validation Error */
@@ -6322,37 +5148,6 @@ export interface operations {
             };
         };
     };
-    get_all_critical_values_api_v1_lab_critical_values_all_get: {
-        parameters: {
-            query?: {
-                acknowledged?: boolean | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CriticalValueResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     notify_critical_value_api_v1_lab_critical_values__test_id__notify_post: {
         parameters: {
             query?: never;
@@ -6410,37 +5205,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_order_critical_values_api_v1_lab_orders__order_id__critical_values_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                order_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CriticalValueResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -6589,39 +5353,6 @@ export interface operations {
             };
         };
     };
-    list_quality_issues_api_v1_lab_quality_issues_get: {
-        parameters: {
-            query?: {
-                orderId?: number | null;
-                sampleId?: number | null;
-                orderTestId?: number | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["QualityIssueResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     report_quality_issue_api_v1_lab_quality_issues_post: {
         parameters: {
             query?: never;
@@ -6642,198 +5373,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["QualityIssueResult"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_invoices_for_order_api_v1_invoices_order__orderId__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InvoiceResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_invoice_for_order_api_v1_invoices_order__orderId__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InvoiceResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_invoice_api_v1_invoices__invoiceId__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                invoiceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InvoiceResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    void_invoice_api_v1_invoices__invoiceId__void_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                invoiceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["InvoiceVoidRequest"] | null;
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InvoiceResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_claims_for_order_api_v1_insurance_claims_order__orderId__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InsuranceClaimResponse"][];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    submit_insurance_claim_api_v1_insurance_claims_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["InsuranceClaimCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InsuranceClaimResponse"];
                 };
             };
             /** @description Validation Error */

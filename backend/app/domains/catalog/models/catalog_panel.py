@@ -11,6 +11,7 @@ class CatalogPanel(Base):
 
     code = Column(String, primary_key=True, index=True)
     name = Column(String, nullable=False, index=True)
+    description = Column(String, nullable=True)
     memberTestCodes = Column("member_test_codes", JSON, nullable=False)
     price = Column(Float, nullable=True)
     isActive = Column("is_active", Boolean, default=True, nullable=False)

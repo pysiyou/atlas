@@ -16,12 +16,3 @@ def get_affiliation_pricing(
     current_user: User = Depends(get_current_user),
 ):
     return AffiliationPricingService(db).list_pricing(response)
-
-
-@router.get("/affiliations/pricing/{duration}")
-def get_affiliation_price(
-    duration: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    return AffiliationPricingService(db).get_price(duration)

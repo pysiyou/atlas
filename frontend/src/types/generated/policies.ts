@@ -52,7 +52,7 @@ export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string
 
 export const ALLOWED_ACTION_KEYS = ["collect","enterResults","validate","reject"] as const;
 
-export const PIPELINE_STAGES = ["collection","entry","validation","escalation","completed","cancelled"] as const;
+export const PIPELINE_STAGES = ["collection","entry","validation","completed","cancelled"] as const;
 
 export const ATTENTION_TYPE_SORT: Record<string, number> = {
   "escalation_critical": 10,

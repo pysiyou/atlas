@@ -106,7 +106,7 @@ export function getLabQueueUrl(tab: LabTabId, options?: { search?: string }): st
 
 /**
  * Map a server pipeline stage to a lab queue tab.
- * Escalation lives on the validation queue.
+ * Leftover `escalation` rows (pre-simplification tickets) stay on Validation.
  */
 export function getLabTabForPipelineStage(stage?: string | null): LabTabId | null {
   if (stage === 'collection') return 'collection';

@@ -3,7 +3,7 @@ import type { FeedbackId } from '@/types/generated/feedback';
 import { RETEST_PATH_RADIO_COPY } from '../constants/qualityIssuePopoverCopy';
 import { ResolutionPopover } from './EscalationResolutionPopover.Chrome';
 import { Popover, PopoverFormChrome, RadioCard } from '@/components/overlays';
-import { Button } from '@/components/primitives';
+import { Button, FormNotesField } from '@/components/primitives';
 import { inputBase, text } from '@/theme/recipes';
 import { cn, displayId } from '@/utils';
 import { useEffect, useState } from 'react';
@@ -272,23 +272,19 @@ function RetestActionPopoverBody({
             />
           ) : null}
         </div>
-        <div>
-          <label className="sr-only" htmlFor="escalation-retest-reason">
-            Clinical reason
-          </label>
-          <textarea
-            id="escalation-retest-reason"
-            className={cn(inputBase, 'min-h-[80px] resize-none')}
-            placeholder={
-              reasonRequired
-                ? 'e.g. Sample compromised; new collection required'
-                : 'e.g. One more run with senior tech (optional)'
-            }
-            value={reason}
-            onChange={e => onReasonChange(e.target.value)}
-            maxLength={1000}
-          />
-        </div>
+        <FormNotesField
+          id="escalation-retest-reason"
+          label={reasonRequired ? 'Clinical reason' : 'Notes'}
+          placeholder={
+            reasonRequired
+              ? 'e.g. Sample compromised; new collection required'
+              : 'e.g. One more run with senior tech (optional)'
+          }
+          value={reason}
+          onChange={onReasonChange}
+          maxLength={1000}
+          rows={4}
+        />
       </PopoverFormChrome>
     </div>
   );

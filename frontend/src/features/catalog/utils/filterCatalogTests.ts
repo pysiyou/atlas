@@ -1,5 +1,6 @@
 import type { FilterValues } from '@/components/filters/types';
 import type { TestCategory, TestSummary } from '@/types';
+import { resolveOrderablePanelLabel } from '@/types/generated/orderablePanels';
 import { PRICE_RANGE } from '@/utils/constants';
 
 export const catalogListInitialFilters: FilterValues = {
@@ -27,7 +28,11 @@ export function filterCatalogTests(tests: TestSummary[], filters: FilterValues):
         test.code.toLowerCase().includes(query) ||
         test.synonyms?.some(syn => syn.toLowerCase().includes(query)) ||
         test.loincCodes?.some(loinc => loinc.toLowerCase().includes(query)) ||
-        test.panels?.some(panel => panel.toLowerCase().includes(query))
+        test.panels?.some(
+          panel =>
+            panel.toLowerCase().includes(query) ||
+            resolveOrderablePanelLabel(panel).toLowerCase().includes(query)
+        )
       );
     });
   }

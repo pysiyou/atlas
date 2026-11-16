@@ -3,7 +3,6 @@
  * Convention: `*API` objects are pure fetch; `use*` hooks wrap TanStack Query (same file).
  */
 import { apiClient } from '@/lib/api';
-import type { ApiEscalationResolveResponse } from '@/lib/api/types';
 import type { components } from '@/lib/api/types';
 import type { ValidationDecision } from '@/types';
 
@@ -34,6 +33,7 @@ interface ResultValidationRequest {
   validationNotes?: string;
   rejectionReason?: string;
   preferredRemedy?: RemedyType;
+  criticalSeen?: boolean;
 }
 
 export const resultAPI = {
@@ -48,7 +48,7 @@ export const resultAPI = {
   async resolveEscalation(
     payload: EscalationResolveRequest & { orderTestId: number }
   ): Promise<EscalationResolveResult> {
-    return apiClient.post<ApiEscalationResolveResponse>(
+    return apiClient.post<EscalationResolveResult>(
       LAB_PATHS.results.resolveEscalation(payload.orderTestId),
       {
         action: payload.action,
@@ -149,10 +149,12 @@ export function useValidateResults() {
     mutationFn: ({
       orderTestId,
       validationNotes,
+      criticalSeen,
     }: {
       orderTestId: number;
       orderId?: string | number;
       validationNotes?: string;
+      criticalSeen?: boolean;
     }) => {
       if (orderTestId == null) {
         throw new Error('orderTestId is required to validate results.');
@@ -162,6 +164,7 @@ export function useValidateResults() {
         data: {
           decision: 'approved' as ValidationDecision,
           validationNotes,
+          criticalSeen,
         },
       });
     },

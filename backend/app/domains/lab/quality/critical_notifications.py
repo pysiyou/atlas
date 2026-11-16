@@ -145,25 +145,6 @@ class CriticalNotificationService:
             .all()
         )
 
-    def get_critical_values_for_order(self, order_id: int) -> list[OrderTest]:
-        """
-        Get all OrderTests with critical values for an order.
-
-        Args:
-            order_id: The order ID to check
-
-        Returns:
-            List of OrderTest objects with critical values
-        """
-        return (
-            self.db.query(OrderTest)
-            .filter(
-                OrderTest.orderId == order_id,
-                OrderTest.hasCriticalValues.is_(True),
-            )
-            .all()
-        )
-
     def _to_response(self, test: OrderTest, order: Order | None) -> CriticalValueResponse:
         return CriticalValueResponse(
             id=test.id,
@@ -188,27 +169,6 @@ class CriticalNotificationService:
             order = self.db.query(Order).filter(Order.orderId == test.orderId).first()
             results.append(self._to_response(test, order))
         return results
-
-    def list_all(self, acknowledged: bool | None = None) -> list[CriticalValueResponse]:
-        query = self.db.query(OrderTest).filter(OrderTest.hasCriticalValues.is_(True))
-        if acknowledged is not None:
-            if acknowledged:
-                query = query.filter(OrderTest.criticalAcknowledgedAt.isnot(None))
-            else:
-                query = query.filter(OrderTest.criticalAcknowledgedAt.is_(None))
-        tests = query.order_by(OrderTest.updatedAt.desc()).all()
-        results = []
-        for test in tests:
-            order = self.db.query(Order).filter(Order.orderId == test.orderId).first()
-            results.append(self._to_response(test, order))
-        return results
-
-    def list_for_order(self, order_id: int) -> list[CriticalValueResponse]:
-        order = self.db.query(Order).filter(Order.orderId == order_id).first()
-        if not order:
-            raise LabOperationError("Order not found", status_code=404)
-        tests = self.get_critical_values_for_order(order_id)
-        return [self._to_response(test, order) for test in tests]
 
     @staticmethod
     def _parse_critical_flags(test: OrderTest) -> list[ResultFlag]:

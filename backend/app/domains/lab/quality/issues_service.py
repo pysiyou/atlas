@@ -2,7 +2,7 @@
 Unified quality issue handling for lab workflow.
 
 Thin façade: option previews, report commands, and shared remedy helpers.
-Command modules (`sample_issue_commands`, `test_issue_commands`) and escalation
+Command modules (`sample_issue_commands`, `test_issue_commands`)
 use public accessors on this service (`get_sample`, `linked_tests`, `record_issue`,
 `remedy`, `db`, etc.) rather than private methods.
 """
@@ -13,7 +13,6 @@ from typing import Any
 from app.domains.audit.service import AuditEmitter
 from app.domains.lab.models.quality_issue import QualityIssue
 from app.domains.lab.models.sample import Sample
-from app.domains.lab.quality.escalation import EscalationEngine
 from app.domains.lab.quality.issue_options import sample_options, test_options
 from app.domains.lab.quality.remedy_support import (
     QualityRemedySupport,
@@ -39,12 +38,10 @@ class QualityIssueService:
     def __init__(
         self,
         db: Session,
-        escalation: EscalationEngine,
         emitter: AuditEmitter,
         recollection_execution: Any | None = None,
     ):
         self.db = db
-        self.escalation = escalation
         self.emitter = emitter
         self.collection = SampleCollectionService(db)
         self.recollection_execution = recollection_execution
@@ -204,28 +201,4 @@ class QualityIssueService:
         """Entry for validation rejection from workflow modules (e.g. result_commands)."""
         return self._test_cmds.report_test_validation_issue(
             order_test_id, user_id, reason, notes, preferred_remedy
-        )
-
-    def get_issues_for_order(self, order_id: int) -> list[QualityIssue]:
-        return (
-            self.db.query(QualityIssue)
-            .filter(QualityIssue.orderId == order_id)
-            .order_by(QualityIssue.createdAt.asc())
-            .all()
-        )
-
-    def get_issues_for_test(self, order_test_id: int) -> list[QualityIssue]:
-        return (
-            self.db.query(QualityIssue)
-            .filter(QualityIssue.orderTestId == order_test_id)
-            .order_by(QualityIssue.createdAt.asc())
-            .all()
-        )
-
-    def get_issues_for_sample(self, sample_id: int) -> list[QualityIssue]:
-        return (
-            self.db.query(QualityIssue)
-            .filter(QualityIssue.sampleId == sample_id)
-            .order_by(QualityIssue.createdAt.asc())
-            .all()
         )

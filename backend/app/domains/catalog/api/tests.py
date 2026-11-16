@@ -1,10 +1,8 @@
 """Test Catalog API Routes"""
 
 from app.domains.catalog.schemas.test import (
-    TestCreate,
     TestResponse,
     TestSummaryResponse,
-    TestUpdate,
 )
 from app.domains.catalog.test_catalog_service import BY_CODES_MAX, TestCatalogService
 from app.domains.users.models import User
@@ -79,22 +77,3 @@ def get_test(
     current_user: User = Depends(get_current_user),
 ):
     return TestCatalogService(db).get_by_code(testCode)
-
-
-@router.post("/tests", response_model=TestResponse, status_code=status.HTTP_201_CREATED)
-def create_test(
-    test_data: TestCreate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    return TestCatalogService(db).create(test_data, current_user.id)
-
-
-@router.put("/tests/{testCode}", response_model=TestResponse)
-def update_test(
-    testCode: str,
-    test_data: TestUpdate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    return TestCatalogService(db).update(testCode, test_data, current_user.id)

@@ -213,13 +213,6 @@ class OrderDetailResponse(OrderResponse):
 """Order endpoint request schemas."""
 
 
-class OrderPaymentUpdate(BaseModel):
-    """Body for PATCH /orders/{orderId}/payment"""
-
-    paymentStatus: PaymentStatus = Field(..., description="unpaid | partial | paid")
-    amountPaid: float | None = Field(None, ge=0)
-
-
 class OrderReportResponse(BaseModel):
     """Response for order report/completion confirmation."""
 

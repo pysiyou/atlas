@@ -11,7 +11,6 @@ export type TestDetailHeaderVariant = 'entry' | 'validation' | 'escalation';
 
 export function resolveTestDetailModalStage(lab?: LabWorkItemProjection | null): LabModalStage {
   const stage = lab?.pipelineStage;
-  if (stage === 'escalation') return 'escalation';
   if (stage === 'validation' || stage === 'completed') return 'validation';
   if (stage === 'entry') return 'entry';
   if (stage === 'collection') return 'collection';

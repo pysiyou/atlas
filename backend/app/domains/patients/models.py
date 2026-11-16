@@ -11,7 +11,6 @@ class Patient(Base):
     __tablename__ = "patients"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    mrn = Column(String, nullable=True, unique=True, index=True)
     fullName = Column("full_name", String, nullable=False, index=True)
     dateOfBirth = Column("date_of_birth", String, nullable=False)
     gender = Column(contract_enum(Gender), nullable=False)

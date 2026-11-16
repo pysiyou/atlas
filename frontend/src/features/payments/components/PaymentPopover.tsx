@@ -7,7 +7,7 @@
  */
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Popover } from '@/components/overlays';
-import { Button, Icon } from '@/components/primitives';
+import { Button, FormNotesField, Icon } from '@/components/primitives';
 import { Alert, FooterInfo } from '@/components/display';
 
 import { RecordId } from '@/features/shared';
@@ -16,9 +16,9 @@ import { PaymentMethodSelector } from './PaymentMethodSelector';
 import { PaymentAmountInput } from './PaymentAmountInput';
 import { isFullyPaid, roundMoney } from '../utils/paymentStatus';
 import { PopoverFormChrome } from '@/components/overlays';
-import { cn, formatCurrency } from '@/utils';
+import { formatCurrency } from '@/utils';
 import { OrderReceipt } from '@/features/orders';
-import { text, inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
+import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
 import { TONE } from '@/theme/recipes';
 import type { Order } from '@/types';
 import type { PaymentMethod } from '@/types';
@@ -160,17 +160,11 @@ function PaymentPopoverContent({
         />
       </div>
 
-      {/* Notes */}
-      <div>
-        <label className={`${FORM_FIELD_LABEL} mb-space-1`}>Notes</label>
-        <textarea
-          rows={2}
-          placeholder="Add optional notes..."
-          value={notes}
-          onChange={e => setNotes(e.target.value)}
-          className={cn(inputBase, 'resize-none')}
-        />
-      </div>
+      <FormNotesField
+        value={notes}
+        onChange={setNotes}
+        placeholder="Add optional notes..."
+      />
 
       {/* Error Display */}
       {error && (

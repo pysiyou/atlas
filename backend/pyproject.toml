@@ -37,6 +37,7 @@ extend-exclude = [
     "app/shared/contracts/audit_events.py",
     "app/shared/contracts/audit_taxonomy.py",
     "app/shared/contracts/rejection_reasons.py",
+    "app/shared/contracts/orderable_panels.py",
 ]
 
 [tool.ruff.lint]

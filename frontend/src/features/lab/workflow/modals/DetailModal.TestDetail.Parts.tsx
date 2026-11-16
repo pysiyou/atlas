@@ -15,11 +15,10 @@ import type { Order, OrderTest, Patient, Sample, Test } from '@/types';
 import { text } from '@/theme/recipes';
 import type { QualityIssueResult } from '@/types';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
-import type { CriticalValueRecord } from '../../criticalValues/criticalValues';
 import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
 import { ResultValidationPanel } from '../../validation/ResultValidationForm';
 import { QualityIssuePopover } from '../../components/QualityIssuePopover';
-import { CriticalValueActions } from '../../criticalValues/CriticalValueActions';
+import { CriticalSeenConfirm } from '../../validation/CriticalSeenConfirm';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleRejectedBanner } from '../../components/SampleRejectedBanner';
 import {
@@ -106,6 +105,9 @@ type TestDetailModalFooterProps = {
   onApprove: () => void;
   onReject: (result: QualityIssueResult) => void | Promise<void>;
   labUrl: string | undefined;
+  hasCriticalValues?: boolean;
+  criticalSeen?: boolean;
+  onCriticalSeenChange?: (checked: boolean) => void;
 };
 
 /** Approve/reject or "open in lab" footer for the test-detail modal. */
@@ -122,12 +124,24 @@ export function TestDetailModalFooter({
   onApprove,
   onReject,
   labUrl,
+  hasCriticalValues = false,
+  criticalSeen = false,
+  onCriticalSeenChange,
 }: TestDetailModalFooterProps) {
   const navigate = useNavigate();
 
   if (isValidate) {
+    const approveDisabled = !hasResults || (hasCriticalValues && !criticalSeen);
     return (
-      <div className="flex items-center gap-space-2 flex-nowrap justify-end w-full">
+      <ModalFooter>
+        {hasCriticalValues && onCriticalSeenChange ? (
+          <CriticalSeenConfirm
+            id={`critical-seen-modal-${orderTestId}`}
+            checked={criticalSeen}
+            onChange={onCriticalSeenChange}
+            disabled={isApproving}
+          />
+        ) : null}
         <QualityIssuePopover
           orderTestId={orderTestId}
           testCode={displayWorkItem?.testCode ?? orderTest?.testCode ?? ''}
@@ -148,11 +162,11 @@ export function TestDetailModalFooter({
           size="sm"
           layout="icon-text"
           isLoading={isApproving}
-          disabled={!hasResults}
+          disabled={approveDisabled}
         >
           Approve
         </Button>
-      </div>
+      </ModalFooter>
     );
   }
 
@@ -188,8 +202,7 @@ type TestDetailModalBodyProps = {
   resultsPanelPreset: 'panel.compact.scrollAuto.maxH';
   onCommentsChange: (value: string) => void;
   onApprove: () => void;
-  criticalRecord: CriticalValueRecord | undefined;
-  onCriticalValueUpdated: () => void;
+  criticalSeen?: boolean;
   ready: boolean;
   order: Order | undefined;
   catalogTest: Test | undefined;
@@ -211,8 +224,7 @@ export function TestDetailModalBody({
   resultsPanelPreset,
   onCommentsChange,
   onApprove,
-  criticalRecord,
-  onCriticalValueUpdated,
+  criticalSeen = false,
   ready,
   order,
   catalogTest,
@@ -249,7 +261,9 @@ export function TestDetailModalBody({
           onCommentsChange={onCommentsChange}
           onApprove={isValidate ? onApprove : () => {}}
           readOnly={!isValidate}
-          enableApproveShortcut={isValidate}
+          enableApproveShortcut={
+            isValidate && (!orderTest.hasCriticalValues || criticalSeen)
+          }
         />
       ) : (
         <Panel
@@ -261,12 +275,6 @@ export function TestDetailModalBody({
           </p>
         </Panel>
       )}
-
-      {isValidate && criticalRecord ? (
-        <Panel preset="panel.compact.standard" title={labCopy.panels.criticalValueNotification}>
-          <CriticalValueActions record={criticalRecord} onUpdated={onCriticalValueUpdated} />
-        </Panel>
-      ) : null}
 
       {ready && order && orderTest ? (
         <>

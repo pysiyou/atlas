@@ -1,8 +1,8 @@
 """
-Billing Models - Invoice, Payment, InsuranceClaim - All fields use camelCase
+Billing Models - Invoice, Payment - All fields use camelCase
 """
 from app.platform.database import Base, contract_enum
-from app.shared.contracts.enums import ClaimStatus, PaymentMethod, PaymentStatus
+from app.shared.contracts.enums import PaymentMethod, PaymentStatus
 from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -67,34 +67,3 @@ class Payment(Base):
 
     # Relationship for eager loading
     order = relationship("Order", back_populates="payments", foreign_keys=[orderId])
-
-
-class InsuranceClaim(Base):
-    __tablename__ = "insurance_claims"
-
-    claimId = Column("claim_id", Integer, primary_key=True, autoincrement=True, index=True)
-    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
-    invoiceId = Column(
-        "invoice_id", Integer, ForeignKey("invoices.invoice_id"), nullable=False, index=True
-    )
-    patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
-
-    insuranceProvider = Column("insurance_provider", String, nullable=False)
-    insuranceNumber = Column("insurance_number", String, nullable=False)
-
-    claimAmount = Column("claim_amount", Float, nullable=False)
-    approvedAmount = Column("approved_amount", Float, nullable=True)
-
-    claimStatus = Column(
-        "claim_status", contract_enum(ClaimStatus), nullable=False, default=ClaimStatus.SUBMITTED
-    )
-
-    submittedDate = Column("submitted_date", DateTime(timezone=True), nullable=False)
-    processedDate = Column("processed_date", DateTime(timezone=True), nullable=True)
-
-    denialReason = Column("denial_reason", String, nullable=True)
-    notes = Column(String, nullable=True)
-    createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column(
-        "updated_at", DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
-    )

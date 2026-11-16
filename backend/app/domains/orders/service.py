@@ -29,9 +29,8 @@ from app.domains.orders.schemas import (
 from app.domains.orders.search import order_search_filter
 from app.domains.patients.models import Patient
 from app.domains.patients.schemas import PatientResponse
-from app.domains.payments.schemas import PaymentCreate, PaymentResponse
-from app.domains.payments.service import PaymentService, enrich_payment
-from app.domains.payments.status import derive_payment_status, money
+from app.domains.payments.schemas import PaymentResponse
+from app.domains.payments.service import enrich_payment
 from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.platform.utils.common import get_or_404
@@ -520,30 +519,6 @@ class OrderService:
             return OrderDetailResponse(**detail)
         return self._order_response_with_lab(order)
 
-    def delete_order(self, order_id: int, user_id: int) -> None:
-        order = get_or_404(self.db, Order, order_id, "orderId")
-        has_payments = (
-            self.db.query(Payment).filter(Payment.orderId == order_id).first() is not None
-        )
-        if has_payments:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Cannot delete order that has payments. Remove or void payments first.",
-            )
-        try:
-            self.emitter.order_deleted(order_id, user_id)
-            self.db.query(Sample).filter(Sample.orderId == order_id).delete()
-            self.db.delete(order)
-            self.db.commit()
-            invalidate_lab_board_summary_cache()
-        except Exception:
-            self.db.rollback()
-            logger.exception("Failed to delete order %s", order_id)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to delete order",
-            )
-
     def mark_as_reported(self, order_id: int, user_id: int) -> OrderReportResponse:
         order = get_or_404(self.db, Order, order_id, "orderId")
         if order.overallStatus != OrderStatus.COMPLETED:
@@ -718,46 +693,6 @@ class OrderService:
             )
 
         self.db.commit()
-        self.db.refresh(order)
-        order = self._order_with_relations(order.orderId)
-        return self._order_response_with_lab(order)
-
-    def update_order_payment(
-        self,
-        order_id: int,
-        payment_status: PaymentStatus,
-        amount_paid: float | None,
-        user_id: int,
-    ) -> OrderResponse:
-        order = self.db.query(Order).filter(Order.orderId == order_id).first()
-        if not order:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Order {order_id} not found",
-            )
-        # Client paymentStatus is ignored: status always follows the payment ledger.
-        _ = payment_status
-        if amount_paid is not None and amount_paid > 0:
-            # Single emit path: PaymentService.create_payment writes billing.payment.process.
-            PaymentService(self.db).create_payment(
-                PaymentCreate(
-                    orderId=order_id,
-                    amount=amount_paid,
-                    paymentMethod=PaymentMethod.CASH,
-                    notes="",
-                ),
-                user_id,
-            )
-            order = self._order_with_relations(order_id)
-            return self._order_response_with_lab(order)
-
-        payments = self.db.query(Payment).filter(Payment.orderId == order_id).all()
-        total_paid = money(sum(p.amount for p in payments))
-        derived = derive_payment_status(total_paid, order.totalPrice)
-        if order.paymentStatus != derived:
-            order.paymentStatus = derived
-            order.updatedAt = datetime.now(UTC)
-            self.db.commit()
         self.db.refresh(order)
         order = self._order_with_relations(order.orderId)
         return self._order_response_with_lab(order)

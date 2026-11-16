@@ -25,6 +25,7 @@ import {
 } from '../testLookup';
 import { cacheConfig, getQueryClient, queryKeys, useAuthQueryEnabled } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query';
+import { resolveOrderablePanelLabel } from '@/types/generated/orderablePanels';
 
 interface GetTestsParams {
   category?: TestCategory;
@@ -292,7 +293,11 @@ export function useTestSearch(searchQuery: string) {
           test.code.toLowerCase().includes(query) ||
           test.synonyms?.some(syn => syn.toLowerCase().includes(query)) ||
           test.loincCodes?.some(loinc => loinc.toLowerCase().includes(query)) ||
-          test.panels?.some(panel => panel.toLowerCase().includes(query))
+          test.panels?.some(
+            panel =>
+              panel.toLowerCase().includes(query) ||
+              resolveOrderablePanelLabel(panel).toLowerCase().includes(query)
+          )
         );
       })
     : tests;

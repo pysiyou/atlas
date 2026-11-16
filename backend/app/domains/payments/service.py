@@ -41,33 +41,6 @@ class PaymentService:
             joinedload(Payment.order).selectinload(Order.tests),
         )
 
-    def list_payments(
-        self,
-        skip: int,
-        limit: int,
-        order_id: int | None = None,
-        payment_method=None,
-        order_ids: list[int] | None = None,
-    ) -> list[dict]:
-        query = self._payment_query()
-        if order_ids:
-            query = query.filter(Payment.orderId.in_(order_ids))
-        elif order_id:
-            query = query.filter(Payment.orderId == order_id)
-        if payment_method:
-            query = query.filter(Payment.paymentMethod == payment_method)
-        payments = query.order_by(Payment.paidAt.desc()).offset(skip).limit(limit).all()
-        return [enrich_payment(p, p.order) for p in payments]
-
-    def get_payment(self, payment_id: int) -> dict:
-        payment = self._payment_query().filter(Payment.paymentId == payment_id).first()
-        if not payment:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Payment {payment_id} not found",
-            )
-        return enrich_payment(payment, payment.order)
-
     def list_by_order(self, order_id: int) -> list[dict]:
         payments = (
             self._payment_query()

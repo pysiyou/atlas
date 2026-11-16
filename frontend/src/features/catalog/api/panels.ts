@@ -7,8 +7,10 @@ import { cacheConfig, queryKeys, useAuthQueryEnabled } from '@/lib/query';
 import { useQuery } from '@tanstack/react-query';
 
 export interface CatalogPanel {
+  /** Registry id (`hepatitis_panel`), same as contract `orderable-panels.json`. */
   code: string;
   name: string;
+  description?: string | null;
   memberTestCodes: string[];
   price: number | null;
   isActive: boolean;

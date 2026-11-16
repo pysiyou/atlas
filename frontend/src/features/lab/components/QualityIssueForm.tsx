@@ -10,7 +10,10 @@ import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields
 import { useQualityIssueOptions } from '../api/qualityIssues';
 import type { QualityIssueOptions } from '@/types';
 import type { QualityIssueTargetType, RemedyType } from '@/types';
-import { QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
+import {
+  QUALITY_ISSUE_POPOVER_COPY,
+  QUALITY_ISSUE_POPOVER_LAYOUT,
+} from '../constants/qualityIssuePopoverCopy';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
 import { useLabCopy } from '@/strings';
 import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
@@ -29,15 +32,15 @@ function getCollectionFormCopy(options: QualityIssueOptions): CollectionFormCopy
   const hasResultedOrValidated =
     (options.resultedTestsCount ?? 0) > 0 || (options.validatedTestsCount ?? 0) > 0;
   const recollect = QUALITY_ISSUE_POPOVER_COPY.collection.recollect;
-  const escalate = QUALITY_ISSUE_POPOVER_COPY.collection.escalateResults;
+  const resultedWarning = QUALITY_ISSUE_POPOVER_COPY.collection.escalateResults.warningBody;
 
   if (hasResultedOrValidated) {
     return {
       alert: {
-        message: escalate.warningTitle,
+        message: resultedWarning,
       },
-      reasonLabel: escalate.reasonLabel,
-      notesLabel: escalate.notesLabel,
+      reasonLabel: recollect.reasonLabel,
+      notesLabel: recollect.notesLabel,
     };
   }
 
@@ -138,7 +141,7 @@ export function QualityIssueForm({
                 ? QUALITY_ISSUE_POPOVER_COPY.reject.reasonLabel
                 : labCopy.quality.sampleIssue)
             }
-            notesLabel={collectionCopy?.notesLabel}
+            showNotes={false}
           />
 
           {targetType === 'sample' && sampleRemedyOptions.length > 0 && (
@@ -149,6 +152,19 @@ export function QualityIssueForm({
               onChange={remedy => onPreferredRemedyChange?.(remedy)}
             />
           )}
+
+          <CatalogRejectionCriteriaFields
+            criteria={options?.allowedCriteria ?? []}
+            rejectionReason={reason}
+            rejectionNotes={notes}
+            onReasonChange={onReasonChange ?? (() => {})}
+            onNotesChange={onNotesChange ?? (() => {})}
+            notesLabel={
+              collectionCopy?.notesLabel ?? QUALITY_ISSUE_POPOVER_COPY.reject.notesLabel
+            }
+            notesRows={QUALITY_ISSUE_POPOVER_LAYOUT.reasonTextareaRows}
+            showReason={false}
+          />
         </>
       )}
     </div>

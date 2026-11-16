@@ -109,20 +109,16 @@ export interface ValidationFormCopy {
   escalationRequired: boolean;
 }
 
-/** Dialog copy for validation rejection — supervisor approves remedy on escalation. */
+/** Dialog copy for validation rejection — operator picks retest, recollect, or cancel. */
 export function getValidationFormCopy(options: QualityIssueOptions): ValidationFormCopy {
-  const escalation = QUALITY_ISSUE_POPOVER_COPY.escalation;
   const reject = QUALITY_ISSUE_POPOVER_COPY.reject;
-  const alertMessage =
-    options.willEscalate
-      ? escalation.warningTitle
-      : 'Rejecting sends this test to a supervisor to approve retest, recollection, or cancellation.';
+  const preview = options.previewMessage?.trim();
   return {
-    alert: { message: alertMessage },
+    alert: preview ? { message: preview } : { message: reject.warningBody },
     confirmLabel: reject.confirmLabel,
     reasonLabel: reject.reasonLabel,
     notesLabel: reject.notesLabel,
-    escalationRequired: true,
+    escalationRequired: false,
   };
 }
 
@@ -147,51 +143,36 @@ function presentationFor(
 function buildRemedyOptions(
   displayOrder: readonly string[],
   context: RemedyPresentationContext,
-  allowed: RemedyType[] | undefined,
-  options?: { retestRemaining?: number }
+  allowed: RemedyType[] | undefined
 ): RemedyOption[] {
   const allowedSet = new Set(allowed ?? displayOrder);
   const result: RemedyOption[] = [];
 
   for (const wire of displayOrder) {
-    if (!allowedSet.has(wire as RemedyType)) {
-      continue;
-    }
     const pres = presentationFor(wire, context);
     if (!pres) {
       continue;
     }
-    let hint: string | undefined;
-    let description = feedbackTitle(pres.descriptionFeedbackId);
-    if (
-      wire === 'retry_same_sample' &&
-      context === 'validation' &&
-      options?.retestRemaining != null &&
-      options.retestRemaining <= 0
-    ) {
-      if (pres.supervisorHintFeedbackId) {
-        hint = feedbackTitle(pres.supervisorHintFeedbackId);
-      }
-      if (pres.limitDescriptionFeedbackId) {
-        description = feedbackTitle(pres.limitDescriptionFeedbackId);
-      }
+    const isAllowed = allowedSet.has(wire as RemedyType);
+    const isValidationRetest = wire === 'retry_same_sample' && context === 'validation';
+
+    if (!isAllowed && !isValidationRetest) {
+      continue;
     }
+
     result.push({
       value: wire as RemedyType,
       label: feedbackTitle(pres.labelFeedbackId),
-      description,
-      ...(hint ? { hint } : {}),
+      description: feedbackTitle(pres.descriptionFeedbackId),
+      ...(!isAllowed && isValidationRetest ? { disabled: true as const } : {}),
     });
   }
 
   return result;
 }
 
-export function buildValidationRemedyOptions(
-  allowed: RemedyType[] | undefined,
-  context?: { retestRemaining?: number }
-): RemedyOption[] {
-  return buildRemedyOptions(VALIDATION_REMEDY_WIRES, 'validation', allowed, context);
+export function buildValidationRemedyOptions(allowed: RemedyType[] | undefined): RemedyOption[] {
+  return buildRemedyOptions(VALIDATION_REMEDY_WIRES, 'validation', allowed);
 }
 
 export function buildSampleRemedyOptions(allowed: RemedyType[] | undefined): RemedyOption[] {
