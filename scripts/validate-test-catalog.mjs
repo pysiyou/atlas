@@ -8,8 +8,8 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
-const catalogPath = path.join(root, 'contracts', 'test-catalog.json');
-const panelsPath = path.join(root, 'contracts', 'orderable-panels.json');
+const catalogPath = path.join(root, 'contracts', 'catalog', 'test-catalog.json');
+const panelsPath = path.join(root, 'contracts', 'catalog', 'orderable-panels.json');
 
 const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf-8'));
 const registry = JSON.parse(fs.readFileSync(panelsPath, 'utf-8'));

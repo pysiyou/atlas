@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://atlas.local/contracts/lab.schema.json",
+  "$id": "https://atlas.local/contracts/registries/lab.schema.json",
   "title": "Atlas lab policy contract",
   "type": "object",
   "required": ["limits", "blockers", "presentation", "reporting", "priority", "qualityWorkflow"],

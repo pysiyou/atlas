@@ -1,5 +1,5 @@
 """
-Laboratory policy contract — GENERATED from contracts/lab.json. DO NOT EDIT.
+Laboratory policy contract — GENERATED from contracts/registries/lab.json. DO NOT EDIT.
 """
 from __future__ import annotations
 

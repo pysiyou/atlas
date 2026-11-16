@@ -1,6 +1,6 @@
 """Event log kinds → event_type SQL LIKE prefixes.
 
-Kinds are domain roots plus laboratory subcategory keys (see contracts/audit-events.json query).
+Kinds are domain roots plus laboratory subcategory keys (see contracts/registries/audit-events.json query).
 """
 from __future__ import annotations
 

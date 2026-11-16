@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://atlas.local/contracts/test-catalog.schema.json",
+  "$id": "https://atlas.local/contracts/catalog/test-catalog.schema.json",
   "title": "Atlas test catalog",
   "type": "object",
   "required": ["tests"],

@@ -1,4 +1,4 @@
-/** GENERATED — DO NOT EDIT. Regenerate: npm run codegen:audit (contracts/audit-events.json) */
+/** GENERATED — DO NOT EDIT. Regenerate: npm run codegen:audit (contracts/registries/audit-events.json) */
 
 // =============================================================================
 // taxonomy

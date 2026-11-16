@@ -1,5 +1,5 @@
 """
-Audit event wire taxonomy — GENERATED from contracts/audit-events.json. DO NOT EDIT.
+Audit event wire taxonomy — GENERATED from contracts/registries/audit-events.json. DO NOT EDIT.
 """
 from __future__ import annotations
 

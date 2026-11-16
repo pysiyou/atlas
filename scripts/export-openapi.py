@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Export FastAPI OpenAPI schema to contracts/openapi.json (repo root).
+Export FastAPI OpenAPI schema to contracts/registries/openapi.json (repo root).
 Run from repository root: python scripts/export-openapi.py
 """
 from __future__ import annotations
@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BACKEND = ROOT / "backend"
-OUT = ROOT / "contracts" / "openapi.json"
+OUT = ROOT / "contracts" / "registries" / "openapi.json"
 
 if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))

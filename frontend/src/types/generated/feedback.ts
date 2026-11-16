@@ -1,5 +1,5 @@
 /**
- * GENERATED — DO NOT EDIT. Regenerate: npm run codegen:feedback (contracts/feedback.json)
+ * GENERATED — DO NOT EDIT. Regenerate: npm run codegen:feedback (contracts/registries/feedback.json)
  */
 export type FeedbackChannel = 'toast' | 'inline';
 export type FeedbackVariant = 'success' | 'error' | 'warning' | 'info' | 'danger';

@@ -20,11 +20,11 @@ def _repo_root() -> Path:
 
 def _load_panel_membership_from_contract() -> dict[str, list[str]]:
     """
-    Build panel id → member test codes from contracts/test-catalog.json.
+    Build panel id → member test codes from contracts/catalog/test-catalog.json.
 
     Tests reference panels by registry id only; typos fail validation in CI.
     """
-    catalog_path = _repo_root() / "contracts" / "test-catalog.json"
+    catalog_path = _repo_root() / "contracts" / "catalog" / "test-catalog.json"
     if not catalog_path.is_file():
         logger.warning("test-catalog.json not found; skipping panel membership load")
         return {}
@@ -67,7 +67,7 @@ class CatalogPanelService:
 
     def sync_test_panel_ids_from_contract(self) -> int:
         """Copy panel id arrays from test-catalog.json onto matching catalog test rows."""
-        catalog_path = _repo_root() / "contracts" / "test-catalog.json"
+        catalog_path = _repo_root() / "contracts" / "catalog" / "test-catalog.json"
         if not catalog_path.is_file():
             return 0
 

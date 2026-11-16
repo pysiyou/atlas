@@ -456,7 +456,7 @@ export interface ReferenceRange {
   criticalHigh?: number; // Above this is critical
 }
 
-/** Registry reason id (contracts/test-catalog.json rejection_criteria entries). */
+/** Registry reason id (contracts/catalog/test-catalog.json rejection_criteria entries). */
 export type RejectionReasonId = string;
 
 /** Wire shape (catalog JSON) — snake_case field names. */

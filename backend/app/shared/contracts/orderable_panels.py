@@ -1,5 +1,5 @@
 """
-Orderable panel registry — GENERATED from contracts/orderable-panels.json. DO NOT EDIT.
+Orderable panel registry — GENERATED from contracts/catalog/orderable-panels.json. DO NOT EDIT.
 """
 from __future__ import annotations
 

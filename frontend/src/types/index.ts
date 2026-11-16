@@ -23,7 +23,7 @@
  *
  * ## Generated
  * - `npm run codegen` — OpenAPI types and `generated/feedback.ts`.
- * - `generated/{enums,policies,audit}.ts` — keep in sync with `contracts/*.json` (no frontend bundler).
+ * - `generated/{enums,policies,audit}.ts` — keep in sync with `contracts/{catalog,registries}/*.json` (no frontend bundler).
  * - Do not hand-edit generated files except via contract/codegen workflows.
  */
 

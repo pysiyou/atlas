@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate panel registry modules from contracts/orderable-panels.json.
+ * Generate panel registry modules from contracts/catalog/orderable-panels.json.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
-const panelsPath = path.join(root, 'contracts', 'orderable-panels.json');
+const panelsPath = path.join(root, 'contracts', 'catalog', 'orderable-panels.json');
 const pyOut = path.join(root, 'backend', 'app', 'shared', 'contracts', 'orderable_panels.py');
 const tsOut = path.join(root, 'frontend', 'src', 'types', 'generated', 'orderablePanels.ts');
 
@@ -46,7 +46,7 @@ const pyEntries = panels
 const pyIds = panels.map(p => pyStr(p.id)).join(', ');
 
 const py = `"""
-Orderable panel registry — GENERATED from contracts/orderable-panels.json. DO NOT EDIT.
+Orderable panel registry — GENERATED from contracts/catalog/orderable-panels.json. DO NOT EDIT.
 """
 from __future__ import annotations
 

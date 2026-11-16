@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate frontend/src/types/generated/audit.ts from contracts/audit-events.json.
+ * Generate frontend/src/types/generated/audit.ts from contracts/registries/audit-events.json.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
-const contractPath = path.join(root, 'contracts', 'audit-events.json');
+const contractPath = path.join(root, 'contracts', 'registries', 'audit-events.json');
 const outPath = path.join(root, 'frontend', 'src', 'types', 'generated', 'audit.ts');
 
 const data = JSON.parse(fs.readFileSync(contractPath, 'utf-8'));
@@ -70,7 +70,7 @@ function formatDefinition(event) {
 
 const definitionsBody = events.map(formatDefinition).join('\n');
 
-const output = `/** GENERATED — DO NOT EDIT. Regenerate: npm run codegen:audit (contracts/audit-events.json) */
+const output = `/** GENERATED — DO NOT EDIT. Regenerate: npm run codegen:audit (contracts/registries/audit-events.json) */
 
 // =============================================================================
 // taxonomy

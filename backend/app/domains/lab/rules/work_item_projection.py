@@ -4,7 +4,7 @@ Unified lab work-item projection for worklists, orders, and monitor.
 Semantics:
 - denyReason: primary reason the row's main action is disabled (fix this to proceed).
 - attentionReason: contextual reason for badges/monitor (may block progress).
-- attentionLabel / denyMessage: human copy from contracts/lab.json blockers.
+- attentionLabel / denyMessage: human copy from contracts/registries/lab.json blockers.
 """
 
 from __future__ import annotations

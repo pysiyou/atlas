@@ -1,5 +1,5 @@
 """
-Rejection reason registry — GENERATED from contracts/rejection-reasons.json. DO NOT EDIT.
+Rejection reason registry — GENERATED from contracts/registries/rejection-reasons.json. DO NOT EDIT.
 """
 from __future__ import annotations
 

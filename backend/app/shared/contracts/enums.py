@@ -1,5 +1,5 @@
 """
-Enum types — GENERATED from contracts/enums.json. DO NOT EDIT.
+Enum types — GENERATED from contracts/registries/enums.json. DO NOT EDIT.
 """
 import enum
 
