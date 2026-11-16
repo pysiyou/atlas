@@ -9,17 +9,16 @@ import { displayId } from '@/utils';
 export interface ModalContextSubtitleProps {
   /** Patient name, test name, or other primary context for this modal. */
   label: ReactNode;
-  orderId?: number | string | null;
-  patientId?: number | string | null;
+  orderId?: string | null;
+  patientId?: string | null;
   badges?: ReactNode;
 }
 
 function formatRecordId(
   type: 'order' | 'patient',
-  id: number | string
+  id: string
 ): string {
-  const numeric = typeof id === 'string' ? Number(id) : id;
-  return displayId[type](numeric);
+  return displayId[type](id);
 }
 
 export function ModalContextSubtitle({ label, orderId, patientId, badges }: ModalContextSubtitleProps) {

@@ -196,14 +196,14 @@ export function useOrderUpsertModal({
   const subtitle = useMemo((): React.ReactNode => {
     if (mode === 'edit' && order) {
       return (
-        <ModalContextSubtitle label={order.patientName} orderId={order.orderId} />
+        <ModalContextSubtitle label={order.patientName} orderId={order.fillerNumber} />
       );
     }
     if (selectedPatient) {
       return (
         <ModalContextSubtitle
           label={selectedPatient.fullName}
-          patientId={selectedPatient.id}
+          patientId={selectedPatient.mrn}
         />
       );
     }

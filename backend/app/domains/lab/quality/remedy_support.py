@@ -10,7 +10,7 @@ from app.domains.lab.models.quality_issue import QualityIssue
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine
 from app.domains.orders.models import OrderTest
-from app.platform.utils.exceptions import LabOperationError
+from app.platform.utils import LabOperationError
 from app.shared.contracts.enums import (
     PriorityLevel,
     QualityDomain,

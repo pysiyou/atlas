@@ -28,12 +28,13 @@ from app.domains.orders.schemas import (
 )
 from app.domains.orders.search import order_search_filter
 from app.domains.patients.models import Patient
+from app.platform.utils import allocate_filler_number
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
 from app.domains.payments.service import enrich_payment
 from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
-from app.platform.utils.common import get_or_404
+from app.platform.utils import get_or_404
 from app.shared.contracts.enums import (
     OrderStatus,
     PaymentMethod,
@@ -222,7 +223,10 @@ def _order_to_summary(
     codes = test_codes or []
     return OrderSummaryResponse(
         orderId=order.orderId,
+        fillerNumber=order.fillerNumber,
+        placerNumber=order.placerNumber,
         patientId=order.patientId,
+        patientMrn=patient.mrn if patient else "",
         patientName=patient_name,
         patientDob=patient.dateOfBirth if patient else None,
         patientGender=patient.gender if patient else None,
@@ -543,9 +547,13 @@ class OrderService:
 
         self._resolve_referent_doctor_id(order_data.referentDoctorId)
 
+        order_date = datetime.now(UTC)
+        filler_number = allocate_filler_number(self.db, order_date)
         order = Order(
             patientId=order_data.patientId,
-            orderDate=datetime.now(UTC),
+            fillerNumber=filler_number,
+            placerNumber=filler_number,
+            orderDate=order_date,
             totalPrice=total_price,
             paymentStatus=PaymentStatus.UNPAID,
             overallStatus=OrderStatus.ORDERED,

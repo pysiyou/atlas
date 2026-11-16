@@ -12,6 +12,7 @@ class Invoice(Base):
     __tablename__ = "invoices"
 
     invoiceId = Column("invoice_id", Integer, primary_key=True, autoincrement=True, index=True)
+    invoiceNumber = Column("invoice_number", String(12), nullable=False, unique=True, index=True)
     orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
     patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
     patientName = Column("patient_name", String, nullable=False)
@@ -46,6 +47,7 @@ class Payment(Base):
     __tablename__ = "payments"
 
     paymentId = Column("payment_id", Integer, primary_key=True, autoincrement=True, index=True)
+    receiptNumber = Column("receipt_number", String(8), nullable=False, unique=True, index=True)
     orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
     invoiceId = Column(
         "invoice_id", Integer, ForeignKey("invoices.invoice_id"), nullable=True, index=True

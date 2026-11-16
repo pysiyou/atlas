@@ -8,8 +8,8 @@ from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
 from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine
 from app.domains.lab.schemas.lab import QualityIssueResult
 from app.domains.orders.models import OrderTest
-from app.platform.utils.common import is_specimen_rejection_reason
-from app.platform.utils.exceptions import LabOperationError
+from app.platform.utils import is_specimen_rejection_reason
+from app.platform.utils import LabOperationError
 from app.shared.contracts.enums import (
     QualityDomain,
     QualityStage,

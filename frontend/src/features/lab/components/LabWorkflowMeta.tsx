@@ -37,18 +37,18 @@ export function SampleContainerInfo({
 }
 
 /**
- * Sample collection metadata line (who collected, when, sample id).
+ * Sample collection metadata line (who collected, when, accession).
  */
 
 interface SampleCollectionMetaLineProps {
-  sampleId?: string | number;
+  accessionNumber?: string | null;
   collectedAt?: string;
   collectedBy?: string;
   className?: string;
 }
 
 export function SampleCollectionMetaLine({
-  sampleId,
+  accessionNumber,
   collectedAt,
   collectedBy,
   className,
@@ -56,10 +56,10 @@ export function SampleCollectionMetaLine({
   if (!collectedAt) return null;
 
   const line =
-    sampleId !== undefined
+    accessionNumber
       ? {
           type: 'sample-collected' as const,
-          sampleId,
+          accessionNumber,
           collectedAt,
           collectedBy,
         }

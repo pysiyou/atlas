@@ -97,7 +97,7 @@ export function EditPatientModal({
                         >
                           <span className="font-medium">{match.fullName}</span>
                           <span className="ml-space-2 text-sm opacity-70">
-                            {`PAT${String(match.id).padStart(4, '0')}`} · {match.phone}
+                            {match.mrn} · {match.phone}
                           </span>
                         </button>
                       </li>

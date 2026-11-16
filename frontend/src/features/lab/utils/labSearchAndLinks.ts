@@ -1,68 +1,65 @@
 /** Lab search keys, result presence, collection lookup filters, and queue deep-links. */
 import type { OrderTest } from '@/types';
 import type { LabModalWorkItem } from '../types/labQueueChrome';
-import { displayId, inclusiveDateRangeBounds, toIsoDateParam, ID_PREFIXES, parseDisplayId } from '@/utils';
+import {
+  classifyClinicalSearch,
+  displayId,
+  formatOrderTestDisplay,
+  inclusiveDateRangeBounds,
+  toIsoDateParam,
+} from '@/utils';
 import type { TestStatus } from '@/types/generated/enums';
-import type { UrlFilters } from '@/utils/filters';
 import { getLabQueueUrl, getLabTabForTestStatus, type LabTabId } from '../constants/labConstants';
 
 export interface LabQueueSearchableIds {
   orderTestId?: number | null;
   orderId?: number | null;
   sampleId?: number | null;
+  fillerNumber?: string | null;
+  accessionNumber?: string | null;
+  patientMrn?: string | null;
+  testCode?: string | null;
 }
 
 type LabQueueSearchIntent =
   | { kind: 'empty' }
-  | { kind: 'test'; testId: number }
-  | { kind: 'order'; orderId: number }
-  | { kind: 'sample'; sampleId: number }
-  | { kind: 'numeric'; value: number }
+  | { kind: 'filler'; fillerNumber: string }
+  | { kind: 'accession'; accessionNumber: string }
+  | { kind: 'mrn'; mrn: string }
+  | { kind: 'mnemonic'; testCode: string }
   | { kind: 'text'; term: string };
 
 function parseLabQueueSearchIntent(query: string): LabQueueSearchIntent {
   const trimmed = query.trim();
   if (!trimmed) return { kind: 'empty' };
 
-  const compact = trimmed.replace(/[\s-]/g, '');
-  const upper = compact.toUpperCase();
-
-  if (upper.startsWith(ID_PREFIXES.orderTest)) {
-    const testId = parseDisplayId('orderTest', trimmed);
-    if (testId != null) return { kind: 'test', testId };
-  }
-  if (upper.startsWith(ID_PREFIXES.order)) {
-    const orderId = parseDisplayId('order', trimmed);
-    if (orderId != null) return { kind: 'order', orderId };
-  }
-  if (upper.startsWith(ID_PREFIXES.sample)) {
-    const sampleId = parseDisplayId('sample', trimmed);
-    if (sampleId != null) return { kind: 'sample', sampleId };
-  }
-  if (/^\d+$/.test(compact)) {
-    return { kind: 'numeric', value: Number(compact) };
-  }
+  const classified = classifyClinicalSearch(trimmed);
+  if (classified === 'filler') return { kind: 'filler', fillerNumber: trimmed.replace(/[\s-]/g, '') };
+  if (classified === 'accession') return { kind: 'accession', accessionNumber: trimmed };
+  if (classified === 'mrn') return { kind: 'mrn', mrn: trimmed.replace(/[\s-]/g, '').toUpperCase() };
+  if (classified === 'mnemonic') return { kind: 'mnemonic', testCode: trimmed.toUpperCase() };
   return { kind: 'text', term: trimmed };
 }
 
-/** Build searchable tokens for substring fallback (display ids + raw numbers). */
+/** Build searchable tokens from clinical identifiers. */
 export function labQueueSearchTextFields(
   ids: LabQueueSearchableIds,
   extra: string[] = [],
 ): string[] {
   const fields = [
-    ids.orderTestId != null ? displayId.orderTest(ids.orderTestId) : '',
-    ids.orderId != null ? displayId.order(ids.orderId) : '',
-    ids.sampleId != null ? displayId.sample(ids.sampleId) : '',
-    ids.orderTestId != null ? String(ids.orderTestId) : '',
-    ids.orderId != null ? String(ids.orderId) : '',
-    ids.sampleId != null ? String(ids.sampleId) : '',
+    ids.fillerNumber ?? '',
+    ids.accessionNumber ?? '',
+    ids.patientMrn ?? '',
+    ids.testCode ?? '',
+    ids.accessionNumber && ids.testCode
+      ? formatOrderTestDisplay(ids.accessionNumber, ids.testCode)
+      : '',
     ...extra,
   ].filter(Boolean);
   return fields;
 }
 
-/** Client-side lab queue search: SAM/ORD/TST display ids, numeric ids, or free text. */
+/** Client-side lab queue search: filler/accession/MRN/mnemonic or free text. */
 export function matchLabQueueSearchQuery(
   ids: LabQueueSearchableIds,
   textFields: string[],
@@ -70,50 +67,20 @@ export function matchLabQueueSearchQuery(
 ): boolean {
   const intent = parseLabQueueSearchIntent(query);
   if (intent.kind === 'empty') return true;
-  if (intent.kind === 'test') {
-    return ids.orderTestId != null && ids.orderTestId === intent.testId;
+  if (intent.kind === 'filler') {
+    return Boolean(ids.fillerNumber && ids.fillerNumber === intent.fillerNumber);
   }
-  if (intent.kind === 'order') {
-    return ids.orderId != null && ids.orderId === intent.orderId;
+  if (intent.kind === 'accession') {
+    return Boolean(ids.accessionNumber && ids.accessionNumber === intent.accessionNumber);
   }
-  if (intent.kind === 'sample') {
-    return ids.sampleId != null && ids.sampleId === intent.sampleId;
+  if (intent.kind === 'mrn') {
+    return Boolean(ids.patientMrn && ids.patientMrn === intent.mrn);
   }
-  if (intent.kind === 'numeric') {
-    const n = intent.value;
-    return (
-      ids.orderTestId === n ||
-      ids.orderId === n ||
-      ids.sampleId === n ||
-      textFields.some(field => field.includes(String(n)))
-    );
+  if (intent.kind === 'mnemonic') {
+    return Boolean(ids.testCode && ids.testCode.toUpperCase() === intent.testCode);
   }
   const lower = intent.term.toLowerCase();
   return textFields.some(field => field.toLowerCase().includes(lower));
-}
-
-export function hasActiveRecordUrlFilters(urlFilters?: UrlFilters): boolean {
-  if (!urlFilters) return false;
-  return Boolean(urlFilters.patientId || urlFilters.orderId || urlFilters.sampleId || urlFilters.testId);
-}
-
-/**
- * Text to show in the lab queue search input when opened via entity URL filters.
- * Collection prefers sample id (SAMxxxx) because that is what users search by on that tab.
- */
-export function getLabQueueSearchFromUrlFilters(
-  urlFilters: UrlFilters | undefined,
-  fallback = '',
-  preferSampleId = false
-): string {
-  if (!urlFilters) return fallback;
-  if (preferSampleId && urlFilters.sampleId) {
-    return displayId.sample(Number(urlFilters.sampleId));
-  }
-  if (urlFilters.testId) return displayId.orderTest(Number(urlFilters.testId));
-  if (urlFilters.sampleId) return displayId.sample(Number(urlFilters.sampleId));
-  if (urlFilters.orderId) return displayId.order(Number(urlFilters.orderId));
-  return fallback;
 }
 
 export function orderTestKey(orderTestId: number): string {
@@ -171,41 +138,46 @@ export function resolveCollectionStatusFilters<T extends string>(
 }
 
 /**
- * Lab queue URL for an order test: correct workflow tab + TST display id in `search`.
+ * Lab queue URL for an order test: workflow tab + accession/mnemonic or filler in `search`.
  */
 export function getLabQueueUrlForTest(
   test: Pick<OrderTest, 'id' | 'status' | 'testCode'> & {
     sampleId?: number | null;
     lab?: { pipelineStage?: string | null } | null;
+    accessionNumber?: string | null;
   },
-  _orderId: number
+  _orderId: number,
+  fillerNumber?: string | null,
 ): string | null {
   const tab = getLabTabForTestStatus(test.status as TestStatus, test.lab?.pipelineStage);
   if (!tab) return null;
 
-  if (test.id != null) {
-    return getLabQueueUrl(tab, { search: displayId.orderTest(test.id) });
+  const orderTestDisplay = formatOrderTestDisplay(test.accessionNumber, test.testCode);
+  if (orderTestDisplay !== '-') {
+    return getLabQueueUrl(tab, { search: orderTestDisplay });
   }
-
-  const searchTerms = [displayId.order(_orderId), test.testCode].filter(Boolean);
-  return getLabQueueUrl(tab, { search: searchTerms.join(' ') });
+  if (test.testCode) {
+    return getLabQueueUrl(tab, { search: test.testCode });
+  }
+  const filler = displayId.order(fillerNumber);
+  if (filler === '-') return getLabQueueUrl(tab);
+  return getLabQueueUrl(tab, { search: filler });
 }
 
-/** Lab queue URL with sample id in the search bar (SAM####). */
-export function getLabQueueUrlForSample(sampleId: number | string, tab: LabTabId = 'collection'): string {
-  const id = Number(sampleId);
-  return getLabQueueUrl(tab, {
-    search: Number.isFinite(id) ? displayId.sample(id) : String(sampleId),
-  });
+/** Lab queue URL with accession in the search bar. */
+export function getLabQueueUrlForSample(
+  accessionNumber: string,
+  tab: LabTabId = 'collection',
+): string {
+  return getLabQueueUrl(tab, { search: accessionNumber.trim() });
 }
 
-/** Lab queue URL with order id in the search bar (ORD####). */
-export function getLabQueueUrlForOrder(orderId: number | string, tab: LabTabId = 'collection'): string {
-  const id = Number(orderId);
-  return getLabQueueUrl(tab, {
-    search: Number.isFinite(id) ? displayId.order(id) : String(orderId),
-  });
+/** Lab queue URL with filler number in the search bar. */
+export function getLabQueueUrlForOrder(
+  fillerNumber: string,
+  tab: LabTabId = 'collection',
+): string {
+  return getLabQueueUrl(tab, { search: fillerNumber.trim() });
 }
 
 export { getLabTabForTestStatus, getLabQueueUrl, type LabTabId };
-

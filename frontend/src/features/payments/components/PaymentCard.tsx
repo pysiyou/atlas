@@ -43,7 +43,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
             secondarySlot="entity"
             secondaryText={renderTableSecondaryRecordId({
               type: 'patient',
-              value: order.patientId,
+              value: order.patientMrn,
             })}
             size="xs"
           />
@@ -65,7 +65,7 @@ export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentVi
 
       <div className="flex justify-between items-center mt-auto pt-space-3 gap-space-2">
         <div className={TABLE_DATETIME_SECONDARY_CLASS}>
-          <RecordId type="order" value={order.orderId} emphasis="mutedBlock" />
+          <RecordId type="order" value={order.fillerNumber} emphasis="mutedBlock" />
           <span className="block mt-space-0-5">{formatDateTime(displayDate)}</span>
         </div>
         <div className="flex items-center gap-space-2 shrink-0">

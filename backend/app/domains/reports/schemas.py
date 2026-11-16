@@ -10,6 +10,8 @@ class ReportableOrderItem(BaseModel):
     """One lab report row: a non-cancelled order with at least one active test."""
 
     orderId: int
+    fillerNumber: str
+    patientMrn: str
     orderDate: datetime
     overallStatus: OrderStatus
     statusPresentation: StatusPresentation

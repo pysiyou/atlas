@@ -15,15 +15,16 @@ from app.domains.lab.integration.hl7_parser import (
 )
 from app.domains.lab.models.analyzer_ingest_dedup import AnalyzerIngestDedup
 from app.domains.lab.models.sample import Sample
+from app.domains.orders.models import Order, OrderTest
 from app.domains.lab.schemas.analyzer import (
     AnalyzerResultRequest,
     AnalyzerResultResponse,
     HL7MessageRequest,
 )
 from app.domains.lab.workflow.service import LabOperationsService
-from app.domains.orders.models import OrderTest
 from app.platform.config import settings
-from app.platform.utils.exceptions import LabOperationError
+from app.platform.utils import looks_like_accession, looks_like_filler
+from app.platform.utils import LabOperationError
 from app.shared.contracts.enums import TestStatus
 from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
@@ -99,6 +100,27 @@ class AnalyzerIngestService:
                 status_code=400,
                 error_code="VALIDATION_ERROR",
             )
+
+    def _resolve_sample(self, specimen_id: str) -> Sample | None:
+        """Match SPM-2 / specimen_id to accession, then filler order number."""
+        token = specimen_id.strip()
+        if not token:
+            return None
+        sample = self.db.query(Sample).filter(Sample.accessionNumber == token).first()
+        if sample:
+            return sample
+        if looks_like_accession(token):
+            return None
+        if looks_like_filler(token):
+            order = self.db.query(Order).filter(Order.fillerNumber == token).first()
+            if order:
+                return (
+                    self.db.query(Sample)
+                    .filter(Sample.orderId == order.orderId)
+                    .order_by(Sample.sampleId.asc())
+                    .first()
+                )
+        return None
 
     def _find_pending_test(self, sample: Sample, test_code: str) -> OrderTest:
         order_test = (
@@ -214,7 +236,7 @@ class AnalyzerIngestService:
                 phase="hl7_missing_specimen",
                 analyzer_id=analyzer_id,
             )
-        sample = self.db.query(Sample).filter(Sample.sampleId == int(specimen_id)).first()
+        sample = self._resolve_sample(str(specimen_id))
         if not sample:
             self._http_reject_ingest(
                 status.HTTP_404_NOT_FOUND,
@@ -259,7 +281,7 @@ class AnalyzerIngestService:
         )
 
     def ingest_json(self, request: AnalyzerResultRequest) -> AnalyzerResultResponse:
-        sample = self.db.query(Sample).filter(Sample.sampleId == int(request.specimen_id)).first()
+        sample = self._resolve_sample(str(request.specimen_id))
         if not sample:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -311,7 +333,7 @@ class AnalyzerIngestService:
             if sample:
                 results.append(
                     {
-                        "specimen_id": sample.sampleId,
+                        "specimen_id": sample.accessionNumber,
                         "order_id": test.orderId,
                         "test_code": test.testCode,
                         "sample_type": sample.sampleType.value if sample.sampleType else None,

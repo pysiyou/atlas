@@ -94,7 +94,7 @@ export function SampleCollectionDetailContent({
       {showBarcode && sample.sampleId != null && (
         <div className={`flex items-center justify-center ${SURFACE.recessed} ${RADIUS.field} p-panel`}>
           <Barcode
-            value={displayId.sample(sample.sampleId)}
+            value={displayId.sample(sample.accessionNumber)}
             height={40}
             displayValue={false}
             background="transparent"
@@ -258,6 +258,7 @@ export function SampleCollectionDetailFooter({
         <SampleLabelPrintButton sample={sample} patientName={patientName} eventAt={collectedAt} />
         <SampleRejectionPopover
           sampleId={sample.sampleId.toString()}
+          accessionNumber={sample.accessionNumber}
           testCodes={sample.testCodes ?? []}
           sampleType={sample.sampleType}
           patientName={patientName}

@@ -10,7 +10,6 @@ import {
   QUALITY_ISSUE_POPOVER_COPY,
   getValidationFormCopy,
 } from '../constants/qualityIssuePopoverCopy';
-import { displayId } from '@/utils';
 import { inlineFeedbackMessage } from '@/feedback';
 import { useListLoadErrorToast } from '@/hooks';
 import {
@@ -26,7 +25,7 @@ function buildSubtitle(
 ): string {
   const testLabel = [testName, testCode ? `(${testCode})` : ''].filter(Boolean).join(' ');
   const patient = patientName ? ` - ${patientName}` : '';
-  return `${displayId.orderTest(orderTestId)} · ${testLabel}${patient}`;
+  return [testLabel, patient.trim()].filter(Boolean).join(' · ') || `Test ${orderTestId}`;
 }
 
 export interface UseQualityIssuePopoverParams {

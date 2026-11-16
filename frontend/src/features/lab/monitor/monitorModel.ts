@@ -179,7 +179,11 @@ export interface LabAttentionQueueItem {
   stage: LabPipelineStage;
   stageLabel: string;
   orderId: number;
+  fillerNumber?: string | null;
   patientName: string;
+  patientMrn?: string | null;
+  accessionNumber?: string | null;
+  testCodes?: string[];
   priority: PriorityLevel;
   waitingHours: number;
   attentionReason: LabAttentionReason | null;

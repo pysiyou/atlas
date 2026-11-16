@@ -7,7 +7,7 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { Alert } from '@/components/display';
 
 import { RecordId } from '@/features/shared';
-import { formatDateTime } from '@/utils';
+import { formatDateTime, formatOrderTestDisplay } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/feedback';
 import {
@@ -80,10 +80,13 @@ export function CriticalValueActions({
   return (
     <div className={compact ? 'space-y-space-2' : 'space-y-space-3'}>
       <div className={`flex flex-wrap items-center gap-space-2 ${text({ role: 'body' })}`}>
-        <RecordId type="orderTest" value={record.id} />
+        <RecordId
+          type="orderTest"
+          value={formatOrderTestDisplay(record.accessionNumber, record.testCode)}
+        />
         <span className={TONE.danger.fg}>{record.testCode}</span>
         <span className={FG.labelMuted}>{record.patientName}</span>
-        <RecordId type="order" value={record.orderId} emphasis="mutedBlock" />
+        <RecordId type="order" value={record.fillerNumber} emphasis="mutedBlock" />
       </div>
 
       {record.flags && record.flags.length > 0 && (

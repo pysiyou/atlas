@@ -81,7 +81,7 @@ function SampleCollectionCardLeftColumnFromVm({
   return (
     <SampleCollectionCardLeftColumn
       patientName={patientName}
-      orderId={vm.orderId}
+      fillerNumber={vm.fillerNumber}
       referentDoctorName={vm.referentDoctorName}
       orderDate={vm.orderDate}
       sample={sample}
@@ -158,6 +158,7 @@ export function SampleCollectionCardDesktop({
               {vm.isCollected ? (
                 <SampleRejectionPopover
                   sampleId={sample.sampleId.toString()}
+                  accessionNumber={sample.accessionNumber}
                   testCodes={sample.testCodes ?? []}
                   sampleType={sample.sampleType}
                   patientName={patientName}

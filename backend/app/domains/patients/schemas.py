@@ -6,6 +6,7 @@ import re
 from calendar import monthrange
 from datetime import datetime
 
+from app.platform.utils import MEMBER_ID_PATTERN, MRN_PATTERN
 from app.shared.contracts.enums import AffiliationDuration, Gender, Relationship
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -70,7 +71,7 @@ class MedicalHistory(BaseModel):
 class AffiliationInput(BaseModel):
     """Partial affiliation input (for form submission)."""
 
-    assuranceNumber: str | None = None
+    assuranceNumber: str | None = Field(None, min_length=6, max_length=20, pattern=MEMBER_ID_PATTERN)
     startDate: str | None = None
     endDate: str | None = None
     duration: AffiliationDuration | None = None
@@ -79,7 +80,7 @@ class AffiliationInput(BaseModel):
 class Affiliation(BaseModel):
     """Insurance/affiliation information."""
 
-    assuranceNumber: str = Field(..., min_length=1, max_length=50)
+    assuranceNumber: str = Field(..., min_length=6, max_length=20, pattern=MEMBER_ID_PATTERN)
     startDate: str
     endDate: str
     duration: AffiliationDuration
@@ -181,12 +182,10 @@ class PatientCreate(PatientBase):
                         )
                     end_date = end_dt.strftime("%Y-%m-%d")
 
-                    # Generate assurance number if missing
                     assurance_number = aff.get("assuranceNumber")
                     if not assurance_number:
-                        date_str = datetime.now().strftime("%Y%m%d")
-                        random_suffix = secrets.randbelow(1000)
-                        assurance_number = f"ASS-{date_str}-{random_suffix:03d}"
+                        # Sequential-looking 12-digit member ID; uniqueness is per-patient JSON.
+                        assurance_number = f"{100_000_000_000 + secrets.randbelow(899_999_999_999):012d}"
 
                     data["affiliation"] = {
                         "assuranceNumber": assurance_number,
@@ -250,12 +249,9 @@ class PatientUpdate(BaseModel):
                         )
                     end_date = end_dt.strftime("%Y-%m-%d")
 
-                    # Generate assurance number if missing
                     assurance_number = aff.get("assuranceNumber")
                     if not assurance_number:
-                        date_str = datetime.now().strftime("%Y%m%d")
-                        random_suffix = secrets.randbelow(1000)
-                        assurance_number = f"ASS-{date_str}-{random_suffix:03d}"
+                        assurance_number = f"{100_000_000_000 + secrets.randbelow(899_999_999_999):012d}"
 
                     data["affiliation"] = {
                         "assuranceNumber": assurance_number,
@@ -275,11 +271,22 @@ class PatientOrderSummary(BaseModel):
     hasUnpaidOrders: bool = False
 
 
+class AffiliationResponse(BaseModel):
+    """Stored affiliation with the 6–20 character member ID."""
+
+    assuranceNumber: str = Field(..., min_length=6, max_length=20, pattern=MEMBER_ID_PATTERN)
+    startDate: str
+    endDate: str
+    duration: AffiliationDuration
+
+
 class PatientResponse(PatientBase):
     # Allow legacy DB values shorter than the 10-char create/update minimum.
     phone: str = Field(..., min_length=1, max_length=20)
     emergencyContact: EmergencyContactResponse
+    affiliation: AffiliationResponse | None = None
     id: int
+    mrn: str = Field(..., min_length=6, max_length=12, pattern=MRN_PATTERN)
     registrationDate: datetime
     createdBy: str
     createdAt: datetime

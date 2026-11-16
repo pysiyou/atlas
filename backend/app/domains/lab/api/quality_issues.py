@@ -8,7 +8,7 @@ from app.domains.lab.schemas.lab import (
 )
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
-from app.platform.http.dependencies import assert_quality_issue_target_access, get_current_user
+from app.platform.http import assert_quality_issue_target_access, get_current_user
 from app.shared.contracts.enums import QualityIssueTargetType
 from fastapi import APIRouter, Depends, Query
 

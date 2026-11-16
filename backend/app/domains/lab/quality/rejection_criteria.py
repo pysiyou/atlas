@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from app.domains.catalog.models.catalog_test import CatalogTest
-from app.platform.utils.exceptions import LabOperationError
+from app.platform.utils import LabOperationError
 from app.shared.contracts.rejection_reasons import (
     REJECTION_REASON_BY_ID,
     REJECTION_REASON_DOMAIN_BY_ID,

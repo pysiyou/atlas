@@ -47,7 +47,7 @@ export function PatientReportsList({ orders }: PatientReportsListProps) {
             </div>
             <div className="min-w-0">
               <p className={`${text({ role: 'body' })} font-normal truncate`}>
-                Report_<RecordId type="order" value={order.orderId} />.pdf
+                Report_<RecordId type="order" value={order.fillerNumber} />.pdf
               </p>
               <p className={`${TABLE_DATETIME_SECONDARY_CLASS} mt-space-0-5`}>
                 {formatDateTime(order.orderDate)} • 1.2 MB

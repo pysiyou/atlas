@@ -3,7 +3,6 @@
  */
 import type { IconKey } from '@/icons';
 import { IconKeys } from '@/icons';
-import { formatDisplayId } from '@/utils/id';
 import type { AuditSearchPreviewResponse } from './api';
 import { parseRecordFilterDisplayId } from './eventLogPanelState';
 import { getEventLogCopy } from '@/strings';
@@ -14,7 +13,6 @@ export type EventLogSearchIntentMode =
   | 'record_test'
   | 'record_sample'
   | 'record_patient'
-  | 'numeric'
   | 'text';
 
 export type EventLogSearchDimension = 'patientName' | 'actorName' | 'username';
@@ -48,54 +46,22 @@ export function classifyEventLogSearchIntent(term: string): EventLogSearchIntent
     };
   }
 
-  const compact = trimmed.replace(/[\s-]/g, '');
-  const upper = compact.toUpperCase();
-  if (/^\d+$/.test(compact) && !/^(TST|ORD|SAM|PAT)/.test(upper)) {
-    const numeric = Number.parseInt(compact, 10);
-    return {
-      mode: 'numeric',
-      textTerm: compact,
-      dimensions: [],
-      parsedIds: { orderId: numeric, patientId: numeric, testId: numeric },
-      displayToken: null,
-    };
-  }
-
   const parsed = parseRecordFilterDisplayId(trimmed);
-  if (parsed.kind === 'test') {
+  if (parsed.kind === 'clinical') {
+    const token = parsed.token;
+    const classified = token.includes('/') || /^[A-Z][A-Z0-9]{1,7}$/.test(token.toUpperCase())
+      ? 'record_test'
+      : /^\d{13}$/.test(token.replace(/[\s-]/g, ''))
+        ? 'record_order'
+        : /^\d{2}-\d{5}/.test(token)
+          ? 'record_sample'
+          : 'record_patient';
     return {
-      mode: 'record_test',
+      mode: classified,
       textTerm: null,
       dimensions: [],
-      parsedIds: { testId: parsed.testId },
-      displayToken: formatDisplayId('orderTest', parsed.testId),
-    };
-  }
-  if (parsed.kind === 'order') {
-    return {
-      mode: 'record_order',
-      textTerm: null,
-      dimensions: [],
-      parsedIds: { orderId: parsed.orderId },
-      displayToken: formatDisplayId('order', parsed.orderId),
-    };
-  }
-  if (parsed.kind === 'sample') {
-    return {
-      mode: 'record_sample',
-      textTerm: null,
-      dimensions: [],
-      parsedIds: { sampleId: parsed.sampleId },
-      displayToken: formatDisplayId('sample', parsed.sampleId),
-    };
-  }
-  if (parsed.kind === 'patient') {
-    return {
-      mode: 'record_patient',
-      textTerm: null,
-      dimensions: [],
-      parsedIds: { patientId: parsed.patientId },
-      displayToken: formatDisplayId('patient', parsed.patientId),
+      parsedIds: null,
+      displayToken: token,
     };
   }
 
@@ -167,51 +133,6 @@ function buildRecordIdItems(intent: EventLogSearchIntent): EventLogSearchMatchIt
         primary: `${getEventLogCopy().searchIntentPatient} ${intent.displayToken}`,
         secondary: intent.displayToken,
         applyValue: intent.displayToken,
-      },
-    ];
-  }
-  if (intent.mode === 'numeric' && intent.textTerm) {
-    const term = intent.textTerm;
-    const numeric = Number.parseInt(term, 10);
-    const orderId = formatDisplayId('order', numeric);
-    const patientId = formatDisplayId('patient', numeric);
-    const testId = formatDisplayId('orderTest', numeric);
-    const sampleId = formatDisplayId('sample', numeric);
-    return [
-      {
-        key: 'numeric-order',
-        icon: IconKeys.dataFields.orderId,
-        primary: `${getEventLogCopy().searchIntentOrder} ${orderId}`,
-        secondary: orderId,
-        applyValue: orderId,
-      },
-      {
-        key: 'numeric-patient',
-        icon: IconKeys.dataFields.patientId,
-        primary: `${getEventLogCopy().searchIntentPatient} ${patientId}`,
-        secondary: patientId,
-        applyValue: patientId,
-      },
-      {
-        key: 'numeric-test',
-        icon: IconKeys.dataFields.testId,
-        primary: `${getEventLogCopy().searchIntentTest} ${testId}`,
-        secondary: testId,
-        applyValue: testId,
-      },
-      {
-        key: 'numeric-sample',
-        icon: IconKeys.dataFields.sampleId,
-        primary: `${getEventLogCopy().searchIntentSample} ${sampleId}`,
-        secondary: sampleId,
-        applyValue: sampleId,
-      },
-      {
-        key: 'numeric-target',
-        icon: IconKeys.dataFields.orderId,
-        primary: `${getEventLogCopy().searchIntentNumericTarget} ${term}`,
-        secondary: term,
-        applyValue: term,
       },
     ];
   }

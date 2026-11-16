@@ -190,7 +190,7 @@ export function labModalHeaderContext({
 }: {
   stage: LabModalStage;
   contextLabel: string;
-  orderId: string | number;
+  orderId?: string | null;
   badges?: ReactNode;
 }): { title: string; subtitle: ReactNode } {
   const wrappedBadges =

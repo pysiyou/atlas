@@ -120,7 +120,7 @@ export function ReportPreviewModal({
         reportData ? (
           <ModalContextSubtitle
             label={reportData.patientName}
-            orderId={reportData.order.orderId}
+            orderId={reportData.order.fillerNumber}
           />
         ) : undefined
       }

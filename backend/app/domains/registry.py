@@ -6,7 +6,7 @@ from app.domains.billing.models import Invoice, Payment
 from app.domains.catalog.models.affiliation_pricing import AffiliationPricing
 from app.domains.catalog.models.catalog_panel import CatalogPanel
 from app.domains.catalog.models.catalog_test import CatalogTest
-from app.domains.lab.models.accession_counter import AccessionCounter
+from app.platform.utils import IdSequence
 from app.domains.lab.models.analyzer_ingest_dedup import AnalyzerIngestDedup
 from app.domains.lab.models.escalation import EscalationTicket
 from app.domains.lab.models.quality_issue import QualityIssue
@@ -22,7 +22,7 @@ __all__ = [
     "Patient",
     "CatalogTest",
     "CatalogPanel",
-    "AccessionCounter",
+    "IdSequence",
     "ReportDocument",
     "Order",
     "OrderTest",

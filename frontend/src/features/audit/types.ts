@@ -40,8 +40,11 @@ export interface EventLogRecord {
   targetType: string;
   targetId: number;
   patientId?: number | null;
+  patientMrn?: string | null;
   orderId?: number | null;
+  fillerNumber?: string | null;
   testId?: number | null;
+  accessionNumber?: string | null;
   eventScope?: string | null;
   changes?: EventLogChanges | null;
   metadata?: Record<string, unknown> | null;

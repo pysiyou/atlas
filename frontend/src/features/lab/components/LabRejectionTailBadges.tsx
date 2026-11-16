@@ -13,8 +13,8 @@ import type { LabOrderTestQueueRow } from '../types/labQueueChrome';
 import { LAB_CONFIG } from '../constants';
 
 export interface LabRejectionTailBadgesProps {
-  retestOfTestId?: number | null;
-  originalSampleId?: number | null;
+  priorTestDisplay?: string | null;
+  originalAccessionNumber?: string | null;
   showRetestLink?: boolean;
   showRecollectionLink?: boolean;
   attemptNumber: number;
@@ -25,8 +25,8 @@ export interface LabRejectionTailBadgesProps {
 }
 
 export function LabRejectionTailBadges({
-  retestOfTestId,
-  originalSampleId,
+  priorTestDisplay,
+  originalAccessionNumber,
   showRetestLink = false,
   showRecollectionLink = false,
   attemptNumber,
@@ -37,18 +37,18 @@ export function LabRejectionTailBadges({
 }: LabRejectionTailBadgesProps) {
   const showAttempt = attemptNumber > 1;
   const hasLink =
-    (showRetestLink && retestOfTestId != null) ||
-    (showRecollectionLink && originalSampleId != null);
+    (showRetestLink && Boolean(priorTestDisplay)) ||
+    (showRecollectionLink && Boolean(originalAccessionNumber));
 
   if (!hasLink && !showAttempt) return null;
 
   return (
     <>
-      {showRetestLink && retestOfTestId != null && (
-        <RetestOfBadge retestOfTestId={retestOfTestId} size={size} />
+      {showRetestLink && priorTestDisplay && (
+        <RetestOfBadge priorTestDisplay={priorTestDisplay} size={size} />
       )}
-      {showRecollectionLink && originalSampleId != null && (
-        <RecollectionOfBadge originalSampleId={originalSampleId} size={size} />
+      {showRecollectionLink && originalAccessionNumber && (
+        <RecollectionOfBadge originalAccessionNumber={originalAccessionNumber} size={size} />
       )}
       {showAttempt && (
         <AttemptIndicator
@@ -74,8 +74,8 @@ export function LabRejectionTailBadgesFromWorkItem({ row, previousReason, size }
 
   return (
     <LabRejectionTailBadges
-      retestOfTestId={row.retestOfTestId}
-      originalSampleId={row.sampleOriginalSampleId}
+      priorTestDisplay={row.priorTestDisplay}
+      originalAccessionNumber={row.sampleOriginalAccessionNumber}
       showRetestLink={ctx.showRetestBadge}
       showRecollectionLink={ctx.showRecollectionLink}
       attemptNumber={ctx.attemptNumber}
@@ -95,8 +95,8 @@ export function LabRejectionTailBadgesFromSample({ sample, size }: {
 
   return (
     <LabRejectionTailBadges
-      originalSampleId={sample.originalSampleId}
-      showRecollectionLink={sample.originalSampleId != null}
+      originalAccessionNumber={sample.originalAccessionNumber}
+      showRecollectionLink={Boolean(sample.originalAccessionNumber)}
       attemptNumber={sample.recollectionAttempt ?? 1}
       maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
       attemptType="recollection"

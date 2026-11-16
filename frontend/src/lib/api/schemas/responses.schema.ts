@@ -20,6 +20,7 @@ export const refreshTokenResponseSchema = z.object({
 export const authUserResponseSchema = z.object({
   id: z.union([z.number(), z.string()]),
   username: z.string(),
+  employeeNumber: z.string().nullable().optional(),
   name: z.string(),
   role: z.string(),
   email: z.string().optional(),
@@ -27,7 +28,9 @@ export const authUserResponseSchema = z.object({
 
 export const paymentResponseSchema = z.object({
   paymentId: z.union([z.number(), z.string()]),
+  receiptNumber: z.string().optional(),
   orderId: z.number(),
+  fillerNumber: z.string().nullable().optional(),
   invoiceId: z.number().nullable().optional(),
   amount: z.number(),
   paymentMethod: z.string(),

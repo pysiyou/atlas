@@ -1,33 +1,28 @@
-"""Daily sequential accession numbers (YYMMDD-NNNN) assigned at sample create."""
+"""Yearly sequential accession numbers (YY-NNNNN) assigned at sample create."""
 from __future__ import annotations
 
-from datetime import UTC, datetime
-
-from app.domains.lab.models.accession_counter import AccessionCounter
 from app.domains.lab.models.sample import Sample
-from sqlalchemy.dialects.postgresql import insert
+from app.platform.utils import allocate_accession_number, format_aliquot_accession
 from sqlalchemy.orm import Session
 
 
-def assign_accession_number(db: Session, sample: Sample) -> str:
+def assign_accession_number(db: Session, sample: Sample, parent: Sample | None = None) -> str:
     """
-    Allocate the next accession for the current UTC day and store it on the sample.
+    Allocate the next yearly accession and store it on the sample.
 
-    Uses INSERT … ON CONFLICT DO NOTHING then SELECT FOR UPDATE so concurrent
-    creators on a new day cannot insert duplicate counter rows.
+    Aliquots inherit ``{parentAccession}.{aliquotIndex}`` so the parent barcode
+    remains the lineage key. Recollections and original tubes get a new yearly
+    number. Idempotent when ``accessionNumber`` is already set.
     """
     if sample.accessionNumber:
         return sample.accessionNumber
 
-    day = datetime.now(UTC).date()
-    db.execute(
-        insert(AccessionCounter)
-        .values(day=day, lastSeq=0)
-        .on_conflict_do_nothing(index_elements=["day"])
-    )
-    db.flush()
-    counter = db.query(AccessionCounter).filter(AccessionCounter.day == day).with_for_update().one()
-    counter.lastSeq = int(counter.lastSeq or 0) + 1
-    accession = f"{day.strftime('%y%m%d')}-{counter.lastSeq:04d}"
-    sample.accessionNumber = accession
-    return accession
+    if sample.isAliquot:
+        if parent is None or not parent.accessionNumber:
+            raise ValueError("Aliquot requires a parent sample with an accession number")
+        index = int(sample.aliquotIndex or 1)
+        sample.accessionNumber = format_aliquot_accession(parent.accessionNumber, index)
+        return sample.accessionNumber
+
+    sample.accessionNumber = allocate_accession_number(db)
+    return sample.accessionNumber

@@ -80,7 +80,7 @@ export function useUsersList() {
  * @example
  * ```tsx
  * const { getUserName, getUserInfo } = useUserLookup();
- * const name = getUserName('USR-001'); // "John Doe"
+ * const name = getUserName('1'); // "John Doe" (internal user id)
  * ```
  */
 export function useUserLookup() {

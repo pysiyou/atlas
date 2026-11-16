@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ID_PREFIXES, parseDisplayId } from '@/utils/id';
+import { classifyClinicalSearch } from '@/utils/id';
 import { buildEventLogQuery } from './buildEventLogQuery';
 import {
   DEFAULT_EVENT_LOG_USER_FILTERS as DEFAULT_FILTERS,
@@ -20,30 +20,9 @@ import {
 } from './types';
 import { decodeEventLogUrlFilters, writeEventLogUrlFilters } from './eventLogUrlCodec';
 
-// --- parseRecordDisplayId ---
-
-export function parseOrderDisplayId(input: string): number | null {
-  return parseDisplayId('order', input);
-}
-
-export function parseOrderTestDisplayId(input: string): number | null {
-  return parseDisplayId('orderTest', input);
-}
-
-export function parseSampleDisplayId(input: string): number | null {
-  return parseDisplayId('sample', input);
-}
-
-export function parsePatientDisplayId(input: string): number | null {
-  return parseDisplayId('patient', input);
-}
-
 export type ParsedRecordIdFilter =
   | { kind: 'empty' }
-  | { kind: 'order'; orderId: number }
-  | { kind: 'test'; testId: number }
-  | { kind: 'sample'; sampleId: number }
-  | { kind: 'patient'; patientId: number }
+  | { kind: 'clinical'; token: string }
   | { kind: 'invalid' };
 
 export function parseRecordFilterDisplayId(input: string): ParsedRecordIdFilter {
@@ -51,25 +30,16 @@ export function parseRecordFilterDisplayId(input: string): ParsedRecordIdFilter 
   if (!trimmed) {
     return { kind: 'empty' };
   }
-  const upper = trimmed.toUpperCase();
-  if (upper.startsWith(ID_PREFIXES.orderTest)) {
-    const testId = parseOrderTestDisplayId(input);
-    return testId != null ? { kind: 'test', testId } : { kind: 'invalid' };
+  const classified = classifyClinicalSearch(trimmed);
+  if (
+    classified === 'filler' ||
+    classified === 'mrn' ||
+    classified === 'accession' ||
+    classified === 'mnemonic'
+  ) {
+    return { kind: 'clinical', token: trimmed };
   }
-  if (upper.startsWith(ID_PREFIXES.order)) {
-    const orderId = parseOrderDisplayId(input);
-    return orderId != null ? { kind: 'order', orderId } : { kind: 'invalid' };
-  }
-  if (upper.startsWith(ID_PREFIXES.sample)) {
-    const sampleId = parseSampleDisplayId(input);
-    return sampleId != null ? { kind: 'sample', sampleId } : { kind: 'invalid' };
-  }
-  if (upper.startsWith(ID_PREFIXES.patient)) {
-    const patientId = parsePatientDisplayId(input);
-    return patientId != null ? { kind: 'patient', patientId } : { kind: 'invalid' };
-  }
-  const orderId = parseOrderDisplayId(input);
-  return orderId != null ? { kind: 'order', orderId } : { kind: 'invalid' };
+  return { kind: 'invalid' };
 }
 
 // --- derive panel state ---
@@ -142,10 +112,9 @@ export function deriveEventLogPanelState({
     if (!usesRecordIdField) {
       return next;
     }
-    if (parsedRecord.kind === 'order') next.orderId = parsedRecord.orderId;
-    if (parsedRecord.kind === 'test') next.testId = parsedRecord.testId;
-    if (parsedRecord.kind === 'sample') next.sampleId = parsedRecord.sampleId;
-    if (parsedRecord.kind === 'patient') next.patientId = parsedRecord.patientId;
+    if (parsedRecord.kind === 'clinical') {
+      next.search = parsedRecord.token;
+    }
     return next;
   })();
 

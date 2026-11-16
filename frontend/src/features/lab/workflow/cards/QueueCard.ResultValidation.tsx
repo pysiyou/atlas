@@ -136,7 +136,7 @@ function ResultValidationCardDesktop({
   const labCopy = useLabCopy();
   const { showAttemptIndicator } = rejection;
   const { leftColumn, badges } = useResultValidationCardHeader(chromeRow, patientName);
-  const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
+  const { showBanner: isSampleRejected, sampleRejectionReason } = sampleRejection;
   const approveDisabled = !canValidate || (hasCriticalValues && !criticalSeen);
 
   return (
@@ -175,7 +175,10 @@ function ResultValidationCardDesktop({
         <>
           {isSampleRejected && (
             <div className="mb-space-3">
-              <SampleRejectedBanner sampleId={sampleId} sampleRejectionReason={sampleRejectionReason} />
+              <SampleRejectedBanner
+                accessionNumber={sampleRejection.accessionNumber}
+                sampleRejectionReason={sampleRejectionReason}
+              />
             </div>
           )}
           {hasCriticalValues ? (
@@ -225,7 +228,7 @@ function ResultValidationCardMobile({
   const labCopy = useLabCopy();
   const { showAttemptIndicator } = rejection;
   const { leftColumn } = useResultValidationCardHeader(chromeRow, patientName);
-  const { showBanner: isSampleRejected, sampleId, sampleRejectionReason } = sampleRejection;
+  const { showBanner: isSampleRejected, sampleRejectionReason } = sampleRejection;
   const approveDisabled = !canValidate || (hasCriticalValues && !criticalSeen);
 
   return (
@@ -241,7 +244,7 @@ function ResultValidationCardMobile({
       {isSampleRejected && (
         <div className="mb-space-2">
           <SampleRejectedBanner
-            sampleId={sampleId}
+            accessionNumber={sampleRejection.accessionNumber}
             sampleRejectionReason={sampleRejectionReason}
             size="compact"
           />

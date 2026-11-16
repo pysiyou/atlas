@@ -44,8 +44,6 @@ export {
 } from './eventLogUrlCodec';
 export { EVENT_LOG_KIND_OPTIONS } from './eventLogFilterConfig';
 export {
-  parseOrderDisplayId,
-  parseOrderTestDisplayId,
   parseRecordFilterDisplayId,
   type ParsedRecordIdFilter,
 } from './eventLogPanelState';

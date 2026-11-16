@@ -7,7 +7,7 @@ import { Badge, Icon } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { IconKeys } from '@/icons';
-import { cn, displayId } from '@/utils';
+import { cn, formatOrderTestDisplay } from '@/utils';
 import { getLabQueueUrl } from '../constants/labConstants';
 import { usePendingCriticalValues } from './criticalValues';
 import { CriticalValueActions } from './CriticalValueActions';
@@ -51,12 +51,14 @@ export function PendingCriticalValuesPanel({
             <div className="flex items-center justify-between gap-space-2">
               <div className={`flex items-center gap-space-2 ${text({ role: 'body' })}`}>
                 <Icon iconKey={IconKeys.actions.alertCircle} className={`w-4 h-4 ${TONE.danger.fg}`} />
-                <RecordId type="orderTest" value={record.id} />
+                <RecordId type="orderTest" value={formatOrderTestDisplay(record.accessionNumber, record.testCode)} />
                 {record.testName ?? record.testCode}
               </div>
               <Link
                 to={getLabQueueUrl('validation', {
-                  search: displayId.orderTest(record.id),
+                  search: formatOrderTestDisplay(record.accessionNumber, record.testCode) !== '-'
+                    ? formatOrderTestDisplay(record.accessionNumber, record.testCode)
+                    : record.fillerNumber || record.testCode,
                 })}
                 className={`${text({ role: 'caption' })} ${TONE.brand.fg} hover:underline`}
               >

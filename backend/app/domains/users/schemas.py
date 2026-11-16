@@ -3,8 +3,9 @@ Pydantic schemas for User
 """
 from datetime import datetime
 
+from app.platform.utils import EMPLOYEE_NUMBER_PATTERN
 from app.shared.contracts.enums import UserRole
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class UserBase(BaseModel):
@@ -34,6 +35,7 @@ class UserResponse(UserBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    employeeNumber: str = Field(..., pattern=EMPLOYEE_NUMBER_PATTERN)
     createdAt: datetime
     isActive: bool = True
     loggedInAt: datetime | None = None

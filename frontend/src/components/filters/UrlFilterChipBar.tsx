@@ -3,17 +3,16 @@
  */
 
 import type { UrlFilterKey, UrlFilters } from '@/utils/filters';
-import { displayId } from '@/utils';
 import { ActiveFilterChipBar, type ActiveFilterItem } from './ActiveFilterChipBar';
 import { getUrlFilterChipLabels } from '@/strings';
 
 function buildUrlFilterLabels(): Record<string, { label: string; format: (v: string | number) => string }> {
   const chip = getUrlFilterChipLabels();
   return {
-    patientId: { label: chip.patientId, format: v => displayId.patient(Number(v)) },
-    orderId: { label: chip.orderId, format: v => displayId.order(Number(v)) },
-    sampleId: { label: chip.sampleId, format: v => displayId.sample(Number(v)) },
-    testId: { label: chip.testId, format: v => displayId.orderTest(Number(v)) },
+    patientId: { label: chip.patientId, format: v => String(v) },
+    orderId: { label: chip.orderId, format: v => String(v) },
+    sampleId: { label: chip.sampleId, format: v => String(v) },
+    testId: { label: chip.testId, format: v => String(v) },
   };
 }
 

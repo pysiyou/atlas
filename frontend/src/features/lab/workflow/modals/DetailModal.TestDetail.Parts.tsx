@@ -242,7 +242,7 @@ export function TestDetailModalBody({
       {sampleRejection.showBanner ? (
         <div className="mb-space-4">
           <SampleRejectedBanner
-            sampleId={sampleRejection.sampleId}
+            accessionNumber={sampleRejection.accessionNumber}
             sampleRejectionReason={sampleRejection.sampleRejectionReason}
           />
         </div>

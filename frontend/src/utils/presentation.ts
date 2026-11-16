@@ -344,6 +344,8 @@ export interface ReportHeaderSource {
   patientEmail?: string;
   order: {
     orderId: number;
+    fillerNumber?: string | null;
+    patientMrn?: string | null;
     orderDate?: string;
     createdAt?: string;
     referentDoctorName?: string | null;
@@ -464,11 +466,11 @@ export function buildReportHeaderViewModel(
 ): ReportHeaderViewModel {
   const registeredAt = resolveRegisteredAt(source);
   const collectedAt = resolveCollectedAt(source);
-  const orderId = displayId.order(source.order.orderId);
+  const orderId = displayId.order(source.order.fillerNumber);
   const when = formatReportOnAt(registeredAt);
   const orderDisplay = when ? `${orderId} ${when}` : orderId;
 
-  const patientCode = displayId.patient(source.patientId);
+  const patientCode = displayId.patient(source.order.patientMrn);
   const patientDisplay = `${source.patientName}(Internal: ${patientCode})`;
 
   const email =
@@ -675,10 +677,7 @@ function appendRecollectionDescriptors(
     {
       id: 'original',
       label: 'Original',
-      value:
-        sample.originalSampleId != null
-          ? displayId.sample(sample.originalSampleId)
-          : undefined,
+      value: displayId.sample(sample.originalAccessionNumber),
     },
     { id: 'reason', label: 'Reason', value: sample.recollectionReason },
   );

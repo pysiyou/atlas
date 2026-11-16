@@ -1,7 +1,7 @@
 import { Input } from '@/components/inputs';
 import { Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { getEmptyCopy, usePanelCopy } from '@/strings';
-import { cn, formatPhoneNumber } from '@/utils';
+import { cn, formatPhoneNumber, ID_PATTERNS } from '@/utils';
 import { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
 import {
@@ -25,6 +25,7 @@ import {
 
 function formatDoctorMetaLine(doctor: ReferentDoctor): string {
   return [
+    doctor.npi?.trim() ? doctor.npi.trim() : undefined,
     doctor.username?.trim() ? `@${doctor.username.trim()}` : undefined,
     doctor.hospitalName?.trim() || undefined,
     doctor.phone?.trim() ? formatPhoneNumber(doctor.phone) : undefined,
@@ -51,6 +52,7 @@ export function ReferentDoctorSelect({
 }: ReferentDoctorSelectProps) {
   const [search, setSearch] = useState('');
   const [newUsername, setNewUsername] = useState('');
+  const [newNpi, setNewNpi] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [newHospital, setNewHospital] = useState('');
@@ -71,6 +73,7 @@ export function ReferentDoctorSelect({
 
   const resetNewDoctorFields = () => {
     setNewUsername('');
+    setNewNpi('');
     setNewEmail('');
     setNewPhone('');
     setNewHospital('');
@@ -78,8 +81,11 @@ export function ReferentDoctorSelect({
 
   const handleCreate = async () => {
     if (!canCreate || createDoctor.isPending) return;
+    const npi = newNpi.trim();
+    if (npi && !ID_PATTERNS.npi.test(npi)) return;
     const created = await createDoctor.mutateAsync({
       fullName: trimmedSearch,
+      npi: npi || null,
       username: newUsername.trim() || null,
       email: newEmail.trim() || null,
       phone: newPhone.trim() || null,
@@ -177,7 +183,16 @@ export function ReferentDoctorSelect({
           </div>
 
           {canCreate && !disabled ? (
-            <div className="grid gap-space-2 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-space-2 sm:grid-cols-2 lg:grid-cols-5">
+              <Input
+                label="NPI"
+                name="referentDoctorNpi"
+                icon={IconKeys.dataFields.document}
+                value={newNpi}
+                onChange={e => setNewNpi(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                placeholder="10-digit NPI"
+                inputMode="numeric"
+              />
               <Input
                 label="Username"
                 name="referentDoctorUsername"

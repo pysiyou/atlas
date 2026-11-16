@@ -79,11 +79,11 @@ function ReceiptHeader({
           <div className="space-y-space-1-5">
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className={DOCUMENT_TYPE.fieldLabel}>Order Number:</span>
-              <RecordId type="order" value={order.orderId} />
+              <RecordId type="order" value={order.fillerNumber} />
             </div>
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className={DOCUMENT_TYPE.fieldLabel}>Patient Number:</span>
-              <RecordId type="patient" value={order.patientId} />
+              <RecordId type="patient" value={order.patientMrn} />
             </div>
             <div className={cn('flex items-center', DOCUMENT_TYPE.fieldRow)}>
               <span className={DOCUMENT_TYPE.fieldLabel}>Order Date:</span>
@@ -109,7 +109,7 @@ function ReceiptHeader({
             ) : null}
             <div className={DOCUMENT_TYPE.metaRow}>
               <span className={cn(DOCUMENT_TYPE.metaPart, 'min-w-0 truncate')}>
-                {displayId.order(order.orderId)}
+                {displayId.order(order.fillerNumber)}
               </span>
               {order.orderDate && (
                 <>
@@ -135,7 +135,7 @@ function ReceiptHeader({
           <div className="flex justify-between items-center gap-space-2">
             <RecordId
               type="order"
-              value={order.orderId}
+              value={order.fillerNumber}
               emphasis="mutedBlock"
               className={DOCUMENT_TYPE.compactRecordId}
             />

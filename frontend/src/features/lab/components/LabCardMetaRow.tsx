@@ -12,7 +12,6 @@ import type { Sample } from '@/types';
 import type { LabOrderTestQueueRow } from '../types/labQueueChrome';
 import { deriveRetestContextFromRow } from '../utils/deriveRetestContext';
 import { LAB_CONFIG } from '../constants';
-import { displayId } from '@/utils';
 
 function collectNodes(children: ReactNode): ReactNode[] {
   return React.Children.toArray(children).filter(child => child != null && child !== '');
@@ -100,11 +99,11 @@ export function LabModalMetaRow({
 export function TestRejectionTailMeta({ row }: { row: LabOrderTestQueueRow }) {
   const ctx = deriveRetestContextFromRow(row);
 
-  if (ctx.showRetestBadge && row.retestOfTestId != null) {
+  if (ctx.showRetestBadge && row.priorTestDisplay) {
     return (
       <LabCardMetaRow>
         <span>
-          Re-test of <RecordId type="orderTest" value={row.retestOfTestId} emphasis="inline" />
+          Re-test of <RecordId type="orderTest" value={row.priorTestDisplay} emphasis="inline" />
         </span>
         {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
@@ -114,12 +113,12 @@ export function TestRejectionTailMeta({ row }: { row: LabOrderTestQueueRow }) {
       </LabCardMetaRow>
     );
   }
-  if (ctx.showRecollectionLink && row.sampleOriginalSampleId != null) {
+  if (ctx.showRecollectionLink && row.sampleOriginalAccessionNumber) {
     return (
       <LabCardMetaRow>
         <span>
           Recollection of{' '}
-          <RecordId type="sample" value={row.sampleOriginalSampleId} emphasis="inline" />
+          <RecordId type="sample" value={row.sampleOriginalAccessionNumber} emphasis="inline" />
         </span>
         {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
@@ -149,7 +148,7 @@ export function SampleRejectionTailMeta({
   sample: Sample;
   showAttempt?: boolean;
 }) {
-  if (!sample.isRecollection || sample.originalSampleId == null) return null;
+  if (!sample.isRecollection || !sample.originalAccessionNumber) return null;
   const attempt = sample.recollectionAttempt ?? 1;
   const max = LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
 
@@ -157,7 +156,7 @@ export function SampleRejectionTailMeta({
     <LabCardMetaRow>
       <span>
         Recollection of{' '}
-        <RecordId type="sample" value={sample.originalSampleId} emphasis="inline" />
+        <RecordId type="sample" value={sample.originalAccessionNumber} emphasis="inline" />
       </span>
       {showAttempt && attempt > 1 ? (
         <span className={attempt >= max - 1 ? TONE.warning.fg : undefined}>
@@ -169,31 +168,28 @@ export function SampleRejectionTailMeta({
 }
 
 export function RecollectionRequestedMeta({
-  recollectionSampleId,
+  recollectionAccessionNumber,
 }: {
-  recollectionSampleId?: number | null;
+  recollectionAccessionNumber?: string | null;
 }) {
-  if (recollectionSampleId == null) return null;
+  if (!recollectionAccessionNumber) return null;
   return (
     <span>
       Recollection requested:{' '}
-      <RecordId type="sample" value={recollectionSampleId} emphasis="inline" />
+      <RecordId type="sample" value={recollectionAccessionNumber} emphasis="inline" />
     </span>
   );
 }
 
 export function BarcodeMeta({
-  sampleId,
   accessionNumber,
 }: {
-  sampleId: number;
   accessionNumber?: string | null;
 }) {
-  const accession = displayId.accession(accessionNumber);
+  if (!accessionNumber) return null;
   return (
     <span className={FG.monoCaptionMuted}>
-      {displayId.sample(sampleId)}
-      {accession ? ` · ${accession}` : ''}
+      {accessionNumber}
     </span>
   );
 }

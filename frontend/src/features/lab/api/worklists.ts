@@ -100,6 +100,7 @@ export const worklistsAPI = {
         rows: Array<{
           orderTestId: number;
           orderId: number;
+          fillerNumber?: string | null;
           patientName: string;
           accessionNumber?: string | null;
           sampleType: string;

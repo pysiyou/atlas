@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
+from app.platform.utils import FILLER_PATTERN, PLACER_PATTERN, TEST_MNEMONIC_PATTERN
 from app.domains.payments.schemas import PaymentResponse
 from app.shared.contracts.enums import (
     Gender,
@@ -48,7 +49,13 @@ TestResultsDict = dict[str, TestResultValue | dict[str, Any] | str | float | int
 class OrderTestCreate(BaseModel):
     """Schema for creating a test within an order."""
 
-    testCode: str = Field(..., min_length=1, max_length=50, description="Test code from catalog")
+    testCode: str = Field(
+        ...,
+        min_length=2,
+        max_length=8,
+        pattern=TEST_MNEMONIC_PATTERN,
+        description="Clinical mnemonic from the test catalog",
+    )
 
 
 class OrderTestResponse(BaseModel):
@@ -61,6 +68,7 @@ class OrderTestResponse(BaseModel):
     status: TestStatus
     priceAtOrder: float
     sampleId: int | None = None
+    accessionNumber: str | None = None
     results: TestResultsDict | None = None
     resultEnteredAt: datetime | None = None
     enteredBy: str | None = None
@@ -139,7 +147,10 @@ class OrderSummaryResponse(BaseModel):
     """Lightweight order projection for lists, dashboards, and aggregates."""
 
     orderId: int
+    fillerNumber: str = Field(..., pattern=FILLER_PATTERN)
+    placerNumber: str | None = Field(None, pattern=PLACER_PATTERN)
     patientId: int
+    patientMrn: str
     patientName: str
     patientDob: str | None = None
     patientGender: Gender | None = None
@@ -172,7 +183,10 @@ class OrderSummaryResponse(BaseModel):
 
 class OrderResponse(BaseModel):
     orderId: int
+    fillerNumber: str = Field(..., pattern=FILLER_PATTERN)
+    placerNumber: str | None = Field(None, pattern=PLACER_PATTERN)
     patientId: int
+    patientMrn: str
     patientName: str  # From relationship
     patientDob: str | None = None
     patientGender: Gender | None = None

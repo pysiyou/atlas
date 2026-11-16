@@ -6,6 +6,7 @@ import { Icon } from '@/components/primitives';
 import { RecordId } from '@/features/shared';
 import { DetailGrid } from '../shared/DetailModalLayout';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
+import { formatOrderTestDisplay } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { IconKeys } from '@/icons';
 import { FG } from '@/theme/recipes';
@@ -63,7 +64,7 @@ export function ResultEntryDetailGrid({
               value: (
                 <RecordId
                   type="orderTest"
-                  value={workItem.orderTestId}
+                  value={formatOrderTestDisplay(workItem.accessionNumber, workItem.testCode)}
                   emphasis="block"
                   className="text-right"
                 />
@@ -81,10 +82,10 @@ export function ResultEntryDetailGrid({
             },
             {
               label: 'Sample ID',
-              value: workItem.sampleId ? (
+              value: workItem.accessionNumber ? (
                 <RecordId
                   type="sample"
-                  value={workItem.sampleId}
+                  value={workItem.accessionNumber}
                   emphasis="block"
                   className="text-right"
                 />

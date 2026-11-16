@@ -68,7 +68,7 @@ export function buildFallbackHeadline(
     case 'order_test':
       return append(parts, ...targetOrderTestRef(record, context));
     case 'user':
-      return append(parts, userAccountRecordPhrase(record.targetId));
+      return append(parts, userAccountRecordPhrase());
     case 'test_catalog': {
       const catalogHighlight = testHighlightFromMetaKey(record, 'test_code', context);
       return append(
@@ -186,21 +186,21 @@ function formatTargetLabel(
     case 'patient':
       return getPatientName(record.targetId);
     case 'order':
-      return eventLogId.order(record.targetId);
+      return eventLogId.order(record.fillerNumber);
     case 'sample':
-      return eventLogId.sample(record.targetId);
+      return eventLogId.sample(record.accessionNumber);
     case 'order_test':
       return testCodes.length > 0
         ? formatTestNamesLabel(testCodes, getTestName)
-        : eventLogId.orderTest(record.targetId);
+        : eventLogId.orderTest(record.accessionNumber);
     case 'payment':
-      return eventLogId.payment(record.targetId);
+      return eventLogId.payment(undefined);
     case 'invoice':
-      return eventLogId.invoice(record.targetId);
+      return eventLogId.invoice(undefined);
     case 'insurance_claim':
       return `Claim ${withHashPrefix(String(record.targetId))}`;
     case 'user':
-      return eventLogId.user(record.targetId);
+      return eventLogId.user(undefined);
     case 'test_catalog':
       return testCodes.length > 0
         ? formatTestNamesLabel(testCodes, getTestName)
@@ -291,7 +291,7 @@ export function resolveEventLogItem(
   const catalog = getCatalogEntry(record.eventType);
   const system = isSystemActorRecord(record, catalog);
   const getTestName = options?.getTestName ?? (code => code);
-  const getPatientName = options?.getPatientName ?? (id => eventLogId.patient(id));
+  const getPatientName = options?.getPatientName ?? (() => eventLogId.patient(undefined));
   const built = buildEventLogHeadline(record, { getTestName, getPatientName });
   const note = pickNoteForCard(record, built.parts);
   const results = pickResultsForCard(record);

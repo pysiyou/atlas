@@ -36,6 +36,7 @@ export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
   const age = item.patientDob ? calculateAge(item.patientDob) : undefined;
   return {
     orderId: item.orderId,
+    fillerNumber: item.fillerNumber,
     orderDate: item.orderDate,
     overallStatus: item.overallStatus,
     statusPresentation: item.statusPresentation ?? {
@@ -43,6 +44,7 @@ export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
       variant: 'gray',
     },
     patientId: item.patientId,
+    patientMrn: item.patientMrn,
     patientName: item.patientName,
     patientAge: age,
     patientDob: item.patientDob ?? undefined,
@@ -110,7 +112,7 @@ function triggerBlobDownload(blob: Blob, filename: string): void {
 
 export async function downloadServerReportPdf(orderId: number): Promise<void> {
   const blob = await reportsAPI.downloadPdf(orderId);
-  triggerBlobDownload(blob, `lab-report-ORD${String(orderId).padStart(4, '0')}.pdf`);
+  triggerBlobDownload(blob, `lab-report-${orderId}.pdf`);
 }
 
 const EMPTY_PAGINATION = {

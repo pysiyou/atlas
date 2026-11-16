@@ -99,7 +99,7 @@ function AttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
   const tone = getAttentionTone(type);
   const formatted = formatLabAttentionQueueItem(item, type);
   const href = getLabQueueUrl(item.queueTab, {
-    search: displayId.order(item.orderId),
+    search: displayId.order(item.fillerNumber),
   });
 
   const identityDetails = formatted.details.filter(isIdentityDetail);

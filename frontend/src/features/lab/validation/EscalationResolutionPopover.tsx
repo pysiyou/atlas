@@ -5,7 +5,7 @@ import { ResolutionPopover } from './EscalationResolutionPopover.Chrome';
 import { Popover, PopoverFormChrome, RadioCard } from '@/components/overlays';
 import { Button, FormNotesField } from '@/components/primitives';
 import { inputBase, text } from '@/theme/recipes';
-import { cn, displayId } from '@/utils';
+import { cn } from '@/utils';
 import { useEffect, useState } from 'react';
 import { useLabCopy } from '@/strings';
 
@@ -13,8 +13,8 @@ export { ResolutionPopover } from './EscalationResolutionPopover.Chrome';
 
 type RetestPath = 'same_sample' | 'recollect';
 
-function popoverSubtitle(orderTestId?: number, hint?: string): string {
-  const label = orderTestId != null ? displayId.orderTest(orderTestId) : undefined;
+function popoverSubtitle(idOrCode?: number | string, hint?: string): string {
+  const label = typeof idOrCode === 'string' && idOrCode.trim() ? idOrCode.trim() : undefined;
   return [label, hint].filter(Boolean).join(' · ');
 }
 

@@ -42,7 +42,7 @@ export interface AffiliationPlan {
 }
 
 export interface Affiliation {
-  assuranceNumber: string; // Auto-generated: ASS-YYYYMMDD-XXX
+  assuranceNumber: string; // Payer member ID (12-digit numeric when generated)
   startDate: string; // ISO date
   endDate: string; // ISO date (calculated from duration)
   duration: AffiliationDuration; // Duration in months
@@ -75,7 +75,8 @@ export interface MedicalHistory {
 }
 
 export interface Patient {
-  id: number; // Integer ID, displayed as PAT{id}
+  id: number;
+  mrn: string;
   fullName: string;
   dateOfBirth: string;
   gender: Gender;
@@ -143,8 +144,8 @@ export interface TestResult {
 
 export interface OrderTest {
   // Identity
-  id?: number; // Integer ID, displayed as TST{id}
-  testCode: string; // Links to Test catalog
+  id?: number;
+  testCode: string; // Catalog mnemonic (CBC, CMP, TSH)
   testName: string; // From API relationship
   sampleType: string; // From API relationship
 
@@ -154,6 +155,7 @@ export interface OrderTest {
 
   // Sample linkage
   sampleId?: number; // Links to Sample (assigned after sample generation)
+  accessionNumber?: string | null;
 
   // Results (order-specific)
   results: Record<string, TestResult> | null;
@@ -211,8 +213,11 @@ export interface LatestPaymentSnippet {
 
 export interface Order {
   // Identity
-  orderId: number; // Integer ID, displayed as ORD{id}
-  patientId: number; // Links to Patient
+  orderId: number;
+  fillerNumber?: string | null;
+  placerNumber?: string | null;
+  patientId: number;
+  patientMrn?: string | null;
   patientName: string; // From API relationship
   patientDob?: string;
   patientGender?: Gender;
@@ -306,6 +311,7 @@ interface BaseSample {
   isRecollection?: boolean;
   originalSampleId?: number;
   originalSampleCollectedAt?: string;
+  originalAccessionNumber?: string | null;
   recollectionReason?: string;
   recollectionAttempt?: number;
   accessionNumber?: string | null;
@@ -350,6 +356,7 @@ export interface RejectedSample extends BaseSample {
   rejectionNotes?: string;
   recollectionRequired: boolean;
   recollectionSampleId?: number;
+  recollectionAccessionNumber?: string | null;
 }
 
 export type Sample = PendingSample | CollectedSample | RejectedSample;
@@ -369,6 +376,7 @@ export function isRejectedSample(sample: Sample): sample is RejectedSample {
 /** Staff users and authenticated session shape. */
 export interface User {
   id: number;
+  employeeNumber?: string | null;
   username: string;
   password: string;
   name: string;
@@ -384,6 +392,7 @@ export interface User {
 export interface AuthUser {
   id: number;
   username: string;
+  employeeNumber?: string | null;
   name: string;
   role: UserRole;
   email?: string;

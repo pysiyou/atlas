@@ -6,8 +6,9 @@ import type { ColumnSizePreset } from './types';
 
 /** Standard widths for recurring DataTable column roles. */
 export const TABLE_COLUMN_WIDTH = {
-  /** Entity / catalog codes (PAT, ORD, test code). */
-  id: 'sm',
+  /** Entity IDs (MRN, filler, accession). */
+  id: 'md',
+  /** Catalog mnemonics and similar short codes. */
   code: 'sm',
   /** Currency / numeric amount columns. */
   amount: 'sm',

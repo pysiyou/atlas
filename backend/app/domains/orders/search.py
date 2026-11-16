@@ -2,24 +2,25 @@
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
-from app.platform.utils.common import parse_display_id_from_search
-from sqlalchemy import String, and_, cast, exists, or_
+from app.platform.utils import compact_identifier, looks_like_filler, looks_like_mrn
+from sqlalchemy import and_, exists, or_
 
 
 def order_search_filter(search_term: str):
-    """Match order id, patient id, display ids, or patient name."""
+    """Match filler/placer numbers, MRN, or patient name."""
     term = search_term.strip()
-    compact = term.replace(" ", "").replace("-", "")
-    predicates = [Patient.fullName.ilike(f"%{term}%")]
-    order_id = parse_display_id_from_search(term, "ORD")
-    patient_id = parse_display_id_from_search(term, "PAT")
-    if order_id is not None:
-        predicates.append(Order.orderId == order_id)
-    if patient_id is not None:
-        predicates.append(Order.patientId == patient_id)
-    if compact.isdigit():
-        predicates.append(cast(Order.orderId, String).ilike(f"%{compact}%"))
-        predicates.append(cast(Order.patientId, String).ilike(f"%{compact}%"))
+    compact = compact_identifier(term)
+    predicates = [
+        Patient.fullName.ilike(f"%{term}%"),
+        Order.fillerNumber.ilike(f"%{term}%"),
+        Order.placerNumber.ilike(f"%{term}%"),
+        Patient.mrn.ilike(f"%{term}%"),
+    ]
+    if looks_like_filler(term):
+        predicates.append(Order.fillerNumber == compact)
+        predicates.append(Order.placerNumber == compact)
+    if looks_like_mrn(term):
+        predicates.append(Patient.mrn == compact)
     return or_(*predicates)
 
 

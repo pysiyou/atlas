@@ -43,7 +43,7 @@ export function TestDetailModal({
     ? labModalHeaderContext({
         stage: view.modalStage,
         contextLabel: view.testDisplayName,
-        orderId: view.order!.orderId,
+        orderId: view.order!.fillerNumber,
         badges: headerBadges ?? undefined,
       })
     : { title: titles.testDetail, subtitle: null };

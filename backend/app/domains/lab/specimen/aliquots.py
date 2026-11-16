@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from app.domains.audit.service import AuditEmitter
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.specimen.accession import assign_accession_number
-from app.platform.utils.exceptions import LabOperationError
+from app.platform.utils import LabOperationError
 from app.shared.contracts.enums import SampleStatus
 from sqlalchemy.orm import Session
 
@@ -89,7 +89,7 @@ def create_aliquots(
         )
         db.add(child)
         db.flush()
-        assign_accession_number(db, child)
+        assign_accession_number(db, child, parent=parent)
         if emitter is not None:
             emitter.sample_aliquot_created(
                 child.sampleId,

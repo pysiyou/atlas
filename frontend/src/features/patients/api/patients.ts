@@ -266,7 +266,7 @@ export function usePaginatedPatientContextList(filters?: PatientsFilter) {
  *
  * @example
  * ```tsx
- * const { patient, isLoading } = usePatient('PAT-001');
+ * const { patient, isLoading } = usePatient('1'); // internal PK; display uses patient.mrn
  * ```
  */
 export function usePatient(patientId: string | undefined) {
@@ -396,7 +396,7 @@ export function usePatientNames() {
  * @example
  * ```tsx
  * const { getPatientName } = usePatientNameLookup();
- * const name = getPatientName('PAT-001'); // "John Doe"
+ * const name = getPatientName(1); // "John Doe" (internal PK; display uses MRN)
  * ```
  */
 export function usePatientNameLookup() {

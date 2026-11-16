@@ -37,17 +37,25 @@ class ReportService:
         patient = order.patient
         active_tests = active_order_tests(order)
         validated_count = sum(1 for test in active_tests if test.status == TestStatus.VALIDATED)
+        if not order.fillerNumber:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Order {order.orderId} is missing a filler number",
+            )
+        patient_mrn = patient.mrn if patient and patient.mrn else ""
         return ReportableOrderItem(
             orderId=order.orderId,
+            fillerNumber=order.fillerNumber,
+            patientMrn=patient_mrn,
             orderDate=order.orderDate,
             overallStatus=order.overallStatus,
             statusPresentation=resolve_order_presentation(order.overallStatus),
-            patientId=patient.id,
-            patientName=patient.fullName,
-            patientDob=patient.dateOfBirth,
-            patientGender=patient.gender,
-            patientEmail=patient.email,
-            patientPhone=patient.phone,
+            patientId=patient.id if patient else 0,
+            patientName=patient.fullName if patient else "Unknown",
+            patientDob=patient.dateOfBirth if patient else None,
+            patientGender=patient.gender if patient else None,
+            patientEmail=patient.email if patient else None,
+            patientPhone=patient.phone if patient else None,
             activeTestCount=len(active_tests),
             validatedTestCount=validated_count,
             testCodes=[test.testCode for test in active_tests],
@@ -148,7 +156,12 @@ class ReportService:
     def issue_pdf(self, order_id: int, user_id: int) -> tuple[bytes, str]:
         """Generate, archive, and return PDF bytes plus a download filename."""
         order = self._load_completed_order(order_id)
+        if not order.fillerNumber:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Order {order.orderId} is missing a filler number",
+            )
         pdf_bytes, _document = ReportPdfService(self.db).generate_and_store(order, user_id)
         AuditEmitter(self.db).reporting_generated(order.orderId, user_id)
         self.db.commit()
-        return pdf_bytes, f"lab-report-ORD{order.orderId:04d}.pdf"
+        return pdf_bytes, f"lab-report-{order.fillerNumber}.pdf"

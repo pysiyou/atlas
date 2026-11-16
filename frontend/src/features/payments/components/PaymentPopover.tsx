@@ -123,7 +123,7 @@ function PaymentPopoverContent({
       title={panels.payments.processPayment}
       subtitle={
         <span>
-          Order <RecordId type="order" value={order.orderId} />
+          Order <RecordId type="order" value={order.fillerNumber} />
         </span>
       }
       onCancel={onCancel}

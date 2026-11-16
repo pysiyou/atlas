@@ -26,6 +26,7 @@ class ReferentDoctorService:
                     ReferentDoctor.email.ilike(term),
                     ReferentDoctor.phone.ilike(term),
                     ReferentDoctor.username.ilike(term),
+                    ReferentDoctor.npi.ilike(term),
                 )
             )
         rows = query.order_by(ReferentDoctor.fullName.asc()).limit(min(limit, 100)).all()
@@ -57,6 +58,7 @@ class ReferentDoctorService:
             return ReferentDoctorResponse.model_validate(existing)
         row = ReferentDoctor(
             fullName=full_name,
+            npi=payload.npi,
             username=payload.username,
             email=payload.email,
             phone=payload.phone,

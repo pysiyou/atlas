@@ -8,18 +8,18 @@ import {text, FG } from '@/theme/recipes';
 import { useLabCopy } from '@/strings';
 
 export interface SampleRejectedBannerProps {
-  sampleId?: number;
+  accessionNumber?: string | null;
   sampleRejectionReason?: string;
   size?: 'default' | 'compact';
 }
 
 export function SampleRejectedBanner({
-  sampleId,
+  accessionNumber,
   sampleRejectionReason,
   size = 'default',
 }: SampleRejectedBannerProps) {
   const labCopy = useLabCopy();
-  if (!sampleId) return null;
+  if (!accessionNumber) return null;
 
   const isCompact = size === 'compact';
   const quality = labCopy.quality;
@@ -34,7 +34,7 @@ export function SampleRejectedBanner({
           <p
             className={`${FG.labelMuted} leading-tight mt-space-0-5 ${isCompact ? text({ role: 'caption' }) : text({ role: 'body' })}`}
           >
-            {labCopy.entity.sample} <RecordId type="sample" value={sampleId} /> {quality.wasRejected}
+            {labCopy.entity.sample} <RecordId type="sample" value={accessionNumber} /> {quality.wasRejected}
             {sampleRejectionReason && (
               <>
                 : <span className="italic">{sampleRejectionReason}</span>

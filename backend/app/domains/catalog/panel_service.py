@@ -97,7 +97,7 @@ class CatalogPanelService:
         """
         Upsert catalog_panels from the registry and test-catalog membership.
 
-        Panel ``code`` is the registry id (e.g. ``hepatitis_panel``).
+        Panel ``code`` is the registry mnemonic (e.g. ``HEP``).
         """
         members_by_id = _load_panel_membership_from_contract()
         if not members_by_id:

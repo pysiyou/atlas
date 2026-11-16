@@ -21,13 +21,16 @@ export function useLabHeaderCompact(): boolean {
 export interface LabWorkflowModalContext {
   patientName: string;
   patientId: string | number;
+  patientMrn?: string | null;
   orderId: string | number;
+  fillerNumber?: string | null;
   orderTestId?: number;
   entityCode?: string;
   entityName?: string;
   referentDoctorName?: string;
   patientDob?: string;
   sampleId?: number;
+  accessionNumber?: string | null;
 }
 
 export interface LabModalHeaderProps {
@@ -39,20 +42,19 @@ export interface LabModalHeaderProps {
 
 function parseModalIdentity(contextInfo: LabWorkflowModalContext): LabIdentityContext {
   const orderId =
-    typeof contextInfo.orderId === 'number'
-      ? contextInfo.orderId
-      : parseInt(String(contextInfo.orderId), 10);
+    typeof contextInfo.orderId === 'number' ? contextInfo.orderId : 0;
   const patientId =
-    typeof contextInfo.patientId === 'number'
-      ? contextInfo.patientId
-      : parseInt(String(contextInfo.patientId).replace(/\D/g, ''), 10);
+    typeof contextInfo.patientId === 'number' ? contextInfo.patientId : undefined;
 
   return {
     patientName: contextInfo.patientName,
-    patientId: Number.isNaN(patientId) ? undefined : patientId,
-    orderId: Number.isNaN(orderId) ? 0 : orderId,
+    patientId,
+    patientMrn: contextInfo.patientMrn,
+    orderId,
+    fillerNumber: contextInfo.fillerNumber,
     orderTestId: contextInfo.orderTestId,
     sampleId: contextInfo.sampleId,
+    accessionNumber: contextInfo.accessionNumber,
     entityCode: contextInfo.entityCode,
     entityName: contextInfo.entityName,
     referentDoctorName: contextInfo.referentDoctorName,

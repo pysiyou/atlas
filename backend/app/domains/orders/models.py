@@ -13,6 +13,8 @@ class Order(Base):
 
     orderId = Column("order_id", Integer, primary_key=True, autoincrement=True, index=True)
     patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
+    fillerNumber = Column("filler_number", String(13), nullable=False, unique=True, index=True)
+    placerNumber = Column("placer_number", String(13), nullable=True, unique=True, index=True)
     orderDate = Column("order_date", DateTime(timezone=True), nullable=False)
 
     # Pricing
@@ -75,6 +77,11 @@ class Order(Base):
     def patientName(self) -> str:
         """Get patient full name from relationship"""
         return self.patient.fullName if self.patient else "Unknown"
+
+    @property
+    def patientMrn(self) -> str:
+        """Medical record number from the linked patient."""
+        return self.patient.mrn if self.patient else ""
 
     @property
     def patientDob(self) -> str | None:
@@ -184,6 +191,7 @@ class OrderTest(Base):
     # Relationships
     order = relationship("Order", back_populates="tests")
     test = relationship("CatalogTest", foreign_keys=[testCode])
+    sample = relationship("Sample", foreign_keys=[sampleId])
 
     @property
     def testName(self) -> str:
@@ -194,3 +202,8 @@ class OrderTest(Base):
     def sampleType(self) -> str:
         """Get test sample type from relationship"""
         return self.test.sampleType if self.test else "Unknown"
+
+    @property
+    def accessionNumber(self) -> str | None:
+        """Accession from the linked sample, when one exists."""
+        return self.sample.accessionNumber if self.sample else None

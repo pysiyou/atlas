@@ -67,14 +67,14 @@
   "filters": {
     "orders": {
       "search": "Search {{orders}}...",
-      "searchLong": "Search {{orders}} by ID, {{patient}} name, or details...",
+      "searchLong": "Search {{orders}} by filler number, MRN, {{patient}} name, or details...",
       "dateRange": "Filter by date range",
       "orderStatus": "Select {{order}} status",
       "paymentStatus": "Select payment status"
     },
     "patients": {
       "search": "Search {{patients}}...",
-      "searchLong": "Search {{patients}} by name, ID, phone, or email...",
+      "searchLong": "Search {{patients}} by name, MRN, phone, or email...",
       "ageRange": "Filter by age range",
       "sex": "Select sex",
       "affiliationStatus": "Select affiliation status"
@@ -101,24 +101,24 @@
       "paymentMethod": "Select payment method"
     },
     "labQueues": {
-      "idHint": "{{sample}} ID (SAM####), {{order}} ID (ORD####), {{test}} ID (TST####)",
+      "idHint": "accession (YY-NNNNN), filler number, MRN, or test mnemonic",
       "collection": {
-        "searchPlaceholder": "{{sampleCap}}, {{order}}, or {{test}} ID (SAM/ORD/TST) — min 3 chars for lookup...",
+        "searchPlaceholder": "Accession, filler, MRN, or mnemonic — min 3 chars for lookup...",
         "searchHelpText": "Search by {{idHint}}, numeric IDs, or {{patient}} name. Lookup runs after 3 characters.",
         "dateRangeHelpText": "Filter {{samples}} by collection or {{order}} date range."
       },
       "entry": {
-        "searchPlaceholder": "{{sampleCap}}, {{order}}, or {{test}} ID (SAM/ORD/TST) or {{patient}}...",
+        "searchPlaceholder": "Accession, filler, MRN, mnemonic, or {{patient}}...",
         "searchHelpText": "Search by {{idHint}}, {{patient}} name, or {{test}} name.",
         "dateRangeHelpText": "Filter by {{order}} or result date range."
       },
       "validation": {
-        "searchPlaceholder": "{{sampleCap}}, {{order}}, or {{test}} ID (SAM/ORD/TST) or {{patient}}...",
+        "searchPlaceholder": "Accession, filler, MRN, mnemonic, or {{patient}}...",
         "searchHelpText": "Search by {{idHint}}, {{patient}} name, or {{test}} name.",
         "dateRangeHelpText": "Filter by {{order}} or validation date range."
       },
       "allTests": {
-        "searchPlaceholder": "{{sampleCap}}, {{order}}, or {{test}} ID (SAM/ORD/TST), {{patient}}, or {{test}} name...",
+        "searchPlaceholder": "Accession, filler, MRN, mnemonic, {{patient}}, or {{test}} name...",
         "searchHelpText": "Search by {{idHint}}, {{patient}} name, {{test}} name, or {{test}} code.",
         "dateRangeHelpText": "Filter by last modified date (UTC)."
       }

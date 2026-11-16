@@ -15,8 +15,9 @@ from app.domains.lab.schemas.critical_values import (
     CriticalValueResponse,
     NotifyRequest,
 )
+from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import Order, OrderTest
-from app.platform.utils.exceptions import LabOperationError
+from app.platform.utils import LabOperationError
 from app.shared.contracts.enums import ResultStatus
 from sqlalchemy.orm import Session
 
@@ -145,14 +146,21 @@ class CriticalNotificationService:
             .all()
         )
 
-    def _to_response(self, test: OrderTest, order: Order | None) -> CriticalValueResponse:
+    def _to_response(self, test: OrderTest, order: Order) -> CriticalValueResponse:
+        sample = None
+        if test.sampleId:
+            sample = self.db.query(Sample).filter(Sample.sampleId == test.sampleId).first()
+        patient = order.patient
         return CriticalValueResponse(
             id=test.id,
             orderId=test.orderId,
+            fillerNumber=order.fillerNumber,
             testCode=test.testCode,
             testName=test.testName,
-            patientId=order.patientId if order else 0,
-            patientName=order.patientName if order else "Unknown",
+            patientId=order.patientId,
+            patientMrn=patient.mrn if patient else "",
+            patientName=order.patientName,
+            accessionNumber=sample.accessionNumber if sample else None,
             flags=test.flags,
             criticalNotificationSent=test.criticalNotificationSent,
             criticalNotifiedAt=test.criticalNotifiedAt,
@@ -167,6 +175,8 @@ class CriticalNotificationService:
         results = []
         for test in tests:
             order = self.db.query(Order).filter(Order.orderId == test.orderId).first()
+            if not order:
+                continue
             results.append(self._to_response(test, order))
         return results
 

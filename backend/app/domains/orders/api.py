@@ -13,8 +13,8 @@ from app.domains.orders.schemas import (
 from app.domains.orders.service import OrderService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http.dependencies import PaginationParams, get_current_user
-from app.platform.utils.common import parse_csv_values
+from app.platform.http import PaginationParams, get_current_user
+from app.platform.utils import parse_csv_values
 from app.shared.contracts.enums import OrderStatus, PaymentMethod, PaymentStatus
 from app.shared.schemas.pagination import PaginatedResponse
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -115,7 +115,7 @@ def approve_order(
     """
     from datetime import UTC, datetime
 
-    from app.platform.client_config import client_config
+    from app.platform.config import client_config
     
     require_approval = client_config.workflows.get("requireDoctorApproval", False)
     if not require_approval:

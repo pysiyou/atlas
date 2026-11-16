@@ -59,7 +59,7 @@ export function OrderInfoSection({ order }: OrderInfoSectionProps) {
           <DescriptionItem
             icon={getDataFieldIcon('orderId')}
             label="Order ID"
-            value={<RecordId type="order" value={order.orderId} />}
+            value={<RecordId type="order" value={order.fillerNumber} />}
             orientation="vertical"
           />
           <DescriptionItem

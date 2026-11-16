@@ -42,19 +42,15 @@ export interface TestWorkflowCardLeftColumnProps {
 function TestWorkflowIdentityLines({
   patientName,
   testName,
-  orderTestId,
   referentDoctorName,
-  orderId,
-  sampleId,
+  fillerNumber,
   testCode,
   accessionNumber,
 }: {
   patientName: string;
   testName: string;
-  orderTestId?: number;
   referentDoctorName?: string;
-  orderId: number;
-  sampleId?: number;
+  fillerNumber?: string | null;
   testCode: string;
   accessionNumber?: string | null;
 }) {
@@ -80,10 +76,15 @@ function TestWorkflowIdentityLines({
       </span>
     );
   }
-  if (orderTestId != null) {
-    if (line1.length > 0) line1.push(<InlineDot key="dot-tst" />);
+  if (accessionNumber && testCode) {
+    if (line1.length > 0) line1.push(<InlineDot key="dot-ot" />);
     line1.push(
-      <RecordId key="tst" type="orderTest" value={orderTestId} className={idClass} />
+      <RecordId
+        key="ot"
+        type="orderTest"
+        value={`${accessionNumber}/${testCode}`}
+        className={idClass}
+      />
     );
   }
 
@@ -98,24 +99,16 @@ function TestWorkflowIdentityLines({
       </span>
     );
   }
-  if (orderId) {
+  if (fillerNumber) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-ord" />);
     line2.push(
-      <RecordId key="ord" type="order" value={orderId} emphasis="headerMuted" className={idClass} />
-    );
-  }
-  if (sampleId != null) {
-    if (line2.length > 0) line2.push(<InlineDot key="dot-sam" />);
-    line2.push(
-      <RecordId key="sam" type="sample" value={sampleId} emphasis="headerMuted" className={idClass} />
+      <RecordId key="ord" type="order" value={fillerNumber} emphasis="headerMuted" className={idClass} />
     );
   }
   if (accessionNumber) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-acc" />);
     line2.push(
-      <span key="acc" className={cn(IDENTITY_STACK.secondaryText, idClass)}>
-        {accessionNumber}
-      </span>
+      <RecordId key="acc" type="sample" value={accessionNumber} emphasis="headerMuted" className={idClass} />
     );
   }
   if (testCode) {
@@ -215,7 +208,9 @@ export function TestWorkflowCardLeftColumn({
       resultEnteredAt: row.resultEnteredAt ?? undefined,
       enteredBy: row.enteredBy ?? undefined,
       retestOfTestId: row.retestOfTestId,
+      priorTestDisplay: row.priorTestDisplay,
       sampleOriginalSampleId: row.sampleOriginalSampleId,
+      sampleOriginalAccessionNumber: row.sampleOriginalAccessionNumber,
     },
     { includeResultEntered }
   );
@@ -228,12 +223,10 @@ export function TestWorkflowCardLeftColumn({
         <TestWorkflowIdentityLines
           patientName={patientName}
           testName={row.testName}
-          orderTestId={row.orderTestId}
           referentDoctorName={row.referentDoctorName ?? undefined}
-          orderId={row.orderId}
-          sampleId={row.sampleId ?? undefined}
+          fillerNumber={row.fillerNumber}
           testCode={row.testCode}
-          accessionNumber={'accessionNumber' in row ? (row.accessionNumber as string | undefined) : undefined}
+          accessionNumber={row.accessionNumber}
         />
       }
       alerts={

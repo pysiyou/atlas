@@ -11,6 +11,7 @@ import {
   type OrderTestQueueState,
 } from '../utils/queueDisplay';
 import type { Order, OrderTest, Patient, Sample, TestStatus } from '@/types';
+import { formatOrderTestDisplay } from '@/utils';
 import type { PendingEscalationItem } from '../api/results';
 import type { WorklistLabProjection } from '../utils/worklistRowContext';
 import {
@@ -24,12 +25,15 @@ export type LabQueueRowDto = EntryQueueRow | ValidationQueueRow | EscalationQueu
 export interface LabOrderTestQueueRow {
   orderTestId: number;
   orderId: number;
+  fillerNumber?: string | null;
   patientId?: number;
+  patientMrn?: string | null;
   patientName: string;
   testCode: string;
   testName: string;
   sampleType?: string;
   sampleId?: number | null;
+  accessionNumber?: string | null;
   priority?: string;
   status: string;
   orderDate?: string;
@@ -40,9 +44,11 @@ export interface LabOrderTestQueueRow {
   isRetest?: boolean;
   retestOfTestId?: number | null;
   retestNumber?: number;
+  priorTestDisplay?: string | null;
   sampleIsRecollection?: boolean;
   sampleRecollectionAttempt?: number | null;
   sampleOriginalSampleId?: number | null;
+  sampleOriginalAccessionNumber?: string | null;
   hasCriticalValues?: boolean;
   flags?: string[] | null;
   results?: Record<string, unknown> | null;
@@ -99,12 +105,15 @@ export function labModalWorkItemFromDto(row: LabQueueRowDto): LabModalWorkItem {
   const base: LabModalWorkItem = {
     orderTestId: orderTestIdFromDto(row),
     orderId: row.orderId,
+    fillerNumber: 'fillerNumber' in row ? row.fillerNumber : undefined,
     patientId: row.patientId,
+    patientMrn: 'patientMrn' in row ? row.patientMrn : undefined,
     patientName: row.patientName,
     testCode: row.testCode,
     testName: row.testName,
     sampleType: row.sampleType,
     sampleId: row.sampleId ?? undefined,
+    accessionNumber: 'accessionNumber' in row ? row.accessionNumber : undefined,
     priority: row.priority,
     status: row.status,
     orderDate: row.orderDate,
@@ -117,6 +126,13 @@ export function labModalWorkItemFromDto(row: LabQueueRowDto): LabModalWorkItem {
     isRetest: row.isRetest,
     retestOfTestId: row.retestOfTestId,
     retestNumber: row.retestNumber,
+    priorTestDisplay: 'priorTestDisplay' in row ? row.priorTestDisplay : undefined,
+    sampleIsRecollection: 'sampleIsRecollection' in row ? row.sampleIsRecollection : undefined,
+    sampleOriginalSampleId: 'sampleOriginalSampleId' in row ? row.sampleOriginalSampleId : undefined,
+    sampleOriginalAccessionNumber:
+      'sampleOriginalAccessionNumber' in row ? row.sampleOriginalAccessionNumber : undefined,
+    sampleRecollectionAttempt:
+      'sampleRecollectionAttempt' in row ? row.sampleRecollectionAttempt : undefined,
   };
 
   if ('collectedAt' in row) {
@@ -135,6 +151,7 @@ export function labModalWorkItemFromDto(row: LabQueueRowDto): LabModalWorkItem {
   if ('ticketMetadata' in row) {
     base.sampleIsRecollection = row.sampleIsRecollection;
     base.sampleOriginalSampleId = row.sampleOriginalSampleId;
+    base.sampleOriginalAccessionNumber = row.sampleOriginalAccessionNumber;
     base.sampleRecollectionAttempt = row.sampleRecollectionAttempt;
     base.sampleRecollectionReason = row.sampleRecollectionReason;
     base.collectedAt = row.collectedAt;
@@ -178,17 +195,21 @@ export function labModalWorkItemFromOrder(
   return {
     orderTestId: orderTest.id!,
     orderId: order.orderId,
+    fillerNumber: order.fillerNumber,
     patientId: order.patientId,
+    patientMrn: patient?.mrn ?? order.patientMrn,
     patientName: patient?.fullName ?? order.patientName,
     testName: orderTest.testName,
     testCode: orderTest.testCode,
     sampleType: orderTest.sampleType,
     sampleId: orderTest.sampleId ?? activeSample?.sampleId,
+    accessionNumber: orderTest.accessionNumber ?? activeSample?.accessionNumber,
     collectedAt,
     collectedBy,
     sampleStatus: activeSample?.status,
     sampleIsRecollection: activeSample?.isRecollection,
     sampleOriginalSampleId: activeSample?.originalSampleId,
+    sampleOriginalAccessionNumber: activeSample?.originalAccessionNumber,
     sampleRecollectionReason: activeSample?.recollectionReason,
     sampleRecollectionAttempt: activeSample?.recollectionAttempt,
     priority: order.priority,
@@ -199,6 +220,12 @@ export function labModalWorkItemFromOrder(
     isRetest: orderTest.isRetest,
     retestOfTestId: orderTest.retestOfTestId,
     retestNumber: orderTest.retestNumber,
+    priorTestDisplay: (() => {
+      const prior = order.tests?.find(test => test.id === orderTest.retestOfTestId);
+      if (!prior) return undefined;
+      const display = formatOrderTestDisplay(prior.accessionNumber, prior.testCode);
+      return display === '-' ? undefined : display;
+    })(),
     referentDoctorName: order.referentDoctorName,
     results: (orderTest.results ?? undefined) as Record<string, unknown> | undefined,
     flags: orderTest.flags,

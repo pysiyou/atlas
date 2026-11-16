@@ -57,12 +57,14 @@ class SampleResponse(SampleBase):
     rejectionNotes: str | None = None
     recollectionRequired: bool = False
     recollectionSampleId: int | None = None
+    recollectionAccessionNumber: str | None = None
     isRecollection: bool = False
     originalSampleId: int | None = None
     originalSampleCollectedAt: datetime | None = None
+    originalAccessionNumber: str | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
-    accessionNumber: str | None = None
+    accessionNumber: str
     parentSampleId: int | None = None
     isAliquot: bool = False
     aliquotIndex: int | None = None

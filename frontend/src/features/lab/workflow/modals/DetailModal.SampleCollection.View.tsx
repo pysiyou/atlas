@@ -88,14 +88,14 @@ export function SampleCollectionDetailModalView({
   const { title: modalTitle, subtitle: modalSubtitle } = labModalHeaderContext({
     stage: 'collection',
     contextLabel: patientName,
-    orderId: sample.orderId,
+    orderId: order?.fillerNumber,
     badges: headerBadges,
   });
 
   const headerLeftColumn = (
     <SampleCollectionCardLeftColumn
       patientName={patientName}
-      orderId={sample.orderId}
+      fillerNumber={order?.fillerNumber}
       referentDoctorName={order?.referentDoctorName ?? undefined}
       orderDate={order?.orderDate}
       sample={sample}

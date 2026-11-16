@@ -67,8 +67,6 @@ export function UserUpsertModalSummary({
           secondaryText={
             <span className="font-mono tabular-nums">
               @{user.username}
-              <span className={FG.disabled}> · </span>
-              uid {user.id}
             </span>
           }
           size="lg"

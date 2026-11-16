@@ -78,7 +78,7 @@ class Sample(Base):
         "recollection_attempt", Integer, default=1
     )  # 1 = original/first collection, 2 = 1st recollection, etc.
 
-    accessionNumber = Column("accession_number", String, nullable=True, unique=True, index=True)
+    accessionNumber = Column("accession_number", String, nullable=False, unique=True, index=True)
 
     parentSampleId = Column("parent_sample_id", Integer, nullable=True, index=True)
     isAliquot = Column("is_aliquot", Boolean, default=False)

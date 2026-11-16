@@ -1,5 +1,5 @@
 /**
- * Maps flat worklist DTOs to legacy Sample/Order shapes for workflow actions.
+ * Maps flat worklist DTOs to Sample shapes used by collection workflow actions.
  * For display-only UI, use `@/features/shared` and `@/hooks`.
  */
 import type { SampleRequirement } from './labSample';
@@ -13,11 +13,6 @@ import type {
 
 /** Map a collection worklist API row to a queue card/modal row (no synthetic Order/Patient). */
 export function worklistItemToQueueRow(item: CollectionWorklistItem): CollectionQueueRow {
-  const extras = item as CollectionWorklistItem & {
-    accessionNumber?: string | null;
-    isAliquot?: boolean;
-    parentSampleId?: number | null;
-  };
   const isCollectedLike = item.status === 'collected' || item.status === 'rejected';
   const sample = {
     sampleId: item.sampleId,
@@ -32,11 +27,14 @@ export function worklistItemToQueueRow(item: CollectionWorklistItem): Collection
     isRecollection: item.isRecollection,
     originalSampleId: item.originalSampleId ?? undefined,
     originalSampleCollectedAt: item.originalSampleCollectedAt ?? undefined,
+    originalAccessionNumber: item.originalAccessionNumber ?? undefined,
+    recollectionSampleId: item.recollectionSampleId ?? undefined,
+    recollectionAccessionNumber: item.recollectionAccessionNumber ?? undefined,
     recollectionReason: item.recollectionReason ?? undefined,
     recollectionAttempt: item.recollectionAttempt ?? 1,
-    accessionNumber: extras.accessionNumber ?? undefined,
-    isAliquot: extras.isAliquot ?? false,
-    parentSampleId: extras.parentSampleId ?? undefined,
+    accessionNumber: item.accessionNumber,
+    isAliquot: item.isAliquot ?? false,
+    parentSampleId: item.parentSampleId ?? undefined,
     createdBy: '',
     updatedBy: '',
     createdAt: item.orderDate,
@@ -65,8 +63,10 @@ export function worklistItemToQueueRow(item: CollectionWorklistItem): Collection
   return {
     sample,
     patientId: item.patientId,
+    patientMrn: item.patientMrn,
     patientName: item.patientName,
     orderId: item.orderId,
+    fillerNumber: item.fillerNumber,
     orderDate: item.orderDate,
     paymentStatus: item.paymentStatus,
     priority: item.priority,

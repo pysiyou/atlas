@@ -14,7 +14,7 @@ from app.shared.contracts.enums import (
     TestStatus,
 )
 from app.shared.schemas.status_presentation import StatusPresentation
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class WorklistPagination(BaseModel):
@@ -29,7 +29,9 @@ class WorklistPagination(BaseModel):
 class CollectionWorklistItem(BaseModel):
     sampleId: int
     orderId: int
+    fillerNumber: str
     patientId: int
+    patientMrn: str
     patientName: str
     sampleType: str
     status: SampleStatus
@@ -37,12 +39,15 @@ class CollectionWorklistItem(BaseModel):
     paymentStatus: PaymentStatus
     orderDate: datetime
     testCodes: list[str]
-    accessionNumber: str | None = None
+    accessionNumber: str
     isAliquot: bool = False
     parentSampleId: int | None = None
     isRecollection: bool
     originalSampleId: int | None = None
     originalSampleCollectedAt: datetime | None = None
+    originalAccessionNumber: str | None = None
+    recollectionSampleId: int | None = None
+    recollectionAccessionNumber: str | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
     pipelineStage: PipelineStage | None = None
@@ -74,7 +79,9 @@ class CollectionWorklistItem(BaseModel):
 class EntryWorklistItem(BaseModel):
     orderTestId: int
     orderId: int
+    fillerNumber: str
     patientId: int
+    patientMrn: str
     patientName: str
     testCode: str
     testName: str
@@ -90,6 +97,11 @@ class EntryWorklistItem(BaseModel):
     isRetest: bool
     retestOfTestId: int | None = None
     retestNumber: int = 0
+    priorTestDisplay: str | None = None
+    sampleIsRecollection: bool = False
+    sampleOriginalSampleId: int | None = None
+    sampleOriginalAccessionNumber: str | None = None
+    sampleRecollectionAttempt: int | None = None
     referentDoctorId: int | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
@@ -113,7 +125,9 @@ class DashboardWorklistItem(BaseModel):
 
     orderTestId: int
     orderId: int
+    fillerNumber: str
     patientId: int
+    patientMrn: str
     patientName: str
     patientDob: str
     patientGender: Gender
@@ -140,7 +154,9 @@ class DashboardWorklistItem(BaseModel):
 class ValidationWorklistItem(BaseModel):
     orderTestId: int
     orderId: int
+    fillerNumber: str
     patientId: int
+    patientMrn: str
     patientName: str
     testCode: str
     testName: str
@@ -162,6 +178,11 @@ class ValidationWorklistItem(BaseModel):
     isRetest: bool = False
     retestOfTestId: int | None = None
     retestNumber: int = 0
+    priorTestDisplay: str | None = None
+    sampleIsRecollection: bool = False
+    sampleOriginalSampleId: int | None = None
+    sampleOriginalAccessionNumber: str | None = None
+    sampleRecollectionAttempt: int | None = None
     resultEnteredAt: datetime | None
     orderDate: datetime
     waitingHours: float
@@ -189,8 +210,10 @@ class WorksheetRow(BaseModel):
 
     orderTestId: int
     orderId: int
+    fillerNumber: str
     patientName: str
-    accessionNumber: str | None = None
+    patientMrn: str
+    accessionNumber: str
     sampleType: str
     priority: PriorityLevel
     testCode: str
@@ -267,7 +290,11 @@ class BoardAttentionItem(BaseModel):
     stage: Literal["collection", "entry", "validation"]
     stageLabel: str
     orderId: int
+    fillerNumber: str
     patientName: str
+    patientMrn: str
+    accessionNumber: str | None = None
+    testCodes: list[str] = Field(default_factory=list)
     priority: PriorityLevel
     waitingHours: float
     attentionReason: str | None = None

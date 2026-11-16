@@ -5,8 +5,8 @@ from app.domains.patients.schemas import PatientCreate, PatientResponse, Patient
 from app.domains.patients.service import PatientService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http.dependencies import PaginationParams, get_current_user
-from app.platform.utils.common import parse_csv_values
+from app.platform.http import PaginationParams, get_current_user
+from app.platform.utils import parse_csv_values
 from app.shared.contracts.enums import Gender
 from app.shared.schemas.pagination import PaginatedResponse, create_paginated_response, skip_to_page
 from fastapi import APIRouter, Depends, Query
@@ -22,7 +22,7 @@ def search_patients(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Search patients by name, id (numeric or PAT display id), or phone."""
+    """Search patients by name, MRN, numeric id, or phone."""
     return PatientService(db).search(q, limit=limit)
 
 

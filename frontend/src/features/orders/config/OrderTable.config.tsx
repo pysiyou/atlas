@@ -48,7 +48,7 @@ export const createOrderTableConfig = (
       getStatusPresentation: order => order.statusPresentation,
     },
     {
-      renderOrderId: order => renderOrderId(order.orderId),
+      renderOrderId: order => renderOrderId(order.fillerNumber),
     },
     { getTestName: getTestNameFn }
   );

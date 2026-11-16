@@ -120,7 +120,7 @@ export interface EntityStackProps {
   primaryText: string;
   primaryTextClassName?: string;
   secondaryType?: EntityType;
-  secondaryValue?: string | number;
+  secondaryValue?: string | null;
   secondaryEmphasis?: 'mutedBlock' | 'block';
   secondaryCustom?: ReactNode;
   size?: 'xs' | 'sm' | 'md';
@@ -202,12 +202,13 @@ export function renderCardDateTimeSecondary(
 
 export function renderNavigableOrderId(
   orderId: string | number,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  fillerNumber?: string | null,
 ): ReactNode {
   return (
     <RecordId
       type="order"
-      value={orderId}
+      value={fillerNumber}
       emphasis="interactive"
       as="button"
       onClick={(e: MouseEvent<HTMLElement>) => {
@@ -218,11 +219,11 @@ export function renderNavigableOrderId(
   );
 }
 
-export function renderNavigableSampleId(sampleId: string | number): ReactNode {
+export function renderNavigableSampleId(accessionNumber: string): ReactNode {
   return (
     <RecordId
       type="sample"
-      value={sampleId}
+      value={accessionNumber}
       emphasis="interactive"
       navigateToFiltered={{
         targetPage: '/laboratory/collection',
@@ -354,8 +355,8 @@ export function renderOrderTestsBlockFromTests(
   return <OrderTestsCell activeTests={activeTests} variant="namesFirst" {...options} />;
 }
 
-export function renderOrderId(orderId: string | number, clickable = false): ReactNode {
-  return <RecordId type="order" value={orderId} emphasis={clickable ? 'interactive' : 'block'} />;
+export function renderOrderId(fillerNumber: string | null | undefined, clickable = false): ReactNode {
+  return <RecordId type="order" value={fillerNumber} emphasis={clickable ? 'interactive' : 'block'} />;
 }
 
 export interface OrderPatientDemographics {
@@ -414,8 +415,8 @@ export function renderOrderDateCell(date: string | Date | null | undefined): Rea
   return renderDateTimeCell(date);
 }
 
-export function renderPatientId(patientId: string | number): ReactNode {
-  return <RecordId type="patient" value={patientId} emphasis="block" />;
+export function renderPatientId(mrn: string | null | undefined): ReactNode {
+  return <RecordId type="patient" value={mrn} emphasis="block" />;
 }
 
 export function renderPatientOrdersSummary(

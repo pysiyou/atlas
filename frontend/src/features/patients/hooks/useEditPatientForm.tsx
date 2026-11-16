@@ -110,7 +110,7 @@ export function useEditPatientForm({ patient, mode, onClose, onCreated }: UseEdi
     const draftName = formValues?.fullName?.trim() ?? '';
     if (mode === 'edit' && patient) {
       const label = draftName || patient.fullName;
-      return <ModalContextSubtitle label={label} patientId={patient.id} />;
+      return <ModalContextSubtitle label={label} patientId={patient.mrn} />;
     }
     if (draftName) {
       return <ModalContextSubtitle label={draftName} />;

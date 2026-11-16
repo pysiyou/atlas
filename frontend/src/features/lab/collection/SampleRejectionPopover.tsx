@@ -39,6 +39,7 @@ interface CollectionRejectionPopoverContentProps {
   onSuccess: () => void;
   onCancel: () => void;
   sampleId: string;
+  accessionNumber?: string | null;
   testCodes: string[];
   sampleType?: string;
   patientName?: string;
@@ -49,6 +50,7 @@ function CollectionRejectionPopoverContent({
   onSuccess,
   onCancel,
   sampleId,
+  accessionNumber,
   testCodes,
   sampleType,
   patientName,
@@ -101,7 +103,7 @@ function CollectionRejectionPopoverContent({
   ]);
 
   const subtitle = [
-    numericSampleId != null ? displayId.sample(numericSampleId) : sampleId,
+    displayId.sample(accessionNumber),
     sampleType,
     patientName,
     isRecollection ? 'Recollection' : null,
@@ -142,6 +144,7 @@ function CollectionRejectionPopoverContent({
 
 interface CollectionRejectionPopoverProps {
   sampleId: string;
+  accessionNumber?: string | null;
   testCodes: string[];
   sampleType?: string;
   patientName?: string;
@@ -152,6 +155,7 @@ interface CollectionRejectionPopoverProps {
 
 export function SampleRejectionPopover({
   sampleId,
+  accessionNumber,
   testCodes,
   sampleType,
   patientName,
@@ -173,6 +177,7 @@ export function SampleRejectionPopover({
       {({ close }) => (
         <CollectionRejectionPopoverContent
           sampleId={sampleId}
+          accessionNumber={accessionNumber}
           testCodes={testCodes}
           sampleType={sampleType}
           patientName={patientName}

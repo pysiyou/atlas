@@ -34,7 +34,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
             primaryText={patient.fullName}
             primaryTextClassName=""
             secondarySlot="entity"
-            secondaryText={<RecordId type="patient" value={patient.id} emphasis="mutedBlock" />}
+            secondaryText={<RecordId type="patient" value={patient.mrn} emphasis="mutedBlock" />}
             size="xs"
           />
         }

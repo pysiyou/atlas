@@ -12,13 +12,13 @@ import { BADGE, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 const badgeIconClass = BADGE.icon.xs;
 
 interface RecollectionOfBadgeProps {
-  originalSampleId: number;
+  originalAccessionNumber: string;
   size?: BadgeSize;
   className?: string;
 }
 
 export function RecollectionOfBadge({
-  originalSampleId,
+  originalAccessionNumber,
   size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
 }: RecollectionOfBadgeProps) { return (
@@ -28,7 +28,7 @@ export function RecollectionOfBadge({
     className={`flex items-center gap-space-1 ${className}`}
   >
     <Icon iconKey={IconKeys.actions.alertCircle} className={badgeIconClass} />
-    Recollection of <RecordId type="sample" value={originalSampleId} />
+    Recollection of <RecordId type="sample" value={originalAccessionNumber} />
   </Badge>
 ); }
 
@@ -38,19 +38,19 @@ export function RecollectionOfBadge({
 
 
 interface RetestOfBadgeProps {
-  retestOfTestId: number;
+  priorTestDisplay: string;
   size?: BadgeSize;
   className?: string;
 }
 
 export function RetestOfBadge({
-  retestOfTestId,
+  priorTestDisplay,
   size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
 }: RetestOfBadgeProps) { return (
   <Badge size={size} variant="warning" className={`flex items-center gap-space-1 ${className}`}>
     <Icon iconKey={IconKeys.actions.alertCircle} className={badgeIconClass} />
-    Re-test of <RecordId type="orderTest" value={retestOfTestId} />
+    Re-test of <RecordId type="orderTest" value={priorTestDisplay} />
   </Badge>
 ); }
 

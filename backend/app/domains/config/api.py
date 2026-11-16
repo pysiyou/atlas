@@ -3,7 +3,7 @@ Configuration API
 
 Exposes white-label configuration to frontend.
 """
-from app.platform.client_config import client_config
+from app.platform.config import client_config
 from fastapi import APIRouter
 
 router = APIRouter()

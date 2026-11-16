@@ -5,7 +5,7 @@ from app.domains.reports.schemas import ReportableOrderItem
 from app.domains.reports.service import ReportService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http.dependencies import get_current_user
+from app.platform.http import get_current_user
 from app.shared.schemas.pagination import PaginatedResponse
 from fastapi import APIRouter, Depends, Query, status
 from fastapi.responses import Response

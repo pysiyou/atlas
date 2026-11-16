@@ -9,8 +9,8 @@ from app.domains.lab.results.delta_check import DeltaCheckService
 from app.domains.lab.results.flags import ResultFlag
 from app.domains.lab.results.reflex import ReflexEngine
 from app.domains.orders.models import Order, OrderTest
-from app.platform.utils.common import parse_numeric_result_value
-from app.platform.utils.exceptions import LabOperationError
+from app.platform.utils import parse_numeric_result_value
+from app.platform.utils import LabOperationError
 from app.shared.contracts.enums import (
     RemedyType,
     ResultStatus,
@@ -205,7 +205,7 @@ class ResultCommandHandler:
         extra_metadata: dict[str, Any] | None,
     ) -> None:
         """Auto-validate analyzer results that are fully normal."""
-        from app.platform.client_config import client_config
+        from app.platform.config import client_config
         from app.shared.contracts.enums import ResultStatus as FlagStatus
 
         if not client_config.workflows.get("enableAutoVerification", False):
@@ -248,7 +248,7 @@ class ResultCommandHandler:
         order_id = order_test.orderId
 
         from app.domains.lab.rules.eligibility import assert_can_validate
-        from app.platform.client_config import client_config
+        from app.platform.config import client_config
 
         user_id_str = str(user_id)
         assert_can_validate(order_test, validator_id=user_id_str)

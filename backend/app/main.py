@@ -11,10 +11,12 @@ import app.domains.registry  # noqa: F401 — register ORM models
 from app.platform.cache import close_redis, get_redis
 from app.platform.config import settings
 from app.platform.database import Base, engine
-from app.platform.http.v1_router import build_v1_router
-from app.platform.middleware import CacheHeadersMiddleware, DelayMiddleware
-from app.platform.middleware.error_handlers import register_exception_handlers
-from app.platform.schema_patches import apply_schema_patches
+from app.platform.http import build_v1_router
+from app.platform.middleware import (
+    CacheHeadersMiddleware,
+    DelayMiddleware,
+    register_exception_handlers,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +25,6 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
     Base.metadata.create_all(bind=engine)
-    apply_schema_patches(engine)
     try:
         from app.domains.catalog.panel_service import CatalogPanelService
         from app.platform.database import SessionLocal

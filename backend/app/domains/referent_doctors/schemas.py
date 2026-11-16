@@ -2,6 +2,7 @@
 import re
 from datetime import datetime
 
+from app.platform.utils import NPI_PATTERN
 from pydantic import BaseModel, Field, field_validator
 
 _EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -17,12 +18,13 @@ def _optional_strip(value: str | None) -> str | None:
 
 class ReferentDoctorCreate(BaseModel):
     fullName: str = Field(..., min_length=1, max_length=200)
+    npi: str | None = Field(None, pattern=NPI_PATTERN)
     username: str | None = Field(None, min_length=3, max_length=100)
     email: str | None = Field(None, max_length=255)
     phone: str | None = Field(None, max_length=20)
     hospitalName: str | None = Field(None, max_length=200)
 
-    @field_validator("username", "email", "phone", "hospitalName", mode="before")
+    @field_validator("npi", "username", "email", "phone", "hospitalName", mode="before")
     @classmethod
     def empty_strings_to_none(cls, value: object) -> object:
         if isinstance(value, str):
@@ -53,6 +55,7 @@ class ReferentDoctorCreate(BaseModel):
 class ReferentDoctorResponse(BaseModel):
     referentDoctorId: int
     fullName: str
+    npi: str | None = None
     username: str | None = None
     email: str | None = None
     phone: str | None = None

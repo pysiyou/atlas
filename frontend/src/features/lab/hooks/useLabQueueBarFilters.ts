@@ -8,7 +8,6 @@ import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { LAB_CONFIG } from '../constants/labConstants';
 import {
   decodeLabQueueBarFilters,
-  migrateLegacyLabEntitySearchParams,
   writeLabQueueBarFilters,
   type LabQueueBarFilters,
 } from '../utils/labQueueUrlCodec';
@@ -55,9 +54,7 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
   const filterConfig = useMemo(() => getLabQueueStageConfig(workflowType), [workflowType]);
 
   const readBarFiltersFromUrl = (): LabQueueBarFilters => {
-    const params = new URLSearchParams(searchParams);
-    migrateLegacyLabEntitySearchParams(params);
-    return barFiltersFromUrl(params, workflowType, filterConfig.defaultStatuses);
+    return barFiltersFromUrl(searchParams, workflowType, filterConfig.defaultStatuses);
   };
 
   const [searchQuery, setSearchQuery] = useState(() => readBarFiltersFromUrl().searchQuery);
@@ -124,23 +121,6 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
 
   const skipUrlDecodeRef = useRef(false);
   const persistSkipRef = useRef(true);
-  const legacyMigrateRef = useRef(false);
-
-  useLayoutEffect(() => {
-    if (legacyMigrateRef.current) return;
-    legacyMigrateRef.current = true;
-    setSearchParams(
-      prev => {
-        const params = new URLSearchParams(prev);
-        if (!migrateLegacyLabEntitySearchParams(params)) {
-          return prev;
-        }
-        skipUrlDecodeRef.current = true;
-        return params;
-      },
-      { replace: true },
-    );
-  }, [setSearchParams]);
 
   useEffect(() => {
     if (skipUrlDecodeRef.current) {

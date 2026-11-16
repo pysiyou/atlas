@@ -14,9 +14,10 @@
   "$defs": {
     "panelId": {
       "type": "string",
-      "pattern": "^[a-z][a-z0-9_]*$",
-      "minLength": 1,
-      "maxLength": 60
+      "description": "Clinical panel mnemonic (LIPID, CMP, LFT), 2–8 uppercase characters",
+      "pattern": "^[A-Z][A-Z0-9]{1,7}$",
+      "minLength": 2,
+      "maxLength": 8
     },
     "panelEntry": {
       "type": "object",

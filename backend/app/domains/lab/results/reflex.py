@@ -8,7 +8,7 @@ from typing import Any
 from app.domains.catalog.models.catalog_test import CatalogTest
 from app.domains.lab.specimen.generation import generate_samples_for_order
 from app.domains.orders.models import Order, OrderTest
-from app.platform.utils.common import parse_numeric_result_value
+from app.platform.utils import parse_numeric_result_value
 from app.shared.contracts.enums import TestStatus
 from sqlalchemy.orm import Session
 

@@ -4,6 +4,7 @@ import logging
 from app.domains.audit.service import AuditEmitter
 from app.domains.users.models import User
 from app.domains.users.schemas import FirstAdminSetupRequest, UserCreate, UserUpdate
+from app.platform.utils import allocate_employee_number
 from app.platform.security import get_password_hash
 from app.shared.contracts.enums import UserRole
 from fastapi import HTTPException, status
@@ -55,6 +56,7 @@ class UserService:
 
         user = User(
             username=username,
+            employeeNumber=allocate_employee_number(self.db),
             hashedPassword=get_password_hash(password),
             name=name,
             role=UserRole.ADMIN,
@@ -153,6 +155,7 @@ class UserService:
             )
         user = User(
             username=user_data.username,
+            employeeNumber=allocate_employee_number(self.db),
             hashedPassword=get_password_hash(user_data.password),
             name=user_data.name,
             role=user_data.role,

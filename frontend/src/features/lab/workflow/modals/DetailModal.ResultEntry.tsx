@@ -241,7 +241,6 @@ export function ResultEntryDetailModal({
     displayWorkItem?.denyMessage ??
     orderTestSnapshot?.denyMessage;
   const testDisplayName = orderTest?.testName ?? displayWorkItem?.testName ?? '';
-  const orderId = order?.orderId ?? displayWorkItem?.orderId ?? orderTestSnapshot?.orderId ?? 0;
   const filledCount = Object.values(displayResults).filter(value => value?.trim()).length;
   const totalParams = resolvedTestDef?.parameters?.length ?? 0;
   const isComplete = filledCount === totalParams;
@@ -284,7 +283,7 @@ export function ResultEntryDetailModal({
     ? labModalHeaderContext({
         stage: 'entry',
         contextLabel: testDisplayName,
-        orderId,
+        orderId: workItem?.fillerNumber,
         badges: headerBadges ?? undefined,
       })
     : { title: labCopy.workflow.entry, subtitle: '' };

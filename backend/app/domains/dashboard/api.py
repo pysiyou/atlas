@@ -3,7 +3,7 @@ from app.domains.dashboard.schemas import DashboardSummaryResponse
 from app.domains.dashboard.service import DashboardService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http.dependencies import get_current_user
+from app.platform.http import get_current_user
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 

@@ -23,6 +23,7 @@ import {
 } from '../../types/labQueueChrome';
 import { text, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 import type { EscalationResolutionAction, Order } from '@/types';
+import { formatOrderTestDisplay } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { notify } from '@/feedback';
 import { DetailGrid } from './DetailModalLayout';
@@ -199,10 +200,10 @@ export function EscalationResolutionBody({
             fields: [
               {
                 label: 'Sample ID',
-                value: workItem.sampleId ? (
+                value: workItem.accessionNumber ? (
                   <RecordId
                     type="sample"
-                    value={workItem.sampleId}
+                    value={workItem.accessionNumber}
                     emphasis="block"
                     className="text-right"
                   />
@@ -233,7 +234,7 @@ export function EscalationResolutionBody({
                 value: (
                   <RecordId
                     type="orderTest"
-                    value={workItem.orderTestId}
+                    value={formatOrderTestDisplay(workItem.accessionNumber, workItem.testCode)}
                     emphasis="block"
                     className="text-right"
                   />
@@ -250,7 +251,7 @@ export function EscalationResolutionBody({
               {
                 label: 'Order ID',
                 value: (
-                  <RecordId type="order" value={workItem.orderId} emphasis="block" className="text-right" />
+                  <RecordId type="order" value={workItem.fillerNumber} emphasis="block" className="text-right" />
                 ),
               },
             ],

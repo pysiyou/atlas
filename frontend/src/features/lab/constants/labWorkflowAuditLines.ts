@@ -7,7 +7,7 @@ import type { ReactNode } from 'react';
 export type LabAuditLine =
   | {
       type: 'sample-collected';
-      sampleId: number | string;
+      accessionNumber: string;
       collectedAt: string;
       collectedBy?: string;
     }
@@ -18,16 +18,16 @@ export type LabAuditLine =
     }
   | {
       type: 'recollection-lineage';
-      sampleId: number;
+      accessionNumber: string;
       collectedAt?: string;
     }
   | {
       type: 'retest-lineage';
-      orderTestId: number;
+      priorTestDisplay: string;
     }
   | {
       type: 'test-recollection-lineage';
-      sampleId: number;
+      accessionNumber: string;
     }
   | {
       type: 'result-entered';
@@ -50,6 +50,7 @@ export interface SampleCollectionTimelineSource {
   collectedBy?: string;
   isRecollection?: boolean;
   originalSampleId?: number;
+  originalAccessionNumber?: string | null;
   originalSampleCollectedAt?: string;
 }
 
@@ -58,10 +59,10 @@ export function buildSampleCollectionTimelineLines(
   sample: SampleCollectionTimelineSource
 ): LabAuditLine[] {
   return compactAuditLines(
-    sample.isRecollection && sample.originalSampleId != null
+    sample.isRecollection && sample.originalAccessionNumber
       ? {
           type: 'recollection-lineage',
-          sampleId: sample.originalSampleId,
+          accessionNumber: sample.originalAccessionNumber,
           collectedAt: sample.originalSampleCollectedAt,
         }
       : null,
@@ -81,7 +82,9 @@ export interface TestQueueTimelineSource {
   resultEnteredAt?: string;
   enteredBy?: string;
   retestOfTestId?: number | null;
+  priorTestDisplay?: string | null;
   sampleOriginalSampleId?: number | null;
+  sampleOriginalAccessionNumber?: string | null;
 }
 
 /** Test workflow queue cards — lineage, collection, result entry (no duplicate TST/SAM in prose). */
@@ -90,11 +93,14 @@ export function buildTestQueueTimelineLines(
   options?: { includeResultEntered?: boolean }
 ): LabAuditLine[] {
   return compactAuditLines(
-    source.retestOfTestId != null
-      ? { type: 'retest-lineage', orderTestId: source.retestOfTestId }
+    source.priorTestDisplay
+      ? { type: 'retest-lineage', priorTestDisplay: source.priorTestDisplay }
       : null,
-    source.sampleOriginalSampleId != null
-      ? { type: 'test-recollection-lineage', sampleId: source.sampleOriginalSampleId }
+    source.sampleOriginalAccessionNumber
+      ? {
+          type: 'test-recollection-lineage',
+          accessionNumber: source.sampleOriginalAccessionNumber,
+        }
       : null,
     source.collectedAt
       ? {

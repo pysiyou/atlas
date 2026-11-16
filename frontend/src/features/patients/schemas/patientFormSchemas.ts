@@ -28,7 +28,7 @@ const affiliationDurationSchema = z.custom<number>(
 
 export const affiliationSchema = z
   .object({
-    assuranceNumber: z.string().min(1),
+    assuranceNumber: z.string().min(1).max(50),
     startDate: dateStringSchema,
     endDate: dateStringSchema,
     duration: affiliationDurationSchema,
@@ -136,6 +136,7 @@ export const medicalHistorySchema = z.object({
 
 export const patientSchema = z.object({
   id: z.number().int().positive(),
+  mrn: z.string().min(6).max(12),
   fullName: nameSchema,
   dateOfBirth: dateStringSchema,
   gender: zEnumFromValues(GENDER_VALUES),
@@ -161,6 +162,7 @@ export type MedicalHistory = z.infer<typeof medicalHistorySchema>;
 const patientFormFieldsSchema = patientSchema
   .omit({
     id: true,
+    mrn: true,
     registrationDate: true,
     createdBy: true,
     createdAt: true,

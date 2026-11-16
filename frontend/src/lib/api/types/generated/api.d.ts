@@ -204,7 +204,7 @@ export interface paths {
         };
         /**
          * Search Patients
-         * @description Search patients by name, id (numeric or PAT display id), or phone.
+         * @description Search patients by name, MRN, numeric id, or phone.
          */
         get: operations["search_patients_api_v1_patients_search_get"];
         put?: never;
@@ -1069,6 +1069,19 @@ export interface components {
             endDate?: string | null;
             duration?: components["schemas"]["AffiliationDuration"] | null;
         };
+        /**
+         * AffiliationResponse
+         * @description Stored affiliation with the 6–20 character member ID.
+         */
+        AffiliationResponse: {
+            /** Assurancenumber */
+            assuranceNumber: string;
+            /** Startdate */
+            startDate: string;
+            /** Enddate */
+            endDate: string;
+            duration: components["schemas"]["AffiliationDuration"];
+        };
         /** AgeBuckets */
         AgeBuckets: {
             /** Fresh */
@@ -1080,7 +1093,10 @@ export interface components {
             /** Critical */
             critical: number;
         };
-        /** AnalyzerResultRequest */
+        /**
+         * AnalyzerResultRequest
+         * @description JSON ingest: specimen_id is the accession (SPM-2), not the integer sample PK.
+         */
         AnalyzerResultRequest: {
             /** Specimen Id */
             specimen_id: string;
@@ -1141,10 +1157,16 @@ export interface components {
             targetId: number;
             /** Patientid */
             patientId?: number | null;
+            /** Patientmrn */
+            patientMrn?: string | null;
             /** Orderid */
             orderId?: number | null;
+            /** Fillernumber */
+            fillerNumber?: string | null;
             /** Testid */
             testId?: number | null;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
             /** Eventscope */
             eventScope?: string | null;
             /** Changes */
@@ -1231,8 +1253,16 @@ export interface components {
             stageLabel: string;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
             /** Patientname */
             patientName: string;
+            /** Patientmrn */
+            patientMrn: string;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
+            /** Testcodes */
+            testCodes?: string[];
             priority: components["schemas"]["PriorityLevel"];
             /** Waitinghours */
             waitingHours: number;
@@ -1285,8 +1315,12 @@ export interface components {
             sampleId: number;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
             /** Sampletype */
@@ -1302,7 +1336,7 @@ export interface components {
             /** Testcodes */
             testCodes: string[];
             /** Accessionnumber */
-            accessionNumber?: string | null;
+            accessionNumber: string;
             /**
              * Isaliquot
              * @default false
@@ -1316,6 +1350,12 @@ export interface components {
             originalSampleId?: number | null;
             /** Originalsamplecollectedat */
             originalSampleCollectedAt?: string | null;
+            /** Originalaccessionnumber */
+            originalAccessionNumber?: string | null;
+            /** Recollectionsampleid */
+            recollectionSampleId?: number | null;
+            /** Recollectionaccessionnumber */
+            recollectionAccessionNumber?: string | null;
             /** Recollectionreason */
             recollectionReason?: string | null;
             /**
@@ -1398,14 +1438,20 @@ export interface components {
             id: number;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
             /** Testcode */
             testCode: string;
             /** Testname */
             testName: string | null;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
             /** Flags */
             flags: string[] | null;
             /** Criticalnotificationsent */
@@ -1447,8 +1493,12 @@ export interface components {
             orderTestId: number;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -1535,8 +1585,12 @@ export interface components {
             orderTestId: number;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
             /** Testcode */
@@ -1571,6 +1625,19 @@ export interface components {
              * @default 0
              */
             retestNumber: number;
+            /** Priortestdisplay */
+            priorTestDisplay?: string | null;
+            /**
+             * Sampleisrecollection
+             * @default false
+             */
+            sampleIsRecollection: boolean;
+            /** Sampleoriginalsampleid */
+            sampleOriginalSampleId?: number | null;
+            /** Sampleoriginalaccessionnumber */
+            sampleOriginalAccessionNumber?: string | null;
+            /** Samplerecollectionattempt */
+            sampleRecollectionAttempt?: number | null;
             /** Referentdoctorid */
             referentDoctorId?: number | null;
             /** Referentdoctorname */
@@ -1680,6 +1747,8 @@ export interface components {
         InvoiceResponse: {
             /** Invoiceid */
             invoiceId: number;
+            /** Invoicenumber */
+            invoiceNumber: string;
             /** Orderid */
             orderId: number;
             /** Patientid */
@@ -1962,8 +2031,14 @@ export interface components {
         OrderDetailResponse: {
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
+            /** Placernumber */
+            placerNumber?: string | null;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -2026,8 +2101,14 @@ export interface components {
         OrderResponse: {
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
+            /** Placernumber */
+            placerNumber?: string | null;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -2093,8 +2174,14 @@ export interface components {
         OrderSummaryResponse: {
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
+            /** Placernumber */
+            placerNumber?: string | null;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -2159,7 +2246,7 @@ export interface components {
         OrderTestCreate: {
             /**
              * Testcode
-             * @description Test code from catalog
+             * @description Clinical mnemonic from the test catalog
              */
             testCode: string;
         };
@@ -2181,6 +2268,8 @@ export interface components {
             priceAtOrder: number;
             /** Sampleid */
             sampleId?: number | null;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
             /** Results */
             results?: {
                 [key: string]: components["schemas"]["TestResultValue"] | {
@@ -2410,9 +2499,11 @@ export interface components {
             address: components["schemas"]["Address"];
             emergencyContact: components["schemas"]["EmergencyContactResponse"];
             medicalHistory?: components["schemas"]["MedicalHistory"] | null;
-            affiliation?: components["schemas"]["Affiliation"] | null;
+            affiliation?: components["schemas"]["AffiliationResponse"] | null;
             /** Id */
             id: number;
+            /** Mrn */
+            mrn: string;
             /**
              * Registrationdate
              * Format: date-time
@@ -2480,8 +2571,12 @@ export interface components {
         PaymentResponse: {
             /** Paymentid */
             paymentId: number;
+            /** Receiptnumber */
+            receiptNumber: string;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber?: string | null;
             /** Invoiceid */
             invoiceId?: number | null;
             /** Amount */
@@ -2517,6 +2612,8 @@ export interface components {
             id: number;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
             /**
              * Orderdate
              * Format: date-time
@@ -2524,6 +2621,8 @@ export interface components {
             orderDate: string;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -2538,6 +2637,8 @@ export interface components {
             status: string;
             /** Sampleid */
             sampleId?: number | null;
+            /** Accessionnumber */
+            accessionNumber?: string | null;
             /** Results */
             results?: {
                 [key: string]: components["schemas"]["TestResultValue"] | {
@@ -2575,6 +2676,8 @@ export interface components {
              * @default 0
              */
             retestNumber: number;
+            /** Priortestdisplay */
+            priorTestDisplay?: string | null;
             /** Priority */
             priority: string;
             /** Referentdoctorid */
@@ -2600,6 +2703,8 @@ export interface components {
             sampleIsRecollection: boolean;
             /** Sampleoriginalsampleid */
             sampleOriginalSampleId?: number | null;
+            /** Sampleoriginalaccessionnumber */
+            sampleOriginalAccessionNumber?: string | null;
             /** Samplerecollectionreason */
             sampleRecollectionReason?: string | null;
             /** Samplerecollectionattempt */
@@ -2793,6 +2898,8 @@ export interface components {
         ReferentDoctorCreate: {
             /** Fullname */
             fullName: string;
+            /** Npi */
+            npi?: string | null;
             /** Username */
             username?: string | null;
             /** Email */
@@ -2808,6 +2915,8 @@ export interface components {
             referentDoctorId: number;
             /** Fullname */
             fullName: string;
+            /** Npi */
+            npi?: string | null;
             /** Username */
             username?: string | null;
             /** Email */
@@ -2894,6 +3003,10 @@ export interface components {
         ReportableOrderItem: {
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
+            /** Patientmrn */
+            patientMrn: string;
             /**
              * Orderdate
              * Format: date-time
@@ -3019,6 +3132,8 @@ export interface components {
             recollectionRequired: boolean;
             /** Recollectionsampleid */
             recollectionSampleId?: number | null;
+            /** Recollectionaccessionnumber */
+            recollectionAccessionNumber?: string | null;
             /**
              * Isrecollection
              * @default false
@@ -3028,6 +3143,8 @@ export interface components {
             originalSampleId?: number | null;
             /** Originalsamplecollectedat */
             originalSampleCollectedAt?: string | null;
+            /** Originalaccessionnumber */
+            originalAccessionNumber?: string | null;
             /** Recollectionreason */
             recollectionReason?: string | null;
             /**
@@ -3036,7 +3153,7 @@ export interface components {
              */
             recollectionAttempt: number;
             /** Accessionnumber */
-            accessionNumber?: string | null;
+            accessionNumber: string;
             /** Parentsampleid */
             parentSampleId?: number | null;
             /**
@@ -3296,6 +3413,8 @@ export interface components {
             phone?: string | null;
             /** Id */
             id: number;
+            /** Employeenumber */
+            employeeNumber: string;
             /**
              * Createdat
              * Format: date-time
@@ -3348,8 +3467,12 @@ export interface components {
             orderTestId: number;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
             /** Patientid */
             patientId: number;
+            /** Patientmrn */
+            patientMrn: string;
             /** Patientname */
             patientName: string;
             /** Testcode */
@@ -3399,6 +3522,19 @@ export interface components {
              * @default 0
              */
             retestNumber: number;
+            /** Priortestdisplay */
+            priorTestDisplay?: string | null;
+            /**
+             * Sampleisrecollection
+             * @default false
+             */
+            sampleIsRecollection: boolean;
+            /** Sampleoriginalsampleid */
+            sampleOriginalSampleId?: number | null;
+            /** Sampleoriginalaccessionnumber */
+            sampleOriginalAccessionNumber?: string | null;
+            /** Samplerecollectionattempt */
+            sampleRecollectionAttempt?: number | null;
             /** Resultenteredat */
             resultEnteredAt: string | null;
             /**
@@ -3483,10 +3619,14 @@ export interface components {
             orderTestId: number;
             /** Orderid */
             orderId: number;
+            /** Fillernumber */
+            fillerNumber: string;
             /** Patientname */
             patientName: string;
+            /** Patientmrn */
+            patientMrn: string;
             /** Accessionnumber */
-            accessionNumber?: string | null;
+            accessionNumber: string;
             /** Sampletype */
             sampleType: string;
             priority: components["schemas"]["PriorityLevel"];
@@ -3763,7 +3903,7 @@ export interface operations {
                 actorRoles?: string | null;
                 /** @description Partial match on actor display name (snapshot) or account username */
                 actorSearch?: string | null;
-                /** @description Unified stream search: ORD/TST/SAM/PAT display ids, numeric ids, patient name, actor name, or username */
+                /** @description Unified stream search: MRN, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username */
                 search?: string | null;
                 limit?: number;
             };

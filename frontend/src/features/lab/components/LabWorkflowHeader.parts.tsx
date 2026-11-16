@@ -29,11 +29,7 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           Sample{' '}
-          {typeof line.sampleId === 'number' ? (
-            <RecordId type="sample" value={line.sampleId} />
-          ) : (
-            <RecordId>{line.sampleId}</RecordId>
-          )}{' '}
+          <RecordId type="sample" value={line.accessionNumber} />{' '}
           collected{' '}
           <span className={WORKLIST_EMPHASIZED_INLINE}>
             {formatDateTime(line.collectedAt)}
@@ -71,7 +67,7 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           <span>Recollection of </span>
-          <RecordId type="sample" value={line.sampleId} emphasis="inline" />
+          <RecordId type="sample" value={line.accessionNumber} emphasis="inline" />
           {line.collectedAt ? (
             <>
               <span> — collected on </span>
@@ -86,14 +82,14 @@ export function LabAuditLineView({
       return (
         <span className={base}>
           <span>Re-test of </span>
-          <RecordId type="orderTest" value={line.orderTestId} emphasis="inline" />
+          <RecordId type="orderTest" value={line.priorTestDisplay} emphasis="inline" />
         </span>
       );
     case 'test-recollection-lineage':
       return (
         <span className={base}>
           <span>Recollection of </span>
-          <RecordId type="sample" value={line.sampleId} emphasis="inline" />
+          <RecordId type="sample" value={line.accessionNumber} emphasis="inline" />
         </span>
       );
     case 'result-entered':

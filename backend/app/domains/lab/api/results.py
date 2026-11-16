@@ -10,7 +10,7 @@ from app.domains.lab.schemas.lab import (
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http.dependencies import get_current_user, require_lab_tech
+from app.platform.http import get_current_user, require_lab_tech
 from app.shared.contracts.enums import ValidationDecision
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session

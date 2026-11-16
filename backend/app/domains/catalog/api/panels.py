@@ -3,7 +3,7 @@ from app.domains.catalog.panel_service import CatalogPanelService
 from app.domains.catalog.schemas.panel import CatalogPanelResponse
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http.dependencies import get_current_user
+from app.platform.http import get_current_user
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 

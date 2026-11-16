@@ -1,7 +1,7 @@
 {
   "tests": [
     {
-      "test_code": "HEM001",
+      "test_code": "CBC",
       "display_name": "Complete Blood Count (CBC) / Full Blood Count (FBC)",
       "synonyms": [
         "Full Haemogram",
@@ -10,7 +10,7 @@
       ],
       "category": "Hematology",
       "panels": [
-        "complete_hematology_panel"
+        "HEMFULL"
       ],
       "loinc_codes": [
         "57021-8"
@@ -39,7 +39,7 @@
           "item_code": "WBC",
           "item_name": "White Blood Cell Count",
           "value_type": "NUMERIC",
-          "unit": "×10⁹/L",
+          "unit": "\u00d710\u2079/L",
           "decimals_suggested": 2,
           "reference_range": {
             "adult_general": {
@@ -64,7 +64,7 @@
           "item_code": "RBC",
           "item_name": "Red Blood Cell Count",
           "value_type": "NUMERIC",
-          "unit": "×10¹²/L",
+          "unit": "\u00d710\u00b9\u00b2/L",
           "decimals_suggested": 2,
           "reference_range": {
             "adult_male": {
@@ -170,7 +170,7 @@
           "item_code": "PLAT",
           "item_name": "Platelet Count",
           "value_type": "NUMERIC",
-          "unit": "×10⁹/L",
+          "unit": "\u00d710\u2079/L",
           "decimals_suggested": 0,
           "reference_range": {
             "adult_general": {
@@ -222,7 +222,7 @@
       ]
     },
     {
-      "test_code": "HEM002",
+      "test_code": "RETIC",
       "display_name": "Reticulocyte Count",
       "synonyms": [
         "Retic",
@@ -230,7 +230,7 @@
       ],
       "category": "Hematology",
       "panels": [
-        "anemia_workup_panel"
+        "ANEMIA"
       ],
       "loinc_codes": [
         "4695-3"
@@ -276,7 +276,7 @@
           "item_code": "RETCOUNT_ABS",
           "item_name": "Reticulocytes (Absolute Count)",
           "value_type": "NUMERIC",
-          "unit": "×10⁹/L",
+          "unit": "\u00d710\u2079/L",
           "decimals_suggested": 1,
           "reference_range": {
             "adult_general": {
@@ -320,7 +320,7 @@
       ]
     },
     {
-      "test_code": "HEM003",
+      "test_code": "PBS",
       "display_name": "Peripheral Blood Smear with Manual Differential",
       "synonyms": [
         "Blood Film",
@@ -328,7 +328,7 @@
       ],
       "category": "Hematology",
       "panels": [
-        "manual_differential_panel"
+        "MDIFF"
       ],
       "loinc_codes": [
         "15286-3"
@@ -421,7 +421,7 @@
       ]
     },
     {
-      "test_code": "HEM004",
+      "test_code": "ESR",
       "display_name": "Erythrocyte Sedimentation Rate (ESR)",
       "synonyms": [
         "ESR",
@@ -429,7 +429,7 @@
       ],
       "category": "Hematology",
       "panels": [
-        "inflammatory_markers_panel"
+        "INFLAMM"
       ],
       "loinc_codes": [
         "4537-7"
@@ -506,7 +506,7 @@
       ]
     },
     {
-      "test_code": "HEMA001",
+      "test_code": "ABO",
       "display_name": "Blood Grouping - ABO and Rh D System",
       "synonyms": [
         "Blood Group",
@@ -515,7 +515,7 @@
       ],
       "category": "Hematology - Transfusion Medicine",
       "panels": [
-        "transfusion_screening_panel"
+        "TXFUSE"
       ],
       "loinc_codes": [
         "883-4"
@@ -609,7 +609,7 @@
       ]
     },
     {
-      "test_code": "CHEM001",
+      "test_code": "GLU",
       "display_name": "Glucose (Fasting)",
       "synonyms": [
         "FBS",
@@ -617,8 +617,8 @@
       ],
       "category": "Clinical Chemistry",
       "panels": [
-        "metabolic_panel",
-        "diabetes_screening"
+        "CMP",
+        "DMSCR"
       ],
       "loinc_codes": [
         "1558-5"
@@ -700,7 +700,7 @@
       ]
     },
     {
-      "test_code": "CHEM002",
+      "test_code": "RBS",
       "display_name": "Glucose (Random/Post-prandial)",
       "synonyms": [
         "RBS",
@@ -708,7 +708,7 @@
       ],
       "category": "Clinical Chemistry",
       "panels": [
-        "diabetes_screening_panel"
+        "DMPANEL"
       ],
       "loinc_codes": [
         "2345-7"
@@ -789,7 +789,7 @@
       ]
     },
     {
-      "test_code": "CHEM003",
+      "test_code": "HBA1C",
       "display_name": "Hemoglobin A1c (HbA1c)",
       "synonyms": [
         "Glycated Hemoglobin",
@@ -797,7 +797,7 @@
       ],
       "category": "Clinical Chemistry",
       "panels": [
-        "diabetes_management_panel"
+        "DMGMT"
       ],
       "loinc_codes": [
         "4548-4"
@@ -869,7 +869,7 @@
       ]
     },
     {
-      "test_code": "CHEM004",
+      "test_code": "CREA",
       "display_name": "Creatinine (Serum)",
       "synonyms": [
         "Serum Creatinine",
@@ -877,8 +877,8 @@
       ],
       "category": "Clinical Chemistry - Renal Function",
       "panels": [
-        "renal_panel",
-        "metabolic_panel"
+        "RENAL",
+        "CMP"
       ],
       "loinc_codes": [
         "2160-0"
@@ -962,7 +962,7 @@
       ]
     },
     {
-      "test_code": "CHEM005",
+      "test_code": "BUN",
       "display_name": "Blood Urea Nitrogen (BUN)",
       "synonyms": [
         "Urea",
@@ -970,8 +970,8 @@
       ],
       "category": "Clinical Chemistry - Renal Function",
       "panels": [
-        "renal_panel",
-        "metabolic_panel"
+        "RENAL",
+        "CMP"
       ],
       "loinc_codes": [
         "3094-0"
@@ -1051,7 +1051,7 @@
       ]
     },
     {
-      "test_code": "CHEM006",
+      "test_code": "EGFR",
       "display_name": "eGFR (Estimated Glomerular Filtration Rate)",
       "synonyms": [
         "eGFR",
@@ -1059,7 +1059,7 @@
       ],
       "category": "Clinical Chemistry - Renal Function",
       "panels": [
-        "renal_panel"
+        "RENAL"
       ],
       "loinc_codes": [
         "33914-3"
@@ -1086,7 +1086,7 @@
           "item_code": "EGFR_VALUE",
           "item_name": "eGFR",
           "value_type": "NUMERIC",
-          "unit": "mL/min/1.73m²",
+          "unit": "mL/min/1.73m\u00b2",
           "decimals_suggested": 1,
           "reference_range": {
             "adult_general": {
@@ -1135,7 +1135,7 @@
       ]
     },
     {
-      "test_code": "CHEM007",
+      "test_code": "NA",
       "display_name": "Sodium (Serum/Plasma)",
       "synonyms": [
         "Na",
@@ -1143,8 +1143,8 @@
       ],
       "category": "Clinical Chemistry - Electrolytes",
       "panels": [
-        "electrolyte_panel",
-        "metabolic_panel"
+        "LYTES",
+        "CMP"
       ],
       "loinc_codes": [
         "2951-2"
@@ -1225,7 +1225,7 @@
       ]
     },
     {
-      "test_code": "CHEM008",
+      "test_code": "POT",
       "display_name": "Potassium (Serum/Plasma)",
       "synonyms": [
         "K",
@@ -1233,7 +1233,7 @@
       ],
       "category": "Clinical Chemistry - Electrolytes",
       "panels": [
-        "electrolyte_panel"
+        "LYTES"
       ],
       "loinc_codes": [
         "2823-3"
@@ -1316,7 +1316,7 @@
       ]
     },
     {
-      "test_code": "CHEM009",
+      "test_code": "CL",
       "display_name": "Chloride (Serum/Plasma)",
       "synonyms": [
         "Cl",
@@ -1324,7 +1324,7 @@
       ],
       "category": "Clinical Chemistry - Electrolytes",
       "panels": [
-        "electrolyte_panel"
+        "LYTES"
       ],
       "loinc_codes": [
         "2075-0"
@@ -1401,7 +1401,7 @@
       ]
     },
     {
-      "test_code": "CHEM010",
+      "test_code": "HCO3",
       "display_name": "Bicarbonate / Total CO2",
       "synonyms": [
         "HCO3",
@@ -1409,7 +1409,7 @@
       ],
       "category": "Clinical Chemistry - Acid-Base",
       "panels": [
-        "electrolyte_panel"
+        "LYTES"
       ],
       "loinc_codes": [
         "2028-9"
@@ -1485,7 +1485,7 @@
       ]
     },
     {
-      "test_code": "CHEM011",
+      "test_code": "CA",
       "display_name": "Calcium (Serum) - Total",
       "synonyms": [
         "Total Calcium",
@@ -1493,7 +1493,7 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
-        "mineral_panel"
+        "MINERAL"
       ],
       "loinc_codes": [
         "2000-8"
@@ -1573,7 +1573,7 @@
       ]
     },
     {
-      "test_code": "CHEM012",
+      "test_code": "MG",
       "display_name": "Magnesium (Serum)",
       "synonyms": [
         "Mg",
@@ -1581,7 +1581,7 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
-        "mineral_panel"
+        "MINERAL"
       ],
       "loinc_codes": [
         "19123-9"
@@ -1657,7 +1657,7 @@
       ]
     },
     {
-      "test_code": "CHEM013",
+      "test_code": "PO4",
       "display_name": "Phosphate (Inorganic)",
       "synonyms": [
         "Phosphorus",
@@ -1665,7 +1665,7 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
-        "mineral_panel"
+        "MINERAL"
       ],
       "loinc_codes": [
         "2777-7"
@@ -1741,7 +1741,7 @@
       ]
     },
     {
-      "test_code": "CHEM014",
+      "test_code": "ALT",
       "display_name": "Alanine Aminotransferase (ALT)",
       "synonyms": [
         "SGPT",
@@ -1749,7 +1749,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "liver_function_panel"
+        "LFT"
       ],
       "loinc_codes": [
         "1742-6"
@@ -1833,7 +1833,7 @@
       ]
     },
     {
-      "test_code": "CHEM015",
+      "test_code": "AST",
       "display_name": "Aspartate Aminotransferase (AST)",
       "synonyms": [
         "SGOT",
@@ -1841,7 +1841,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "liver_function_panel"
+        "LFT"
       ],
       "loinc_codes": [
         "1920-8"
@@ -1926,7 +1926,7 @@
       ]
     },
     {
-      "test_code": "CHEM016",
+      "test_code": "ALP",
       "display_name": "Alkaline Phosphatase (ALP)",
       "synonyms": [
         "ALP",
@@ -1934,7 +1934,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "liver_function_panel"
+        "LFT"
       ],
       "loinc_codes": [
         "1743-4"
@@ -2010,7 +2010,7 @@
       ]
     },
     {
-      "test_code": "CHEM017",
+      "test_code": "GGT",
       "display_name": "Gamma-Glutamyl Transferase (GGT)",
       "synonyms": [
         "GGT",
@@ -2018,7 +2018,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "liver_function_panel"
+        "LFT"
       ],
       "loinc_codes": [
         "2324-2"
@@ -2094,7 +2094,7 @@
       ]
     },
     {
-      "test_code": "CHEM018",
+      "test_code": "TBIL",
       "display_name": "Bilirubin - Total",
       "synonyms": [
         "Total Bilirubin",
@@ -2102,7 +2102,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "liver_function_panel"
+        "LFT"
       ],
       "loinc_codes": [
         "1975-2"
@@ -2184,7 +2184,7 @@
       ]
     },
     {
-      "test_code": "CHEM019",
+      "test_code": "DBIL",
       "display_name": "Bilirubin - Direct (Conjugated)",
       "synonyms": [
         "Direct Bilirubin",
@@ -2192,7 +2192,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "liver_function_panel"
+        "LFT"
       ],
       "loinc_codes": [
         "1968-7"
@@ -2269,14 +2269,14 @@
       ]
     },
     {
-      "test_code": "CHEM020",
+      "test_code": "ALB",
       "display_name": "Albumin (Serum)",
       "synonyms": [
         "Serum Albumin"
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "liver_function_panel"
+        "LFT"
       ],
       "loinc_codes": [
         "1863-0"
@@ -2352,7 +2352,7 @@
       ]
     },
     {
-      "test_code": "CHEM021",
+      "test_code": "TP",
       "display_name": "Total Protein (Serum)",
       "synonyms": [
         "TP",
@@ -2360,7 +2360,7 @@
       ],
       "category": "Clinical Chemistry - Protein Metabolism",
       "panels": [
-        "metabolic_panel"
+        "CMP"
       ],
       "loinc_codes": [
         "2885-2"
@@ -2436,7 +2436,7 @@
       ]
     },
     {
-      "test_code": "CHEM022",
+      "test_code": "CHOL",
       "display_name": "Cholesterol - Total",
       "synonyms": [
         "Total Cholesterol",
@@ -2444,7 +2444,7 @@
       ],
       "category": "Clinical Chemistry - Lipid Panel",
       "panels": [
-        "lipid_panel"
+        "LIPID"
       ],
       "loinc_codes": [
         "2093-3"
@@ -2521,7 +2521,7 @@
       ]
     },
     {
-      "test_code": "CHEM023",
+      "test_code": "HDL",
       "display_name": "HDL Cholesterol",
       "synonyms": [
         "Good Cholesterol",
@@ -2529,7 +2529,7 @@
       ],
       "category": "Clinical Chemistry - Lipid Panel",
       "panels": [
-        "lipid_panel"
+        "LIPID"
       ],
       "loinc_codes": [
         "2085-9"
@@ -2609,7 +2609,7 @@
       ]
     },
     {
-      "test_code": "CHEM024",
+      "test_code": "LDL",
       "display_name": "LDL Cholesterol",
       "synonyms": [
         "Bad Cholesterol",
@@ -2617,7 +2617,7 @@
       ],
       "category": "Clinical Chemistry - Lipid Panel",
       "panels": [
-        "lipid_panel"
+        "LIPID"
       ],
       "loinc_codes": [
         "2089-1"
@@ -2693,7 +2693,7 @@
       ]
     },
     {
-      "test_code": "CHEM025",
+      "test_code": "TG",
       "display_name": "Triglycerides",
       "synonyms": [
         "TG",
@@ -2701,7 +2701,7 @@
       ],
       "category": "Clinical Chemistry - Lipid Panel",
       "panels": [
-        "lipid_panel"
+        "LIPID"
       ],
       "loinc_codes": [
         "2571-8"
@@ -2778,7 +2778,7 @@
       ]
     },
     {
-      "test_code": "CHEM026",
+      "test_code": "AMY",
       "display_name": "Amylase (Serum)",
       "synonyms": [
         "Serum Amylase",
@@ -2786,7 +2786,7 @@
       ],
       "category": "Clinical Chemistry - Pancreatic Enzymes",
       "panels": [
-        "acute_pancreatitis_panel"
+        "PANC"
       ],
       "loinc_codes": [
         "1798-8"
@@ -2862,14 +2862,14 @@
       ]
     },
     {
-      "test_code": "CHEM027",
+      "test_code": "LIP",
       "display_name": "Lipase (Serum)",
       "synonyms": [
         "Serum Lipase"
       ],
       "category": "Clinical Chemistry - Pancreatic Enzymes",
       "panels": [
-        "acute_pancreatitis_panel"
+        "PANC"
       ],
       "loinc_codes": [
         "3040-3"
@@ -2945,7 +2945,7 @@
       ]
     },
     {
-      "test_code": "CHEM028",
+      "test_code": "CRP",
       "display_name": "C-Reactive Protein (CRP)",
       "synonyms": [
         "CRP",
@@ -2953,7 +2953,7 @@
       ],
       "category": "Clinical Chemistry - Inflammation",
       "panels": [
-        "inflammatory_markers_panel"
+        "INFLAMM"
       ],
       "loinc_codes": [
         "1988-5"
@@ -3025,7 +3025,7 @@
       ]
     },
     {
-      "test_code": "CHEM029",
+      "test_code": "CTNI",
       "display_name": "Troponin I (Cardiac)",
       "synonyms": [
         "cTnI",
@@ -3033,7 +3033,7 @@
       ],
       "category": "Clinical Chemistry - Cardiac",
       "panels": [
-        "acute_coronary_syndrome_panel"
+        "ACS"
       ],
       "loinc_codes": [
         "10839-9"
@@ -3115,7 +3115,7 @@
       ]
     },
     {
-      "test_code": "CHEM030",
+      "test_code": "CKMB",
       "display_name": "Creatine Kinase-MB (CK-MB)",
       "synonyms": [
         "CK-MB",
@@ -3123,7 +3123,7 @@
       ],
       "category": "Clinical Chemistry - Cardiac",
       "panels": [
-        "acute_coronary_syndrome_panel"
+        "ACS"
       ],
       "loinc_codes": [
         "2157-6"
@@ -3195,7 +3195,7 @@
       ]
     },
     {
-      "test_code": "CHEM031",
+      "test_code": "FE",
       "display_name": "Serum Iron",
       "synonyms": [
         "Iron",
@@ -3203,7 +3203,7 @@
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
-        "iron_studies_panel"
+        "IRON"
       ],
       "loinc_codes": [
         "2498-4"
@@ -3231,7 +3231,7 @@
           "item_code": "IRON",
           "item_name": "Serum Iron",
           "value_type": "NUMERIC",
-          "unit": "μg/dL",
+          "unit": "\u03bcg/dL",
           "decimals_suggested": 0,
           "reference_range": {
             "adult_male": {
@@ -3280,14 +3280,14 @@
       ]
     },
     {
-      "test_code": "CHEM032",
+      "test_code": "FERR",
       "display_name": "Ferritin (Serum)",
       "synonyms": [
         "Serum Ferritin"
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
-        "iron_studies_panel"
+        "IRON"
       ],
       "loinc_codes": [
         "2276-4"
@@ -3363,7 +3363,7 @@
       ]
     },
     {
-      "test_code": "CHEM033",
+      "test_code": "TIBC",
       "display_name": "TIBC (Total Iron-Binding Capacity)",
       "synonyms": [
         "TIBC",
@@ -3371,7 +3371,7 @@
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
-        "iron_studies_panel"
+        "IRON"
       ],
       "loinc_codes": [
         "2500-7"
@@ -3398,7 +3398,7 @@
           "item_code": "TIBC",
           "item_name": "TIBC",
           "value_type": "NUMERIC",
-          "unit": "μg/dL",
+          "unit": "\u03bcg/dL",
           "decimals_suggested": 0,
           "reference_range": {
             "adult_general": {
@@ -3443,7 +3443,7 @@
       ]
     },
     {
-      "test_code": "CHEM034",
+      "test_code": "B12",
       "display_name": "Vitamin B12 (Cobalamin) - Serum",
       "synonyms": [
         "Serum B12",
@@ -3451,7 +3451,7 @@
       ],
       "category": "Clinical Chemistry - Nutrition",
       "panels": [
-        "macrocytic_anemia_workup_panel"
+        "MACANEM"
       ],
       "loinc_codes": [
         "2132-8"
@@ -3522,7 +3522,7 @@
       ]
     },
     {
-      "test_code": "CHEM035",
+      "test_code": "FOL",
       "display_name": "Folate - Serum or RBC Folate",
       "synonyms": [
         "Serum Folate",
@@ -3530,7 +3530,7 @@
       ],
       "category": "Clinical Chemistry - Nutrition",
       "panels": [
-        "macrocytic_anemia_workup_panel"
+        "MACANEM"
       ],
       "loinc_codes": [
         "2157-0"
@@ -3602,7 +3602,7 @@
       ]
     },
     {
-      "test_code": "CHEM036",
+      "test_code": "VITD",
       "display_name": "Vitamin D, 25-Hydroxy (25-OH Vitamin D)",
       "synonyms": [
         "Vitamin D Total",
@@ -3610,7 +3610,7 @@
       ],
       "category": "Clinical Chemistry - Nutrition",
       "panels": [
-        "bone_metabolism_panel"
+        "BONE"
       ],
       "loinc_codes": [
         "14635-7"
@@ -3681,7 +3681,7 @@
       ]
     },
     {
-      "test_code": "COAG001",
+      "test_code": "PTINR",
       "display_name": "Prothrombin Time (PT) / International Normalized Ratio (INR)",
       "synonyms": [
         "PT",
@@ -3689,7 +3689,7 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "coagulation_panel"
+        "COAG"
       ],
       "loinc_codes": [
         "34714-6"
@@ -3792,7 +3792,7 @@
       ]
     },
     {
-      "test_code": "COAG002",
+      "test_code": "APTT",
       "display_name": "Activated Partial Thromboplastin Time (aPTT)",
       "synonyms": [
         "aPTT",
@@ -3800,7 +3800,7 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "coagulation_panel"
+        "COAG"
       ],
       "loinc_codes": [
         "1994-3"
@@ -3883,7 +3883,7 @@
       ]
     },
     {
-      "test_code": "COAG003",
+      "test_code": "FIB",
       "display_name": "Fibrinogen",
       "synonyms": [
         "Plasma Fibrinogen",
@@ -3891,8 +3891,8 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "coagulation_panel",
-        "dic_panel"
+        "COAG",
+        "DIC"
       ],
       "loinc_codes": [
         "3349-0"
@@ -3970,14 +3970,14 @@
       ]
     },
     {
-      "test_code": "COAG004",
+      "test_code": "DDIMER",
       "display_name": "D-dimer",
       "synonyms": [
         "D-Dimer"
       ],
       "category": "Coagulation",
       "panels": [
-        "thromboembolism_panel"
+        "VTE"
       ],
       "loinc_codes": [
         "3896-5"
@@ -4004,7 +4004,7 @@
           "item_code": "DDIMER",
           "item_name": "D-dimer",
           "value_type": "NUMERIC",
-          "unit": "μg/mL",
+          "unit": "\u03bcg/mL",
           "decimals_suggested": 1,
           "reference_range": {
             "adult_general": {
@@ -4052,7 +4052,7 @@
       ]
     },
     {
-      "test_code": "URINE001",
+      "test_code": "UA",
       "display_name": "Urinalysis - Dipstick and Microscopy",
       "synonyms": [
         "UA",
@@ -4060,7 +4060,7 @@
       ],
       "category": "Urinalysis",
       "panels": [
-        "routine_urinalysis_panel"
+        "UAPANEL"
       ],
       "loinc_codes": [
         "24357-6"
@@ -4352,7 +4352,7 @@
       ]
     },
     {
-      "test_code": "URINE002",
+      "test_code": "UHCG",
       "display_name": "Pregnancy Test (Urine hCG)",
       "synonyms": [
         "Urine hCG",
@@ -4360,7 +4360,7 @@
       ],
       "category": "Urinalysis / Endocrinology",
       "panels": [
-        "pregnancy_panel"
+        "PREG"
       ],
       "loinc_codes": [
         "2106-3"
@@ -4432,7 +4432,7 @@
       ]
     },
     {
-      "test_code": "ENDO001",
+      "test_code": "BHCG",
       "display_name": "Beta-hCG (Human Chorionic Gonadotropin) - Serum Quantitative",
       "synonyms": [
         "Serum hCG",
@@ -4440,7 +4440,7 @@
       ],
       "category": "Endocrinology / Reproductive",
       "panels": [
-        "pregnancy_panel"
+        "PREG"
       ],
       "loinc_codes": [
         "2118-8"
@@ -4520,7 +4520,7 @@
       ]
     },
     {
-      "test_code": "ENDO002",
+      "test_code": "TSH",
       "display_name": "Thyroid Stimulating Hormone (TSH)",
       "synonyms": [
         "TSH",
@@ -4528,7 +4528,7 @@
       ],
       "category": "Endocrinology - Thyroid",
       "panels": [
-        "thyroid_function_panel"
+        "TFT"
       ],
       "loinc_codes": [
         "3016-3"
@@ -4606,7 +4606,7 @@
       ]
     },
     {
-      "test_code": "ENDO003",
+      "test_code": "FT4",
       "display_name": "Free Thyroxine (FT4)",
       "synonyms": [
         "FT4",
@@ -4614,7 +4614,7 @@
       ],
       "category": "Endocrinology - Thyroid",
       "panels": [
-        "thyroid_function_panel"
+        "TFT"
       ],
       "loinc_codes": [
         "3024-7"
@@ -4692,7 +4692,7 @@
       ]
     },
     {
-      "test_code": "SER001",
+      "test_code": "HIVAGAB",
       "display_name": "HIV 1/2 Antibody + p24 Antigen (Fourth-Generation Combo Test)",
       "synonyms": [
         "HIV Combo Test",
@@ -4701,7 +4701,7 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "hiv_testing_panel"
+        "HIV"
       ],
       "loinc_codes": [
         "57013-6"
@@ -4775,7 +4775,7 @@
       ]
     },
     {
-      "test_code": "SER002",
+      "test_code": "HIVCONF",
       "display_name": "HIV Confirmation Test (HIV Immunoblot or HIV RNA-PCR)",
       "synonyms": [
         "HIV Confirm",
@@ -4784,7 +4784,7 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "hiv_testing_panel"
+        "HIV"
       ],
       "loinc_codes": [
         "34701-0"
@@ -4858,7 +4858,7 @@
       ]
     },
     {
-      "test_code": "SER003",
+      "test_code": "HIVVL",
       "display_name": "HIV-1 Viral Load (RNA-PCR Quantitative)",
       "synonyms": [
         "HIV RNA",
@@ -4866,7 +4866,7 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "hiv_management_panel"
+        "HIVMGMT"
       ],
       "loinc_codes": [
         "20415-4"
@@ -4940,14 +4940,14 @@
       ]
     },
     {
-      "test_code": "SER004",
+      "test_code": "HBSAG",
       "display_name": "HBsAg (Hepatitis B Surface Antigen)",
       "synonyms": [
         "Hepatitis B Surface Antigen"
       ],
       "category": "Serology / Infectious Disease - Hepatitis B",
       "panels": [
-        "hepatitis_panel"
+        "HEP"
       ],
       "loinc_codes": [
         "5195-3"
@@ -5019,14 +5019,14 @@
       ]
     },
     {
-      "test_code": "SER005",
+      "test_code": "AHBC",
       "display_name": "Anti-HBc (Hepatitis B Core Antibody)",
       "synonyms": [
         "Hepatitis B Core Antibody"
       ],
       "category": "Serology / Infectious Disease - Hepatitis B",
       "panels": [
-        "hepatitis_panel"
+        "HEP"
       ],
       "loinc_codes": [
         "5196-1"
@@ -5097,14 +5097,14 @@
       ]
     },
     {
-      "test_code": "SER006",
+      "test_code": "AHBS",
       "display_name": "Anti-HBs (Hepatitis B Surface Antibody)",
       "synonyms": [
         "Hepatitis B Surface Antibody"
       ],
       "category": "Serology / Infectious Disease - Hepatitis B",
       "panels": [
-        "hepatitis_panel"
+        "HEP"
       ],
       "loinc_codes": [
         "5194-6"
@@ -5141,7 +5141,7 @@
           ],
           "reference_range": {
             "adult_general": {
-              "text": "Negative (non-immune); ≥10 mIU/mL positive indicates immunity"
+              "text": "Negative (non-immune); \u226510 mIU/mL positive indicates immunity"
             }
           }
         }
@@ -5175,14 +5175,14 @@
       ]
     },
     {
-      "test_code": "SER007",
+      "test_code": "AHCV",
       "display_name": "Anti-HCV (Hepatitis C Antibody)",
       "synonyms": [
         "HCV Antibody"
       ],
       "category": "Serology / Infectious Disease - Hepatitis C",
       "panels": [
-        "hepatitis_panel"
+        "HEP"
       ],
       "loinc_codes": [
         "7905-9"
@@ -5255,7 +5255,7 @@
       ]
     },
     {
-      "test_code": "SER008",
+      "test_code": "RPR",
       "display_name": "Syphilis Screening - RPR/VDRL (Non-Treponemal Test)",
       "synonyms": [
         "RPR",
@@ -5264,8 +5264,8 @@
       ],
       "category": "Serology / Infectious Disease - Syphilis",
       "panels": [
-        "syphilis_diagnosis_panel",
-        "sti_panel"
+        "SYPH",
+        "STI"
       ],
       "loinc_codes": [
         "5289-3"
@@ -5336,7 +5336,7 @@
       ]
     },
     {
-      "test_code": "SER009",
+      "test_code": "TPHA",
       "display_name": "Syphilis Confirmation - TPHA/TPPA (Treponemal Test)",
       "synonyms": [
         "TPHA",
@@ -5345,7 +5345,7 @@
       ],
       "category": "Serology / Infectious Disease - Syphilis",
       "panels": [
-        "syphilis_diagnosis_panel"
+        "SYPH"
       ],
       "loinc_codes": [
         "14032-3"
@@ -5416,7 +5416,7 @@
       ]
     },
     {
-      "test_code": "SER010",
+      "test_code": "HPYLORI",
       "display_name": "Helicobacter pylori (H. pylori) Serology (IgG)",
       "synonyms": [
         "H. pylori Serology",
@@ -5424,7 +5424,7 @@
       ],
       "category": "Serology / Infectious Disease - H. pylori",
       "panels": [
-        "gastric_ulcer_workup"
+        "ULCER"
       ],
       "loinc_codes": [
         "5213-8"
@@ -5496,7 +5496,7 @@
       ]
     },
     {
-      "test_code": "SER011",
+      "test_code": "TOXO",
       "display_name": "Toxoplasma gondii Serology (IgG and IgM)",
       "synonyms": [
         "Toxo Serology",
@@ -5504,7 +5504,7 @@
       ],
       "category": "Serology / Infectious Disease - Parasitic",
       "panels": [
-        "pregnancy_serology_panel"
+        "PREGSER"
       ],
       "loinc_codes": [
         "6317-8"
@@ -5593,7 +5593,7 @@
       ]
     },
     {
-      "test_code": "SER012",
+      "test_code": "CMV",
       "display_name": "Cytomegalovirus (CMV) Serology (IgG and IgM)",
       "synonyms": [
         "CMV Serology",
@@ -5601,7 +5601,7 @@
       ],
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
-        "immunocompromised_patient_workup"
+        "IMMCOMP"
       ],
       "loinc_codes": [
         "6639-2"
@@ -5690,7 +5690,7 @@
       ]
     },
     {
-      "test_code": "SER013",
+      "test_code": "EBV",
       "display_name": "Epstein-Barr Virus (EBV) Serology (VCA-IgG, VCA-IgM, EBNA)",
       "synonyms": [
         "EBV Serology",
@@ -5698,7 +5698,7 @@
       ],
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
-        "acute_infection_workup"
+        "INFACUTE"
       ],
       "loinc_codes": [
         "5304-0"
@@ -5805,7 +5805,7 @@
       ]
     },
     {
-      "test_code": "SER014",
+      "test_code": "RUBELLA",
       "display_name": "Rubella Serology (IgG Antibody) - Immunity",
       "synonyms": [
         "Rubella IgG",
@@ -5813,7 +5813,7 @@
       ],
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
-        "prenatal_serology_panel"
+        "PRENATAL"
       ],
       "loinc_codes": [
         "5320-6"
@@ -5850,7 +5850,7 @@
           ],
           "reference_range": {
             "adult_general": {
-              "text": "Positive/Immune (≥10 IU/mL or per assay cut-off)"
+              "text": "Positive/Immune (\u226510 IU/mL or per assay cut-off)"
             }
           }
         }
@@ -5884,7 +5884,7 @@
       ]
     },
     {
-      "test_code": "PARA001",
+      "test_code": "MALRDT",
       "display_name": "Malaria RDT (Rapid Diagnostic Test)",
       "synonyms": [
         "Malaria Rapid Test",
@@ -5892,7 +5892,7 @@
       ],
       "category": "Parasitology / Infectious Disease - Malaria",
       "panels": [
-        "fever_workup_panel"
+        "FEVER"
       ],
       "loinc_codes": [
         "9142-9"
@@ -5901,7 +5901,7 @@
       "turnaround_time_hours": 0.25,
       "sample": {
         "sample_type": "Whole Blood (capillary or venous)",
-        "container": "Finger prick or EDTA, 5-10 μL",
+        "container": "Finger prick or EDTA, 5-10 \u03bcL",
         "minimum_volume_ml": 0.005,
         "fasting_required": false,
         "collection_notes": "Follow WHO pre-qualification requirements",
@@ -5953,7 +5953,7 @@
       "container_top_colors": [
         "purple"
       ],
-      "sample_volume_description": "10μL",
+      "sample_volume_description": "10\u03bcL",
       "price": 50,
       "validation_rejection_criteria": [
         "contaminated",
@@ -5969,7 +5969,7 @@
       ]
     },
     {
-      "test_code": "PARA002",
+      "test_code": "MALSMEAR",
       "display_name": "Malaria Microscopy (Thick and Thin Blood Films)",
       "synonyms": [
         "Malaria Smear",
@@ -5978,7 +5978,7 @@
       ],
       "category": "Parasitology / Infectious Disease - Malaria",
       "panels": [
-        "fever_workup_panel"
+        "FEVER"
       ],
       "loinc_codes": [
         "80307-4"
@@ -5987,7 +5987,7 @@
       "turnaround_time_hours": 2,
       "sample": {
         "sample_type": "Whole Blood",
-        "container": "Glass slide or EDTA, 5-10 μL",
+        "container": "Glass slide or EDTA, 5-10 \u03bcL",
         "minimum_volume_ml": 0.01,
         "fasting_required": false,
         "collection_notes": "Prepare within 30 minutes",
@@ -6032,7 +6032,7 @@
       "container_top_colors": [
         "purple"
       ],
-      "sample_volume_description": "10μL",
+      "sample_volume_description": "10\u03bcL",
       "price": 50,
       "validation_rejection_criteria": [
         "contaminated",
@@ -6048,7 +6048,7 @@
       ]
     },
     {
-      "test_code": "PARA003",
+      "test_code": "SICKLE",
       "display_name": "Sickle Cell Screening / Hemoglobin Electrophoresis",
       "synonyms": [
         "Sickle Cell Test",
@@ -6056,7 +6056,7 @@
       ],
       "category": "Hematology - Hemoglobinopathy",
       "panels": [
-        "hemoglobinopathy_panel"
+        "HBPATH"
       ],
       "loinc_codes": [
         "4576-3"
@@ -6151,7 +6151,7 @@
       ]
     },
     {
-      "test_code": "PARA004",
+      "test_code": "G6PD",
       "display_name": "G6PD (Glucose-6-Phosphate Dehydrogenase) Screening",
       "synonyms": [
         "G6PD Test",
@@ -6159,7 +6159,7 @@
       ],
       "category": "Hematology - Enzymatic Defects",
       "panels": [
-        "hemolysis_workup_panel"
+        "HEMOLYS"
       ],
       "loinc_codes": [
         "5803-2"
@@ -6234,7 +6234,7 @@
       ]
     },
     {
-      "test_code": "PARA005",
+      "test_code": "STOOL",
       "display_name": "Stool Ova and Parasites (O&P) Microscopy",
       "synonyms": [
         "Stool O&P",
@@ -6242,7 +6242,7 @@
       ],
       "category": "Parasitology / Microbiology",
       "panels": [
-        "diarrhea_workup_panel"
+        "DIARRHEA"
       ],
       "loinc_codes": [
         "12504-5"
@@ -6312,7 +6312,7 @@
       ]
     },
     {
-      "test_code": "MICRO001",
+      "test_code": "AFB",
       "display_name": "AFB (Acid-Fast Bacilli) Sputum Smear - Ziehl-Neelsen",
       "synonyms": [
         "TB Smear",
@@ -6320,7 +6320,7 @@
       ],
       "category": "Microbiology - Mycobacteriology / TB",
       "panels": [
-        "tb_diagnosis_panel"
+        "TB"
       ],
       "loinc_codes": [
         "12475-8"
@@ -6399,7 +6399,7 @@
       ]
     },
     {
-      "test_code": "MICRO002",
+      "test_code": "XPERT",
       "display_name": "GeneXpert MTB/RIF (Rapid TB + Rifampicin Resistance)",
       "synonyms": [
         "Xpert MTB/RIF",
@@ -6407,8 +6407,8 @@
       ],
       "category": "Microbiology - Molecular / TB",
       "panels": [
-        "tb_diagnosis_panel",
-        "drug_resistant_tb_panel"
+        "TB",
+        "DRTB"
       ],
       "loinc_codes": [
         "80327-7"
@@ -6483,14 +6483,14 @@
       ]
     },
     {
-      "test_code": "MICRO003",
+      "test_code": "UCULT",
       "display_name": "Urine Culture with Antibiotic Susceptibility Testing",
       "synonyms": [
         "Urine Culture & Sensitivity"
       ],
       "category": "Microbiology - Culture",
       "panels": [
-        "infection_workup_panel"
+        "INFECT"
       ],
       "loinc_codes": [
         "9008-3"
@@ -6599,14 +6599,14 @@
       ]
     },
     {
-      "test_code": "MICRO004",
+      "test_code": "SCULT",
       "display_name": "Stool Culture with Antibiotic Susceptibility",
       "synonyms": [
         "Fecal Culture"
       ],
       "category": "Microbiology - Culture / Gastrointestinal",
       "panels": [
-        "diarrhea_workup_panel"
+        "DIARRHEA"
       ],
       "loinc_codes": [
         "625-4"
@@ -6696,7 +6696,7 @@
       ]
     },
     {
-      "test_code": "MICRO005",
+      "test_code": "BCULT",
       "display_name": "Blood Culture (Aerobic and Anaerobic)",
       "synonyms": [
         "Septic Workup",
@@ -6704,7 +6704,7 @@
       ],
       "category": "Microbiology - Culture / Sepsis",
       "panels": [
-        "sepsis_workup_panel"
+        "SEPSIS"
       ],
       "loinc_codes": [
         "27853-3"
@@ -6802,7 +6802,7 @@
       ]
     },
     {
-      "test_code": "VIRO001",
+      "test_code": "COVIDPCR",
       "display_name": "SARS-CoV-2 RT-PCR (COVID-19 Molecular Test)",
       "synonyms": [
         "COVID-19 PCR",
@@ -6810,7 +6810,7 @@
       ],
       "category": "Virology / Infectious Disease - COVID-19",
       "panels": [
-        "covid_19_diagnosis_panel"
+        "COVID"
       ],
       "loinc_codes": [
         "96163-4"
@@ -6883,7 +6883,7 @@
       ]
     },
     {
-      "test_code": "VIRO002",
+      "test_code": "COVIDAG",
       "display_name": "SARS-CoV-2 Antigen RDT (COVID-19 Rapid Test)",
       "synonyms": [
         "COVID-19 Ag-RDT",
@@ -6891,7 +6891,7 @@
       ],
       "category": "Virology / Infectious Disease - COVID-19",
       "panels": [
-        "covid_19_diagnosis_panel"
+        "COVID"
       ],
       "loinc_codes": [
         "96119-6"
@@ -6964,7 +6964,7 @@
       ]
     },
     {
-      "test_code": "VIRO003",
+      "test_code": "DENGUE",
       "display_name": "Dengue Serology (IgM and IgG)",
       "synonyms": [
         "Dengue RDT",
@@ -6972,7 +6972,7 @@
       ],
       "category": "Virology / Infectious Disease - Dengue",
       "panels": [
-        "fever_workup_panel"
+        "FEVER"
       ],
       "loinc_codes": [
         "33879-7"
@@ -7061,7 +7061,7 @@
       ]
     },
     {
-      "test_code": "VIRO004",
+      "test_code": "CHIKV",
       "display_name": "Chikungunya Serology (IgM)",
       "synonyms": [
         "Chikungunya RDT",
@@ -7069,7 +7069,7 @@
       ],
       "category": "Virology / Infectious Disease - Chikungunya",
       "panels": [
-        "fever_workup_panel"
+        "FEVER"
       ],
       "loinc_codes": [
         "81324-6"
@@ -7078,7 +7078,7 @@
       "turnaround_time_hours": 0.5,
       "sample": {
         "sample_type": "Serum or whole blood",
-        "container": "SST or capillary drop, 2-5 μL",
+        "container": "SST or capillary drop, 2-5 \u03bcL",
         "minimum_volume_ml": 2,
         "fasting_required": false,
         "rejection_criteria": [
@@ -7124,7 +7124,7 @@
       "container_top_colors": [
         "red"
       ],
-      "sample_volume_description": "5μL",
+      "sample_volume_description": "5\u03bcL",
       "price": 50,
       "validation_rejection_criteria": [
         "contaminated",
@@ -7140,7 +7140,7 @@
       ]
     },
     {
-      "test_code": "HEMA002",
+      "test_code": "XMATCH",
       "display_name": "Blood Cross-Match (Compatibility Test)",
       "synonyms": [
         "Serological Cross-match",
@@ -7148,7 +7148,7 @@
       ],
       "category": "Hematology - Transfusion Medicine",
       "panels": [
-        "transfusion_screening_panel"
+        "TXFUSE"
       ],
       "loinc_codes": [
         "5808-8"
@@ -7222,14 +7222,14 @@
       ]
     },
     {
-      "test_code": "TUMOR001",
+      "test_code": "PSA",
       "display_name": "PSA (Prostate-Specific Antigen)",
       "synonyms": [
         "Prostate-Specific Antigen"
       ],
       "category": "Oncology / Tumor Markers",
       "panels": [
-        "prostate_cancer_screening"
+        "PSASCR"
       ],
       "loinc_codes": [
         "2025-8"
@@ -7300,14 +7300,14 @@
       ]
     },
     {
-      "test_code": "TUMOR002",
+      "test_code": "CEA",
       "display_name": "CEA (Carcinoembryonic Antigen)",
       "synonyms": [
         "Carcinoembryonic Antigen"
       ],
       "category": "Oncology / Tumor Markers",
       "panels": [
-        "colon_cancer_markers"
+        "COLON"
       ],
       "loinc_codes": [
         "2039-6"
@@ -7381,7 +7381,7 @@
       ]
     },
     {
-      "test_code": "CHEM037",
+      "test_code": "PAB",
       "display_name": "Prealbumin (Transthyretin)",
       "synonyms": [
         "PAB",
@@ -7389,7 +7389,7 @@
       ],
       "category": "Clinical Chemistry - Nutritional Status",
       "panels": [
-        "nutritional_assessment_panel"
+        "NUTRI"
       ],
       "loinc_codes": [
         "2987-5"
@@ -7459,14 +7459,14 @@
       ]
     },
     {
-      "test_code": "CHEM038",
+      "test_code": "LAC",
       "display_name": "Lactate (Serum/Plasma)",
       "synonyms": [
         "Blood Lactate"
       ],
       "category": "Clinical Chemistry - Acid-Base",
       "panels": [
-        "lactic_acidosis_panel"
+        "LACTATE"
       ],
       "loinc_codes": [
         "2524-7"
@@ -7537,7 +7537,7 @@
       ]
     },
     {
-      "test_code": "HEMO001",
+      "test_code": "HBELEC",
       "display_name": "Hemoglobin Electrophoresis - Advanced",
       "synonyms": [
         "Hb Phenotyping",
@@ -7545,7 +7545,7 @@
       ],
       "category": "Hematology - Hemoglobinopathy",
       "panels": [
-        "hemoglobinopathy_panel"
+        "HBPATH"
       ],
       "loinc_codes": [
         "4576-3"
@@ -7614,7 +7614,7 @@
       ]
     },
     {
-      "test_code": "PROT001",
+      "test_code": "SPEP",
       "display_name": "Protein Electrophoresis (Serum)",
       "synonyms": [
         "Serum Protein Electrophoresis",
@@ -7622,7 +7622,7 @@
       ],
       "category": "Clinical Chemistry - Protein Fractionation",
       "panels": [
-        "monoclonal_protein_panel"
+        "MPROTEIN"
       ],
       "loinc_codes": [
         "2820-9"
@@ -7690,7 +7690,7 @@
       ]
     },
     {
-      "test_code": "UREA001",
+      "test_code": "UQUANT",
       "display_name": "Urea Culture / Quantitative Urine Culture",
       "synonyms": [
         "Quantitative UC",
@@ -7698,7 +7698,7 @@
       ],
       "category": "Microbiology - Quantitative Urine",
       "panels": [
-        "uti_management_panel"
+        "UTI"
       ],
       "loinc_codes": [
         "32705-2"
@@ -7742,7 +7742,7 @@
         "SRC002"
       ],
       "confidence": "HIGH",
-      "notes": "≥10^5 CFU/mL diagnostic for UTI in symptomatic patients",
+      "notes": "\u226510^5 CFU/mL diagnostic for UTI in symptomatic patients",
       "mapped_category": "microbiology",
       "mapped_sample_type": "urine",
       "container_types": [
@@ -7769,7 +7769,7 @@
       ]
     },
     {
-      "test_code": "VIRO005",
+      "test_code": "YF",
       "display_name": "Yellow Fever Serology (IgM/IgG)",
       "synonyms": [
         "YF Serology",
@@ -7777,7 +7777,7 @@
       ],
       "category": "Virology / Infectious Disease - Arboviruses",
       "panels": [
-        "fever_workup_panel"
+        "FEVER"
       ],
       "loinc_codes": [
         "6317-8"

@@ -11,7 +11,9 @@ function CollectionOperationalMetaItemNode({ item }: { item: CollectionOperation
     return <QueueAgeMeta since={item.since} />;
   }
   if (item.type === 'recollection-requested') {
-    return <RecollectionRequestedMeta recollectionSampleId={item.recollectionSampleId} />;
+    return (
+      <RecollectionRequestedMeta recollectionAccessionNumber={item.recollectionAccessionNumber} />
+    );
   }
   return <span className={item.className}>{item.text}</span>;
 }

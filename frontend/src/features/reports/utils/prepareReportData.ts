@@ -248,7 +248,7 @@ export function prepareReportData({
 }
 
 /**
- * Generates and downloads a lab report PDF named by order id.
+ * Generates and downloads a lab report PDF named by filler number.
  */
 export async function downloadLabReport(
   reportableOrder: ReportableOrder,
@@ -259,6 +259,7 @@ export async function downloadLabReport(
   formatDate: (date: Date) => string
 ): Promise<void> {
   const doc = await generateLabReport(reportData, catalogTests);
-  const filename = `Lab_Report_ORD${reportableOrder.orderId.toString().padStart(6, '0')}_${formatDate(new Date())}.pdf`;
+  const filler = reportableOrder.order?.fillerNumber ?? '-';
+  const filename = `lab-report-${filler}_${formatDate(new Date())}.pdf`;
   downloadPDF(doc, filename);
 }

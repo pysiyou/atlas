@@ -131,23 +131,21 @@ const TUBE_LABEL_PRINT_CSS = `
 export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleLabelPrintInput): string => {
   assertSampleLabelPrintable(sample);
 
-  const sampleIdDisplay = displayId.sample(sample.sampleId);
   const accessionDisplay = displayId.accession(sample.accessionNumber);
   const sampleType = sampleTypeLabel(sample.sampleType || 'other').toUpperCase();
   const dateTime = resolveLabelDateTime(sample, eventAt);
 
   const safeDateTime = escapeHtml(dateTime);
-  const safeSampleId = escapeHtml(sampleIdDisplay);
   const safeAccession = escapeHtml(accessionDisplay);
   const nameTypeLine = escapeHtml(`${patientName.trim() || 'Unknown'} - ${sampleType}`);
-  const barcodeValue = escapeJsString(sampleIdDisplay);
+  const barcodeValue = escapeJsString(accessionDisplay);
 
   return `
     <!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="utf-8" />
-        <title>Label - ${safeSampleId}</title>
+        <title>Label - ${safeAccession}</title>
         <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
         <style>${TUBE_LABEL_PRINT_CSS}</style>
       </head>
@@ -158,7 +156,7 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
           <div class="label-barcode">
             <svg id="barcode" role="img" aria-label="Barcode"></svg>
           </div>
-          <p class="label-line label-sample-id">${safeSampleId}${safeAccession ? ` · ${safeAccession}` : ''}</p>
+          <p class="label-line label-sample-id">${safeAccession}</p>
         </div>
         <script>
           (function() {

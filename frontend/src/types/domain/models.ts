@@ -39,8 +39,10 @@ export interface SampleCollectionRequirement {
 export interface CollectionQueueRow {
   sample: Sample;
   patientId: number;
+  patientMrn?: string | null;
   patientName: string;
   orderId: number;
+  fillerNumber?: string | null;
   orderDate: string;
   paymentStatus: PaymentStatus;
   priority: PriorityLevel;
@@ -173,10 +175,12 @@ export interface EscalationResolveResult {
 /** One reportable order row for the reports module. */
 export interface ReportableOrder {
   orderId: number;
+  fillerNumber?: string | null;
   orderDate: string;
   overallStatus: OrderStatus;
   statusPresentation: StatusPresentation;
   patientId: number;
+  patientMrn?: string | null;
   patientName: string;
   patientAge?: number;
   /** ISO date of birth from the report DTO; used on the printable header. */

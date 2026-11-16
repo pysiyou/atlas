@@ -17,7 +17,7 @@ from app.domains.users.schemas import (
 )
 from app.domains.users.service import UserService
 from app.platform.database import get_db
-from app.platform.http.dependencies import get_current_user
+from app.platform.http import get_current_user
 from app.platform.security import (
     TokenType,
     create_access_token,

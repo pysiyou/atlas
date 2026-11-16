@@ -12,6 +12,7 @@ class ReferentDoctor(Base):
         "referent_doctor_id", Integer, primary_key=True, autoincrement=True, index=True
     )
     fullName = Column("full_name", String(200), nullable=False)
+    npi = Column(String(10), nullable=True, unique=True, index=True)
     username = Column(String(100), nullable=True, unique=True, index=True)
     email = Column(String(255), nullable=True)
     phone = Column(String(20), nullable=True)

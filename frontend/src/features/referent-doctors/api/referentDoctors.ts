@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 export interface ReferentDoctor {
   referentDoctorId: number;
   fullName: string;
+  npi?: string | null;
   username?: string | null;
   email?: string | null;
   phone?: string | null;
@@ -17,6 +18,7 @@ export interface ReferentDoctor {
 
 export interface ReferentDoctorCreateInput {
   fullName: string;
+  npi?: string | null;
   username?: string | null;
   email?: string | null;
   phone?: string | null;

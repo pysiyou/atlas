@@ -1,15 +1,22 @@
-"""Unified audit event log search — record display ids, numeric ids, names."""
+"""Unified audit event log search — clinical ids and names."""
 from __future__ import annotations
 
-import re
 from typing import Any, Literal
 
 from app.domains.audit.kinds import ACCESS_EVENT_TYPES
 from app.domains.audit.models import AuditEvent
+from app.domains.lab.models.sample import Sample
+from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.users.models import User
-from app.platform.utils.common import parse_display_id_from_search
-from sqlalchemy import String, and_, cast, or_
+from app.platform.utils import (
+    compact_identifier,
+    looks_like_accession,
+    looks_like_filler,
+    looks_like_mnemonic,
+    looks_like_mrn,
+)
+from sqlalchemy import and_, exists, or_
 
 SearchIntentMode = Literal[
     "empty",
@@ -17,15 +24,10 @@ SearchIntentMode = Literal[
     "record_test",
     "record_sample",
     "record_patient",
-    "numeric",
     "text",
 ]
 
 TEXT_SEARCH_DIMENSIONS = ("patientName", "actorName", "username")
-
-
-def format_record_display_id(prefix: str, record_id: int) -> str:
-    return f"{prefix.upper()}{record_id:04d}"
 
 
 def classify_search_term(term: str) -> dict[str, Any]:
@@ -34,60 +36,39 @@ def classify_search_term(term: str) -> dict[str, Any]:
     if not trimmed:
         return {"mode": "empty", "textTerm": None, "dimensions": [], "parsedIds": None}
 
-    compact = re.sub(r"[\s-]", "", trimmed)
-    upper = compact.upper()
+    compact = compact_identifier(trimmed)
 
-    if upper.startswith("TST"):
-        test_id = parse_display_id_from_search(trimmed, "TST")
-        if test_id is not None:
-            return {
-                "mode": "record_test",
-                "textTerm": None,
-                "dimensions": [],
-                "parsedIds": {"testId": test_id},
-                "displayToken": format_record_display_id("TST", test_id),
-            }
-    if upper.startswith("ORD"):
-        order_id = parse_display_id_from_search(trimmed, "ORD")
-        if order_id is not None:
-            return {
-                "mode": "record_order",
-                "textTerm": None,
-                "dimensions": [],
-                "parsedIds": {"orderId": order_id},
-                "displayToken": format_record_display_id("ORD", order_id),
-            }
-    if upper.startswith("SAM"):
-        sample_id = parse_display_id_from_search(trimmed, "SAM")
-        if sample_id is not None:
-            return {
-                "mode": "record_sample",
-                "textTerm": None,
-                "dimensions": [],
-                "parsedIds": {"sampleId": sample_id},
-                "displayToken": format_record_display_id("SAM", sample_id),
-            }
-    if upper.startswith("PAT"):
-        patient_id = parse_display_id_from_search(trimmed, "PAT")
-        if patient_id is not None:
-            return {
-                "mode": "record_patient",
-                "textTerm": None,
-                "dimensions": [],
-                "parsedIds": {"patientId": patient_id},
-                "displayToken": format_record_display_id("PAT", patient_id),
-            }
-    if compact.isdigit():
-        numeric = int(compact)
+    if looks_like_mnemonic(trimmed):
         return {
-            "mode": "numeric",
-            "textTerm": compact,
+            "mode": "record_test",
+            "textTerm": None,
             "dimensions": [],
-            "parsedIds": {
-                "orderId": numeric,
-                "patientId": numeric,
-                "testId": numeric,
-            },
+            "parsedIds": None,
+            "displayToken": trimmed.strip().upper(),
+        }
+    if looks_like_filler(trimmed):
+        return {
+            "mode": "record_order",
+            "textTerm": None,
+            "dimensions": [],
+            "parsedIds": None,
+            "displayToken": compact,
+        }
+    if looks_like_accession(trimmed):
+        return {
+            "mode": "record_sample",
+            "textTerm": None,
+            "dimensions": [],
+            "parsedIds": None,
+            "displayToken": trimmed.strip(),
+        }
+    if looks_like_mrn(trimmed):
+        return {
+            "mode": "record_patient",
+            "textTerm": None,
+            "dimensions": [],
+            "parsedIds": None,
+            "displayToken": compact,
         }
 
     return {
@@ -125,63 +106,52 @@ def access_event_types_to_hide(
 
 
 def _record_id_clauses(term: str) -> list:
-    compact = re.sub(r"[\s-]", "", term.strip())
-    upper = compact.upper()
+    trimmed = term.strip()
+    compact = compact_identifier(trimmed)
     clauses: list = []
 
-    if upper.startswith("TST"):
-        test_id = parse_display_id_from_search(term, "TST")
-        if test_id is not None:
-            clauses.extend(
-                [
-                    AuditEvent.testId == test_id,
-                    and_(
-                        AuditEvent.targetType == "order_test",
-                        AuditEvent.targetId == test_id,
-                    ),
-                ]
+    if looks_like_mnemonic(trimmed):
+        code = trimmed.upper()
+        clauses.append(
+            exists().where(
+                and_(OrderTest.testCode == code, AuditEvent.testId == OrderTest.id)
             )
-    elif upper.startswith("ORD"):
-        order_id = parse_display_id_from_search(term, "ORD")
-        if order_id is not None:
-            clauses.extend(
-                [
-                    AuditEvent.orderId == order_id,
-                    and_(
-                        AuditEvent.targetType == "order",
-                        AuditEvent.targetId == order_id,
-                    ),
-                ]
-            )
-    elif upper.startswith("SAM"):
-        sample_id = parse_display_id_from_search(term, "SAM")
-        if sample_id is not None:
-            clauses.append(
-                and_(
-                    AuditEvent.targetType == "sample",
-                    AuditEvent.targetId == sample_id,
-                )
-            )
-    elif upper.startswith("PAT"):
-        patient_id = parse_display_id_from_search(term, "PAT")
-        if patient_id is not None:
-            clauses.extend(
-                [
-                    AuditEvent.patientId == patient_id,
-                    and_(
-                        AuditEvent.targetType == "patient",
-                        AuditEvent.targetId == patient_id,
-                    ),
-                ]
-            )
-    elif compact.isdigit():
-        numeric = int(compact)
+        )
+    elif looks_like_filler(trimmed):
         clauses.extend(
             [
-                AuditEvent.orderId == numeric,
-                AuditEvent.patientId == numeric,
-                AuditEvent.testId == numeric,
-                cast(AuditEvent.targetId, String).like(f"%{compact}%"),
+                exists().where(
+                    and_(Order.fillerNumber == compact, AuditEvent.orderId == Order.orderId)
+                ),
+                exists().where(
+                    and_(
+                        Order.placerNumber == compact,
+                        AuditEvent.orderId == Order.orderId,
+                    )
+                ),
+            ]
+        )
+    elif looks_like_accession(trimmed):
+        clauses.append(
+            exists().where(
+                and_(
+                    Sample.accessionNumber == trimmed,
+                    AuditEvent.targetType == "sample",
+                    AuditEvent.targetId == Sample.sampleId,
+                )
+            )
+        )
+    elif looks_like_mrn(trimmed):
+        clauses.extend(
+            [
+                exists().where(and_(Patient.mrn == compact, AuditEvent.patientId == Patient.id)),
+                exists().where(
+                    and_(
+                        Patient.mrn == compact,
+                        AuditEvent.targetType == "patient",
+                        AuditEvent.targetId == Patient.id,
+                    )
+                ),
             ]
         )
 
@@ -189,7 +159,7 @@ def _record_id_clauses(term: str) -> list:
 
 
 def apply_unified_search(query, term: str, *, scope: str = "stream"):
-    """Narrow query with OR match on record ids, patient name, actor name, or username."""
+    """Narrow query with OR match on clinical ids, patient name, actor name, or username."""
     trimmed = term.strip()
     if not trimmed:
         return query
@@ -202,6 +172,9 @@ def apply_unified_search(query, term: str, *, scope: str = "stream"):
     text_clauses = [
         AuditEvent.actorSnapshot["name"].astext.ilike(pattern),
         User.username.ilike(pattern),
+        Patient.mrn.ilike(pattern),
+        Order.fillerNumber.ilike(pattern),
+        Sample.accessionNumber.ilike(pattern),
     ]
     if scope != "system":
         text_clauses.append(Patient.fullName.ilike(pattern))
@@ -209,5 +182,7 @@ def apply_unified_search(query, term: str, *, scope: str = "stream"):
     return (
         query.outerjoin(User, User.id == AuditEvent.actorId)
         .outerjoin(Patient, Patient.id == AuditEvent.patientId)
+        .outerjoin(Order, Order.orderId == AuditEvent.orderId)
+        .outerjoin(Sample, Sample.sampleId == AuditEvent.targetId)
         .filter(or_(*text_clauses))
     )

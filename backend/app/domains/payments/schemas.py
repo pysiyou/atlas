@@ -3,6 +3,7 @@ Pydantic schemas for Payment
 """
 from datetime import datetime
 
+from app.platform.utils import FILLER_PATTERN, RECEIPT_NUMBER_PATTERN
 from app.shared.contracts.enums import PaymentMethod, PaymentStatus
 from pydantic import BaseModel, Field
 
@@ -16,7 +17,9 @@ class PaymentCreate(BaseModel):
 
 class PaymentResponse(BaseModel):
     paymentId: int
+    receiptNumber: str = Field(..., pattern=RECEIPT_NUMBER_PATTERN)
     orderId: int
+    fillerNumber: str | None = Field(None, pattern=FILLER_PATTERN)
     invoiceId: int | None = None
     amount: float
     paymentMethod: PaymentMethod

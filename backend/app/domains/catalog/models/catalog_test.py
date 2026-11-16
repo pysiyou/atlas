@@ -9,7 +9,7 @@ from sqlalchemy.sql import func
 class CatalogTest(Base):
     __tablename__ = "tests"
 
-    code = Column(String, primary_key=True, index=True)  # e.g., HEM001
+    code = Column(String, primary_key=True, index=True)  # Clinical mnemonic, e.g. CBC
     name = Column(String, nullable=False, index=True)
     displayName = Column("display_name", String, nullable=False)
     synonyms = Column(JSON, nullable=True)  # Array of alternative names

@@ -19,7 +19,7 @@ from app.domains.lab.specimen.aliquots import create_aliquots
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http.dependencies import (
+from app.platform.http import (
     PaginationParams,
     get_current_user,
     require_sample_collector,
@@ -33,11 +33,18 @@ router = APIRouter()
 
 
 def _sample_response(db: Session, sample: Sample) -> SampleResponse:
+    """Serialize a sample and attach stored clinical lineage identifiers."""
     data = SampleResponse.model_validate(sample).model_dump()
     if sample.originalSampleId:
         parent = db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
-        if parent and parent.collectedAt:
-            data["originalSampleCollectedAt"] = parent.collectedAt
+        if parent:
+            data["originalAccessionNumber"] = parent.accessionNumber
+            if parent.collectedAt:
+                data["originalSampleCollectedAt"] = parent.collectedAt
+    if sample.recollectionSampleId:
+        child = db.query(Sample).filter(Sample.sampleId == sample.recollectionSampleId).first()
+        if child:
+            data["recollectionAccessionNumber"] = child.accessionNumber
     return SampleResponse(**data)
 
 

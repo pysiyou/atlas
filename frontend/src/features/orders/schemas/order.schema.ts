@@ -52,7 +52,10 @@ export const orderTestSchema = z.object({
 
 export const orderSchema = z.object({
   orderId: positiveIntSchema, // Backend returns orderId, not id
+  fillerNumber: z.string().optional(),
+  placerNumber: z.string().nullable().optional(),
   patientId: positiveIntSchema,
+  patientMrn: z.string().nullable().optional(),
   patientName: z.string(), // From backend relationship
   patientDob: dateStringSchema.optional(),
   patientGender: zEnumFromValues(GENDER_VALUES).optional(),

@@ -38,7 +38,8 @@ export const createReportTableConfig = (
       width: TABLE_COLUMN_WIDTH.id,
       sortable: true,
       accessor: (order: ReportableOrder) => order.orderId,
-      render: (order: ReportableOrder) => renderNavigableOrderId(order.orderId, navigate),
+      render: (order: ReportableOrder) =>
+        renderNavigableOrderId(order.orderId, navigate, order.fillerNumber),
     },
     patientName: {
       key: 'patientName',

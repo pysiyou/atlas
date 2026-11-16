@@ -7,6 +7,7 @@ from app.domains.orders.models import Order
 from app.domains.payments.schemas import PaymentCreate
 from app.domains.payments.status import derive_payment_status, money, remaining_balance
 from app.platform.cache import invalidate_lab_board_summary_cache
+from app.platform.utils import allocate_receipt_number
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 
@@ -15,7 +16,9 @@ def enrich_payment(payment: Payment, order: Order | None) -> dict:
     """Build PaymentResponse dict from payment and optional order."""
     return {
         "paymentId": payment.paymentId,
+        "receiptNumber": payment.receiptNumber,
         "orderId": payment.orderId,
+        "fillerNumber": order.fillerNumber if order else None,
         "invoiceId": payment.invoiceId,
         "amount": payment.amount,
         "paymentMethod": payment.paymentMethod,
@@ -92,6 +95,7 @@ class PaymentService:
                 ),
             )
         payment = Payment(
+            receiptNumber=allocate_receipt_number(self.db),
             orderId=payment_data.orderId,
             invoiceId=None,
             amount=amount,

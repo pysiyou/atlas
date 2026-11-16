@@ -8,7 +8,9 @@ export const paymentMethodSchema = zEnumFromValues(PAYMENT_METHOD_VALUES);
 
 export const paymentSchema = z.object({
   paymentId: positiveIntSchema,
+  receiptNumber: z.string().optional(),
   orderId: positiveIntSchema,
+  fillerNumber: z.string().nullable().optional(),
   invoiceId: z.number().int().positive().nullable(),
   amount: z.number().min(0),
   paymentMethod: paymentMethodSchema,

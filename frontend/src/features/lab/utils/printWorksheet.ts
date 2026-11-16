@@ -2,7 +2,6 @@
  * Printable bench worksheet — same window.print pattern as tube labels.
  */
 import { worklistsAPI } from '../api/worklists';
-import { displayId } from '@/utils';
 
 function escapeHtml(value: string): string {
   return value
@@ -25,15 +24,16 @@ export async function printBenchWorksheet(params?: {
   const sections = payload.groups
     .map(group => {
       const rows = group.rows
-        .map(
-          row =>
-            `<tr>
+        .map(row => {
+          const accession = row.accessionNumber?.trim();
+          if (!accession) return '';
+          return `<tr>
               <td>${escapeHtml(row.patientName)}</td>
-              <td>${escapeHtml(row.accessionNumber || displayId.order(row.orderId))}</td>
+              <td>${escapeHtml(accession)}</td>
               <td>${escapeHtml(row.sampleType)}</td>
               <td>${escapeHtml(row.priority)}</td>
-            </tr>`
-        )
+            </tr>`;
+        })
         .join('');
       return `<h2>${escapeHtml(group.testName)} (${escapeHtml(group.testCode)})</h2>
         <table>

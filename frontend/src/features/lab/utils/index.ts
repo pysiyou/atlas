@@ -68,8 +68,6 @@ export {
   worklistItemToValidationRow,
 } from './worklistMappers';
 export {
-  hasActiveRecordUrlFilters,
-  getLabQueueSearchFromUrlFilters,
   orderTestKey,
   worklistServerFilters,
   hasResultsOnWorkItem,

@@ -52,8 +52,10 @@ class ResultValidationRequest(BaseModel):
 class PendingEscalationItemResponse(BaseModel):
     id: int
     orderId: int
+    fillerNumber: str
     orderDate: datetime
     patientId: int
+    patientMrn: str
     patientName: str
     patientDob: str | None = None
     testCode: str
@@ -61,6 +63,7 @@ class PendingEscalationItemResponse(BaseModel):
     sampleType: str
     status: str
     sampleId: int | None = None
+    accessionNumber: str | None = None
     results: TestResultsDict | None = None
     resultEnteredAt: datetime | None = None
     enteredBy: str | None = None
@@ -73,6 +76,7 @@ class PendingEscalationItemResponse(BaseModel):
     isRetest: bool = False
     retestOfTestId: int | None = None
     retestNumber: int = 0
+    priorTestDisplay: str | None = None
     priority: str
     referentDoctorId: int | None = None
     referentDoctorName: str | None = None
@@ -84,6 +88,7 @@ class PendingEscalationItemResponse(BaseModel):
     collectedBy: str | None = None
     sampleIsRecollection: bool = False
     sampleOriginalSampleId: int | None = None
+    sampleOriginalAccessionNumber: str | None = None
     sampleRecollectionReason: str | None = None
     sampleRecollectionAttempt: int | None = None
     ticketId: int | None = None

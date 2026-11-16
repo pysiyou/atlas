@@ -34,8 +34,8 @@ from app.domains.audit.search import (
     access_event_types_to_hide,
     apply_unified_search,
     classify_search_term,
-    format_record_display_id,
 )
+from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.users.models import User
@@ -213,9 +213,82 @@ def _load_order_test_results_map(
     return out
 
 
+def _load_clinical_id_maps(db: Session, rows: list[AuditEvent]) -> dict[str, dict[int, Any]]:
+    """Batch-load MRN / filler / accession (and order-test links) for a page of events."""
+    patient_ids = {row.patientId for row in rows if row.patientId}
+    patient_ids.update(row.targetId for row in rows if row.targetType == "patient")
+    order_ids = {row.orderId for row in rows if row.orderId}
+    order_ids.update(row.targetId for row in rows if row.targetType == "order")
+    sample_ids = {row.targetId for row in rows if row.targetType == "sample"}
+    order_test_ids = {row.testId for row in rows if row.testId}
+    order_test_ids.update(row.targetId for row in rows if row.targetType == "order_test")
+
+    ot_sample: dict[int, int] = {}
+    ot_order: dict[int, int] = {}
+    if order_test_ids:
+        for order_test_id, sample_id, order_id in (
+            db.query(OrderTest.id, OrderTest.sampleId, OrderTest.orderId)
+            .filter(OrderTest.id.in_(order_test_ids))
+            .all()
+        ):
+            if sample_id:
+                ot_sample[order_test_id] = sample_id
+                sample_ids.add(sample_id)
+            if order_id:
+                ot_order[order_test_id] = order_id
+                order_ids.add(order_id)
+
+    mrns: dict[int, str] = {}
+    if patient_ids:
+        for patient in db.query(Patient).filter(Patient.id.in_(patient_ids)).all():
+            if patient.mrn:
+                mrns[patient.id] = patient.mrn
+
+    fillers: dict[int, str] = {}
+    if order_ids:
+        for order in db.query(Order).filter(Order.orderId.in_(order_ids)).all():
+            if order.fillerNumber:
+                fillers[order.orderId] = order.fillerNumber
+
+    accessions: dict[int, str] = {}
+    if sample_ids:
+        for sample in db.query(Sample).filter(Sample.sampleId.in_(sample_ids)).all():
+            if sample.accessionNumber:
+                accessions[sample.sampleId] = sample.accessionNumber
+
+    return {
+        "mrns": mrns,
+        "fillers": fillers,
+        "accessions": accessions,
+        "ot_sample": ot_sample,
+        "ot_order": ot_order,
+    }
+
+
+def _clinical_ids_for_event(
+    row: AuditEvent, maps: dict[str, dict[int, Any]] | None
+) -> tuple[str | None, str | None, str | None]:
+    """Resolve stored clinical identifiers for one audit event."""
+    if not maps:
+        return None, None, None
+    patient_id = row.patientId or (row.targetId if row.targetType == "patient" else None)
+    order_id = row.orderId or (row.targetId if row.targetType == "order" else None)
+    sample_id = row.targetId if row.targetType == "sample" else None
+    order_test_id = row.testId or (row.targetId if row.targetType == "order_test" else None)
+    if order_test_id:
+        sample_id = sample_id or maps["ot_sample"].get(order_test_id)
+        order_id = order_id or maps["ot_order"].get(order_test_id)
+    return (
+        maps["mrns"].get(patient_id) if patient_id else None,
+        maps["fillers"].get(order_id) if order_id else None,
+        maps["accessions"].get(sample_id) if sample_id else None,
+    )
+
+
 def audit_event_to_response(
     row: AuditEvent,
     order_test_results: dict[int, tuple[dict[str, Any], list[str]]] | None = None,
+    clinical_ids: dict[str, dict[int, Any]] | None = None,
 ) -> AuditEventResponse:
     metadata: dict[str, Any] | None = dict(row.eventMetadata) if row.eventMetadata else None
     if (
@@ -231,6 +304,7 @@ def audit_event_to_response(
             if enriched[1]:
                 metadata["flags"] = enriched[1]
 
+    patient_mrn, filler_number, accession_number = _clinical_ids_for_event(row, clinical_ids)
     return AuditEventResponse(
         eventId=row.eventId,
         createdAt=row.createdAt,
@@ -240,8 +314,11 @@ def audit_event_to_response(
         targetType=row.targetType,
         targetId=row.targetId,
         patientId=row.patientId,
+        patientMrn=patient_mrn,
         orderId=row.orderId,
+        fillerNumber=filler_number,
         testId=row.testId,
+        accessionNumber=accession_number,
         eventScope=row.eventScope or stored_event_scope_for_type(row.eventType),
         changes=_changes_for_api(row.changes),
         metadata=metadata,
@@ -438,7 +515,8 @@ class AuditEventQueryService:
             .all()
         )
         order_test_results = _load_order_test_results_map(self.db, rows)
-        return [audit_event_to_response(row, order_test_results) for row in rows]
+        clinical_ids = _load_clinical_id_maps(self.db, rows)
+        return [audit_event_to_response(row, order_test_results, clinical_ids) for row in rows]
 
     def list_recent(self, hours: float, limit: int = 500) -> list[AuditEventResponse]:
         since = datetime.now(UTC) - timedelta(hours=hours)
@@ -478,7 +556,7 @@ class AuditEventQueryService:
                 AuditSearchPreviewPatient(
                     id=row.id,
                     fullName=row.fullName,
-                    displayId=format_record_display_id("PAT", row.id),
+                    displayId=row.mrn,
                 )
                 for row in patient_rows
             ]

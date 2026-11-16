@@ -2,252 +2,252 @@
   "$schema": "./orderable-panels.schema.json",
   "panels": [
     {
-      "id": "acute_coronary_syndrome_panel",
+      "id": "ACS",
       "name": "Acute Coronary Syndrome Panel",
       "description": ""
     },
     {
-      "id": "acute_infection_workup",
+      "id": "INFACUTE",
       "name": "Acute Infection Workup",
       "description": ""
     },
     {
-      "id": "acute_pancreatitis_panel",
+      "id": "PANC",
       "name": "Acute Pancreatitis Panel",
       "description": ""
     },
     {
-      "id": "anemia_workup_panel",
+      "id": "ANEMIA",
       "name": "Anemia Workup Panel",
       "description": ""
     },
     {
-      "id": "bone_metabolism_panel",
+      "id": "BONE",
       "name": "Bone Metabolism Panel",
       "description": ""
     },
     {
-      "id": "covid_19_diagnosis_panel",
+      "id": "COVID",
       "name": "COVID-19 Diagnosis Panel",
       "description": ""
     },
     {
-      "id": "coagulation_panel",
+      "id": "COAG",
       "name": "Coagulation Panel",
       "description": ""
     },
     {
-      "id": "colon_cancer_markers",
+      "id": "COLON",
       "name": "Colon Cancer Markers",
       "description": ""
     },
     {
-      "id": "complete_hematology_panel",
+      "id": "HEMFULL",
       "name": "Complete Hematology Panel",
       "description": ""
     },
     {
-      "id": "dic_panel",
+      "id": "DIC",
       "name": "DIC Panel",
       "description": ""
     },
     {
-      "id": "diabetes_management_panel",
+      "id": "DMGMT",
       "name": "Diabetes Management Panel",
       "description": ""
     },
     {
-      "id": "diabetes_screening",
+      "id": "DMSCR",
       "name": "Diabetes Screening",
       "description": ""
     },
     {
-      "id": "diabetes_screening_panel",
+      "id": "DMPANEL",
       "name": "Diabetes Screening Panel",
       "description": ""
     },
     {
-      "id": "diarrhea_workup_panel",
+      "id": "DIARRHEA",
       "name": "Diarrhea Workup Panel",
       "description": ""
     },
     {
-      "id": "drug_resistant_tb_panel",
+      "id": "DRTB",
       "name": "Drug-Resistant TB Panel",
       "description": ""
     },
     {
-      "id": "electrolyte_panel",
+      "id": "LYTES",
       "name": "Electrolyte Panel",
       "description": ""
     },
     {
-      "id": "fever_workup_panel",
+      "id": "FEVER",
       "name": "Fever Workup Panel",
       "description": ""
     },
     {
-      "id": "gastric_ulcer_workup",
+      "id": "ULCER",
       "name": "Gastric Ulcer Workup",
       "description": ""
     },
     {
-      "id": "hiv_management_panel",
+      "id": "HIVMGMT",
       "name": "HIV Management Panel",
       "description": ""
     },
     {
-      "id": "hiv_testing_panel",
+      "id": "HIV",
       "name": "HIV Testing Panel",
       "description": ""
     },
     {
-      "id": "hemoglobinopathy_panel",
+      "id": "HBPATH",
       "name": "Hemoglobinopathy Panel",
       "description": ""
     },
     {
-      "id": "hemolysis_workup_panel",
+      "id": "HEMOLYS",
       "name": "Hemolysis Workup Panel",
       "description": ""
     },
     {
-      "id": "hepatitis_panel",
+      "id": "HEP",
       "name": "Hepatitis Panel",
       "description": ""
     },
     {
-      "id": "immunocompromised_patient_workup",
+      "id": "IMMCOMP",
       "name": "Immunocompromised Patient Workup",
       "description": ""
     },
     {
-      "id": "infection_workup_panel",
+      "id": "INFECT",
       "name": "Infection Workup Panel",
       "description": ""
     },
     {
-      "id": "inflammatory_markers_panel",
+      "id": "INFLAMM",
       "name": "Inflammatory Markers Panel",
       "description": ""
     },
     {
-      "id": "iron_studies_panel",
+      "id": "IRON",
       "name": "Iron Studies Panel",
       "description": ""
     },
     {
-      "id": "lactic_acidosis_panel",
+      "id": "LACTATE",
       "name": "Lactic Acidosis Panel",
       "description": ""
     },
     {
-      "id": "lipid_panel",
+      "id": "LIPID",
       "name": "Lipid Panel",
       "description": ""
     },
     {
-      "id": "liver_function_panel",
+      "id": "LFT",
       "name": "Liver Function Panel",
       "description": ""
     },
     {
-      "id": "macrocytic_anemia_workup_panel",
+      "id": "MACANEM",
       "name": "Macrocytic Anemia Workup Panel",
       "description": ""
     },
     {
-      "id": "manual_differential_panel",
+      "id": "MDIFF",
       "name": "Manual Differential Panel",
       "description": ""
     },
     {
-      "id": "metabolic_panel",
+      "id": "CMP",
       "name": "Metabolic Panel",
       "description": ""
     },
     {
-      "id": "mineral_panel",
+      "id": "MINERAL",
       "name": "Mineral Panel",
       "description": ""
     },
     {
-      "id": "monoclonal_protein_panel",
+      "id": "MPROTEIN",
       "name": "Monoclonal Protein Panel",
       "description": ""
     },
     {
-      "id": "nutritional_assessment_panel",
+      "id": "NUTRI",
       "name": "Nutritional Assessment Panel",
       "description": ""
     },
     {
-      "id": "pregnancy_panel",
+      "id": "PREG",
       "name": "Pregnancy Panel",
       "description": ""
     },
     {
-      "id": "pregnancy_serology_panel",
+      "id": "PREGSER",
       "name": "Pregnancy Serology Panel",
       "description": ""
     },
     {
-      "id": "prenatal_serology_panel",
+      "id": "PRENATAL",
       "name": "Prenatal Serology Panel",
       "description": ""
     },
     {
-      "id": "prostate_cancer_screening",
+      "id": "PSASCR",
       "name": "Prostate Cancer Screening",
       "description": ""
     },
     {
-      "id": "renal_panel",
+      "id": "RENAL",
       "name": "Renal Panel",
       "description": ""
     },
     {
-      "id": "routine_urinalysis_panel",
+      "id": "UAPANEL",
       "name": "Routine Urinalysis Panel",
       "description": ""
     },
     {
-      "id": "sti_panel",
+      "id": "STI",
       "name": "STI Panel",
       "description": ""
     },
     {
-      "id": "sepsis_workup_panel",
+      "id": "SEPSIS",
       "name": "Sepsis Workup Panel",
       "description": ""
     },
     {
-      "id": "syphilis_diagnosis_panel",
+      "id": "SYPH",
       "name": "Syphilis Diagnosis Panel",
       "description": ""
     },
     {
-      "id": "tb_diagnosis_panel",
+      "id": "TB",
       "name": "TB Diagnosis Panel",
       "description": ""
     },
     {
-      "id": "thromboembolism_panel",
+      "id": "VTE",
       "name": "Thromboembolism Panel",
       "description": ""
     },
     {
-      "id": "thyroid_function_panel",
+      "id": "TFT",
       "name": "Thyroid Function Panel",
       "description": ""
     },
     {
-      "id": "transfusion_screening_panel",
+      "id": "TXFUSE",
       "name": "Transfusion Screening Panel",
       "description": ""
     },
     {
-      "id": "uti_management_panel",
+      "id": "UTI",
       "name": "UTI Management Panel",
       "description": ""
     }

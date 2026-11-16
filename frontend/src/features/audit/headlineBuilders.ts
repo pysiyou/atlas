@@ -71,25 +71,25 @@ const PATIENT_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
 const ORDER_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
   'order.create': (r, c) => {
     const orderId = resolveOrderId(r);
-    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
+    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ', r.fillerNumber)) : appendText([], 'Order ');
     parts = appendText(parts, ' created');
     const patientId = resolvePatientId(r);
     if (patientId != null) {
       parts = appendText(parts, ' for patient ');
-      parts = append(parts, patientRecordPhrase(patientId, c, ''));
+      parts = append(parts, patientRecordPhrase(patientId, c, '', r.patientMrn));
     }
     return parts;
   },
   'order.update': r => {
     const orderId = resolveOrderId(r);
-    const parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
+    const parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ', r.fillerNumber)) : appendText([], 'Order ');
     return appendText(parts, ' updated');
   },
   'order.delete': r => appendText(append([], targetOrder(r, 'Order ')), ' cancelled'),
   'order.status': r => {
     const statusLabel = formatOrderStatusLabel(changeNew(r, 'status'));
     const orderId = resolveOrderId(r);
-    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
+    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ', r.fillerNumber)) : appendText([], 'Order ');
     parts = appendText(parts, ' status changed to ');
     return append(parts, mainPart(statusLabel));
   },
@@ -97,14 +97,14 @@ const ORDER_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
     let parts = append([], ...targetOrderTestRef(r, c));
     parts = appendText(parts, ' added to ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderRecordPhrase(orderId));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order ', r.fillerNumber));
     return parts;
   },
   'order.test.remove': (r, c) => {
     let parts = append([], ...targetOrderTestRef(r, c));
     parts = appendText(parts, ' removed from ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderRecordPhrase(orderId));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order ', r.fillerNumber));
     return parts;
   },
   'order.test.cancel': (r, c) => {
@@ -124,7 +124,7 @@ const ORDER_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
     parts = append(parts, testHighlightFromMetaKey(r, 'added_test_code', c) ?? mainPart('—'));
     parts = appendText(parts, ' added to ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderRecordPhrase(orderId));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order ', r.fillerNumber));
     return appendTriggeredByClause(parts, r, c);
   },
 };
@@ -182,15 +182,15 @@ export const LABORATORY_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> 
 
 const BILLING_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
   'billing.payment.process': r => {
-    const parts = appendText(append([], paymentRecordPhrase(r.targetId)), ' recorded');
+    const parts = appendText(append([], paymentRecordPhrase()), ' recorded');
     return appendForOrderPhrase(parts, r);
   },
   'billing.invoice.generate': r => {
-    const parts = appendText(append([], invoiceRecordPhrase(r.targetId)), ' generated');
+    const parts = appendText(append([], invoiceRecordPhrase()), ' generated');
     return appendForOrderPhrase(parts, r);
   },
   'billing.invoice.void': r => {
-    let parts = appendText(append([], invoiceRecordPhrase(r.targetId)), ' voided');
+    let parts = appendText(append([], invoiceRecordPhrase()), ' voided');
     parts = appendForOrderPhrase(parts, r);
     return appendClause(parts, metaString(r, 'reason') ?? '');
   },
@@ -206,7 +206,7 @@ const SYSTEM_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
     const orderId = resolveOrderId(r);
     if (orderId) {
       parts = appendText(parts, 'for ');
-      parts = append(parts, orderRecordPhrase(orderId));
+      parts = append(parts, orderRecordPhrase(orderId, 'order ', r.fillerNumber));
     }
     return parts;
   },
@@ -217,10 +217,10 @@ const SYSTEM_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
   },
   'system.user.login': () => appendText([], 'signed in'),
   'system.user.logout': () => appendText([], 'signed out'),
-  'system.user.create': r =>
-    appendText(append([], userAccountRecordPhrase(r.targetId)), ' created'),
-  'system.user.update': r =>
-    appendText(append([], userAccountRecordPhrase(r.targetId)), ' updated'),
+  'system.user.create': () =>
+    appendText(append([], userAccountRecordPhrase()), ' created'),
+  'system.user.update': () =>
+    appendText(append([], userAccountRecordPhrase()), ' updated'),
   'system.catalog.create': (r, c) => {
     const highlight = testHighlightFromMetaKey(r, 'test_code', c);
     const parts: EventLogHeadlinePart[] = highlight

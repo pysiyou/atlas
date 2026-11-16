@@ -4,7 +4,6 @@
 
 import { RecordId } from '@/features/shared';
 import type { OrderTest } from '@/types';
-import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 
@@ -26,9 +25,6 @@ export function LinkedOrderTestsList({ tests, onOpen }: LinkedOrderTestsListProp
           <div className="min-w-0 flex flex-wrap items-baseline gap-x-space-2 gap-y-0">
             <span className={`font-medium ${text({ role: 'body' })}`}>{test.testName}</span>
             <RecordId emphasis="inline">{test.testCode}</RecordId>
-            {test.id != null ? (
-              <span className={text({ role: 'body', intent: 'muted' })}>{displayId.orderTest(test.id)}</span>
-            ) : null}
             <span className={text({ role: 'body', intent: 'muted' })}>{formatStatusBadgeLabel(test.status)}</span>
           </div>
           <button type="button" className={INLINE_LINK_BUTTON} onClick={() => onOpen(test)}>

@@ -10,7 +10,6 @@ import { queryKeys, cacheConfig } from '@/lib/query';
 import { useOrder, getSampleRecollectionChain, TestRelatedTestsPanel } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { Order, OrderTest, Sample } from '@/types';
-import { displayId } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 import { usePanelCopy } from '@/strings';
@@ -102,10 +101,7 @@ export function LabRelatedSamplesPanel({
                 className="flex flex-wrap items-baseline justify-between gap-x-space-3 gap-y-space-1"
               >
                 <div className="flex flex-wrap items-baseline gap-x-space-2">
-                  <span className="font-medium">{displayId.sample(s.sampleId)}</span>
-                  {s.accessionNumber ? (
-                    <span className={text({ role: 'body', intent: 'muted' })}>{s.accessionNumber}</span>
-                  ) : null}
+                  <span className="font-medium">{s.accessionNumber}</span>
                   <span className={text({ role: 'body', intent: 'muted' })}>{formatStatusBadgeLabel(s.status)}</span>
                   {s.isRecollection ? <span className={text({ role: 'body', intent: 'muted' })}>Recollection</span> : null}
                 </div>
@@ -130,10 +126,7 @@ export function LabRelatedSamplesPanel({
                 className="flex flex-wrap items-baseline justify-between gap-x-space-3 gap-y-space-1"
               >
                 <div className="flex flex-wrap items-baseline gap-x-space-2">
-                  <span className="font-medium">{displayId.sample(s.sampleId)}</span>
-                  {s.accessionNumber ? (
-                    <span className={text({ role: 'body', intent: 'muted' })}>{s.accessionNumber}</span>
-                  ) : null}
+                  <span className="font-medium">{s.accessionNumber}</span>
                   <span className={text({ role: 'body', intent: 'muted' })}>
                     Aliquot {s.aliquotIndex ?? ''}
                   </span>

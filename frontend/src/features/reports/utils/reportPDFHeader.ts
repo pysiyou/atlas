@@ -68,6 +68,8 @@ function labPayloadToHeaderSource(reportData: LabReportPayload): ReportHeaderSou
     patientEmail: reportData.patientEmail,
     order: {
       orderId: order.orderId,
+      fillerNumber: order.fillerNumber,
+      patientMrn: order.patientMrn,
       orderDate: order.orderDate,
       createdAt: order.createdAt,
       referentDoctorName: order.referentDoctorName,

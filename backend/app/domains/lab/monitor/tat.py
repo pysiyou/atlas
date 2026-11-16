@@ -130,13 +130,21 @@ def _attention_candidate(
     order_test_ids: list[int],
     attention_type: str,
     work_item_count: int = 1,
+    filler_number: str | None = None,
+    patient_mrn: str | None = None,
+    accession_number: str | None = None,
+    test_codes: list[str] | None = None,
 ) -> dict[str, Any]:
     return {
         "id": f"{attention_type}-{order_id}-{stage}",
         "stage": stage,
         "stageLabel": STAGE_LABELS[stage],
         "orderId": order_id,
+        "fillerNumber": filler_number,
         "patientName": patient_name or "Unknown patient",
+        "patientMrn": patient_mrn,
+        "accessionNumber": accession_number,
+        "testCodes": list(test_codes or []),
         "priority": priority,
         "waitingHours": round(waiting_hours, 2),
         "attentionReason": attention_reason,
@@ -173,6 +181,14 @@ def finalize_attention_items(
         existing["workItemCount"] += item.get("workItemCount") or 1
         existing["orderTestIds"] = list(
             dict.fromkeys([*existing["orderTestIds"], *item["orderTestIds"]])
+        )
+        existing["fillerNumber"] = existing.get("fillerNumber") or item.get("fillerNumber")
+        existing["patientMrn"] = existing.get("patientMrn") or item.get("patientMrn")
+        existing["accessionNumber"] = existing.get("accessionNumber") or item.get(
+            "accessionNumber"
+        )
+        existing["testCodes"] = list(
+            dict.fromkeys([*(existing.get("testCodes") or []), *(item.get("testCodes") or [])])
         )
 
     def sort_score(item: dict[str, Any]) -> float:
@@ -323,6 +339,10 @@ def assemble_board(
                     since=since,
                     order_test_ids=[],
                     attention_type=attention_type_for(attention, status, priority),
+                    filler_number=row.get("filler_number"),
+                    patient_mrn=row.get("patient_mrn"),
+                    accession_number=row.get("accession_number"),
+                    test_codes=row.get("test_codes") or [],
                 )
             )
 
@@ -349,6 +369,10 @@ def assemble_board(
                     since=since,
                     order_test_ids=[order_test_id] if order_test_id is not None else [],
                     attention_type=attention_type_for(attention, status, priority),
+                    filler_number=row.get("filler_number"),
+                    patient_mrn=row.get("patient_mrn"),
+                    accession_number=row.get("accession_number"),
+                    test_codes=row.get("test_codes") or [],
                 )
             )
 
@@ -375,6 +399,10 @@ def assemble_board(
                     since=since,
                     order_test_ids=[order_test_id] if order_test_id is not None else [],
                     attention_type=attention_type_for(attention, status, priority),
+                    filler_number=row.get("filler_number"),
+                    patient_mrn=row.get("patient_mrn"),
+                    accession_number=row.get("accession_number"),
+                    test_codes=row.get("test_codes") or [],
                 )
             )
 
@@ -402,6 +430,10 @@ def assemble_board(
                 since=since,
                 order_test_ids=[order_test_id] if order_test_id is not None else [],
                 attention_type=attention_type_for(attention, status, priority),
+                filler_number=row.get("filler_number"),
+                patient_mrn=row.get("patient_mrn"),
+                accession_number=row.get("accession_number"),
+                test_codes=row.get("test_codes") or [],
             )
         )
 

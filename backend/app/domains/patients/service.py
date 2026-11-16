@@ -1,7 +1,6 @@
 """
 Patient business logic. Router delegates list/get/search/create/update to this service.
 """
-import re
 from datetime import UTC, datetime
 
 from app.domains.audit.service import AuditEmitter
@@ -13,11 +12,11 @@ from app.domains.patients.schemas import (
     PatientResponse,
     PatientUpdate,
 )
-from app.platform.client_config import client_config
-from app.platform.utils.common import parse_display_id_from_search
+from app.platform.config import client_config
+from app.platform.utils import allocate_mrn, compact_identifier, looks_like_mrn
 from app.shared.contracts.enums import Gender, PaymentStatus
 from fastapi import HTTPException, status
-from sqlalchemy import String, and_, cast, func, or_
+from sqlalchemy import and_, func, or_
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import Session
 
@@ -43,20 +42,16 @@ def serialize_patient_full(patient: Patient) -> dict:
 
 
 def _patient_search_filter(search_term: str):
-    """Collection-style name/id (PAT display id) lookup plus phone substring match."""
+    """Match MRN, name, or phone."""
     term = search_term.strip()
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
         Patient.phone.contains(term),
+        Patient.mrn.ilike(f"%{term}%"),
     ]
-    patient_id = parse_display_id_from_search(term, "PAT")
-    if patient_id is not None:
-        predicates.append(Patient.id == patient_id)
-    compact = re.sub(r"[\s-]", "", term)
-    if compact.isdigit():
-        predicates.append(cast(Patient.id, String).ilike(f"%{compact}%"))
-        if compact != term:
-            predicates.append(Patient.phone.contains(compact))
+    compact = compact_identifier(term)
+    if looks_like_mrn(term):
+        predicates.append(Patient.mrn == compact)
     return or_(*predicates)
 
 
@@ -248,6 +243,7 @@ class PatientService:
             else MedicalHistory().model_dump()
         )
         patient = Patient(
+            mrn=allocate_mrn(self.db),
             fullName=patient_data.fullName,
             dateOfBirth=patient_data.dateOfBirth,
             gender=patient_data.gender,

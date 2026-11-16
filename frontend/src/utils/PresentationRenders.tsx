@@ -43,7 +43,7 @@ export function renderStackedIdentity(
   );
 }
 
-/** PAT/ORD/SAM/TST sub-line under a primary label (left-aligned, secondary entity color). */
+/** Clinical id sub-line under a primary label (left-aligned, secondary entity color). */
 export function renderTableSecondaryRecordId(
   props: Omit<RecordIdProps, 'emphasis'>,
 ): ReactNode {

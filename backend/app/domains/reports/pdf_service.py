@@ -8,10 +8,9 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-from app.domains.audit.search import format_record_display_id
 from app.domains.orders.models import Order
 from app.domains.reports.models import ReportDocument
-from app.platform.client_config import client_config
+from app.platform.config import client_config
 from app.platform.config import settings
 from app.shared.contracts.enums import TestStatus
 from reportlab.lib import colors
@@ -78,7 +77,7 @@ class ReportPdfService:
             rightMargin=18 * mm,
             topMargin=16 * mm,
             bottomMargin=18 * mm,
-            title=f"Lab report {order.orderId}",
+            title=f"Lab report {order.fillerNumber}",
         )
         styles = getSampleStyleSheet()
         title_style = ParagraphStyle(
@@ -102,15 +101,13 @@ class ReportPdfService:
         story.append(Paragraph(str(header_text), title_style))
         story.append(
             Paragraph(
-                f"Order ORD{order.orderId:04d} · {order.orderDate.strftime('%Y-%m-%d %H:%M UTC')}",
+                f"Order {order.fillerNumber} · {order.orderDate.strftime('%Y-%m-%d %H:%M UTC')}",
                 muted,
             )
         )
         story.append(Spacer(1, 4 * mm))
 
-        patient_id_suffix = (
-            f" ({format_record_display_id('PAT', patient.id)})" if patient else ""
-        )
+        patient_id_suffix = f" ({patient.mrn})" if patient else ""
         patient_lines = [
             f"<b>Patient</b>: {patient.fullName if patient else 'Unknown'}{patient_id_suffix}",
             f"<b>DOB / Sex</b>: {getattr(patient, 'dateOfBirth', '—') if patient else '—'} / "

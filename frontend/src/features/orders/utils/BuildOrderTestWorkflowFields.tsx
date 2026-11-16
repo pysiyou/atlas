@@ -5,7 +5,7 @@
 import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
 import type { OrderTest } from '@/types';
 import { Button } from '@/components/primitives';
-import { displayId } from '@/utils';
+import { formatOrderTestDisplay } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import type { LinkedOrderTests } from './orderTestLineage';
 
@@ -42,14 +42,14 @@ function appendLineageFields(
           className="ml-auto"
           onClick={() => onOpenLinkedTest(linked.prior!)}
         >
-          {displayId.orderTest(linked.prior.id)}
+          {formatOrderTestDisplay(linked.prior.accessionNumber, linked.prior.testCode)}
         </Button>
       ),
     });
   } else if (orderTest.retestOfTestId != null) {
     fields.push({
       label: 'Retest of',
-      value: displayId.orderTest(orderTest.retestOfTestId),
+      value: formatOrderTestDisplay(orderTest.accessionNumber, orderTest.testCode),
     });
   }
 
@@ -63,14 +63,14 @@ function appendLineageFields(
           className="ml-auto"
           onClick={() => onOpenLinkedTest(linked.replacement!)}
         >
-          {displayId.orderTest(linked.replacement.id)}
+          {formatOrderTestDisplay(linked.replacement.accessionNumber, linked.replacement.testCode)}
         </Button>
       ),
     });
   } else if (orderTest.retestOrderTestId != null) {
     fields.push({
       label: 'Replacement',
-      value: displayId.orderTest(orderTest.retestOrderTestId),
+      value: formatOrderTestDisplay(orderTest.accessionNumber, orderTest.testCode),
     });
   }
 

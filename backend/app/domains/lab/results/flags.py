@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Any
 
-from app.platform.utils.common import parse_numeric_result_value
+from app.platform.utils import parse_numeric_result_value
 from app.shared.contracts.enums import ResultStatus
 
 

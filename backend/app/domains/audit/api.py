@@ -13,7 +13,7 @@ from app.domains.audit.schemas import AuditEventResponse, AuditSearchPreviewResp
 from app.domains.audit.service import AuditEventQueryService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http.dependencies import get_current_user
+from app.platform.http import get_current_user
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
@@ -105,8 +105,8 @@ def list_audit_events(
         None,
         max_length=100,
         description=(
-            "Unified stream search: ORD/TST/SAM/PAT display ids, numeric ids, "
-            "patient name, actor name, or username"
+            "Unified stream search: MRN, filler number, accession, test mnemonic, "
+            "numeric ids, patient name, actor name, or username"
         ),
     ),
     limit: int = Query(500, ge=1, le=2000),

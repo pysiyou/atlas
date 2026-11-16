@@ -90,8 +90,11 @@ class AuditEventResponse(BaseModel):
     targetType: str
     targetId: int
     patientId: int | None = None
+    patientMrn: str | None = None
     orderId: int | None = None
+    fillerNumber: str | None = None
     testId: int | None = None
+    accessionNumber: str | None = None
     eventScope: str | None = None
     changes: dict[str, Any] | None = None
     metadata: dict[str, Any] | None = None

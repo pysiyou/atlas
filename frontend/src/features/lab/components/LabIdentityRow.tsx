@@ -9,9 +9,12 @@ import { formatDate } from '@/utils';
 export interface LabIdentityContext {
   patientName?: string;
   patientId?: number;
+  patientMrn?: string | null;
   orderId: number;
+  fillerNumber?: string | null;
   orderTestId?: number;
   sampleId?: number;
+  accessionNumber?: string | null;
   entityCode?: string;
   entityName?: string;
   referentDoctorName?: string;
@@ -58,22 +61,32 @@ export function LabIdentityRow({
   segments.push({
     kind: 'node',
     key: 'ord',
-    node: <RecordId type="order" value={context.orderId} className={idClass} />,
+    node: <RecordId type="order" value={context.fillerNumber} className={idClass} />,
   });
 
   if (context.orderTestId != null) {
     segments.push({
       kind: 'node',
       key: 'tst',
-      node: <RecordId type="orderTest" value={context.orderTestId} className={idClass} />,
+      node: (
+        <RecordId
+          type="orderTest"
+          value={
+            context.accessionNumber && context.entityCode
+              ? `${context.accessionNumber}/${context.entityCode}`
+              : context.entityCode
+          }
+          className={idClass}
+        />
+      ),
       hideBelow: hideMd,
     });
   }
-  if (context.sampleId != null) {
+  if (context.accessionNumber) {
     segments.push({
       kind: 'node',
       key: 'sam',
-      node: <RecordId type="sample" value={context.sampleId} className={idClass} />,
+      node: <RecordId type="sample" value={context.accessionNumber} className={idClass} />,
       hideBelow: hideMd,
     });
   }

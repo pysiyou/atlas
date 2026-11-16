@@ -1,7 +1,6 @@
 import type { CriticalReadBackPayload, EscalationResolutionAction } from '@/types';
 import type { FeedbackId } from '@/types/generated/feedback';
 import { Button } from '@/components/primitives';
-import { displayId } from '@/utils';
 import {
 
   ForceValidateAction,
@@ -43,8 +42,8 @@ interface EscalationResolutionActionsProps {
   onValidationError: (id: FeedbackId) => void;
 }
 
-function popoverSubtitle(orderTestId?: number, hint?: string): string {
-  const label = orderTestId != null ? displayId.orderTest(orderTestId) : undefined;
+function popoverSubtitle(idOrCode?: number | string, hint?: string): string {
+  const label = typeof idOrCode === 'string' && idOrCode.trim() ? idOrCode.trim() : undefined;
   return [label, hint].filter(Boolean).join(' · ');
 }
 

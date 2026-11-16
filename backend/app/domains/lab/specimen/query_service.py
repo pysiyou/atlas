@@ -32,7 +32,35 @@ class SpecimenQueryService:
         total = query.count() if paginated else 0
         samples = query.offset(skip).limit(limit).all()
         try:
-            serialized = [SampleResponse.model_validate(s).model_dump(mode="json") for s in samples]
+            parent_ids = {s.originalSampleId for s in samples if s.originalSampleId}
+            recoll_ids = {s.recollectionSampleId for s in samples if s.recollectionSampleId}
+            related_ids = parent_ids | recoll_ids
+            related = (
+                {
+                    row.sampleId: row
+                    for row in self.db.query(Sample)
+                    .filter(Sample.sampleId.in_(related_ids))
+                    .all()
+                }
+                if related_ids
+                else {}
+            )
+            serialized = []
+            for sample in samples:
+                data = SampleResponse.model_validate(sample).model_dump(mode="json")
+                parent = related.get(sample.originalSampleId) if sample.originalSampleId else None
+                if parent:
+                    parent_data = SampleResponse.model_validate(parent).model_dump(mode="json")
+                    data["originalAccessionNumber"] = parent_data["accessionNumber"]
+                    data["originalSampleCollectedAt"] = parent_data["collectedAt"]
+                child = (
+                    related.get(sample.recollectionSampleId)
+                    if sample.recollectionSampleId
+                    else None
+                )
+                if child:
+                    data["recollectionAccessionNumber"] = child.accessionNumber
+                serialized.append(data)
         except Exception:
             import logging
 

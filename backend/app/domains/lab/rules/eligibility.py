@@ -15,7 +15,7 @@ from app.domains.lab.rules.test_status_sets import (
     COLLECTION_WORKLIST_LINKED_EXCLUDE,
 )
 from app.domains.orders.models import Order, OrderTest
-from app.platform.utils.exceptions import LabOperationError
+from app.platform.utils import LabOperationError
 from app.shared.contracts.enums import (
     EscalationReasonCode,
     PaymentStatus,
@@ -111,7 +111,7 @@ def _tests_must_transition_on_collect(order_tests: list[OrderTest]) -> tuple[boo
 
 def assert_can_collect(sample: Sample, order: Order, order_tests: list[OrderTest]) -> None:
     # Check workflow requirements based on configuration
-    from app.platform.client_config import client_config
+    from app.platform.config import client_config
     
     # Workflow: requirePaymentBeforeCollection
     require_payment = client_config.workflows.get("requirePaymentBeforeCollection", True)
@@ -158,7 +158,7 @@ def assert_can_validate(order_test: OrderTest, validator_id: str | None = None) 
     Check if result can be validated.
     If requireDualValidation is enabled, ensures second validator is different from first.
     """
-    from app.platform.client_config import client_config
+    from app.platform.config import client_config
     
     can_validate, reason = TestStateMachine.can_validate(order_test.status)
     if not can_validate:

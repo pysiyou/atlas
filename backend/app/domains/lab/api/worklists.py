@@ -25,8 +25,8 @@ from app.domains.lab.schemas.worklists import (
     WorksheetResponse,
 )
 from app.domains.users.models import User
-from app.platform.http.dependencies import require_lab_tech, require_sample_collector
-from app.platform.utils.common import parse_csv_values
+from app.platform.http import require_lab_tech, require_sample_collector
+from app.platform.utils import parse_csv_values
 from app.shared.contracts.enums import PriorityLevel, TestStatus, UserRole
 from fastapi import APIRouter, Depends, Query
 

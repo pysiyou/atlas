@@ -24,7 +24,7 @@ export interface OrderTestSampleTabsProps {
 }
 
 function sampleTabLabel(sample: Sample, linkedSampleId?: number): string {
-  const id = displayId.sample(sample.sampleId);
+  const id = displayId.sample(sample.accessionNumber);
   if (linkedSampleId != null && sample.sampleId === linkedSampleId) {
     return `${id} (linked)`;
   }

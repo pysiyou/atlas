@@ -39,7 +39,7 @@ function PatientSelectedChip({ patient }: { patient: Patient }) {
           {patient.fullName}
         </span>
         <span className={`${text({ role: 'caption' })} font-normal truncate`}>
-          {[displayId.patient(patient.id), contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
+          {[displayId.patient(patient.mrn), contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
         </span>
       </div>
     </>
@@ -208,7 +208,7 @@ export function PatientSelect({
                           {patient.fullName}
                         </p>
                         <p className={`${text({ role: 'caption' })} truncate`}>
-                          {[displayId.patient(patient.id), contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
+                          {[displayId.patient(patient.mrn), contactLine || 'No contact on file'].filter(Boolean).join(' · ')}
                         </p>
                       </div>
                     </button>

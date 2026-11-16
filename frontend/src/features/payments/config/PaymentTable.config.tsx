@@ -57,7 +57,7 @@ export const createPaymentTableConfig = (
       getTestsSortValue: item => getTestsSortValue(item),
     },
     {
-      renderOrderId: item => renderOrderId(item.order.orderId),
+      renderOrderId: item => renderOrderId(item.order.fillerNumber),
     },
     { testsSortable: true, getTestName }
   );

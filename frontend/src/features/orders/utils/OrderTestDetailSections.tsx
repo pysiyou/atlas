@@ -7,7 +7,7 @@ import type { DescriptionListItemConfig } from '@/components/display/Description
 import type { OrderTest, Test } from '@/types';
 import { RecordId } from '@/features/shared';
 import { INLINE_LINK } from '@/theme/recipes';
-import { formatCurrency } from '@/utils';
+import { formatCurrency, formatOrderTestDisplay } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import {
   buildOrderTestWorkflowFields,
@@ -30,10 +30,14 @@ export function buildOrderTestOverviewFields(
   const fields: DescriptionListItemConfig[] = [
     {
       label: 'Test ID',
-      value:
-        orderTest.id != null ? (
-          <RecordId type="orderTest" value={orderTest.id} emphasis="block" className="text-right" />
-        ) : undefined,
+      value: (
+        <RecordId
+          type="orderTest"
+          value={formatOrderTestDisplay(orderTest.accessionNumber, orderTest.testCode)}
+          emphasis="block"
+          className="text-right"
+        />
+      ),
     },
     {
       label: 'Test code',

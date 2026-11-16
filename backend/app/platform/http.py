@@ -1,13 +1,18 @@
 """
-Reusable FastAPI dependencies: DB session, pagination, auth, and RBAC.
+HTTP layer: auth/pagination dependencies and the v1 API router.
+
+Domain routers are imported inside ``build_v1_router`` so this module can load
+without a circular import from those routers.
 """
+from __future__ import annotations
+
 from typing import Annotated
 
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.security import TokenType, decode_token
 from app.shared.contracts.enums import QualityIssueTargetType, UserRole
-from fastapi import Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
@@ -121,3 +126,38 @@ def assert_quality_issue_target_access(user: User, target_type: QualityIssueTarg
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f"Requires role: {', '.join(r.value for r in allowed)}",
         )
+
+
+def build_v1_router() -> APIRouter:
+    """Assemble every domain router under ``/api/v1``."""
+    from app.domains.audit.api import router as audit_router
+    from app.domains.auth.api import router as auth_router
+    from app.domains.catalog.api.affiliations import router as affiliations_router
+    from app.domains.catalog.api.panels import router as panels_router
+    from app.domains.catalog.api.tests import router as tests_router
+    from app.domains.config.api import router as config_router
+    from app.domains.dashboard.api import router as dashboard_router
+    from app.domains.lab.api.router import router as lab_router
+    from app.domains.orders.api import router as orders_router
+    from app.domains.patients.api import router as patients_router
+    from app.domains.payments.api import router as payments_router
+    from app.domains.referent_doctors.api import router as referent_doctors_router
+    from app.domains.reports.api import router as reports_router
+    from app.domains.users.api import router as users_router
+
+    root = APIRouter()
+    root.include_router(config_router, tags=["config"])
+    root.include_router(auth_router)
+    root.include_router(audit_router)
+    root.include_router(patients_router, tags=["patients"])
+    root.include_router(tests_router, tags=["tests"])
+    root.include_router(panels_router, tags=["panels"])
+    root.include_router(orders_router, tags=["orders"])
+    root.include_router(referent_doctors_router, tags=["referent-doctors"])
+    root.include_router(users_router, tags=["users"])
+    root.include_router(payments_router, tags=["payments"])
+    root.include_router(affiliations_router, tags=["affiliations"])
+    root.include_router(lab_router)
+    root.include_router(dashboard_router)
+    root.include_router(reports_router)
+    return root

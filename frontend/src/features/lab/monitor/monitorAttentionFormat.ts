@@ -4,7 +4,7 @@
 
 import { ATTENTION_LABELS } from '@/types/generated/policies';
 import { tLower } from '@/config';
-import { displayId } from '@/utils';
+import { displayId, formatOrderTestDisplay } from '@/utils';
 import { getLabCopy } from '@/strings';
 import { LAB_CONFIG, labStageLabel } from '../constants/labConstants';
 import type { LabAttentionQueueItem } from './monitorModel';
@@ -27,8 +27,12 @@ export interface FormattedLabAttentionQueueItem {
 
 type AttentionHandler = (item: LabAttentionQueueItem) => FormattedLabAttentionQueueItem;
 
-function orderLink(orderId: number): AttentionDetail {
-  return { type: 'link', value: displayId.order(orderId), to: `/orders/${orderId}` };
+function orderLink(item: LabAttentionQueueItem): AttentionDetail {
+  return {
+    type: 'link',
+    value: displayId.order(item.fillerNumber),
+    to: `/orders/${item.orderId}`,
+  };
 }
 
 function patientChip(item: LabAttentionQueueItem): AttentionDetail {
@@ -36,14 +40,22 @@ function patientChip(item: LabAttentionQueueItem): AttentionDetail {
 }
 
 function testIdChip(item: LabAttentionQueueItem): AttentionDetail | null {
-  const ids = item.orderTestIds;
-  if (!ids.length) return null;
-  if (ids.length === 1) {
-    return { type: 'testId', value: displayId.orderTest(ids[0]) };
+  const codes = item.testCodes ?? [];
+  if (codes.length === 1) {
+    return {
+      type: 'testId',
+      value: formatOrderTestDisplay(item.accessionNumber, codes[0]),
+    };
   }
-  const preview = ids.slice(0, 2).map(id => displayId.orderTest(id)).join(', ');
-  const suffix = ids.length > 2 ? ` +${ids.length - 2}` : '';
-  return { type: 'testId', value: `${preview}${suffix}` };
+  if (codes.length > 1) {
+    const preview = codes.slice(0, 2).join(', ');
+    const suffix = codes.length > 2 ? ` +${codes.length - 2}` : '';
+    return { type: 'testId', value: `${preview}${suffix}` };
+  }
+  if (item.accessionNumber) {
+    return { type: 'testId', value: displayId.sample(item.accessionNumber) };
+  }
+  return null;
 }
 
 function queueDetails(item: LabAttentionQueueItem): AttentionDetail[] {
@@ -83,7 +95,7 @@ function baseDetails(
   type: AttentionType,
   extras: AttentionDetail[] = [],
 ): AttentionDetail[] {
-  const details: AttentionDetail[] = [patientChip(item), orderLink(item.orderId)];
+  const details: AttentionDetail[] = [patientChip(item), orderLink(item)];
   const testId = testIdChip(item);
   if (testId) details.push(testId);
   const priority = priorityChip(item, type);

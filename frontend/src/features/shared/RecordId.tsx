@@ -5,14 +5,16 @@
 import { type ElementType, type MouseEventHandler, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CodeText, type CodeTextEmphasis } from '@/components/display/CodeText';
-import { displayId, type EntityType } from '@/utils';
+import { formatClinicalId, type EntityType } from '@/utils';
 import { createEntityFilterNavigateHandler, type EntityNavigateTarget } from '@/utils/filters';
 
 export type RecordIdEmphasis = CodeTextEmphasis;
 
 export interface RecordIdProps {
+  /** Entity kind for navigation; not used to prefix the displayed value. */
   type?: EntityType;
-  value?: number | string | null | undefined;
+  /** Stored clinical identifier (MRN, filler, accession, mnemonic, etc.). */
+  value?: string | null | undefined;
   children?: ReactNode;
   emphasis?: RecordIdEmphasis;
   className?: string;
@@ -37,9 +39,7 @@ export function RecordId({
 }: RecordIdProps) {
   const navigate = useNavigate();
 
-  const content =
-    children ??
-    (type != null ? displayId[type](typeof value === 'string' ? Number(value) : value) : null);
+  const content = children ?? formatClinicalId(value);
 
   const handleFilteredNavigation =
     navigateToFiltered && value != null
@@ -50,7 +50,7 @@ export function RecordId({
     <CodeText
       emphasis={emphasis}
       className={className}
-      title={title}
+      title={title ?? (type ? `${type} ${content}` : undefined)}
       onPress={onPress ?? handleFilteredNavigation}
       onClick={onClick}
       as={as}
