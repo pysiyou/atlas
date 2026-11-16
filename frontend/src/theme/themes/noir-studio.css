@@ -102,5 +102,11 @@
   --primitive-cyan-600: #22d3ee;
   --primitive-cyan-800: #a5f3fc;
 
+  /* ── Toast ── */
+  --toast-bg: var(--surface-elev);
+  --toast-fg: var(--text);
+  --toast-border: rgba(255, 255, 255, 0.08);
+  --toast-track: rgba(255, 255, 255, 0.12);
+
   /* Override --lane-* here to recolor pipeline lanes for this theme only. */
 }

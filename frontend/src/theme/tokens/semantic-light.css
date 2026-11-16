@@ -31,7 +31,8 @@
   /* ═══════════════════════════════════════════════════════════════════
      GEOMETRY (semantic radius — themes override these, not primitives)
      field: inputs & triggers; menu: modal/popover shell; menu-item: picks inside menus;
-     surface: in-page panels/cards/tables; workspace: app content well
+     surface: in-page panels/cards/tables; workspace: app content well;
+     notice: toasts/alerts — tracks --radius-base
      ═══════════════════════════════════════════════════════════════════ */
   --radius-field: var(--radius-control);
   --radius-menu: var(--radius-overlay);
@@ -41,6 +42,7 @@
   --radius-inline: 0.125rem;
   /** Inset panels inside copy (event log note/result box, etc.) — between inline and field */
   --radius-inset: 0.250rem;
+  --radius-notice: var(--radius-base);
 
   /* Marker wash (InlineHighlight) — deeper *-200 tints (not pale *-50/100) */
   --inline-highlight-warning: var(--primitive-warning-200);
@@ -231,9 +233,9 @@
   --ring-subtle: rgb(0 0 0 / 0.05);
 
   /* ═══════════════════════════════════════════════════════════════════
-     TOAST (studio-light)
+     TOAST — :root fallback; --toast-bg/--toast-fg overridden per theme in theme/themes/*.css
      ═══════════════════════════════════════════════════════════════════ */
-  --toast-bg: var(--primitive-neutral-0);
+  --toast-bg: var(--surface);
   --toast-fg: var(--primitive-neutral-900);
   --toast-fg-muted: var(--text-secondary);
   --toast-close: var(--text-tertiary);

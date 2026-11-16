@@ -223,6 +223,8 @@ a.entity-id {
 
 .toast-card {
   --toast-variant-accent: var(--toast-info);
+  border-radius: var(--radius-notice);
+  overflow: hidden;
   color: var(--toast-fg);
   border: 1px solid var(--toast-border);
   box-shadow: var(--toast-shadow);
@@ -255,6 +257,44 @@ a.entity-id {
   --toast-variant-accent: var(--toast-fg-muted);
 }
 
+.toast-chip-motion {
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes atlas-toast-enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -0.625rem, 0);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes atlas-toast-exit {
+    from {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translate3d(0, -0.625rem, 0);
+    }
+  }
+
+  .toast-chip-enter {
+    animation: atlas-toast-enter 0.35s cubic-bezier(0.21, 1.02, 0.73, 1) both;
+  }
+
+  .toast-chip-exit {
+    animation: atlas-toast-exit 0.32s cubic-bezier(0.06, 0.71, 0.55, 1) both;
+  }
+}
+
 /* --- Theme switch transition --- */
 
 html.theme-transitioning,
@@ -265,6 +305,7 @@ html.theme-transitioning *::after {
     background-color 0.4s ease-out,
     color 0.4s ease-out,
     border-color 0.4s ease-out,
+    border-radius 0.4s ease-out,
     fill 0.4s ease-out,
     stroke 0.4s ease-out,
     box-shadow 0.4s ease-out !important;

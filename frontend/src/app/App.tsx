@@ -110,7 +110,7 @@ function App() {
           <InitialDataPreload>
             <AppRoutes />
             <ModalRenderer />
-            <ToastHost toastOptions={{ duration: TOAST_DEFAULT_DURATION_MS, removeDelay: 0 }} />
+            <ToastHost toastOptions={{ duration: TOAST_DEFAULT_DURATION_MS }} />
           </InitialDataPreload>
         </AppProviders>
       </Router>

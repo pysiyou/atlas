@@ -168,7 +168,7 @@
   --accent-chart-default: var(--chart-brand);
 
   /* ── Toast ── */
-  --toast-bg: var(--primitive-neutral-0);
+  --toast-bg: var(--surface);
   --toast-fg: var(--text);
   --toast-border: rgb(28 27 46 / 0.08);
   --toast-track: rgb(28 27 46 / 0.06);
@@ -209,7 +209,6 @@
   --radius-menu: 1.5rem;
   --radius-workspace: 1.75rem;
   --button-radius: 9999px;
-  --radius-notice: 1.25rem;
 
   /* ── Soft lilac shadows ── */
   --shadow-sm: 0 1px 3px 0 rgb(28 27 46 / 0.04);

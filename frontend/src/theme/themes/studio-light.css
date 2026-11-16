@@ -117,7 +117,8 @@
   --accent-chart-11: var(--danger-fg-emphasis);
   --accent-chart-default: var(--chart-brand);
 
-  --toast-bg: var(--primitive-neutral-0);
+  /* ── Toast ── */
+  --toast-bg: var(--surface);
   --toast-fg: var(--text);
   --toast-border: rgb(26 29 31 / 0.08);
   --toast-track: rgb(26 29 31 / 0.06);

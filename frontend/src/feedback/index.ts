@@ -113,5 +113,11 @@ export {
   type ToastVariant,
 } from './FeedbackUi';
 
-export { TOAST_DEFAULT_DURATION_MS, ToastHost, ToastProvider, useToastMountRef } from './toast';
+export {
+  TOAST_DEFAULT_DURATION_MS,
+  TOAST_REMOVE_DELAY_MS,
+  ToastHost,
+  ToastProvider,
+  useToastMountRef,
+} from './toast';
 export { ErrorBoundary } from './ErrorBoundary';

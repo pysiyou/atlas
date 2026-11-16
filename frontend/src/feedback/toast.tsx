@@ -10,6 +10,9 @@ import { CompactNotice, TOAST_ALERT_MESSAGE, type ToastVariant } from './Feedbac
 
 export const TOAST_DEFAULT_DURATION_MS = 4000;
 
+/** Must cover exit animation in components.css so dismiss can finish before unmount. */
+export const TOAST_REMOVE_DELAY_MS = 360;
+
 const LOGIN_HOST_Z = 50;
 const HOST_CLASS = 'toast-host';
 
@@ -52,19 +55,29 @@ const ToastChip = React.memo(({ toast: host }: { toast: HotToast }) => {
   }, [host.id, host.toasterId]);
 
   return (
-    <CompactNotice
-      variant={outcomeFromHost(host)}
-      message={message}
-      onDismiss={dismiss}
-      ariaProps={host.ariaProps}
-    />
+    <div
+      className={cn(
+        'toast-chip-motion pointer-events-auto',
+        host.visible ? 'toast-chip-enter' : 'toast-chip-exit',
+      )}
+    >
+      <CompactNotice
+        variant={outcomeFromHost(host)}
+        message={message}
+        onDismiss={dismiss}
+        ariaProps={host.ariaProps}
+      />
+    </div>
   );
 });
 ToastChip.displayName = 'ToastChip';
 
 export function ToastHost({ toastOptions }: { toastOptions?: DefaultToastOptions }) {
   const mount = useContext(ToastMountContext);
-  const { toasts } = useToaster(toastOptions);
+  const { toasts } = useToaster({
+    removeDelay: TOAST_REMOVE_DELAY_MS,
+    ...toastOptions,
+  });
 
   if (toasts.length === 0) return null;
 

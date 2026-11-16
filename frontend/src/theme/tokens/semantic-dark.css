@@ -31,6 +31,7 @@
   --radius-workspace: var(--radius-shell);
   --radius-inline: 0.125rem;
   --radius-inset: 0.250rem;
+  --radius-notice: var(--radius-base);
 
   /* Marker wash (InlineHighlight) — same deeper tints as light (see semantic-light.css) */
   --inline-highlight-warning: var(--primitive-warning-300);
@@ -108,7 +109,7 @@
   --focus: var(--primitive-brand-500);
   --ring-subtle: rgb(255 255 255 / 0.08);
 
-  --toast-bg: var(--primitive-neutral-100);
+  --toast-bg: var(--surface-elev);
   --toast-fg: var(--primitive-neutral-900);
   --toast-fg-muted: var(--primitive-neutral-600);
   --toast-close: var(--primitive-neutral-700);
