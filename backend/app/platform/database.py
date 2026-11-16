@@ -27,6 +27,7 @@ engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,
     echo=False,  # Set to True for SQL query logging
+    connect_args={"connect_timeout": 5},
 )
 
 # Session factory

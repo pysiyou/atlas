@@ -32,13 +32,3 @@ class MessageResponse(BaseModel):
     """Simple message response for operations that return a status message."""
 
     message: str
-
-
-class OperationResponse(BaseModel):
-    """Response for operations that return a status with additional context."""
-
-    success: bool
-    message: str
-
-    class Config:
-        from_attributes = True

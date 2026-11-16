@@ -4,10 +4,7 @@ Database helper utilities for common operations.
 import re
 from typing import Any, TypeVar
 
-from app.shared.contracts.rejection_reasons import (
-    is_specimen_rejection_registry_value,
-    rejection_reason_domain,
-)
+from app.shared.contracts.rejection_reasons import is_specimen_rejection_registry_value
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
@@ -106,11 +103,6 @@ def parse_numeric_result_value(value: Any) -> float | None:
             return None
 
     return None
-
-
-def infer_criterion_domain(reason: str) -> str:
-    """Return specimen or analytical for a catalog label, id, or legacy enum wire."""
-    return rejection_reason_domain(reason) or "analytical"
 
 
 def is_specimen_rejection_reason(reason: str) -> bool:
