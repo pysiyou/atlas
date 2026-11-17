@@ -22,7 +22,8 @@ export const authUserResponseSchema = z.object({
   username: z.string(),
   name: z.string(),
   role: z.string(),
-  email: z.string().optional(),
+  /** API sends `null` when unset; `.optional()` alone does not accept null. */
+  email: z.string().nullable().optional(),
 });
 
 export const paymentResponseSchema = z.object({
