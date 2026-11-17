@@ -54,7 +54,7 @@ class CatalogTest(Base):
 
     # Additional catalog fields
     panels = Column(JSON, nullable=True)  # Orderable panel registry ids
-    loincCodes = Column("loinc_codes", JSON, nullable=True)  # LOINC codes
+    loincCode = Column("loinc_code", String, nullable=True)  # Unique observation LOINC
     methodology = Column(String, nullable=True)
     confidence = Column(String, nullable=True)  # HIGH, MEDIUM, LOW
     notes = Column(String, nullable=True)

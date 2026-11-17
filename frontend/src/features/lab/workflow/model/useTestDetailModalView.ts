@@ -13,7 +13,7 @@ import { useTestDetailModalDerived } from './useTestDetailModalDerived';
 
 const EMPTY_QUEUE_ROW: LabModalWorkItem = {
   orderTestId: 0,
-  orderId: 0,
+  orderId: '',
   patientName: '',
   testName: '',
   testCode: '',

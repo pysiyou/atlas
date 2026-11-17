@@ -1,5 +1,11 @@
 import { PAYMENT_METHOD_VALUES, PAYMENT_STATUS_VALUES, type PaymentMethod } from '@/types/generated/enums';
-import { dateStringSchema, positiveIntSchema, zEnumFromValues } from '@/types/zod';
+import {
+  dateStringSchema,
+  orderIdSchema,
+  invoiceIdSchema,
+  receiptIdSchema,
+  zEnumFromValues,
+} from '@/types/zod';
 import { z } from 'zod';
 
 export type { PaymentMethod };
@@ -7,11 +13,9 @@ export type { PaymentMethod };
 export const paymentMethodSchema = zEnumFromValues(PAYMENT_METHOD_VALUES);
 
 export const paymentSchema = z.object({
-  paymentId: positiveIntSchema,
-  receiptNumber: z.string().optional(),
-  orderId: positiveIntSchema,
-  fillerNumber: z.string().nullable().optional(),
-  invoiceId: z.number().int().positive().nullable(),
+  paymentId: receiptIdSchema,
+  orderId: orderIdSchema,
+  invoiceId: invoiceIdSchema.nullable(),
   amount: z.number().min(0),
   paymentMethod: paymentMethodSchema,
   paidAt: dateStringSchema,
@@ -25,13 +29,7 @@ export const paymentSchema = z.object({
 });
 
 export const paymentCreateSchema = z.object({
-  orderId: z.union([z.string(), positiveIntSchema]).transform(val => {
-    const num = typeof val === 'string' ? parseInt(val, 10) : val;
-    if (isNaN(num) || num <= 0) {
-      throw new Error('Invalid orderId');
-    }
-    return num;
-  }),
+  orderId: orderIdSchema,
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
   paymentMethod: paymentMethodSchema,
   notes: z.string().optional(),

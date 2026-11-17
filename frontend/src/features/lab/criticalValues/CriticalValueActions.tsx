@@ -82,11 +82,11 @@ export function CriticalValueActions({
       <div className={`flex flex-wrap items-center gap-space-2 ${text({ role: 'body' })}`}>
         <RecordId
           type="orderTest"
-          value={formatOrderTestDisplay(record.accessionNumber, record.testCode)}
+          value={formatOrderTestDisplay(record.sampleId, record.testCode)}
         />
         <span className={TONE.danger.fg}>{record.testCode}</span>
         <span className={FG.labelMuted}>{record.patientName}</span>
-        <RecordId type="order" value={record.fillerNumber} emphasis="mutedBlock" />
+        <RecordId type="order" value={record.orderId} emphasis="mutedBlock" />
       </div>
 
       {record.flags && record.flags.length > 0 && (

@@ -27,7 +27,7 @@ export function filterCatalogTests(tests: TestSummary[], filters: FilterValues):
         test.name.toLowerCase().includes(query) ||
         test.code.toLowerCase().includes(query) ||
         test.synonyms?.some(syn => syn.toLowerCase().includes(query)) ||
-        test.loincCodes?.some(loinc => loinc.toLowerCase().includes(query)) ||
+        (test.loincCode?.toLowerCase().includes(query) ?? false) ||
         test.panels?.some(
           panel =>
             panel.toLowerCase().includes(query) ||

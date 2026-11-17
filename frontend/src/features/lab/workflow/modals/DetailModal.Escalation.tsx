@@ -85,7 +85,7 @@ function escalationModalHeader(
       ? labModalHeaderContext({
           stage: 'escalation',
           contextLabel: chromeRow.testName,
-          orderId: chromeRow.fillerNumber,
+          orderId: chromeRow.orderId,
           badges: headerBadges ?? undefined,
         })
       : { title: getLabCopy().workflow.escalation, subtitle: '' };

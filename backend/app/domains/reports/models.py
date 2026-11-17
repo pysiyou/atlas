@@ -10,7 +10,7 @@ class ReportDocument(Base):
     __tablename__ = "report_documents"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    orderId = Column("order_id", String(13), ForeignKey("orders.order_id"), nullable=False, index=True)
     path = Column(String, nullable=False)
     sha256 = Column(String, nullable=False)
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())

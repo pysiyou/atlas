@@ -51,19 +51,16 @@ class ResultValidationRequest(BaseModel):
 
 class PendingEscalationItemResponse(BaseModel):
     id: int
-    orderId: int
-    fillerNumber: str
+    orderId: str
     orderDate: datetime
-    patientId: int
-    patientMrn: str
+    patientId: str
     patientName: str
     patientDob: str | None = None
     testCode: str
     testName: str
     sampleType: str
     status: str
-    sampleId: int | None = None
-    accessionNumber: str | None = None
+    sampleId: str | None = None
     results: TestResultsDict | None = None
     resultEnteredAt: datetime | None = None
     enteredBy: str | None = None
@@ -78,7 +75,7 @@ class PendingEscalationItemResponse(BaseModel):
     retestNumber: int = 0
     priorTestDisplay: str | None = None
     priority: str
-    referentDoctorId: int | None = None
+    referentDoctorId: str | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
     referentDoctorPhone: str | None = None
@@ -87,8 +84,7 @@ class PendingEscalationItemResponse(BaseModel):
     collectedAt: datetime | None = None
     collectedBy: str | None = None
     sampleIsRecollection: bool = False
-    sampleOriginalSampleId: int | None = None
-    sampleOriginalAccessionNumber: str | None = None
+    sampleOriginalSampleId: str | None = None
     sampleRecollectionReason: str | None = None
     sampleRecollectionAttempt: int | None = None
     ticketId: int | None = None
@@ -108,7 +104,7 @@ class PendingEscalationItemResponse(BaseModel):
 
 class QualityIssueTarget(BaseModel):
     type: QualityIssueTargetType
-    id: int
+    id: str
 
 
 class ReportQualityIssueRequest(BaseModel):
@@ -120,10 +116,10 @@ class ReportQualityIssueRequest(BaseModel):
 
 class QualityIssueOptions(BaseModel):
     targetType: QualityIssueTargetType
-    targetId: int
-    orderId: int
+    targetId: str
+    orderId: str
     testCode: str | None = None
-    sampleId: int | None = None
+    sampleId: str | None = None
     stage: QualityStage
     allowedCriteria: list[str] = []
     allowedRemedies: list[RemedyType] = []
@@ -149,10 +145,10 @@ class QualityIssueResult(BaseModel):
     remedy: RemedyType
     message: str
     qualityIssueId: int
-    orderId: int
+    orderId: str
     testCode: str | None = None
-    sampleId: int | None = None
+    sampleId: str | None = None
     orderTestId: int | None = None
     createdTestId: int | None = None
-    createdSampleId: int | None = None
+    createdSampleId: str | None = None
     escalationRequired: bool = False

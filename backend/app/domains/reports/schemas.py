@@ -9,13 +9,11 @@ from pydantic import BaseModel, Field
 class ReportableOrderItem(BaseModel):
     """One lab report row: a non-cancelled order with at least one active test."""
 
-    orderId: int
-    fillerNumber: str
-    patientMrn: str
+    orderId: str
     orderDate: datetime
     overallStatus: OrderStatus
     statusPresentation: StatusPresentation
-    patientId: int
+    patientId: str
     patientName: str
     patientDob: str | None = None
     patientGender: Gender | None = None

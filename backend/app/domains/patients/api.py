@@ -33,7 +33,7 @@ def search_patients(
 def get_patients(
     pagination: PaginationParams,
     search: str | None = Query(None, max_length=100),
-    patientId: int | None = None,
+    patientId: str | None = None,
     gender: str | None = Query(None),
     affiliationStatus: str | None = Query(None),
     ageMin: int | None = Query(None, ge=0, le=150),
@@ -68,7 +68,7 @@ def get_patients(
 
 @router.get("/patients/{patientId}", response_model=PatientResponse)
 def get_patient(
-    patientId: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+    patientId: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
 ):
     """Get patient by ID."""
     return PatientService(db).get_by_id(patientId, viewer_user_id=current_user.id)
@@ -89,7 +89,7 @@ def create_patient(
 
 @router.put("/patients/{patientId}")
 def update_patient(
-    patientId: int,
+    patientId: str,
     patient_data: PatientUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

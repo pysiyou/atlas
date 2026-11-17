@@ -14,7 +14,7 @@ import { LAB_CONFIG } from '../constants';
 
 export interface LabRejectionTailBadgesProps {
   priorTestDisplay?: string | null;
-  originalAccessionNumber?: string | null;
+  originalSampleId?: string | null;
   showRetestLink?: boolean;
   showRecollectionLink?: boolean;
   attemptNumber: number;
@@ -26,7 +26,7 @@ export interface LabRejectionTailBadgesProps {
 
 export function LabRejectionTailBadges({
   priorTestDisplay,
-  originalAccessionNumber,
+  originalSampleId,
   showRetestLink = false,
   showRecollectionLink = false,
   attemptNumber,
@@ -38,7 +38,7 @@ export function LabRejectionTailBadges({
   const showAttempt = attemptNumber > 1;
   const hasLink =
     (showRetestLink && Boolean(priorTestDisplay)) ||
-    (showRecollectionLink && Boolean(originalAccessionNumber));
+    (showRecollectionLink && Boolean(originalSampleId));
 
   if (!hasLink && !showAttempt) return null;
 
@@ -47,8 +47,8 @@ export function LabRejectionTailBadges({
       {showRetestLink && priorTestDisplay && (
         <RetestOfBadge priorTestDisplay={priorTestDisplay} size={size} />
       )}
-      {showRecollectionLink && originalAccessionNumber && (
-        <RecollectionOfBadge originalAccessionNumber={originalAccessionNumber} size={size} />
+      {showRecollectionLink && originalSampleId && (
+        <RecollectionOfBadge originalSampleId={originalSampleId} size={size} />
       )}
       {showAttempt && (
         <AttemptIndicator
@@ -75,7 +75,7 @@ export function LabRejectionTailBadgesFromWorkItem({ row, previousReason, size }
   return (
     <LabRejectionTailBadges
       priorTestDisplay={row.priorTestDisplay}
-      originalAccessionNumber={row.sampleOriginalAccessionNumber}
+      originalSampleId={row.sampleOriginalSampleId}
       showRetestLink={ctx.showRetestBadge}
       showRecollectionLink={ctx.showRecollectionLink}
       attemptNumber={ctx.attemptNumber}
@@ -95,8 +95,8 @@ export function LabRejectionTailBadgesFromSample({ sample, size }: {
 
   return (
     <LabRejectionTailBadges
-      originalAccessionNumber={sample.originalAccessionNumber}
-      showRecollectionLink={Boolean(sample.originalAccessionNumber)}
+      originalSampleId={sample.originalSampleId}
+      showRecollectionLink={Boolean(sample.originalSampleId)}
       attemptNumber={sample.recollectionAttempt ?? 1}
       maxAttempts={LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS}
       attemptType="recollection"

@@ -79,8 +79,8 @@ export function useLabModalWorkItemModel(
   const orderIdForFetch = useMemo(() => {
     const fromWorkItem = resolveOrderIdForFetch(orderProp, queueWorkItem, orderTestProp);
     if (fromWorkItem) return fromWorkItem;
-    if (orderTestSnapshot?.orderId != null) {
-      return String(orderTestSnapshot.orderId);
+    if (orderTestSnapshot?.orderId) {
+      return orderTestSnapshot.orderId;
     }
     return undefined;
   }, [orderProp, queueWorkItem, orderTestProp, orderTestSnapshot]);
@@ -101,7 +101,7 @@ export function useLabModalWorkItemModel(
   const samplesOrderTest = fallbackSamplesOrderTest(orderTest, orderTestId, queueWorkItem);
 
   const { relatedSamples } = useOrderTestDetailSamples(
-    order?.orderId ?? 0,
+    order?.orderId ?? '',
     samplesOrderTest,
     isOpen && Boolean(order?.orderId && orderTest)
   );

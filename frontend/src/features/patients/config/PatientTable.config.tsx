@@ -35,7 +35,7 @@ export const createPatientTableConfig = (
     id: createIdColumn<PatientContext>(
       'id',
       headers.patientId,
-      patient => renderPatientId(patient.mrn),
+      patient => renderPatientId(patient.id),
       {
         sortable: true,
         accessor: patient => patient.id,

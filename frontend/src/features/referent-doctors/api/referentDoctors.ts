@@ -4,9 +4,8 @@ import { cacheConfig, queryKeys, useAuthQueryEnabled } from '@/lib/query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface ReferentDoctor {
-  referentDoctorId: number;
+  referentDoctorId: string;
   fullName: string;
-  npi?: string | null;
   username?: string | null;
   email?: string | null;
   phone?: string | null;

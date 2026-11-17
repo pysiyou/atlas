@@ -18,10 +18,10 @@ export type EventLogSearchIntentMode =
 export type EventLogSearchDimension = 'patientName' | 'actorName' | 'username';
 
 export interface EventLogSearchParsedIds {
-  orderId?: number;
+  orderId?: string;
   testId?: number;
-  sampleId?: number;
-  patientId?: number;
+  sampleId?: string;
+  patientId?: string;
 }
 
 export interface EventLogSearchIntent {

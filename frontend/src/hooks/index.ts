@@ -55,7 +55,6 @@ export {
 } from './layout';
 
 export {
-  parseNumericKey,
   useDebouncedValue,
   useEntityLookup,
   usePaginatedPageSize,

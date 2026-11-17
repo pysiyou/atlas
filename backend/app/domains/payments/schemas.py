@@ -9,18 +9,16 @@ from pydantic import BaseModel, Field
 
 
 class PaymentCreate(BaseModel):
-    orderId: int
+    orderId: str
     amount: float = Field(gt=0, description="Payment amount must be greater than 0")
     paymentMethod: PaymentMethod
     notes: str | None = None
 
 
 class PaymentResponse(BaseModel):
-    paymentId: int
-    receiptNumber: str = Field(..., pattern=RECEIPT_NUMBER_PATTERN)
-    orderId: int
-    fillerNumber: str | None = Field(None, pattern=FILLER_PATTERN)
-    invoiceId: int | None = None
+    paymentId: str = Field(..., pattern=RECEIPT_NUMBER_PATTERN)
+    orderId: str
+    invoiceId: str | None = None
     amount: float
     paymentMethod: PaymentMethod
     paidAt: datetime

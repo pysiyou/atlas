@@ -6,14 +6,12 @@ from pydantic import BaseModel
 
 class CriticalValueResponse(BaseModel):
     id: int
-    orderId: int
-    fillerNumber: str
+    orderId: str
     testCode: str
     testName: str | None
-    patientId: int
-    patientMrn: str
+    patientId: str
     patientName: str
-    accessionNumber: str | None = None
+    sampleId: str | None = None
     flags: list[str] | None
     criticalNotificationSent: bool
     criticalNotifiedAt: datetime | None

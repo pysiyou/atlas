@@ -29,7 +29,7 @@ export interface EntryWorkflow {
   areAllParametersFilled: (orderTestId: number, parameterCount: number) => boolean;
   handleSaveResults: (
     orderTestId: number,
-    orderId: number | string,
+    orderId: string,
     rows?: EntryQueueRow[],
     fullByCode?: Map<string, Test>,
     finalResults?: Record<string, string>,
@@ -74,14 +74,12 @@ export function useResultEntryWorkflow({
   const handleSaveResults = useCallback(
     async (
       orderTestId: number,
-      orderId: number | string,
+      orderId: string,
       saveRows: EntryQueueRow[] = entryRows,
       saveFullByCode: Map<string, Test> = fullByCode,
       finalResults?: Record<string, string>,
       finalNotes?: string
     ) => {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-
       if (enterMutation.isPending) return;
 
       const testResults = finalResults || entryDrafts[orderTestId]?.results;
@@ -111,7 +109,7 @@ export function useResultEntryWorkflow({
 
       try {
         await enterMutation.mutateAsync({
-          orderId: orderIdStr,
+          orderId,
           orderTestId,
           results: rawResults,
           technicianNotes: finalNotes || entryDrafts[orderTestId]?.technicianNotes || undefined,

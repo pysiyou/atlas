@@ -117,8 +117,8 @@ export function createTestsTableConfig(
       'sampleId',
       'Sample',
       test =>
-        test.accessionNumber ? (
-          renderNavigableSampleId(test.accessionNumber)
+        test.sampleId ? (
+          renderNavigableSampleId(test.sampleId)
         ) : (
           <span className={TABLE_TYPE.meta}>—</span>
         ),

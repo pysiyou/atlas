@@ -61,11 +61,11 @@ export function CollectionDetailGrid({
     });
   }
 
-  if (sample.accessionNumber) {
+  if (sample.sampleId) {
     sections.push({
       preset: 'panel.compact.standard',
       title: 'Accession',
-      fields: [{ label: 'Accession', value: sample.accessionNumber }],
+      fields: [{ label: 'Accession', value: sample.sampleId }],
     });
   }
 

@@ -25,7 +25,7 @@ export async function printBenchWorksheet(params?: {
     .map(group => {
       const rows = group.rows
         .map(row => {
-          const accession = row.accessionNumber?.trim();
+          const accession = row.sampleId?.trim();
           if (!accession) return '';
           return `<tr>
               <td>${escapeHtml(row.patientName)}</td>

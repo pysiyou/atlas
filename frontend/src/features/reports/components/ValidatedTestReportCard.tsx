@@ -20,7 +20,7 @@ import { renderTruncatedListPreview } from '@/utils/TruncatedListPreviewRender';
 
 interface ValidatedTestReportCardProps extends CardComponentProps<ReportableOrder> {
   onPrint: (order: ReportableOrder) => void;
-  generatingOrderId: number | null;
+  generatingOrderId: string | null;
 }
 
 export function ValidatedTestReportCard({
@@ -42,7 +42,7 @@ export function ValidatedTestReportCard({
           <EntityStack
             primaryText={order.patientName}
             secondaryType="patient"
-            secondaryValue={order.patientMrn}
+            secondaryValue={order.patientId}
           />
         }
         trailing={
@@ -76,7 +76,7 @@ export function ValidatedTestReportCard({
 
       <div className="flex justify-between items-center mt-auto pt-space-3">
         <div>
-          <RecordId type="order" value={order.fillerNumber} emphasis="mutedBlock" />
+          <RecordId type="order" value={order.orderId} emphasis="mutedBlock" />
           <span className="block mt-space-0-5">{renderCardDateTimeSecondary(order.orderDate)}</span>
         </div>
         <div

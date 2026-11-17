@@ -43,16 +43,16 @@ function TestWorkflowIdentityLines({
   patientName,
   testName,
   referentDoctorName,
-  fillerNumber,
+  orderId,
   testCode,
-  accessionNumber,
+  sampleId,
 }: {
   patientName: string;
   testName: string;
   referentDoctorName?: string;
-  fillerNumber?: string | null;
+  orderId?: string | null;
   testCode: string;
-  accessionNumber?: string | null;
+  sampleId?: string | null;
 }) {
   const idClass = 'whitespace-nowrap';
 
@@ -76,13 +76,13 @@ function TestWorkflowIdentityLines({
       </span>
     );
   }
-  if (accessionNumber && testCode) {
+  if (sampleId && testCode) {
     if (line1.length > 0) line1.push(<InlineDot key="dot-ot" />);
     line1.push(
       <RecordId
         key="ot"
         type="orderTest"
-        value={`${accessionNumber}/${testCode}`}
+        value={`${sampleId}/${testCode}`}
         className={idClass}
       />
     );
@@ -99,16 +99,16 @@ function TestWorkflowIdentityLines({
       </span>
     );
   }
-  if (fillerNumber) {
+  if (orderId) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-ord" />);
     line2.push(
-      <RecordId key="ord" type="order" value={fillerNumber} emphasis="headerMuted" className={idClass} />
+      <RecordId key="ord" type="order" value={orderId} emphasis="headerMuted" className={idClass} />
     );
   }
-  if (accessionNumber) {
+  if (sampleId) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-acc" />);
     line2.push(
-      <RecordId key="acc" type="sample" value={accessionNumber} emphasis="headerMuted" className={idClass} />
+      <RecordId key="acc" type="sample" value={sampleId} emphasis="headerMuted" className={idClass} />
     );
   }
   if (testCode) {
@@ -210,7 +210,6 @@ export function TestWorkflowCardLeftColumn({
       retestOfTestId: row.retestOfTestId,
       priorTestDisplay: row.priorTestDisplay,
       sampleOriginalSampleId: row.sampleOriginalSampleId,
-      sampleOriginalAccessionNumber: row.sampleOriginalAccessionNumber,
     },
     { includeResultEntered }
   );
@@ -224,9 +223,9 @@ export function TestWorkflowCardLeftColumn({
           patientName={patientName}
           testName={row.testName}
           referentDoctorName={row.referentDoctorName ?? undefined}
-          fillerNumber={row.fillerNumber}
+          orderId={row.orderId}
           testCode={row.testCode}
-          accessionNumber={row.accessionNumber}
+          sampleId={row.sampleId}
         />
       }
       alerts={

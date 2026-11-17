@@ -25,7 +25,7 @@ import {
 
 function formatDoctorMetaLine(doctor: ReferentDoctor): string {
   return [
-    doctor.npi?.trim() ? doctor.npi.trim() : undefined,
+    doctor.referentDoctorId?.trim() ? doctor.referentDoctorId.trim() : undefined,
     doctor.username?.trim() ? `@${doctor.username.trim()}` : undefined,
     doctor.hospitalName?.trim() || undefined,
     doctor.phone?.trim() ? formatPhoneNumber(doctor.phone) : undefined,

@@ -30,7 +30,8 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-ANALYZER_USER_ID = 0
+# System actor for analyzer ingest; not a login account.
+ANALYZER_USER_ID = "100000"
 
 
 class AnalyzerIngestService:
@@ -74,7 +75,7 @@ class AnalyzerIngestService:
         detail: str,
         *,
         phase: str,
-        order_id: int | None = None,
+        order_id: str | None = None,
         order_test_id: int | None = None,
         test_code: str | None = None,
         analyzer_id: str | None = None,
@@ -106,13 +107,13 @@ class AnalyzerIngestService:
         token = specimen_id.strip()
         if not token:
             return None
-        sample = self.db.query(Sample).filter(Sample.accessionNumber == token).first()
+        sample = self.db.query(Sample).filter(Sample.sampleId == token).first()
         if sample:
             return sample
         if looks_like_accession(token):
             return None
         if looks_like_filler(token):
-            order = self.db.query(Order).filter(Order.fillerNumber == token).first()
+            order = self.db.query(Order).filter(Order.orderId == token).first()
             if order:
                 return (
                     self.db.query(Sample)
@@ -333,7 +334,7 @@ class AnalyzerIngestService:
             if sample:
                 results.append(
                     {
-                        "specimen_id": sample.accessionNumber,
+                        "specimen_id": sample.sampleId,
                         "order_id": test.orderId,
                         "test_code": test.testCode,
                         "sample_type": sample.sampleType.value if sample.sampleType else None,

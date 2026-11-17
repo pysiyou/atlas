@@ -47,9 +47,8 @@ export function SampleCollectionDetailModal({
   });
   const [isPopoverSubmitting, setIsPopoverSubmitting] = useState(false);
 
-  const numericSampleId = Number(sampleId);
-  const cachedDisplay = Number.isFinite(numericSampleId)
-    ? findCollectionQueueItem(queryClient, numericSampleId)
+  const cachedDisplay = sampleId
+    ? findCollectionQueueItem(queryClient, sampleId)
     : undefined;
 
   const { data: fetchedSample, isLoading: isFetchingSample } = useQuery({
@@ -111,10 +110,10 @@ export function SampleCollectionDetailModal({
   }, [sample, fullByCode]);
 
   const openSampleDetail = useCallback(
-    (id: string | number) => {
+    (id: string) => {
       openModal({
         type: ModalType.SAMPLE_DETAIL,
-        sampleId: String(id),
+        sampleId: id,
         readOnly,
       });
     },

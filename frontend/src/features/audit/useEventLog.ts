@@ -72,7 +72,7 @@ export function useEventLog(query: EventLogQuery, options?: UseEventLogOptions) 
     () => ({
       ...options?.resolve,
       getTestName,
-      getPatientName: (patientId: number) => lookupPatientName(patientId),
+      getPatientName: (patientId: string) => lookupPatientName(patientId),
       showEventTypeInMeta:
         options?.resolve?.showEventTypeInMeta ?? query.verbosity === 'debug',
       includeDebugPayload: query.verbosity === 'debug',

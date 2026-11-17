@@ -20,7 +20,7 @@ import { usePaginatedOrders, type OrdersFilters } from '@/features/orders';
 import { buildOrderPaymentViewsFromOrders } from '../utils/orderPaymentViews';
 
 export interface PaymentCreate {
-  orderId: number | string;
+  orderId: string;
   amount: number;
   paymentMethod: PaymentMethod;
   notes?: string;
@@ -205,7 +205,7 @@ export function useOrderRemainingBalance(orderId: string | undefined, totalPrice
 }
 
 export interface CreatePaymentData {
-  orderId: string | number;
+  orderId: string;
   amount: number;
   paymentMethod: PaymentMethod;
   notes?: string;
@@ -221,21 +221,16 @@ export function useCreatePayment() {
       return paymentAPI.create(validated);
     },
     onSuccess: (payment, variables) => {
-      const orderIdStr =
-        typeof variables.orderId === 'string' ? variables.orderId : String(variables.orderId);
-      const orderIdNum = Number(orderIdStr);
-      if (Number.isFinite(orderIdNum)) {
-        patchOrderSummaryInPaginatedCaches(queryClient, orderIdNum, {
-          latestPayment: {
-            paymentId: payment.paymentId,
-            paymentMethod: payment.paymentMethod,
-            paidAt: payment.paidAt,
-          },
-          ...(payment.orderPaymentStatus ? { paymentStatus: payment.orderPaymentStatus } : {}),
-        });
-      }
+      patchOrderSummaryInPaginatedCaches(queryClient, variables.orderId, {
+        latestPayment: {
+          paymentId: payment.paymentId,
+          paymentMethod: payment.paymentMethod,
+          paidAt: payment.paidAt,
+        },
+        ...(payment.orderPaymentStatus ? { paymentStatus: payment.orderPaymentStatus } : {}),
+      });
       return invalidateOrderQueries(queryClient, {
-        orderId: orderIdStr,
+        orderId: variables.orderId,
         payments: true,
         listsOnly: true,
       });

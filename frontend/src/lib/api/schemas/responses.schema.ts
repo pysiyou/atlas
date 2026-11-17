@@ -18,20 +18,17 @@ export const refreshTokenResponseSchema = z.object({
 });
 
 export const authUserResponseSchema = z.object({
-  id: z.union([z.number(), z.string()]),
+  id: z.string(),
   username: z.string(),
-  employeeNumber: z.string().nullable().optional(),
   name: z.string(),
   role: z.string(),
   email: z.string().optional(),
 });
 
 export const paymentResponseSchema = z.object({
-  paymentId: z.union([z.number(), z.string()]),
-  receiptNumber: z.string().optional(),
-  orderId: z.number(),
-  fillerNumber: z.string().nullable().optional(),
-  invoiceId: z.number().nullable().optional(),
+  paymentId: z.string(),
+  orderId: z.string(),
+  invoiceId: z.string().nullable().optional(),
   amount: z.number(),
   paymentMethod: z.string(),
   paidAt: z.string(),

@@ -13,7 +13,7 @@ class BillingService:
         self.db = db
         self.emitter = AuditEmitter(db)
 
-    def create_invoice_for_order(self, order_id: int, user_id: int | None = None) -> Invoice:
+    def create_invoice_for_order(self, order_id: str, user_id: str | None = None) -> Invoice:
         existing = self.db.query(Invoice).filter(Invoice.orderId == order_id).first()
         if existing:
             return existing
@@ -47,7 +47,7 @@ class BillingService:
 
         patient_name = order.patient.fullName if order.patient else "Unknown"
         invoice = Invoice(
-            invoiceNumber=allocate_invoice_number(self.db),
+            invoiceId=allocate_invoice_number(self.db),
             orderId=order.orderId,
             patientId=order.patientId,
             patientName=patient_name,
@@ -65,5 +65,5 @@ class BillingService:
         self.emitter.invoice_generated(order_id, invoice.invoiceId, user_id)
         return invoice
 
-    def list_invoices_for_order(self, order_id: int) -> list[Invoice]:
+    def list_invoices_for_order(self, order_id: str) -> list[Invoice]:
         return self.db.query(Invoice).filter(Invoice.orderId == order_id).all()

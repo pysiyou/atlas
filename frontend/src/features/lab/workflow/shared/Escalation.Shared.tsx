@@ -200,10 +200,10 @@ export function EscalationResolutionBody({
             fields: [
               {
                 label: 'Sample ID',
-                value: workItem.accessionNumber ? (
+                value: workItem.sampleId ? (
                   <RecordId
                     type="sample"
-                    value={workItem.accessionNumber}
+                    value={workItem.sampleId}
                     emphasis="block"
                     className="text-right"
                   />
@@ -234,7 +234,7 @@ export function EscalationResolutionBody({
                 value: (
                   <RecordId
                     type="orderTest"
-                    value={formatOrderTestDisplay(workItem.accessionNumber, workItem.testCode)}
+                    value={formatOrderTestDisplay(workItem.sampleId, workItem.testCode)}
                     emphasis="block"
                     className="text-right"
                   />
@@ -251,7 +251,7 @@ export function EscalationResolutionBody({
               {
                 label: 'Order ID',
                 value: (
-                  <RecordId type="order" value={workItem.fillerNumber} emphasis="block" className="text-right" />
+                  <RecordId type="order" value={workItem.orderId} emphasis="block" className="text-right" />
                 ),
               },
             ],

@@ -178,7 +178,7 @@ export function PaymentDetailModal({
         subtitle={
           <ModalContextSubtitle
             label={sourceOrder.patientName}
-            orderId={sourceOrder.fillerNumber}
+            orderId={sourceOrder.orderId}
           />
         }
         size="xl"

@@ -18,7 +18,7 @@ router = APIRouter()
 @router.get("/quality-issues/options", response_model=QualityIssueOptions)
 def get_quality_issue_options(
     targetType: QualityIssueTargetType = Query(...),
-    targetId: int = Query(...),
+    targetId: str = Query(...),
     service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(get_current_user),
 ):

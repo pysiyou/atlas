@@ -1,6 +1,7 @@
 /**
  * Shared Zod schemas and helpers for forms and API error parsing.
  */
+import { ID_PATTERNS } from '@/utils/id';
 import { z } from 'zod';
 
 export function zEnumFromValues<const T extends readonly [string, ...string[]]>(values: T) {
@@ -47,6 +48,15 @@ export const nullableApiDatetimeSchema = z.preprocess(
 
 export const dateSchema = z.coerce.date();
 export const positiveIntSchema = z.number().int().positive();
+export const mrnSchema = z.string().regex(ID_PATTERNS.mrn, 'Invalid patient id');
+export const orderIdSchema = z.string().regex(ID_PATTERNS.filler, 'Invalid order id');
+export const accessionSchema = z.string().min(1, 'Sample id is required');
+export const employeeNumberSchema = z
+  .string()
+  .regex(ID_PATTERNS.employeeNumber, 'Invalid user id');
+export const npiSchema = z.string().regex(ID_PATTERNS.npi, 'Invalid NPI');
+export const invoiceIdSchema = z.string().regex(ID_PATTERNS.invoiceNumber, 'Invalid invoice id');
+export const receiptIdSchema = z.string().regex(ID_PATTERNS.receiptNumber, 'Invalid payment id');
 export const percentageSchema = z.number().min(0).max(100);
 export const nonEmptyString = z.string().min(1, 'This field is required');
 export const nameSchema = z.string().min(2).max(100);

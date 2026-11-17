@@ -42,14 +42,14 @@ function appendLineageFields(
           className="ml-auto"
           onClick={() => onOpenLinkedTest(linked.prior!)}
         >
-          {formatOrderTestDisplay(linked.prior.accessionNumber, linked.prior.testCode)}
+          {formatOrderTestDisplay(linked.prior.sampleId, linked.prior.testCode)}
         </Button>
       ),
     });
   } else if (orderTest.retestOfTestId != null) {
     fields.push({
       label: 'Retest of',
-      value: formatOrderTestDisplay(orderTest.accessionNumber, orderTest.testCode),
+      value: formatOrderTestDisplay(orderTest.sampleId, orderTest.testCode),
     });
   }
 
@@ -63,14 +63,14 @@ function appendLineageFields(
           className="ml-auto"
           onClick={() => onOpenLinkedTest(linked.replacement!)}
         >
-          {formatOrderTestDisplay(linked.replacement.accessionNumber, linked.replacement.testCode)}
+          {formatOrderTestDisplay(linked.replacement.sampleId, linked.replacement.testCode)}
         </Button>
       ),
     });
   } else if (orderTest.retestOrderTestId != null) {
     fields.push({
       label: 'Replacement',
-      value: formatOrderTestDisplay(orderTest.accessionNumber, orderTest.testCode),
+      value: formatOrderTestDisplay(orderTest.sampleId, orderTest.testCode),
     });
   }
 

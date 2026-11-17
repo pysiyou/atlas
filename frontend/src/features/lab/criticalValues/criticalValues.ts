@@ -13,14 +13,12 @@ import { LAB_PATHS } from '../constants/labConstants';
 
 export interface CriticalValueRecord {
   id: number;
-  orderId: number;
-  fillerNumber?: string | null;
+  orderId: string;
   testCode: string;
   testName?: string;
-  patientId: number;
-  patientMrn?: string | null;
+  patientId?: string;
   patientName: string;
-  accessionNumber?: string | null;
+  sampleId?: string | null;
   flags?: string[];
   criticalNotificationSent: boolean;
   criticalNotifiedAt?: string;
@@ -111,13 +109,11 @@ export function buildCriticalValueRecord(
   return {
     id: workItem.orderTestId,
     orderId: workItem.orderId,
-    fillerNumber: workItem.fillerNumber,
     testCode: workItem.testCode,
     testName: workItem.testName,
-    patientId: workItem.patientId ?? 0,
-    patientMrn: workItem.patientMrn,
+    patientId: workItem.patientId,
     patientName: workItem.patientName,
-    accessionNumber: workItem.accessionNumber,
+    sampleId: workItem.sampleId,
     flags: workItem.flags ?? undefined,
     criticalNotificationSent: workItem.criticalNotificationSent ?? false,
     criticalNotifiedAt: workItem.criticalNotifiedAt ?? undefined,

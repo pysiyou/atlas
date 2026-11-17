@@ -6,7 +6,6 @@
 
 export {
   DENSE_EMPTY_STATE,
-  DENSE_EMPTY_STATE_TEXT,
   PANEL_EMPTY_STATE,
   emptySubtitle,
   emptyTitle,

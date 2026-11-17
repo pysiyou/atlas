@@ -23,7 +23,11 @@ export type EventLogPanelLayout = 'standalone' | 'embedded';
 const EVENT_LOG_PRESET: Record<'default' | 'compact' | 'monitor', PanelPresetId> = {
   default: 'panel.pageEmbed.auto',
   compact: 'panel.compactEmbed.auto',
-  monitor: 'panel.pageEmbed.auto.fill',
+  /**
+   * Same stretch-and-fill body as the Today panel so EmptyState can center
+   * in the monitor column. Feed scrolling moves onto the inner wrapper.
+   */
+  monitor: 'panel.pageEmbed.flexColumnFill',
 };
 
 function eventLogPreset(panelVariant: 'default' | 'compact' | 'monitor'): PanelPresetId {
@@ -152,7 +156,12 @@ export function EventLogPanel({
   ) : null;
 
   const body = (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div
+      className={cn(
+        'flex h-full min-h-0 flex-1 flex-col',
+        panelVariant === 'monitor' && 'overflow-y-auto',
+      )}
+    >
       {isLoading && resolved.length === 0 ? null : (
         <>
           <EventLogFeed items={resolved} />
@@ -200,7 +209,7 @@ export function EventLogPanel({
 }
 
 export function OrderEventLogPanel(props: {
-  orderId: number;
+  orderId: string;
   className?: string;
   layout?: EventLogPanelLayout;
 }) { return (
@@ -220,7 +229,7 @@ export function OrderEventLogPanel(props: {
  */
 export function LabEventLogPanel(props: {
   testId?: number;
-  sampleId?: number;
+  sampleId?: string;
   className?: string;
 }) {
   const hasTest = props.testId != null;
@@ -244,7 +253,7 @@ export function LabEventLogPanel(props: {
 }
 
 export function PatientEventLogPanel(props: {
-  patientId: number;
+  patientId: string;
   className?: string;
 }) { return (
   <EventLogPanel
@@ -269,7 +278,7 @@ export function LabMonitorEventLogPanel({ loading }: {
 /**
  * Billing events for an order — payment and invoice rows on payment detail.
  */
-export function BillingEventLogPanel(props: { orderId: number; className?: string }) { return (
+export function BillingEventLogPanel(props: { orderId: string; className?: string }) { return (
   <EventLogPanel
     query={{ scope: 'order', orderId: props.orderId, kinds: ['billing'], limit: 200 }}
     filterUi={{ fields: [] }}

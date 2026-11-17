@@ -20,6 +20,7 @@ from app.platform.cache import (
 )
 from app.platform.config import settings
 from fastapi import HTTPException, Response, status
+from sqlalchemy import inspect, text
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -33,30 +34,75 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[4]
 
 
-def _loinc_code_from_item(item: dict[str, Any]) -> str | None:
-    """Return a trimmed observation LOINC from a contract result item, if present."""
-    raw = item.get("loinc_code")
-    if not isinstance(raw, str):
+def _loinc_code_from_value(value: object) -> str | None:
+    """Return a trimmed LOINC string, or None when missing/blank."""
+    if not isinstance(value, str):
         return None
-    code = raw.strip()
+    code = value.strip()
     return code or None
 
 
-def _normalize_loinc_list(value: object) -> list[str]:
-    """Keep first-seen non-empty LOINC strings."""
-    if not isinstance(value, list):
-        return []
-    unique: list[str] = []
-    seen: set[str] = set()
-    for raw in value:
-        if not isinstance(raw, str):
+def _loinc_code_from_item(item: dict[str, Any]) -> str | None:
+    """Return a trimmed observation LOINC from a contract result item, if present."""
+    return _loinc_code_from_value(item.get("loinc_code"))
+
+
+def _singleton_legacy_loinc(value: object) -> str | None:
+    """
+    Pull a single LOINC out of the legacy ``loinc_codes`` JSON column.
+
+    Only a one-element array (or an already-scalar string) is copied; multi-item
+    batteries stay empty until the contract sync writes ``None``.
+    """
+    if isinstance(value, str):
+        stripped = value.strip()
+        if stripped.startswith("["):
+            try:
+                parsed = json.loads(stripped)
+            except json.JSONDecodeError:
+                return None
+            return _singleton_legacy_loinc(parsed)
+        return _loinc_code_from_value(stripped)
+    if isinstance(value, list) and len(value) == 1:
+        return _loinc_code_from_value(value[0])
+    return None
+
+
+def ensure_loinc_code_column(db: Session) -> None:
+    """
+    Add ``tests.loinc_code`` when missing and copy singleton legacy arrays.
+
+    ``create_all`` does not rename the existing JSON ``loinc_codes`` column.
+    Leave that column in place so a failed deploy cannot wipe data.
+    """
+    bind = db.get_bind()
+    inspector = inspect(bind)
+    if "tests" not in inspector.get_table_names():
+        return
+    columns = {col["name"] for col in inspector.get_columns("tests")}
+    if "loinc_code" not in columns:
+        db.execute(text("ALTER TABLE tests ADD COLUMN loinc_code VARCHAR"))
+        db.commit()
+        inspector = inspect(bind)
+        columns = {col["name"] for col in inspector.get_columns("tests")}
+    if "loinc_codes" not in columns:
+        return
+    rows = db.execute(
+        text("SELECT code, loinc_codes FROM tests WHERE loinc_code IS NULL")
+    ).fetchall()
+    copied = 0
+    for code, legacy in rows:
+        singleton = _singleton_legacy_loinc(legacy)
+        if not singleton:
             continue
-        code = raw.strip()
-        if not code or code in seen:
-            continue
-        seen.add(code)
-        unique.append(code)
-    return unique
+        db.execute(
+            text("UPDATE tests SET loinc_code = :loinc WHERE code = :code"),
+            {"loinc": singleton, "code": code},
+        )
+        copied += 1
+    if copied:
+        db.commit()
+        logger.info("Copied %s singleton loinc_codes arrays onto tests.loinc_code", copied)
 
 
 def _merge_result_item_loinc(
@@ -148,18 +194,20 @@ class TestCatalogService:
 
     def sync_parameter_loinc_from_contract(self) -> int:
         """
-        Copy observation LOINC from test-catalog.json onto DB result items.
+        Copy observation LOINC from test-catalog.json onto DB rows.
 
         Rows are keyed by sequential lab codes (CHEM001); contract tests use
         clinical mnemonics (GLU). Match on result ``item_code``, which is unique.
+        Test-level ``loinc_code`` is a single string (or None for multi-parameter tests).
         """
+        ensure_loinc_code_column(self.db)
         catalog_path = _repo_root() / "contracts" / "catalog" / "test-catalog.json"
         if not catalog_path.is_file():
             return 0
 
         payload = json.loads(catalog_path.read_text(encoding="utf-8"))
         loinc_by_item_code: dict[str, str] = {}
-        loinc_list_by_item_set: dict[frozenset[str], list[str]] = {}
+        loinc_by_item_set: dict[frozenset[str], str | None] = {}
         for entry in payload.get("tests") or []:
             if not isinstance(entry, dict):
                 continue
@@ -174,9 +222,9 @@ class TestCatalogService:
                 loinc_by_item_code[item_code] = loinc
                 item_codes.append(item_code)
             if item_codes:
-                loinc_list_by_item_set[frozenset(item_codes)] = _normalize_loinc_list(
-                    entry.get("loinc_codes")
-                ) or [loinc_by_item_code[code] for code in item_codes]
+                loinc_by_item_set[frozenset(item_codes)] = _loinc_code_from_value(
+                    entry.get("loinc_code")
+                )
 
         if not loinc_by_item_code:
             return 0
@@ -192,20 +240,20 @@ class TestCatalogService:
                 for item in merged_items
                 if isinstance(item, dict) and isinstance(item.get("item_code"), str)
             ]
-            desired_codes = loinc_list_by_item_set.get(frozenset(row_item_codes))
-            if desired_codes is None:
-                desired_codes = [
-                    loinc_by_item_code[code]
-                    for code in row_item_codes
-                    if code in loinc_by_item_code
-                ]
+            item_key = frozenset(row_item_codes)
+            if item_key in loinc_by_item_set:
+                desired_code = loinc_by_item_set[item_key]
+            elif len(row_item_codes) == 1 and row_item_codes[0] in loinc_by_item_code:
+                desired_code = loinc_by_item_code[row_item_codes[0]]
+            else:
+                desired_code = None
             changed = items_changed
             if items_changed:
                 row.resultItems = merged_items
                 flag_modified(row, "resultItems")
-            current_codes = _normalize_loinc_list(row.loincCodes)
-            if desired_codes and current_codes != desired_codes:
-                row.loincCodes = desired_codes
+            current_code = _loinc_code_from_value(row.loincCode)
+            if current_code != desired_code:
+                row.loincCode = desired_code
                 changed = True
             if changed:
                 updated += 1

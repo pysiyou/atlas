@@ -40,8 +40,8 @@ class SampleAliquotCreateRequest(BaseModel):
 
 
 class SampleResponse(SampleBase):
-    sampleId: int
-    orderId: int
+    sampleId: str
+    orderId: str
     collectedAt: datetime | None = None
     collectedBy: str | None = None
     collectedVolume: float | None = None
@@ -56,16 +56,13 @@ class SampleResponse(SampleBase):
     rejectionReason: str | None = None
     rejectionNotes: str | None = None
     recollectionRequired: bool = False
-    recollectionSampleId: int | None = None
-    recollectionAccessionNumber: str | None = None
+    recollectionSampleId: str | None = None
     isRecollection: bool = False
-    originalSampleId: int | None = None
+    originalSampleId: str | None = None
     originalSampleCollectedAt: datetime | None = None
-    originalAccessionNumber: str | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
-    accessionNumber: str
-    parentSampleId: int | None = None
+    parentSampleId: str | None = None
     isAliquot: bool = False
     aliquotIndex: int | None = None
     aliquotVolume: float | None = None

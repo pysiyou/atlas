@@ -290,8 +290,3 @@ export const DENSE_EMPTY_STATE = {
   variant: 'dense' as const,
   fill: true,
 } as const;
-
-export const DENSE_EMPTY_STATE_TEXT = {
-  variant: 'dense' as const,
-  fill: true,
-} as const;

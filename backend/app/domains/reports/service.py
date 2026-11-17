@@ -37,20 +37,22 @@ class ReportService:
         patient = order.patient
         active_tests = active_order_tests(order)
         validated_count = sum(1 for test in active_tests if test.status == TestStatus.VALIDATED)
-        if not order.fillerNumber:
+        if not order.orderId:
             raise HTTPException(
                 status_code=500,
-                detail=f"Order {order.orderId} is missing a filler number",
+                detail=f"Order is missing an order id",
             )
-        patient_mrn = patient.mrn if patient and patient.mrn else ""
+        if not patient or not patient.id:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Order {order.orderId} is missing a patient",
+            )
         return ReportableOrderItem(
             orderId=order.orderId,
-            fillerNumber=order.fillerNumber,
-            patientMrn=patient_mrn,
             orderDate=order.orderDate,
             overallStatus=order.overallStatus,
             statusPresentation=resolve_order_presentation(order.overallStatus),
-            patientId=patient.id if patient else 0,
+            patientId=patient.id,
             patientName=patient.fullName if patient else "Unknown",
             patientDob=patient.dateOfBirth if patient else None,
             patientGender=patient.gender if patient else None,
@@ -117,7 +119,7 @@ class ReportService:
         ]
         return create_paginated_response(items, total, skip_to_page(skip, limit), limit)
 
-    def _load_reportable_order(self, order_id: int) -> Order:
+    def _load_reportable_order(self, order_id: str) -> Order:
         order = (
             self.db.query(Order)
             .options(*_order_load_options())
@@ -128,11 +130,11 @@ class ReportService:
             raise HTTPException(status_code=404, detail="Reportable order not found")
         return order
 
-    def get_reportable_order_view(self, order_id: int) -> ReportableOrderItem:
+    def get_reportable_order_view(self, order_id: str) -> ReportableOrderItem:
         """Load one reportable order without recording a download audit event."""
         return self._to_item(self._load_reportable_order(order_id))
 
-    def get_reportable_order(self, order_id: int, user_id: int) -> ReportableOrderItem:
+    def get_reportable_order(self, order_id: str, user_id: str) -> ReportableOrderItem:
         order = self._load_reportable_order(order_id)
         item = self._to_item(order)
         active_tests = active_order_tests(order)
@@ -144,7 +146,7 @@ class ReportService:
         self.db.commit()
         return item
 
-    def _load_completed_order(self, order_id: int) -> Order:
+    def _load_completed_order(self, order_id: str) -> Order:
         order = self._load_reportable_order(order_id)
         if order.overallStatus != OrderStatus.COMPLETED:
             raise HTTPException(
@@ -153,15 +155,15 @@ class ReportService:
             )
         return order
 
-    def issue_pdf(self, order_id: int, user_id: int) -> tuple[bytes, str]:
+    def issue_pdf(self, order_id: str, user_id: str) -> tuple[bytes, str]:
         """Generate, archive, and return PDF bytes plus a download filename."""
         order = self._load_completed_order(order_id)
-        if not order.fillerNumber:
+        if not order.orderId:
             raise HTTPException(
                 status_code=500,
-                detail=f"Order {order.orderId} is missing a filler number",
+                detail=f"Order is missing an order id",
             )
         pdf_bytes, _document = ReportPdfService(self.db).generate_and_store(order, user_id)
         AuditEmitter(self.db).reporting_generated(order.orderId, user_id)
         self.db.commit()
-        return pdf_bytes, f"lab-report-{order.fillerNumber}.pdf"
+        return pdf_bytes, f"lab-report-{order.orderId}.pdf"

@@ -15,7 +15,7 @@ import type { Order } from '@/types';
 interface UseOrderFormOptions {
   order?: Order;
   mode?: 'create' | 'edit';
-  initialPatientId?: number;
+  initialPatientId?: string;
   onSubmitSuccess?: (createdOrder?: Order) => void | Promise<void>;
 }
 

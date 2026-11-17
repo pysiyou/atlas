@@ -1120,7 +1120,7 @@ export interface components {
             /** Message */
             message: string;
             /** Order Id */
-            order_id?: number | null;
+            order_id?: string | null;
             /** Test Id */
             test_id?: number | null;
             /** Status */
@@ -1146,7 +1146,7 @@ export interface components {
             /** Eventtype */
             eventType: string;
             /** Actorid */
-            actorId?: number | null;
+            actorId?: string | null;
             /** Actorsnapshot */
             actorSnapshot: {
                 [key: string]: unknown;
@@ -1154,19 +1154,13 @@ export interface components {
             /** Targettype */
             targetType: string;
             /** Targetid */
-            targetId: number;
+            targetId: string;
             /** Patientid */
-            patientId?: number | null;
-            /** Patientmrn */
-            patientMrn?: string | null;
+            patientId?: string | null;
             /** Orderid */
-            orderId?: number | null;
-            /** Fillernumber */
-            fillerNumber?: string | null;
+            orderId?: string | null;
             /** Testid */
             testId?: number | null;
-            /** Accessionnumber */
-            accessionNumber?: string | null;
             /** Eventscope */
             eventScope?: string | null;
             /** Changes */
@@ -1193,18 +1187,18 @@ export interface components {
         /** AuditSearchParsedIds */
         AuditSearchParsedIds: {
             /** Orderid */
-            orderId?: number | null;
+            orderId?: string | null;
             /** Testid */
             testId?: number | null;
             /** Sampleid */
-            sampleId?: number | null;
+            sampleId?: string | null;
             /** Patientid */
-            patientId?: number | null;
+            patientId?: string | null;
         };
         /** AuditSearchPreviewPatient */
         AuditSearchPreviewPatient: {
             /** Id */
-            id: number;
+            id: string;
             /** Fullname */
             fullName: string;
             /** Displayid */
@@ -1223,7 +1217,7 @@ export interface components {
         /** AuditSearchPreviewUser */
         AuditSearchPreviewUser: {
             /** Id */
-            id: number;
+            id: string;
             /** Name */
             name: string;
             /** Username */
@@ -1252,15 +1246,13 @@ export interface components {
             /** Stagelabel */
             stageLabel: string;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
+            /** Patientid */
+            patientId?: string | null;
             /** Patientname */
             patientName: string;
-            /** Patientmrn */
-            patientMrn: string;
-            /** Accessionnumber */
-            accessionNumber?: string | null;
+            /** Sampleid */
+            sampleId?: string | null;
             /** Testcodes */
             testCodes?: string[];
             priority: components["schemas"]["PriorityLevel"];
@@ -1312,15 +1304,11 @@ export interface components {
         /** CollectionWorklistItem */
         CollectionWorklistItem: {
             /** Sampleid */
-            sampleId: number;
+            sampleId: string;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Sampletype */
@@ -1335,27 +1323,21 @@ export interface components {
             orderDate: string;
             /** Testcodes */
             testCodes: string[];
-            /** Accessionnumber */
-            accessionNumber: string;
             /**
              * Isaliquot
              * @default false
              */
             isAliquot: boolean;
             /** Parentsampleid */
-            parentSampleId?: number | null;
+            parentSampleId?: string | null;
             /** Isrecollection */
             isRecollection: boolean;
             /** Originalsampleid */
-            originalSampleId?: number | null;
+            originalSampleId?: string | null;
             /** Originalsamplecollectedat */
             originalSampleCollectedAt?: string | null;
-            /** Originalaccessionnumber */
-            originalAccessionNumber?: string | null;
             /** Recollectionsampleid */
-            recollectionSampleId?: number | null;
-            /** Recollectionaccessionnumber */
-            recollectionAccessionNumber?: string | null;
+            recollectionSampleId?: string | null;
             /** Recollectionreason */
             recollectionReason?: string | null;
             /**
@@ -1396,7 +1378,7 @@ export interface components {
             /** Collectedvolume */
             collectedVolume?: number | null;
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Referentdoctorname */
             referentDoctorName?: string | null;
             /** Referentdoctoremail */
@@ -1437,21 +1419,17 @@ export interface components {
             /** Id */
             id: number;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /** Testcode */
             testCode: string;
             /** Testname */
             testName: string | null;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
-            /** Accessionnumber */
-            accessionNumber?: string | null;
+            /** Sampleid */
+            sampleId?: string | null;
             /** Flags */
             flags: string[] | null;
             /** Criticalnotificationsent */
@@ -1492,13 +1470,9 @@ export interface components {
             /** Ordertestid */
             orderTestId: number;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -1528,7 +1502,7 @@ export interface components {
              */
             orderDate: string;
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Referentdoctorname */
             referentDoctorName?: string | null;
             /** Referentdoctoremail */
@@ -1584,13 +1558,9 @@ export interface components {
             /** Ordertestid */
             orderTestId: number;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Testcode */
@@ -1598,11 +1568,9 @@ export interface components {
             /** Testname */
             testName: string;
             /** Sampleid */
-            sampleId: number | null;
+            sampleId: string | null;
             /** Sampletype */
             sampleType: string;
-            /** Accessionnumber */
-            accessionNumber?: string | null;
             priority: components["schemas"]["PriorityLevel"];
             status: components["schemas"]["TestStatus"];
             /** Collectedat */
@@ -1633,13 +1601,11 @@ export interface components {
              */
             sampleIsRecollection: boolean;
             /** Sampleoriginalsampleid */
-            sampleOriginalSampleId?: number | null;
-            /** Sampleoriginalaccessionnumber */
-            sampleOriginalAccessionNumber?: string | null;
+            sampleOriginalSampleId?: string | null;
             /** Samplerecollectionattempt */
             sampleRecollectionAttempt?: number | null;
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Referentdoctorname */
             referentDoctorName?: string | null;
             /** Referentdoctoremail */
@@ -1746,13 +1712,11 @@ export interface components {
         /** InvoiceResponse */
         InvoiceResponse: {
             /** Invoiceid */
-            invoiceId: number;
-            /** Invoicenumber */
-            invoiceNumber: string;
+            invoiceId: string;
             /** Orderid */
-            orderId: number;
+            orderId: string;
             /** Patientid */
-            patientId: number;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Items */
@@ -1931,7 +1895,7 @@ export interface components {
          */
         LatestPaymentSnippet: {
             /** Paymentid */
-            paymentId: number;
+            paymentId: string;
             paymentMethod: components["schemas"]["PaymentMethod"];
             /**
              * Paidat
@@ -1998,11 +1962,8 @@ export interface components {
          * @description Schema for creating a new order.
          */
         OrderCreate: {
-            /**
-             * Patientid
-             * @description Patient ID
-             */
-            patientId: number;
+            /** Patientid */
+            patientId: string;
             /**
              * Tests
              * @description Explicit catalog tests
@@ -2016,7 +1977,7 @@ export interface components {
             /** @default low */
             priority: components["schemas"]["PriorityLevel"];
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2030,15 +1991,11 @@ export interface components {
          */
         OrderDetailResponse: {
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /** Placernumber */
             placerNumber?: string | null;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -2058,7 +2015,7 @@ export interface components {
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Referentdoctorname */
             referentDoctorName?: string | null;
             /** Referentdoctoremail */
@@ -2100,15 +2057,11 @@ export interface components {
         /** OrderResponse */
         OrderResponse: {
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /** Placernumber */
             placerNumber?: string | null;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -2128,7 +2081,7 @@ export interface components {
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Referentdoctorname */
             referentDoctorName?: string | null;
             /** Referentdoctoremail */
@@ -2173,15 +2126,11 @@ export interface components {
          */
         OrderSummaryResponse: {
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /** Placernumber */
             placerNumber?: string | null;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -2209,7 +2158,7 @@ export interface components {
             statusPresentation?: components["schemas"]["StatusPresentation"] | null;
             priority: components["schemas"]["PriorityLevel"];
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Referentdoctorname */
             referentDoctorName?: string | null;
             /** Referentdoctoremail */
@@ -2267,9 +2216,7 @@ export interface components {
             /** Priceatorder */
             priceAtOrder: number;
             /** Sampleid */
-            sampleId?: number | null;
-            /** Accessionnumber */
-            accessionNumber?: string | null;
+            sampleId?: string | null;
             /** Results */
             results?: {
                 [key: string]: components["schemas"]["TestResultValue"] | {
@@ -2325,7 +2272,7 @@ export interface components {
         OrderUpdate: {
             priority?: components["schemas"]["PriorityLevel"] | null;
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Clinicalnotes */
             clinicalNotes?: string | null;
             /** Specialinstructions */
@@ -2501,9 +2448,7 @@ export interface components {
             medicalHistory?: components["schemas"]["MedicalHistory"] | null;
             affiliation?: components["schemas"]["AffiliationResponse"] | null;
             /** Id */
-            id: number;
-            /** Mrn */
-            mrn: string;
+            id: string;
             /**
              * Registrationdate
              * Format: date-time
@@ -2552,7 +2497,7 @@ export interface components {
         /** PaymentCreate */
         PaymentCreate: {
             /** Orderid */
-            orderId: number;
+            orderId: string;
             /**
              * Amount
              * @description Payment amount must be greater than 0
@@ -2570,15 +2515,11 @@ export interface components {
         /** PaymentResponse */
         PaymentResponse: {
             /** Paymentid */
-            paymentId: number;
-            /** Receiptnumber */
-            receiptNumber: string;
+            paymentId: string;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber?: string | null;
+            orderId: string;
             /** Invoiceid */
-            invoiceId?: number | null;
+            invoiceId?: string | null;
             /** Amount */
             amount: number;
             paymentMethod: components["schemas"]["PaymentMethod"];
@@ -2611,18 +2552,14 @@ export interface components {
             /** Id */
             id: number;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /**
              * Orderdate
              * Format: date-time
              */
             orderDate: string;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -2636,9 +2573,7 @@ export interface components {
             /** Status */
             status: string;
             /** Sampleid */
-            sampleId?: number | null;
-            /** Accessionnumber */
-            accessionNumber?: string | null;
+            sampleId?: string | null;
             /** Results */
             results?: {
                 [key: string]: components["schemas"]["TestResultValue"] | {
@@ -2681,7 +2616,7 @@ export interface components {
             /** Priority */
             priority: string;
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Referentdoctorname */
             referentDoctorName?: string | null;
             /** Referentdoctoremail */
@@ -2702,9 +2637,7 @@ export interface components {
              */
             sampleIsRecollection: boolean;
             /** Sampleoriginalsampleid */
-            sampleOriginalSampleId?: number | null;
-            /** Sampleoriginalaccessionnumber */
-            sampleOriginalAccessionNumber?: string | null;
+            sampleOriginalSampleId?: string | null;
             /** Samplerecollectionreason */
             sampleRecollectionReason?: string | null;
             /** Samplerecollectionattempt */
@@ -2754,13 +2687,13 @@ export interface components {
         QualityIssueOptions: {
             targetType: components["schemas"]["QualityIssueTargetType"];
             /** Targetid */
-            targetId: number;
+            targetId: string;
             /** Orderid */
-            orderId: number;
+            orderId: string;
             /** Testcode */
             testCode?: string | null;
             /** Sampleid */
-            sampleId?: number | null;
+            sampleId?: string | null;
             stage: components["schemas"]["QualityStage"];
             /**
              * Allowedcriteria
@@ -2850,17 +2783,17 @@ export interface components {
             /** Qualityissueid */
             qualityIssueId: number;
             /** Orderid */
-            orderId: number;
+            orderId: string;
             /** Testcode */
             testCode?: string | null;
             /** Sampleid */
-            sampleId?: number | null;
+            sampleId?: string | null;
             /** Ordertestid */
             orderTestId?: number | null;
             /** Createdtestid */
             createdTestId?: number | null;
             /** Createdsampleid */
-            createdSampleId?: number | null;
+            createdSampleId?: string | null;
             /**
              * Escalationrequired
              * @default false
@@ -2871,7 +2804,7 @@ export interface components {
         QualityIssueTarget: {
             type: components["schemas"]["QualityIssueTargetType"];
             /** Id */
-            id: number;
+            id: string;
         };
         /**
          * QualityIssueTargetType
@@ -2912,11 +2845,9 @@ export interface components {
         /** ReferentDoctorResponse */
         ReferentDoctorResponse: {
             /** Referentdoctorid */
-            referentDoctorId: number;
+            referentDoctorId: string;
             /** Fullname */
             fullName: string;
-            /** Npi */
-            npi?: string | null;
             /** Username */
             username?: string | null;
             /** Email */
@@ -3002,11 +2933,7 @@ export interface components {
          */
         ReportableOrderItem: {
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
-            /** Patientmrn */
-            patientMrn: string;
+            orderId: string;
             /**
              * Orderdate
              * Format: date-time
@@ -3015,7 +2942,7 @@ export interface components {
             overallStatus: components["schemas"]["OrderStatus"];
             statusPresentation: components["schemas"]["StatusPresentation"];
             /** Patientid */
-            patientId: number;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Patientdob */
@@ -3098,9 +3025,9 @@ export interface components {
             /** Requiredcontainercolors */
             requiredContainerColors: components["schemas"]["ContainerTopColor"][];
             /** Sampleid */
-            sampleId: number;
+            sampleId: string;
             /** Orderid */
-            orderId: number;
+            orderId: string;
             /** Collectedat */
             collectedAt?: string | null;
             /** Collectedby */
@@ -3131,20 +3058,16 @@ export interface components {
              */
             recollectionRequired: boolean;
             /** Recollectionsampleid */
-            recollectionSampleId?: number | null;
-            /** Recollectionaccessionnumber */
-            recollectionAccessionNumber?: string | null;
+            recollectionSampleId?: string | null;
             /**
              * Isrecollection
              * @default false
              */
             isRecollection: boolean;
             /** Originalsampleid */
-            originalSampleId?: number | null;
+            originalSampleId?: string | null;
             /** Originalsamplecollectedat */
             originalSampleCollectedAt?: string | null;
-            /** Originalaccessionnumber */
-            originalAccessionNumber?: string | null;
             /** Recollectionreason */
             recollectionReason?: string | null;
             /**
@@ -3152,10 +3075,8 @@ export interface components {
              * @default 1
              */
             recollectionAttempt: number;
-            /** Accessionnumber */
-            accessionNumber: string;
             /** Parentsampleid */
-            parentSampleId?: number | null;
+            parentSampleId?: string | null;
             /**
              * Isaliquot
              * @default false
@@ -3272,8 +3193,8 @@ export interface components {
             resultItems?: unknown[] | null;
             /** Panels */
             panels?: string[] | null;
-            /** Loinccodes */
-            loincCodes?: string[] | null;
+            /** Loinccode */
+            loincCode?: string | null;
             /** Methodology */
             methodology?: string | null;
             /** Confidence */
@@ -3343,8 +3264,8 @@ export interface components {
             synonyms?: string[] | null;
             /** Panels */
             panels?: string[] | null;
-            /** Loinccodes */
-            loincCodes?: string[] | null;
+            /** Loinccode */
+            loincCode?: string | null;
             /** Fastingrequired */
             fastingRequired?: boolean | null;
             /**
@@ -3391,7 +3312,7 @@ export interface components {
          */
         UserLookupResponse: {
             /** Id */
-            id: number;
+            id: string;
             /** Name */
             name: string;
             /** Username */
@@ -3412,9 +3333,7 @@ export interface components {
             /** Phone */
             phone?: string | null;
             /** Id */
-            id: number;
-            /** Employeenumber */
-            employeeNumber: string;
+            id: string;
             /**
              * Createdat
              * Format: date-time
@@ -3466,13 +3385,9 @@ export interface components {
             /** Ordertestid */
             orderTestId: number;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
             /** Patientid */
-            patientId: number;
-            /** Patientmrn */
-            patientMrn: string;
+            patientId: string;
             /** Patientname */
             patientName: string;
             /** Testcode */
@@ -3481,12 +3396,10 @@ export interface components {
             testName: string;
             /** Sampletype */
             sampleType: string;
-            /** Accessionnumber */
-            accessionNumber?: string | null;
             priority: components["schemas"]["PriorityLevel"];
             status: components["schemas"]["TestStatus"];
             /** Sampleid */
-            sampleId?: number | null;
+            sampleId?: string | null;
             sampleStatus?: components["schemas"]["SampleStatus"] | null;
             /** Results */
             results?: {
@@ -3499,7 +3412,7 @@ export interface components {
             /** Enteredby */
             enteredBy?: string | null;
             /** Referentdoctorid */
-            referentDoctorId?: number | null;
+            referentDoctorId?: string | null;
             /** Referentdoctorname */
             referentDoctorName?: string | null;
             /** Referentdoctoremail */
@@ -3530,9 +3443,7 @@ export interface components {
              */
             sampleIsRecollection: boolean;
             /** Sampleoriginalsampleid */
-            sampleOriginalSampleId?: number | null;
-            /** Sampleoriginalaccessionnumber */
-            sampleOriginalAccessionNumber?: string | null;
+            sampleOriginalSampleId?: string | null;
             /** Samplerecollectionattempt */
             sampleRecollectionAttempt?: number | null;
             /** Resultenteredat */
@@ -3618,15 +3529,13 @@ export interface components {
             /** Ordertestid */
             orderTestId: number;
             /** Orderid */
-            orderId: number;
-            /** Fillernumber */
-            fillerNumber: string;
+            orderId: string;
+            /** Patientid */
+            patientId: string;
             /** Patientname */
             patientName: string;
-            /** Patientmrn */
-            patientMrn: string;
-            /** Accessionnumber */
-            accessionNumber: string;
+            /** Sampleid */
+            sampleId: string;
             /** Sampletype */
             sampleType: string;
             priority: components["schemas"]["PriorityLevel"];
@@ -3879,10 +3788,10 @@ export interface operations {
             query?: {
                 /** @description Containment lens: order, lab, patient, system, or stream */
                 scope?: "order" | "lab" | "patient" | "system" | "stream";
-                orderId?: number | null;
-                patientId?: number | null;
+                orderId?: string | null;
+                patientId?: string | null;
                 testId?: number | null;
-                sampleId?: number | null;
+                sampleId?: string | null;
                 /** @description Return events created within the last N hours (UTC); ignored if createdFrom is set */
                 hours?: number | null;
                 createdFrom?: string | null;
@@ -3898,7 +3807,7 @@ export interface operations {
                 /** @description Newest-first cursor: eventId of the last row from the previous page */
                 cursorEventId?: string | null;
                 /** @description When set, only events performed by this user id */
-                actorId?: number | null;
+                actorId?: string | null;
                 /** @description Comma-separated UserRole values; matches actor_snapshot.role at event time */
                 actorRoles?: string | null;
                 /** @description Partial match on actor display name (snapshot) or account username */
@@ -3970,7 +3879,7 @@ export interface operations {
         parameters: {
             query?: {
                 search?: string | null;
-                patientId?: number | null;
+                patientId?: string | null;
                 gender?: string | null;
                 affiliationStatus?: string | null;
                 ageMin?: number | null;
@@ -4051,7 +3960,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                patientId: number;
+                patientId: string;
             };
             cookie?: never;
         };
@@ -4082,7 +3991,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                patientId: number;
+                patientId: string;
             };
             cookie?: never;
         };
@@ -4275,8 +4184,8 @@ export interface operations {
     get_orders_api_v1_orders_get: {
         parameters: {
             query?: {
-                patientId?: number | null;
-                orderId?: number | null;
+                patientId?: string | null;
+                orderId?: string | null;
                 status?: string | null;
                 paymentStatus?: string | null;
                 paymentMethod?: string | null;
@@ -4362,7 +4271,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                orderId: number;
+                orderId: string;
             };
             cookie?: never;
         };
@@ -4393,7 +4302,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                orderId: string;
             };
             cookie?: never;
         };
@@ -4428,7 +4337,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                orderId: string;
             };
             cookie?: never;
         };
@@ -4597,7 +4506,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                user_id: number;
+                user_id: string;
             };
             cookie?: never;
         };
@@ -4632,7 +4541,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                orderId: string;
             };
             cookie?: never;
         };
@@ -4714,7 +4623,7 @@ export interface operations {
     get_samples_api_v1_lab_samples_get: {
         parameters: {
             query?: {
-                orderId?: number | null;
+                orderId?: string | null;
                 sampleStatus?: components["schemas"]["SampleStatus"] | null;
                 paginated?: boolean;
                 /** @description Number of records to skip */
@@ -4753,7 +4662,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                sampleId: number;
+                sampleId: string;
             };
             cookie?: never;
         };
@@ -4784,7 +4693,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                sampleId: number;
+                sampleId: string;
             };
             cookie?: never;
         };
@@ -4815,7 +4724,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                sampleId: number;
+                sampleId: string;
             };
             cookie?: never;
         };
@@ -4850,7 +4759,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                sampleId: number;
+                sampleId: string;
             };
             cookie?: never;
         };
@@ -5465,7 +5374,7 @@ export interface operations {
         parameters: {
             query: {
                 targetType: components["schemas"]["QualityIssueTargetType"];
-                targetId: number;
+                targetId: string;
             };
             header?: never;
             path?: never;
@@ -5588,7 +5497,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                orderId: string;
             };
             cookie?: never;
         };
@@ -5619,7 +5528,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                orderId: string;
             };
             cookie?: never;
         };
@@ -5650,7 +5559,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                orderId: number;
+                orderId: string;
             };
             cookie?: never;
         };

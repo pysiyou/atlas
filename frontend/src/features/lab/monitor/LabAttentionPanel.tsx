@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/strings';
+import { getEmptyCopy, DENSE_EMPTY_STATE } from '@/strings';
 
 import { RecordId } from '@/features/shared';
 import { Badge } from '@/components/primitives';
@@ -99,7 +99,7 @@ function AttentionFeedRow({ item }: { item: LabAttentionQueueItem }) {
   const tone = getAttentionTone(type);
   const formatted = formatLabAttentionQueueItem(item, type);
   const href = getLabQueueUrl(item.queueTab, {
-    search: displayId.order(item.fillerNumber),
+    search: displayId.order(item.orderId),
   });
 
   const identityDetails = formatted.details.filter(isIdentityDetail);
@@ -178,13 +178,11 @@ function AttentionFeed({ items }: { items: LabAttentionQueueItem[] }) {
 
   if (groups.length === 0) {
     return (
-      <div className="flex h-full min-h-0 flex-col bg-surface">
-        <EmptyState
-          {...DENSE_EMPTY_STATE_TEXT}
-          title={getEmptyCopy().pendingAttention.title}
-          description={getEmptyCopy().pendingAttention.description}
-        />
-      </div>
+      <EmptyState
+        {...DENSE_EMPTY_STATE}
+        title={getEmptyCopy().pendingAttention.title}
+        description={getEmptyCopy().pendingAttention.description}
+      />
     );
   }
 

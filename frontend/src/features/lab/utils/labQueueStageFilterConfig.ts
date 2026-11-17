@@ -32,8 +32,8 @@ export interface LabQueueStageFilterConfig<T, S> {
     getQueueSince: (item: T) => string | undefined;
     searchFilterFn: (item: T, query: string) => boolean;
     getId?: (item: T) => number | undefined;
-    getOrderId: (item: T) => number | undefined;
-    getSampleId?: (item: T) => number | undefined;
+    getOrderId: (item: T) => string | undefined;
+    getSampleId?: (item: T) => string | undefined;
   };
   defaultStatuses: S[];
   sortByPriority: boolean;

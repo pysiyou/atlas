@@ -33,18 +33,12 @@ router = APIRouter()
 
 
 def _sample_response(db: Session, sample: Sample) -> SampleResponse:
-    """Serialize a sample and attach stored clinical lineage identifiers."""
+    """Serialize a sample and attach parent collection time for recollection lineage."""
     data = SampleResponse.model_validate(sample).model_dump()
     if sample.originalSampleId:
         parent = db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
-        if parent:
-            data["originalAccessionNumber"] = parent.accessionNumber
-            if parent.collectedAt:
-                data["originalSampleCollectedAt"] = parent.collectedAt
-    if sample.recollectionSampleId:
-        child = db.query(Sample).filter(Sample.sampleId == sample.recollectionSampleId).first()
-        if child:
-            data["recollectionAccessionNumber"] = child.accessionNumber
+        if parent and parent.collectedAt:
+            data["originalSampleCollectedAt"] = parent.collectedAt
     return SampleResponse(**data)
 
 
@@ -54,7 +48,7 @@ def _sample_response(db: Session, sample: Sample) -> SampleResponse:
 )
 def get_samples(
     pagination: PaginationParams,
-    orderId: int | None = None,
+    orderId: str | None = None,
     sampleStatus: SampleStatus | None = None,
     paginated: bool = Query(False),
     specimen: SpecimenQueryService = Depends(get_specimen_query_service),
@@ -67,7 +61,7 @@ def get_samples(
 
 @router.get("/samples/{sampleId}/work-context", response_model=CollectionWorklistItem)
 def get_sample_work_context(
-    sampleId: int,
+    sampleId: str,
     worklist: LabWorklistService = Depends(get_lab_worklist_service),
     current_user: User = Depends(get_current_user),
 ):
@@ -77,7 +71,7 @@ def get_sample_work_context(
 
 @router.get("/samples/{sampleId}", response_model=SampleResponse)
 def get_sample(
-    sampleId: int,
+    sampleId: str,
     db: Session = Depends(get_db),
     specimen: SpecimenQueryService = Depends(get_specimen_query_service),
     current_user: User = Depends(get_current_user),
@@ -88,7 +82,7 @@ def get_sample(
 
 @router.patch("/samples/{sampleId}/collect", response_model=SampleResponse)
 def collect_sample(
-    sampleId: int,
+    sampleId: str,
     collect_data: SampleCollectRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_sample_collector),
@@ -105,7 +99,7 @@ def collect_sample(
 
 @router.post("/samples/{sampleId}/aliquots", response_model=list[SampleResponse])
 def create_sample_aliquots(
-    sampleId: int,
+    sampleId: str,
     payload: SampleAliquotCreateRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_sample_collector),

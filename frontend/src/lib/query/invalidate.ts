@@ -21,7 +21,7 @@ import type { PaginatedResponse } from '@/types';
 import { queryKeys } from './keys';
 
 export interface InvalidateOrderOptions {
-  orderId?: string | number;
+  orderId?: string;
   samples?: boolean;
   payments?: boolean;
   /** Invalidate list/paginated order queries only (not the full `orders` prefix). */
@@ -54,7 +54,7 @@ export function invalidateWorklistQueries(client: QueryClient): Promise<void> {
  */
 export function patchOrderSummaryInPaginatedCaches(
   client: QueryClient,
-  orderId: number,
+  orderId: string,
   patch: Partial<Order>
 ): void {
   const queries = client.getQueriesData<PaginatedResponse<Order>>({
@@ -79,8 +79,6 @@ export function invalidateOrderQueries(
   options: InvalidateOrderOptions = {}
 ): Promise<void> {
   const { orderId, samples = true, payments = false, listsOnly = false } = options;
-  const orderIdStr = orderId !== undefined ? String(orderId) : undefined;
-
   const orderListTasks: Array<Promise<unknown>> = listsOnly
     ? [
         client.invalidateQueries({ queryKey: queryKeys.orders.lists() }),
@@ -89,8 +87,8 @@ export function invalidateOrderQueries(
     : [client.invalidateQueries({ queryKey: queryKeys.orders.all })];
 
   const tasks: Array<Promise<unknown>> = [...orderListTasks, invalidateAuditEventQueries(client)];
-  if (orderIdStr) {
-    tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
+  if (orderId) {
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderId) }));
   }
   if (samples) {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.samples.all }));
@@ -107,7 +105,7 @@ export function invalidateOrderDetailQuery(client: QueryClient, orderId: string)
 }
 
 export interface InvalidatePatientOptions {
-  patientId?: string | number;
+  patientId?: string;
 }
 
 export function invalidatePatientQueries(
@@ -115,19 +113,18 @@ export function invalidatePatientQueries(
   options: InvalidatePatientOptions = {}
 ): Promise<void> {
   const { patientId } = options;
-  const patientIdStr = patientId !== undefined ? String(patientId) : undefined;
 
   const tasks: Array<Promise<unknown>> = [
     client.invalidateQueries({ queryKey: queryKeys.patients.all }),
   ];
-  if (patientIdStr) {
-    tasks.push(client.invalidateQueries({ queryKey: queryKeys.patients.byId(patientIdStr) }));
+  if (patientId) {
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.patients.byId(patientId) }));
   }
   return settleInvalidations(tasks);
 }
 
 export interface InvalidateResultOptions {
-  orderId?: string | number;
+  orderId?: string;
   /** When set, refresh only that order-test context instead of every results query. */
   orderTestId?: number;
   samples?: boolean;
@@ -139,14 +136,13 @@ export function invalidateResultQueries(
   options: InvalidateResultOptions = {}
 ): Promise<void> {
   const { orderId, orderTestId, samples = true, pendingEscalation = true } = options;
-  const orderIdStr = orderId !== undefined ? String(orderId) : undefined;
 
   const tasks: Array<Promise<unknown>> = [
     invalidateWorklistQueries(client),
     invalidateAuditEventQueries(client),
   ];
-  if (orderIdStr) {
-    tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderIdStr) }));
+  if (orderId) {
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderId) }));
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.lists() }));
     tasks.push(client.invalidateQueries({ queryKey: [...queryKeys.orders.all, 'paginated'] }));
   } else {
@@ -167,7 +163,7 @@ export function invalidateResultQueries(
 }
 
 export interface InvalidateCriticalValueOptions {
-  orderId?: string | number;
+  orderId?: string;
 }
 
 export function invalidateCriticalValueQueries(
@@ -217,7 +213,7 @@ export type LabMutationInvalidationKind =
 
 export interface InvalidateAfterLabMutationOptions {
   kind: LabMutationInvalidationKind;
-  orderId?: string | number;
+  orderId?: string;
   orderTestId?: number;
 }
 

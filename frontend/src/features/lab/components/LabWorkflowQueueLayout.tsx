@@ -179,20 +179,18 @@ export function LabWorkflowQueueLayout<T>({
 export function createLabQueueSearchFilter<
   T extends {
     id?: string | number;
-    orderId?: string | number;
+    orderId?: string;
     patientName?: string;
     testName?: string;
     testCode?: string;
-    sampleId?: string | number;
+    sampleId?: string;
   },
 >(extraFields?: (item: T) => string[]): (item: T, query: string) => boolean {
   return (item: T, query: string): boolean => {
     const orderTestId =
       item.id != null && Number.isFinite(Number(item.id)) ? Number(item.id) : undefined;
-    const orderId =
-      item.orderId != null && Number.isFinite(Number(item.orderId)) ? Number(item.orderId) : undefined;
-    const sampleId =
-      item.sampleId != null && Number.isFinite(Number(item.sampleId)) ? Number(item.sampleId) : undefined;
+    const orderId = item.orderId || undefined;
+    const sampleId = item.sampleId || undefined;
     const extra = extraFields ? extraFields(item) : [];
     const textFields = labQueueSearchTextFields(
       { orderTestId, orderId, sampleId },

@@ -3,6 +3,7 @@
  * Validate catalog contracts:
  * 1. Ajv Draft-07 compile of orderable-panels.json and test-catalog.json
  * 2. Referential check that each test.panels[] id exists in the panel registry
+ * 3. Singular unique loinc_code on tests and result_items (no leftover arrays)
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,6 +18,9 @@ const addFormats = require('ajv-formats');
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
+/** Observation LOINC pattern (1–5 digits, hyphen, check digit). */
+const LOINC_PATTERN = /^[0-9]{1,5}-[0-9]$/;
+
 const catalogDir = path.join(root, 'contracts', 'catalog');
 const catalogPath = path.join(catalogDir, 'test-catalog.json');
 const panelsPath = path.join(catalogDir, 'orderable-panels.json');
@@ -84,6 +88,8 @@ errors += validateAgainstSchema(
 );
 
 const validIds = new Set((registry.panels ?? []).map(p => p.id));
+/** @type {Map<string, string>} */
+const loincByTest = new Map();
 
 for (const test of catalog.tests ?? []) {
   const code = test.test_code ?? '(unknown)';
@@ -100,6 +106,58 @@ for (const test of catalog.tests ?? []) {
     if (panelId !== panelId.trim()) {
       console.error(`${code}: panel id must not have surrounding whitespace`);
       errors += 1;
+    }
+  }
+
+  if (Object.prototype.hasOwnProperty.call(test, 'loinc_codes')) {
+    console.error(`${code}: leftover loinc_codes array; use singular loinc_code`);
+    errors += 1;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(test, 'loinc_code')) {
+    const loinc = test.loinc_code;
+    if (typeof loinc !== 'string' || !LOINC_PATTERN.test(loinc)) {
+      console.error(`${code}: loinc_code must be a LOINC string, got ${JSON.stringify(loinc)}`);
+      errors += 1;
+    } else {
+      const owner = loincByTest.get(loinc);
+      if (owner) {
+        console.error(`${code}: loinc_code "${loinc}" already used by ${owner}`);
+        errors += 1;
+      } else {
+        loincByTest.set(loinc, code);
+      }
+    }
+  }
+
+  /** @type {Map<string, string>} */
+  const loincByItem = new Map();
+  for (const item of test.result_items ?? []) {
+    if (!item || typeof item !== 'object') {
+      continue;
+    }
+    const itemCode = typeof item.item_code === 'string' ? item.item_code : '(unknown item)';
+    if (Object.prototype.hasOwnProperty.call(item, 'loinc_codes')) {
+      console.error(`${code}/${itemCode}: leftover loinc_codes array; use singular loinc_code`);
+      errors += 1;
+    }
+    if (!Object.prototype.hasOwnProperty.call(item, 'loinc_code')) {
+      continue;
+    }
+    const itemLoinc = item.loinc_code;
+    if (typeof itemLoinc !== 'string' || !LOINC_PATTERN.test(itemLoinc)) {
+      console.error(
+        `${code}/${itemCode}: loinc_code must be a LOINC string, got ${JSON.stringify(itemLoinc)}`,
+      );
+      errors += 1;
+      continue;
+    }
+    const otherItem = loincByItem.get(itemLoinc);
+    if (otherItem) {
+      console.error(`${code}: result_item loinc_code "${itemLoinc}" used by both ${otherItem} and ${itemCode}`);
+      errors += 1;
+    } else {
+      loincByItem.set(itemLoinc, itemCode);
     }
   }
 }

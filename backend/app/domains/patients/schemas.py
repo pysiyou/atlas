@@ -285,8 +285,7 @@ class PatientResponse(PatientBase):
     phone: str = Field(..., min_length=1, max_length=20)
     emergencyContact: EmergencyContactResponse
     affiliation: AffiliationResponse | None = None
-    id: int
-    mrn: str = Field(..., min_length=6, max_length=12, pattern=MRN_PATTERN)
+    id: str = Field(..., min_length=6, max_length=12, pattern=MRN_PATTERN)
     registrationDate: datetime
     createdBy: str
     createdAt: datetime

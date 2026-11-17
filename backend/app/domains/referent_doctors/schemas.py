@@ -53,9 +53,8 @@ class ReferentDoctorCreate(BaseModel):
 
 
 class ReferentDoctorResponse(BaseModel):
-    referentDoctorId: int
+    referentDoctorId: str
     fullName: str
-    npi: str | None = None
     username: str | None = None
     email: str | None = None
     phone: str | None = None

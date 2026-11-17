@@ -51,7 +51,7 @@ export function PaymentList() {
   const serverFilters = useMemo(() => {
     return {
       patientId: urlFilters.patientId ?? undefined,
-      orderId: urlFilters.orderId ? Number(urlFilters.orderId) : undefined,
+      orderId: urlFilters.orderId || undefined,
       paymentStatus: statusFilters.length > 0 ? statusFilters : undefined,
       ...dateSearchServerParams(searchQuery, dateRange),
     };

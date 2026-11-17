@@ -73,7 +73,7 @@ class ResultCommandHandler:
     def enter_results(
         self,
         order_test_id: int,
-        user_id: int,
+        user_id: str,
         results: dict[str, Any],
         technician_notes: str | None = None,
         skip_validation: bool = False,
@@ -199,7 +199,7 @@ class ResultCommandHandler:
         self,
         order_test: OrderTest,
         *,
-        user_id: int,
+        user_id: str,
         flags: list[ResultFlag],
         delta_warnings: list,
         extra_metadata: dict[str, Any] | None,
@@ -238,7 +238,7 @@ class ResultCommandHandler:
     def validate_results(
         self,
         order_test_id: int,
-        user_id: int,
+        user_id: str,
         validation_notes: str | None = None,
         critical_seen: bool = False,
     ) -> OrderTest:
@@ -349,7 +349,7 @@ class ResultCommandHandler:
     def reject_results(
         self,
         order_test_id: int,
-        user_id: int,
+        user_id: str,
         rejection_reason: str,
         validation_notes: str | None = None,
         preferred_remedy: RemedyType | None = None,

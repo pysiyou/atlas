@@ -30,13 +30,17 @@ export function getRelatedOrderTestEntries(
     .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 }
 
+function compareSampleIds(a: string, b: string): number {
+  return a.localeCompare(b, undefined, { numeric: true });
+}
+
 /** Original sample and recollections linked to a sample on the order. */
 export function getSampleRecollectionChain(
-  sampleId: number,
+  sampleId: string,
   orderSamples: Sample[]
 ): Sample[] {
   const byId = new Map(orderSamples.map(s => [s.sampleId, s]));
-  const inChain = new Set<number>();
+  const inChain = new Set<string>();
   const seed = byId.get(sampleId);
   if (!seed) return [];
 
@@ -60,7 +64,7 @@ export function getSampleRecollectionChain(
     .sort((a, b) => {
       if (a.sampleId === linkedId) return -1;
       if (b.sampleId === linkedId) return 1;
-      return a.sampleId - b.sampleId;
+      return compareSampleIds(a.sampleId, b.sampleId);
     });
 }
 
@@ -68,9 +72,9 @@ export function getSampleRecollectionChain(
 export function expandSamplesWithRecollectionChain(
   related: Sample[],
   orderSamples: Sample[],
-  linkedSampleId?: number
+  linkedSampleId?: string
 ): Sample[] {
-  const byId = new Map<number, Sample>();
+  const byId = new Map<string, Sample>();
   for (const s of related) {
     byId.set(s.sampleId, s);
   }
@@ -86,6 +90,6 @@ export function expandSamplesWithRecollectionChain(
       if (a.sampleId === linkedId) return -1;
       if (b.sampleId === linkedId) return 1;
     }
-    return a.sampleId - b.sampleId;
+    return compareSampleIds(a.sampleId, b.sampleId);
   });
 }

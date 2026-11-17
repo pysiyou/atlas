@@ -186,13 +186,13 @@ function formatTargetLabel(
     case 'patient':
       return getPatientName(record.targetId);
     case 'order':
-      return eventLogId.order(record.fillerNumber);
+      return eventLogId.order(record.orderId);
     case 'sample':
-      return eventLogId.sample(record.accessionNumber);
+      return eventLogId.sample(record.sampleId);
     case 'order_test':
       return testCodes.length > 0
         ? formatTestNamesLabel(testCodes, getTestName)
-        : eventLogId.orderTest(record.accessionNumber);
+        : eventLogId.orderTest(record.sampleId);
     case 'payment':
       return eventLogId.payment(undefined);
     case 'invoice':

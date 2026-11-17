@@ -36,7 +36,7 @@ export function isLastActiveAdministrator(
  */
 export function canDisableUser(
   user: UserAdminRecord,
-  currentUserId: number | null,
+  currentUserId: string | null,
   users: UserAdminRecord[]
 ): boolean {
   if (!isUserActive(user)) return false;

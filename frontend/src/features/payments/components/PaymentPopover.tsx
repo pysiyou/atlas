@@ -57,7 +57,7 @@ interface PaymentPopoverContentProps {
   error: string | null;
   /** Submit handler from parent (mutation runs in wrapper). */
   onSubmit: (paymentData: {
-    orderId: string | number;
+    orderId: string;
     amount: number;
     paymentMethod: PaymentMethod;
     notes?: string;
@@ -123,7 +123,7 @@ function PaymentPopoverContent({
       title={panels.payments.processPayment}
       subtitle={
         <span>
-          Order <RecordId type="order" value={order.fillerNumber} />
+          Order <RecordId type="order" value={order.orderId} />
         </span>
       }
       onCancel={onCancel}
@@ -186,7 +186,7 @@ function PaymentPopoverContentInner({ close, closeRef, order, remainingAmount, p
   submitting: boolean;
   error: string | null;
   onSubmit: (data: {
-    orderId: string | number;
+    orderId: string;
     amount: number;
     paymentMethod: PaymentMethod;
     notes?: string;
@@ -228,7 +228,7 @@ export function PaymentPopover({
   const [error, setError] = useState<string | null>(null);
   const { mutate: createPaymentMutation, isPending: submitting } = useCreatePayment();
   const { remainingAmount, paymentsLoading } = useOrderRemainingBalance(
-    String(order.orderId),
+    order.orderId,
     order.totalPrice
   );
 
@@ -236,7 +236,7 @@ export function PaymentPopover({
 
   const handleSubmit = useCallback(
     (paymentData: {
-      orderId: string | number;
+      orderId: string;
       amount: number;
       paymentMethod: PaymentMethod;
       notes?: string;

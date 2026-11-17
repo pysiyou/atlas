@@ -45,12 +45,12 @@ export type ModalFrame =
   | {
       type: typeof ModalType.NEW_ORDER;
       patientId?: string;
-      orderId?: number;
+      orderId?: string;
       mode?: 'create' | 'edit';
     }
   | {
       type: typeof ModalType.REPORT_PREVIEW;
-      orderId: number;
+      orderId: string;
       layout?: ReportPreviewResultsLayout;
     };
 
@@ -89,12 +89,12 @@ export type EscalationResolutionModalProps = BaseModalProps & {
 
 export type OrderUpsertModalOpenProps = BaseModalProps & {
   patientId?: string;
-  orderId?: number;
+  orderId?: string;
   mode?: 'create' | 'edit';
 };
 
 export type ReportPreviewModalProps = BaseModalProps & {
-  orderId: number;
+  orderId: string;
   layout?: ReportPreviewResultsLayout;
 };
 

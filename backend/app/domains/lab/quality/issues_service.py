@@ -24,6 +24,7 @@ from app.domains.lab.quality.test_issue_commands import TestIssueCommands
 from app.domains.lab.schemas.lab import QualityIssueOptions, QualityIssueResult
 from app.domains.lab.specimen import SampleCollectionService
 from app.domains.orders.models import OrderTest
+from app.platform.utils import LabOperationError
 from app.shared.contracts.enums import (
     QualityDomain,
     QualityIssueTargetType,
@@ -32,6 +33,17 @@ from app.shared.contracts.enums import (
     TestStatus,
 )
 from sqlalchemy.orm import Session
+
+
+def _require_order_test_id(target_id: str) -> int:
+    """Parse a quality-issue test target; sample targets stay strings."""
+    try:
+        parsed = int(target_id)
+    except (TypeError, ValueError) as exc:
+        raise LabOperationError(f"Invalid test id {target_id}", status_code=400) from exc
+    if parsed <= 0:
+        raise LabOperationError(f"Invalid test id {target_id}", status_code=400)
+    return parsed
 
 
 class QualityIssueService:
@@ -51,7 +63,7 @@ class QualityIssueService:
 
     # ── lookups (public for commands / escalation) ─────────────────────────
 
-    def get_sample(self, sample_id: int, *, for_update: bool = False) -> Sample:
+    def get_sample(self, sample_id: str, *, for_update: bool = False) -> Sample:
         from app.domains.lab.specimen.lookup import get_sample_or_error
 
         return get_sample_or_error(self.db, sample_id, for_update=for_update)
@@ -68,18 +80,18 @@ class QualityIssueService:
     def record_issue(
         self,
         *,
-        order_id: int,
+        order_id: str,
         stage: QualityStage,
         domain: QualityDomain,
         reason: str,
         notes: str | None,
         remedy: RemedyType,
-        user_id: int,
+        user_id: str,
         order_test_id: int | None = None,
-        sample_id: int | None = None,
+        sample_id: str | None = None,
         test_code: str | None = None,
         created_test_id: int | None = None,
-        created_sample_id: int | None = None,
+        created_sample_id: str | None = None,
         omit_remedy_from_validation_audit: bool = False,
     ) -> QualityIssue:
         return self.remedy.record_issue(
@@ -101,7 +113,7 @@ class QualityIssueService:
     def create_retest(
         self,
         order_test: OrderTest,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
         *,
@@ -120,7 +132,7 @@ class QualityIssueService:
     def reject_sample_record(
         self,
         sample: Sample,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
         context: SampleRejectionContext,
@@ -143,7 +155,7 @@ class QualityIssueService:
     def create_recollection_sample(
         self,
         rejected_sample: Sample,
-        user_id: int,
+        user_id: str,
         reason: str,
         *,
         test_codes: list[str] | None = None,
@@ -167,17 +179,17 @@ class QualityIssueService:
     def get_options(
         self,
         target_type: QualityIssueTargetType,
-        target_id: int,
+        target_id: str,
     ) -> QualityIssueOptions:
         if target_type == QualityIssueTargetType.SAMPLE:
             return sample_options(self, target_id)
-        return test_options(self, target_id)
+        return test_options(self, _require_order_test_id(target_id))
 
     def report_issue(
         self,
         target_type: QualityIssueTargetType,
-        target_id: int,
-        user_id: int,
+        target_id: str,
+        user_id: str,
         reason: str,
         notes: str | None = None,
         preferred_remedy: RemedyType | None = None,
@@ -187,13 +199,13 @@ class QualityIssueService:
                 target_id, user_id, reason, notes, preferred_remedy
             )
         return self._test_cmds.report_test_issue(
-            target_id, user_id, reason, notes, preferred_remedy
+            _require_order_test_id(target_id), user_id, reason, notes, preferred_remedy
         )
 
     def report_test_validation_issue(
         self,
         order_test_id: int,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
         preferred_remedy: RemedyType | None = None,

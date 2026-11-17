@@ -1,4 +1,4 @@
-"""Yearly sequential accession numbers (YY-NNNNN) assigned at sample create."""
+"""Yearly sequential accession numbers (YY-NNNNN) assigned as the sample row id."""
 from __future__ import annotations
 
 from app.domains.lab.models.sample import Sample
@@ -8,21 +8,21 @@ from sqlalchemy.orm import Session
 
 def assign_accession_number(db: Session, sample: Sample, parent: Sample | None = None) -> str:
     """
-    Allocate the next yearly accession and store it on the sample.
+    Allocate the next yearly accession and store it as ``sample.sampleId``.
 
     Aliquots inherit ``{parentAccession}.{aliquotIndex}`` so the parent barcode
     remains the lineage key. Recollections and original tubes get a new yearly
-    number. Idempotent when ``accessionNumber`` is already set.
+    number. Idempotent when ``sampleId`` is already set.
     """
-    if sample.accessionNumber:
-        return sample.accessionNumber
+    if sample.sampleId:
+        return sample.sampleId
 
     if sample.isAliquot:
-        if parent is None or not parent.accessionNumber:
+        if parent is None or not parent.sampleId:
             raise ValueError("Aliquot requires a parent sample with an accession number")
         index = int(sample.aliquotIndex or 1)
-        sample.accessionNumber = format_aliquot_accession(parent.accessionNumber, index)
-        return sample.accessionNumber
+        sample.sampleId = format_aliquot_accession(parent.sampleId, index)
+        return sample.sampleId
 
-    sample.accessionNumber = allocate_accession_number(db)
-    return sample.accessionNumber
+    sample.sampleId = allocate_accession_number(db)
+    return sample.sampleId

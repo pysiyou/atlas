@@ -10,7 +10,7 @@ import { formatVolume, getCollectionRequirements } from './labSample';
 export type CollectionOperationalMetaItem =
   | { type: 'queue-age'; since: string }
   | { type: 'text'; text: string; className?: string }
-  | { type: 'recollection-requested'; recollectionAccessionNumber: string };
+  | { type: 'recollection-requested'; recollectionSampleId: string };
 
 export interface BuildCollectionOperationalMetaItemsInput {
   sample: Sample;
@@ -91,10 +91,10 @@ function appendRecollectionMetaItems(
   input: BuildCollectionOperationalMetaItemsInput
 ): void {
   const { isRejected, rejectedSample, sample } = input;
-  if (isRejected && rejectedSample?.recollectionAccessionNumber) {
+  if (isRejected && rejectedSample?.recollectionSampleId) {
     items.push({
       type: 'recollection-requested',
-      recollectionAccessionNumber: rejectedSample.recollectionAccessionNumber,
+      recollectionSampleId: rejectedSample.recollectionSampleId,
     });
   }
   const attempt = sample.recollectionAttempt ?? 1;

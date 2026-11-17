@@ -135,8 +135,7 @@ export const medicalHistorySchema = z.object({
 });
 
 export const patientSchema = z.object({
-  id: z.number().int().positive(),
-  mrn: z.string().min(6).max(12),
+  id: z.string().min(6).max(12),
   fullName: nameSchema,
   dateOfBirth: dateStringSchema,
   gender: zEnumFromValues(GENDER_VALUES),
@@ -162,7 +161,6 @@ export type MedicalHistory = z.infer<typeof medicalHistorySchema>;
 const patientFormFieldsSchema = patientSchema
   .omit({
     id: true,
-    mrn: true,
     registrationDate: true,
     createdBy: true,
     createdAt: true,

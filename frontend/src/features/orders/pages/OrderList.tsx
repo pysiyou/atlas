@@ -48,7 +48,7 @@ export function OrderList() {
   const serverFilters = useMemo(() => {
     return {
       patientId: urlFilters.patientId ?? undefined,
-      orderId: urlFilters.orderId ? Number(urlFilters.orderId) : undefined,
+      orderId: urlFilters.orderId || undefined,
       status: statusFilters.length > 0 ? statusFilters : undefined,
       ...dateSearchServerParams(searchQuery, dateRange),
     };

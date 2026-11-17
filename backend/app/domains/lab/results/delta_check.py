@@ -28,7 +28,7 @@ class DeltaCheckService:
 
     def check_results(
         self,
-        patient_id: int,
+        patient_id: str,
         test_code: str,
         results: dict[str, Any],
         exclude_order_test_id: int | None = None,

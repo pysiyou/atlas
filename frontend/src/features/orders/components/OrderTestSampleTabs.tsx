@@ -18,13 +18,13 @@ import { usePanelCopy } from '@/strings';
 
 export interface OrderTestSampleTabsProps {
   samples: Sample[];
-  linkedSampleId?: number;
+  linkedSampleId?: string;
   catalogTest?: Test;
-  onViewFullSample: (sampleId: number) => void;
+  onViewFullSample: (sampleId: string) => void;
 }
 
-function sampleTabLabel(sample: Sample, linkedSampleId?: number): string {
-  const id = displayId.sample(sample.accessionNumber);
+function sampleTabLabel(sample: Sample, linkedSampleId?: string): string {
+  const id = displayId.sample(sample.sampleId);
   if (linkedSampleId != null && sample.sampleId === linkedSampleId) {
     return `${id} (linked)`;
   }

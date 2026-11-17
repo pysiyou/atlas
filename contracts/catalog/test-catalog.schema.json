@@ -55,11 +55,9 @@
         "test_code": {
           "$ref": "#/definitions/analyteId"
         },
-        "loinc_codes": {
-          "type": "array",
-          "description": "Observation-level LOINC codes for this catalog entry (union of result_item.loinc_code).",
-          "items": { "$ref": "#/definitions/loincCode" },
-          "uniqueItems": true
+        "loinc_code": {
+          "$ref": "#/definitions/loincCode",
+          "description": "Unique observation-level LOINC for this test when the test itself is one observation (e.g. 718-7 for HGB). Multi-parameter batteries omit this; each result_item has its own loinc_code."
         },
         "result_items": {
           "type": "array",

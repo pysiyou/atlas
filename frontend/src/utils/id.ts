@@ -1,8 +1,8 @@
 /**
  * Clinical LIS identifier display, parsing, and validation.
  *
- * Integer primary keys stay internal. UI, barcodes, and search use MRN,
- * filler/placer numbers, accessions, and catalog mnemonics.
+ * Row ids use these formats: patient id = MRN, order id = filler number,
+ * sample id = accession, user id = employee number, invoice id, payment id.
  */
 
 /** Regex contracts — keep in sync with `backend/app/platform/utils.py`. */
@@ -95,20 +95,20 @@ export function formatAccessionNumber(value: string | null | undefined): string 
 }
 
 /**
- * Display helpers. Pass the stored clinical identifier, not the integer PK.
+ * Display helpers. Pass the row id (already in clinical format).
  */
 export const displayId = {
-  patient: (mrn: string | null | undefined) => formatClinicalId(mrn),
-  order: (fillerNumber: string | null | undefined) => formatClinicalId(fillerNumber),
-  sample: (accessionNumber: string | null | undefined) => formatClinicalId(accessionNumber),
-  orderTest: (accessionOrDisplay: string | null | undefined, testCode?: string | null) =>
-    typeof accessionOrDisplay === 'string' && testCode
-      ? formatOrderTestDisplay(accessionOrDisplay, testCode)
-      : formatClinicalId(accessionOrDisplay),
+  patient: (patientId: string | null | undefined) => formatClinicalId(patientId),
+  order: (orderId: string | null | undefined) => formatClinicalId(orderId),
+  sample: (sampleId: string | null | undefined) => formatClinicalId(sampleId),
+  orderTest: (sampleIdOrDisplay: string | null | undefined, testCode?: string | null) =>
+    typeof sampleIdOrDisplay === 'string' && testCode
+      ? formatOrderTestDisplay(sampleIdOrDisplay, testCode)
+      : formatClinicalId(sampleIdOrDisplay),
   accession: formatAccessionNumber,
-  invoice: (invoiceNumber: string | null | undefined) => formatClinicalId(invoiceNumber),
-  payment: (receiptNumber: string | null | undefined) => formatClinicalId(receiptNumber),
-  report: (fillerNumber: string | null | undefined) => formatClinicalId(fillerNumber),
-  user: (usernameOrEmployee: string | null | undefined) => formatClinicalId(usernameOrEmployee),
+  invoice: (invoiceId: string | null | undefined) => formatClinicalId(invoiceId),
+  payment: (paymentId: string | null | undefined) => formatClinicalId(paymentId),
+  report: (orderId: string | null | undefined) => formatClinicalId(orderId),
+  user: (userId: string | null | undefined) => formatClinicalId(userId),
   audit: (eventId: string | null | undefined) => formatClinicalId(eventId),
 };

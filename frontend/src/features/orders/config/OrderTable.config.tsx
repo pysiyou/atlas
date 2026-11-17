@@ -25,7 +25,7 @@ export type OrderTableConfigOptions = {
 
 export const createOrderTableConfig = (
   _navigate: NavigateFunction,
-  getPatientNameFn: (patientId: number | string) => string,
+  getPatientNameFn: (patientId: string) => string,
   getTestNameFn: (testCode: string) => string,
   options: OrderTableConfigOptions = {}
 ): TableViewConfig<Order> => {
@@ -48,7 +48,7 @@ export const createOrderTableConfig = (
       getStatusPresentation: order => order.statusPresentation,
     },
     {
-      renderOrderId: order => renderOrderId(order.fillerNumber),
+      renderOrderId: order => renderOrderId(order.orderId),
     },
     { getTestName: getTestNameFn }
   );

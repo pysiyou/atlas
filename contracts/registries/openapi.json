@@ -330,7 +330,7 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "string"
                 },
                 {
                   "type": "null"
@@ -346,7 +346,7 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "string"
                 },
                 {
                   "type": "null"
@@ -378,7 +378,7 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "string"
                 },
                 {
                   "type": "null"
@@ -540,8 +540,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer",
-                  "minimum": 1
+                  "type": "string",
+                  "ge": 1
                 },
                 {
                   "type": "null"
@@ -755,7 +755,7 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "string"
                 },
                 {
                   "type": "null"
@@ -1001,7 +1001,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Patientid"
             }
           }
@@ -1047,7 +1047,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Patientid"
             }
           }
@@ -1411,7 +1411,7 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "string"
                 },
                 {
                   "type": "null"
@@ -1427,7 +1427,7 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "string"
                 },
                 {
                   "type": "null"
@@ -1725,7 +1725,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Orderid"
             }
           },
@@ -1796,7 +1796,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Orderid"
             }
           }
@@ -1854,7 +1854,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Orderid"
             }
           }
@@ -2118,7 +2118,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "User Id"
             }
           }
@@ -2175,7 +2175,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Orderid"
             }
           }
@@ -2298,7 +2298,7 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "string"
                 },
                 {
                   "type": "null"
@@ -2415,7 +2415,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Sampleid"
             }
           }
@@ -2462,7 +2462,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Sampleid"
             }
           }
@@ -2509,7 +2509,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Sampleid"
             }
           }
@@ -2567,7 +2567,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Sampleid"
             }
           }
@@ -4056,7 +4056,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Targetid"
             }
           }
@@ -4291,7 +4291,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Orderid"
             }
           }
@@ -4338,7 +4338,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Orderid"
             }
           }
@@ -4385,7 +4385,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "title": "Orderid"
             }
           }
@@ -4694,7 +4694,7 @@
           "order_id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4759,7 +4759,7 @@
           "actorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4777,13 +4777,13 @@
             "title": "Targettype"
           },
           "targetId": {
-            "type": "integer",
+            "type": "string",
             "title": "Targetid"
           },
           "patientId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4791,38 +4791,16 @@
             ],
             "title": "Patientid"
           },
-          "patientMrn": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Patientmrn"
-          },
           "orderId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
             "title": "Orderid"
-          },
-          "fillerNumber": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Fillernumber"
           },
           "testId": {
             "anyOf": [
@@ -4834,17 +4812,6 @@
               }
             ],
             "title": "Testid"
-          },
-          "accessionNumber": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Accessionnumber"
           },
           "eventScope": {
             "anyOf": [
@@ -4950,7 +4917,7 @@
           "orderId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4972,7 +4939,7 @@
           "sampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4983,7 +4950,7 @@
           "patientId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -4998,7 +4965,7 @@
       "AuditSearchPreviewPatient": {
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "title": "Id"
           },
           "fullName": {
@@ -5058,7 +5025,7 @@
       "AuditSearchPreviewUser": {
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "title": "Id"
           },
           "name": {
@@ -5126,22 +5093,10 @@
             "title": "Stagelabel"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
-          "fillerNumber": {
-            "type": "string",
-            "title": "Fillernumber"
-          },
-          "patientName": {
-            "type": "string",
-            "title": "Patientname"
-          },
-          "patientMrn": {
-            "type": "string",
-            "title": "Patientmrn"
-          },
-          "accessionNumber": {
+          "patientId": {
             "anyOf": [
               {
                 "type": "string"
@@ -5150,7 +5105,22 @@
                 "type": "null"
               }
             ],
-            "title": "Accessionnumber"
+            "title": "Patientid"
+          },
+          "patientName": {
+            "type": "string",
+            "title": "Patientname"
+          },
+          "sampleId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sampleid"
           },
           "testCodes": {
             "items": {
@@ -5223,9 +5193,7 @@
           "stage",
           "stageLabel",
           "orderId",
-          "fillerNumber",
           "patientName",
-          "patientMrn",
           "priority",
           "waitingHours",
           "queueTab",
@@ -5322,24 +5290,16 @@
       "CollectionWorklistItem": {
         "properties": {
           "sampleId": {
-            "type": "integer",
+            "type": "string",
             "title": "Sampleid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
-          "fillerNumber": {
-            "type": "string",
-            "title": "Fillernumber"
-          },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
@@ -5370,10 +5330,6 @@
             "type": "array",
             "title": "Testcodes"
           },
-          "accessionNumber": {
-            "type": "string",
-            "title": "Accessionnumber"
-          },
           "isAliquot": {
             "type": "boolean",
             "title": "Isaliquot",
@@ -5382,7 +5338,7 @@
           "parentSampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -5397,7 +5353,7 @@
           "originalSampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -5417,38 +5373,16 @@
             ],
             "title": "Originalsamplecollectedat"
           },
-          "originalAccessionNumber": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Originalaccessionnumber"
-          },
           "recollectionSampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
             "title": "Recollectionsampleid"
-          },
-          "recollectionAccessionNumber": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Recollectionaccessionnumber"
           },
           "recollectionReason": {
             "anyOf": [
@@ -5612,7 +5546,7 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -5730,9 +5664,7 @@
         "required": [
           "sampleId",
           "orderId",
-          "fillerNumber",
           "patientId",
-          "patientMrn",
           "patientName",
           "sampleType",
           "status",
@@ -5740,7 +5672,6 @@
           "paymentStatus",
           "orderDate",
           "testCodes",
-          "accessionNumber",
           "isRecollection",
           "waitingHours",
           "turnaroundHours"
@@ -5800,12 +5731,8 @@
             "title": "Id"
           },
           "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "fillerNumber": {
             "type": "string",
-            "title": "Fillernumber"
+            "title": "Orderid"
           },
           "testCode": {
             "type": "string",
@@ -5823,18 +5750,14 @@
             "title": "Testname"
           },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
             "title": "Patientname"
           },
-          "accessionNumber": {
+          "sampleId": {
             "anyOf": [
               {
                 "type": "string"
@@ -5843,7 +5766,7 @@
                 "type": "null"
               }
             ],
-            "title": "Accessionnumber"
+            "title": "Sampleid"
           },
           "flags": {
             "anyOf": [
@@ -5919,11 +5842,9 @@
         "required": [
           "id",
           "orderId",
-          "fillerNumber",
           "testCode",
           "testName",
           "patientId",
-          "patientMrn",
           "patientName",
           "flags",
           "criticalNotificationSent",
@@ -5988,20 +5909,12 @@
             "title": "Ordertestid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
-          "fillerNumber": {
-            "type": "string",
-            "title": "Fillernumber"
-          },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
@@ -6054,7 +5967,7 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -6165,9 +6078,7 @@
         "required": [
           "orderTestId",
           "orderId",
-          "fillerNumber",
           "patientId",
-          "patientMrn",
           "patientName",
           "patientDob",
           "patientGender",
@@ -6288,20 +6199,12 @@
             "title": "Ordertestid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
-          "fillerNumber": {
-            "type": "string",
-            "title": "Fillernumber"
-          },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
@@ -6318,7 +6221,7 @@
           "sampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -6329,17 +6232,6 @@
           "sampleType": {
             "type": "string",
             "title": "Sampletype"
-          },
-          "accessionNumber": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Accessionnumber"
           },
           "priority": {
             "$ref": "#/components/schemas/PriorityLevel"
@@ -6411,24 +6303,13 @@
           "sampleOriginalSampleId": {
             "anyOf": [
               {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sampleoriginalsampleid"
-          },
-          "sampleOriginalAccessionNumber": {
-            "anyOf": [
-              {
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Sampleoriginalaccessionnumber"
+            "title": "Sampleoriginalsampleid"
           },
           "sampleRecollectionAttempt": {
             "anyOf": [
@@ -6444,7 +6325,7 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -6632,9 +6513,7 @@
         "required": [
           "orderTestId",
           "orderId",
-          "fillerNumber",
           "patientId",
-          "patientMrn",
           "patientName",
           "testCode",
           "testName",
@@ -6803,20 +6682,16 @@
       "InvoiceResponse": {
         "properties": {
           "invoiceId": {
-            "type": "integer",
-            "title": "Invoiceid"
-          },
-          "invoiceNumber": {
             "type": "string",
             "pattern": "^\\d{12}$",
-            "title": "Invoicenumber"
+            "title": "Invoiceid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
           "patientId": {
-            "type": "integer",
+            "type": "string",
             "title": "Patientid"
           },
           "patientName": {
@@ -6883,7 +6758,6 @@
         "type": "object",
         "required": [
           "invoiceId",
-          "invoiceNumber",
           "orderId",
           "patientId",
           "patientName",
@@ -7268,7 +7142,7 @@
       "LatestPaymentSnippet": {
         "properties": {
           "paymentId": {
-            "type": "integer",
+            "type": "string",
             "title": "Paymentid"
           },
           "paymentMethod": {
@@ -7434,10 +7308,11 @@
       "OrderCreate": {
         "properties": {
           "patientId": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
-            "title": "Patientid",
-            "description": "Patient ID"
+            "type": "string",
+            "maxLength": 12,
+            "minLength": 6,
+            "pattern": "^[0-9A-Z]{6,12}$",
+            "title": "Patientid"
           },
           "tests": {
             "items": {
@@ -7462,8 +7337,8 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer",
-                "exclusiveMinimum": 0.0
+                "type": "string",
+                "pattern": "^\\d{10}$"
               },
               {
                 "type": "null"
@@ -7520,13 +7395,9 @@
       "OrderDetailResponse": {
         "properties": {
           "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "fillerNumber": {
             "type": "string",
             "pattern": "^\\d{13}$",
-            "title": "Fillernumber"
+            "title": "Orderid"
           },
           "placerNumber": {
             "anyOf": [
@@ -7541,12 +7412,8 @@
             "title": "Placernumber"
           },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
@@ -7611,7 +7478,7 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -7789,9 +7656,7 @@
         "type": "object",
         "required": [
           "orderId",
-          "fillerNumber",
           "patientId",
-          "patientMrn",
           "patientName",
           "orderDate",
           "tests",
@@ -7809,13 +7674,9 @@
       "OrderResponse": {
         "properties": {
           "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "fillerNumber": {
             "type": "string",
             "pattern": "^\\d{13}$",
-            "title": "Fillernumber"
+            "title": "Orderid"
           },
           "placerNumber": {
             "anyOf": [
@@ -7830,12 +7691,8 @@
             "title": "Placernumber"
           },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
@@ -7900,7 +7757,7 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -8040,9 +7897,7 @@
         "type": "object",
         "required": [
           "orderId",
-          "fillerNumber",
           "patientId",
-          "patientMrn",
           "patientName",
           "orderDate",
           "tests",
@@ -8070,13 +7925,9 @@
       "OrderSummaryResponse": {
         "properties": {
           "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "fillerNumber": {
             "type": "string",
             "pattern": "^\\d{13}$",
-            "title": "Fillernumber"
+            "title": "Orderid"
           },
           "placerNumber": {
             "anyOf": [
@@ -8091,12 +7942,8 @@
             "title": "Placernumber"
           },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
@@ -8183,7 +8030,7 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -8300,9 +8147,7 @@
         "type": "object",
         "required": [
           "orderId",
-          "fillerNumber",
           "patientId",
-          "patientMrn",
           "patientName",
           "orderDate",
           "totalPrice",
@@ -8362,24 +8207,13 @@
           "sampleId": {
             "anyOf": [
               {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sampleid"
-          },
-          "accessionNumber": {
-            "anyOf": [
-              {
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Accessionnumber"
+            "title": "Sampleid"
           },
           "results": {
             "anyOf": [
@@ -8584,8 +8418,8 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer",
-                "exclusiveMinimum": 0.0
+                "type": "string",
+                "pattern": "^\\d{10}$"
               },
               {
                 "type": "null"
@@ -9030,15 +8864,11 @@
             ]
           },
           "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "mrn": {
             "type": "string",
             "maxLength": 12,
             "minLength": 6,
             "pattern": "^[0-9A-Z]{6,12}$",
-            "title": "Mrn"
+            "title": "Id"
           },
           "registrationDate": {
             "type": "string",
@@ -9083,7 +8913,6 @@
           "address",
           "emergencyContact",
           "id",
-          "mrn",
           "registrationDate",
           "createdBy",
           "createdAt",
@@ -9222,7 +9051,7 @@
       "PaymentCreate": {
         "properties": {
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
           "amount": {
@@ -9269,34 +9098,18 @@
       "PaymentResponse": {
         "properties": {
           "paymentId": {
-            "type": "integer",
-            "title": "Paymentid"
-          },
-          "receiptNumber": {
             "type": "string",
             "pattern": "^\\d{8}$",
-            "title": "Receiptnumber"
+            "title": "Paymentid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
-          },
-          "fillerNumber": {
-            "anyOf": [
-              {
-                "type": "string",
-                "pattern": "^\\d{13}$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Fillernumber"
           },
           "invoiceId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -9382,7 +9195,6 @@
         "type": "object",
         "required": [
           "paymentId",
-          "receiptNumber",
           "orderId",
           "amount",
           "paymentMethod",
@@ -9408,12 +9220,8 @@
             "title": "Id"
           },
           "orderId": {
-            "type": "integer",
-            "title": "Orderid"
-          },
-          "fillerNumber": {
             "type": "string",
-            "title": "Fillernumber"
+            "title": "Orderid"
           },
           "orderDate": {
             "type": "string",
@@ -9421,12 +9229,8 @@
             "title": "Orderdate"
           },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
@@ -9462,24 +9266,13 @@
           "sampleId": {
             "anyOf": [
               {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sampleid"
-          },
-          "accessionNumber": {
-            "anyOf": [
-              {
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Accessionnumber"
+            "title": "Sampleid"
           },
           "results": {
             "anyOf": [
@@ -9641,7 +9434,7 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -9735,24 +9528,13 @@
           "sampleOriginalSampleId": {
             "anyOf": [
               {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sampleoriginalsampleid"
-          },
-          "sampleOriginalAccessionNumber": {
-            "anyOf": [
-              {
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Sampleoriginalaccessionnumber"
+            "title": "Sampleoriginalsampleid"
           },
           "sampleRecollectionReason": {
             "anyOf": [
@@ -9875,10 +9657,8 @@
         "required": [
           "id",
           "orderId",
-          "fillerNumber",
           "orderDate",
           "patientId",
-          "patientMrn",
           "patientName",
           "testCode",
           "testName",
@@ -9932,11 +9712,11 @@
             "$ref": "#/components/schemas/QualityIssueTargetType"
           },
           "targetId": {
-            "type": "integer",
+            "type": "string",
             "title": "Targetid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
           "testCode": {
@@ -9953,7 +9733,7 @@
           "sampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -10093,7 +9873,7 @@
             "title": "Qualityissueid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
           "testCode": {
@@ -10110,7 +9890,7 @@
           "sampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -10143,7 +9923,7 @@
           "createdSampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -10173,7 +9953,7 @@
             "$ref": "#/components/schemas/QualityIssueTargetType"
           },
           "id": {
-            "type": "integer",
+            "type": "string",
             "title": "Id"
           }
         },
@@ -10321,23 +10101,12 @@
       "ReferentDoctorResponse": {
         "properties": {
           "referentDoctorId": {
-            "type": "integer",
+            "type": "string",
             "title": "Referentdoctorid"
           },
           "fullName": {
             "type": "string",
             "title": "Fullname"
-          },
-          "npi": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Npi"
           },
           "username": {
             "anyOf": [
@@ -10543,16 +10312,8 @@
       "ReportableOrderItem": {
         "properties": {
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
-          },
-          "fillerNumber": {
-            "type": "string",
-            "title": "Fillernumber"
-          },
-          "patientMrn": {
-            "type": "string",
-            "title": "Patientmrn"
           },
           "orderDate": {
             "type": "string",
@@ -10566,7 +10327,7 @@
             "$ref": "#/components/schemas/StatusPresentation"
           },
           "patientId": {
-            "type": "integer",
+            "type": "string",
             "title": "Patientid"
           },
           "patientName": {
@@ -10654,8 +10415,6 @@
         "type": "object",
         "required": [
           "orderId",
-          "fillerNumber",
-          "patientMrn",
           "orderDate",
           "overallStatus",
           "statusPresentation",
@@ -10877,11 +10636,11 @@
             "title": "Requiredcontainercolors"
           },
           "sampleId": {
-            "type": "integer",
+            "type": "string",
             "title": "Sampleid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
           "collectedAt": {
@@ -11038,24 +10797,13 @@
           "recollectionSampleId": {
             "anyOf": [
               {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Recollectionsampleid"
-          },
-          "recollectionAccessionNumber": {
-            "anyOf": [
-              {
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Recollectionaccessionnumber"
+            "title": "Recollectionsampleid"
           },
           "isRecollection": {
             "type": "boolean",
@@ -11065,7 +10813,7 @@
           "originalSampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -11085,17 +10833,6 @@
             ],
             "title": "Originalsamplecollectedat"
           },
-          "originalAccessionNumber": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Originalaccessionnumber"
-          },
           "recollectionReason": {
             "anyOf": [
               {
@@ -11112,14 +10849,10 @@
             "title": "Recollectionattempt",
             "default": 1
           },
-          "accessionNumber": {
-            "type": "string",
-            "title": "Accessionnumber"
-          },
           "parentSampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -11184,7 +10917,6 @@
           "requiredContainerColors",
           "sampleId",
           "orderId",
-          "accessionNumber",
           "createdAt",
           "createdBy",
           "updatedAt",
@@ -11483,19 +11215,16 @@
             ],
             "title": "Panels"
           },
-          "loincCodes": {
+          "loincCode": {
             "anyOf": [
               {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Loinccodes"
+            "title": "Loinccode"
           },
           "methodology": {
             "anyOf": [
@@ -11713,19 +11442,16 @@
             ],
             "title": "Panels"
           },
-          "loincCodes": {
+          "loincCode": {
             "anyOf": [
               {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Loinccodes"
+            "title": "Loinccode"
           },
           "fastingRequired": {
             "anyOf": [
@@ -11845,7 +11571,7 @@
       "UserLookupResponse": {
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "title": "Id"
           },
           "name": {
@@ -11902,13 +11628,9 @@
             "title": "Phone"
           },
           "id": {
-            "type": "integer",
-            "title": "Id"
-          },
-          "employeeNumber": {
             "type": "string",
             "pattern": "^\\d{6}$",
-            "title": "Employeenumber"
+            "title": "Id"
           },
           "createdAt": {
             "type": "string",
@@ -11939,7 +11661,6 @@
           "name",
           "role",
           "id",
-          "employeeNumber",
           "createdAt"
         ],
         "title": "UserResponse",
@@ -12074,20 +11795,12 @@
             "title": "Ordertestid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
-          "fillerNumber": {
-            "type": "string",
-            "title": "Fillernumber"
-          },
           "patientId": {
-            "type": "integer",
-            "title": "Patientid"
-          },
-          "patientMrn": {
             "type": "string",
-            "title": "Patientmrn"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
@@ -12105,17 +11818,6 @@
             "type": "string",
             "title": "Sampletype"
           },
-          "accessionNumber": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Accessionnumber"
-          },
           "priority": {
             "$ref": "#/components/schemas/PriorityLevel"
           },
@@ -12125,7 +11827,7 @@
           "sampleId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -12205,7 +11907,7 @@
           "referentDoctorId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "string"
               },
               {
                 "type": "null"
@@ -12308,24 +12010,13 @@
           "sampleOriginalSampleId": {
             "anyOf": [
               {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Sampleoriginalsampleid"
-          },
-          "sampleOriginalAccessionNumber": {
-            "anyOf": [
-              {
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Sampleoriginalaccessionnumber"
+            "title": "Sampleoriginalsampleid"
           },
           "sampleRecollectionAttempt": {
             "anyOf": [
@@ -12492,9 +12183,7 @@
         "required": [
           "orderTestId",
           "orderId",
-          "fillerNumber",
           "patientId",
-          "patientMrn",
           "patientName",
           "testCode",
           "testName",
@@ -12616,24 +12305,20 @@
             "title": "Ordertestid"
           },
           "orderId": {
-            "type": "integer",
+            "type": "string",
             "title": "Orderid"
           },
-          "fillerNumber": {
+          "patientId": {
             "type": "string",
-            "title": "Fillernumber"
+            "title": "Patientid"
           },
           "patientName": {
             "type": "string",
             "title": "Patientname"
           },
-          "patientMrn": {
+          "sampleId": {
             "type": "string",
-            "title": "Patientmrn"
-          },
-          "accessionNumber": {
-            "type": "string",
-            "title": "Accessionnumber"
+            "title": "Sampleid"
           },
           "sampleType": {
             "type": "string",
@@ -12655,10 +12340,9 @@
         "required": [
           "orderTestId",
           "orderId",
-          "fillerNumber",
+          "patientId",
           "patientName",
-          "patientMrn",
-          "accessionNumber",
+          "sampleId",
           "sampleType",
           "priority",
           "testCode",

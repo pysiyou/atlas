@@ -13,9 +13,9 @@ import { worklistItemToQueueRow } from './worklistMappers';
  */
 export function findCollectionQueueItem(
   queryClient: QueryClient,
-  sampleId: number
+  sampleId: string
 ): CollectionQueueRow | undefined {
-  if (!Number.isFinite(sampleId)) return undefined;
+  if (!sampleId) return undefined;
 
   const queries = queryClient.getQueriesData<{ items?: CollectionWorklistItem[] }>({
     queryKey: queryKeys.worklists.all,

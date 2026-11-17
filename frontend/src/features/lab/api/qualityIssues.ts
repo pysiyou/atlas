@@ -15,10 +15,10 @@ import { invalidateAfterLabMutation } from '@/lib/query';
 import { LAB_PATHS } from '../constants/labConstants';
 
 export const qualityIssuesAPI = {
-  getOptions(targetType: QualityIssueTargetType, targetId: number): Promise<QualityIssueOptions> {
+  getOptions(targetType: QualityIssueTargetType, targetId: string): Promise<QualityIssueOptions> {
     return apiClient.get<ApiQualityIssueOptions>(LAB_PATHS.qualityIssues.options, {
       targetType,
-      targetId: String(targetId),
+      targetId,
     }) as Promise<QualityIssueOptions>;
   },
 
@@ -34,7 +34,7 @@ export const qualityIssuesAPI = {
 
 export function useQualityIssueOptions(
   targetType: QualityIssueTargetType | undefined,
-  targetId: number | undefined,
+  targetId: string | undefined,
   enabled = true
 ) {
   return useQuery({

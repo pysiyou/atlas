@@ -61,10 +61,7 @@ def get_current_user(
     if not user_id:
         raise _credentials_exception
 
-    try:
-        user = db.query(User).filter(User.id == int(user_id)).first()
-    except (ValueError, TypeError):
-        raise _credentials_exception
+    user = db.query(User).filter(User.id == str(user_id)).first()
 
     if not user:
         raise HTTPException(

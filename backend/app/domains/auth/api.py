@@ -141,7 +141,7 @@ def refresh_token(request: RefreshRequest, db: Session = Depends(get_db)):
         )
 
     # Verify user still exists and is allowed to refresh
-    user = db.query(User).filter(User.id == int(user_id)).first()
+    user = db.query(User).filter(User.id == str(user_id)).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

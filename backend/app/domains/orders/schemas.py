@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
-from app.platform.utils import FILLER_PATTERN, PLACER_PATTERN, TEST_MNEMONIC_PATTERN
+from app.platform.utils import FILLER_PATTERN, MRN_PATTERN, NPI_PATTERN, PLACER_PATTERN, TEST_MNEMONIC_PATTERN
 from app.domains.payments.schemas import PaymentResponse
 from app.shared.contracts.enums import (
     Gender,
@@ -67,8 +67,7 @@ class OrderTestResponse(BaseModel):
     sampleType: str  # From relationship
     status: TestStatus
     priceAtOrder: float
-    sampleId: int | None = None
-    accessionNumber: str | None = None
+    sampleId: str | None = None
     results: TestResultsDict | None = None
     resultEnteredAt: datetime | None = None
     enteredBy: str | None = None
@@ -97,7 +96,7 @@ class OrderTestResponse(BaseModel):
 class OrderCreate(BaseModel):
     """Schema for creating a new order."""
 
-    patientId: int = Field(..., gt=0, description="Patient ID")
+    patientId: str = Field(..., min_length=6, max_length=12, pattern=MRN_PATTERN)
     tests: list[OrderTestCreate] = Field(
         default_factory=list, description="Explicit catalog tests"
     )
@@ -105,7 +104,7 @@ class OrderCreate(BaseModel):
         default_factory=list, description="Orderable panel codes expanded server-side"
     )
     priority: PriorityLevel = PriorityLevel.LOW
-    referentDoctorId: int | None = Field(None, gt=0)
+    referentDoctorId: str | None = Field(None, pattern=NPI_PATTERN)
     clinicalNotes: str | None = Field(None, max_length=2000)
     specialInstructions: list[str] | None = None
     patientPrepInstructions: str | None = Field(None, max_length=1000)
@@ -129,7 +128,7 @@ class OrderCreate(BaseModel):
 
 class OrderUpdate(BaseModel):
     priority: PriorityLevel | None = None
-    referentDoctorId: int | None = Field(None, gt=0)
+    referentDoctorId: str | None = Field(None, pattern=NPI_PATTERN)
     clinicalNotes: str | None = None
     specialInstructions: list[str] | None = None
     tests: list[OrderTestCreate] | None = None  # Optional list of tests to update (add/remove)
@@ -138,7 +137,7 @@ class OrderUpdate(BaseModel):
 class LatestPaymentSnippet(BaseModel):
     """Most recent payment on an order (list embed)."""
 
-    paymentId: int
+    paymentId: str
     paymentMethod: PaymentMethod
     paidAt: datetime
 
@@ -146,11 +145,9 @@ class LatestPaymentSnippet(BaseModel):
 class OrderSummaryResponse(BaseModel):
     """Lightweight order projection for lists, dashboards, and aggregates."""
 
-    orderId: int
-    fillerNumber: str = Field(..., pattern=FILLER_PATTERN)
+    orderId: str = Field(..., pattern=FILLER_PATTERN)
     placerNumber: str | None = Field(None, pattern=PLACER_PATTERN)
-    patientId: int
-    patientMrn: str
+    patientId: str
     patientName: str
     patientDob: str | None = None
     patientGender: Gender | None = None
@@ -164,7 +161,7 @@ class OrderSummaryResponse(BaseModel):
     overallStatus: OrderStatus
     statusPresentation: StatusPresentation | None = None
     priority: PriorityLevel
-    referentDoctorId: int | None = None
+    referentDoctorId: str | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
     referentDoctorPhone: str | None = None
@@ -182,11 +179,9 @@ class OrderSummaryResponse(BaseModel):
 
 
 class OrderResponse(BaseModel):
-    orderId: int
-    fillerNumber: str = Field(..., pattern=FILLER_PATTERN)
+    orderId: str = Field(..., pattern=FILLER_PATTERN)
     placerNumber: str | None = Field(None, pattern=PLACER_PATTERN)
-    patientId: int
-    patientMrn: str
+    patientId: str
     patientName: str  # From relationship
     patientDob: str | None = None
     patientGender: Gender | None = None
@@ -197,7 +192,7 @@ class OrderResponse(BaseModel):
     overallStatus: OrderStatus
     statusPresentation: StatusPresentation | None = None
     priority: PriorityLevel
-    referentDoctorId: int | None = None
+    referentDoctorId: str | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
     referentDoctorPhone: str | None = None
@@ -230,7 +225,7 @@ class OrderDetailResponse(OrderResponse):
 class OrderReportResponse(BaseModel):
     """Response for order report/completion confirmation."""
 
-    orderId: int
+    orderId: str
     status: str
     message: str
 

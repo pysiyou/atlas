@@ -15,7 +15,7 @@ interface ResultValidationQueueViewProps {
   isValidatePending: boolean;
   getCommentKey: (row: ValidationQueueRow) => string;
   onCommentsChange: (key: string, value: string) => void;
-  onApprove: (orderTestId: number, orderId: number, criticalSeen?: boolean) => void;
+  onApprove: (orderTestId: number, orderId: string, criticalSeen?: boolean) => void;
   onReject: (row: ValidationQueueRow, result: QualityIssueResult) => void;
   onOpenValidation: (row: ValidationQueueRow) => void;
 }

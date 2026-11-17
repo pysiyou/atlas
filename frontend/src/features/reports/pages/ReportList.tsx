@@ -29,10 +29,9 @@ import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api';
 import { useModuleListTitles } from '@/hooks';
 
 /** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
-function parseReportOrderId(id: string | undefined): number | null {
-  if (!id) return null;
-  const orderId = Number.parseInt(id, 10);
-  return Number.isFinite(orderId) ? orderId : null;
+function parseReportOrderId(id: string | undefined): string | null {
+  if (!id?.trim()) return null;
+  return id.trim();
 }
 
 export function ReportList() {
@@ -40,7 +39,7 @@ export function ReportList() {
   const navigate = useNavigate();
   const { id: routeOrderId } = useParams<{ id?: string }>();
   const deepLinkOrderId = parseReportOrderId(routeOrderId);
-  const openedDeepLinkIdRef = useRef<number | null>(null);
+  const openedDeepLinkIdRef = useRef<string | null>(null);
 
   const { filters, setFilter } = usePageFilters({
     initialFilters: {
@@ -93,7 +92,7 @@ export function ReportList() {
   });
 
   const { openModal } = useModal();
-  const [generatingOrderId, setGeneratingOrderId] = useState<number | null>(null);
+  const [generatingOrderId, setGeneratingOrderId] = useState<string | null>(null);
 
   const buildReportData = useCallback(
     async (reportableOrder: ReportableOrder) => {

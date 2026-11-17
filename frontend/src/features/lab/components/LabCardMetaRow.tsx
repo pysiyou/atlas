@@ -113,12 +113,12 @@ export function TestRejectionTailMeta({ row }: { row: LabOrderTestQueueRow }) {
       </LabCardMetaRow>
     );
   }
-  if (ctx.showRecollectionLink && row.sampleOriginalAccessionNumber) {
+  if (ctx.showRecollectionLink && row.sampleOriginalSampleId) {
     return (
       <LabCardMetaRow>
         <span>
           Recollection of{' '}
-          <RecordId type="sample" value={row.sampleOriginalAccessionNumber} emphasis="inline" />
+          <RecordId type="sample" value={row.sampleOriginalSampleId} emphasis="inline" />
         </span>
         {ctx.showAttemptInMeta ? (
           <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
@@ -148,7 +148,7 @@ export function SampleRejectionTailMeta({
   sample: Sample;
   showAttempt?: boolean;
 }) {
-  if (!sample.isRecollection || !sample.originalAccessionNumber) return null;
+  if (!sample.isRecollection || !sample.originalSampleId) return null;
   const attempt = sample.recollectionAttempt ?? 1;
   const max = LAB_CONFIG.MAX_RECOLLECTION_ATTEMPTS;
 
@@ -156,7 +156,7 @@ export function SampleRejectionTailMeta({
     <LabCardMetaRow>
       <span>
         Recollection of{' '}
-        <RecordId type="sample" value={sample.originalAccessionNumber} emphasis="inline" />
+        <RecordId type="sample" value={sample.originalSampleId} emphasis="inline" />
       </span>
       {showAttempt && attempt > 1 ? (
         <span className={attempt >= max - 1 ? TONE.warning.fg : undefined}>
@@ -168,28 +168,28 @@ export function SampleRejectionTailMeta({
 }
 
 export function RecollectionRequestedMeta({
-  recollectionAccessionNumber,
+  recollectionSampleId,
 }: {
-  recollectionAccessionNumber?: string | null;
+  recollectionSampleId?: string | null;
 }) {
-  if (!recollectionAccessionNumber) return null;
+  if (!recollectionSampleId) return null;
   return (
     <span>
       Recollection requested:{' '}
-      <RecordId type="sample" value={recollectionAccessionNumber} emphasis="inline" />
+      <RecordId type="sample" value={recollectionSampleId} emphasis="inline" />
     </span>
   );
 }
 
 export function BarcodeMeta({
-  accessionNumber,
+  sampleId,
 }: {
-  accessionNumber?: string | null;
+  sampleId?: string | null;
 }) {
-  if (!accessionNumber) return null;
+  if (!sampleId) return null;
   return (
     <span className={FG.monoCaptionMuted}>
-      {accessionNumber}
+      {sampleId}
     </span>
   );
 }

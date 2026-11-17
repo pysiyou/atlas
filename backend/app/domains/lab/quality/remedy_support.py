@@ -78,18 +78,18 @@ class QualityRemedySupport:
     def record_issue(
         self,
         *,
-        order_id: int,
+        order_id: str,
         stage: QualityStage,
         domain: QualityDomain,
         reason: str,
         notes: str | None,
         remedy,
-        user_id: int,
+        user_id: str,
         order_test_id: int | None = None,
-        sample_id: int | None = None,
+        sample_id: str | None = None,
         test_code: str | None = None,
         created_test_id: int | None = None,
-        created_sample_id: int | None = None,
+        created_sample_id: str | None = None,
         omit_remedy_from_validation_audit: bool = False,
     ) -> QualityIssue:
         issue = QualityIssue(
@@ -142,7 +142,7 @@ class QualityRemedySupport:
     def create_retest(
         self,
         order_test: OrderTest,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
         *,
@@ -179,7 +179,7 @@ class QualityRemedySupport:
     def create_recollection_sample(
         self,
         rejected_sample: Sample,
-        user_id: int,
+        user_id: str,
         reason: str,
         *,
         test_codes: list[str] | None = None,
@@ -221,7 +221,7 @@ class QualityRemedySupport:
     def reject_sample_record(
         self,
         sample: Sample,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
         context: SampleRejectionContext,

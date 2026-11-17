@@ -11,9 +11,8 @@ from sqlalchemy.sql import func
 class Order(Base):
     __tablename__ = "orders"
 
-    orderId = Column("order_id", Integer, primary_key=True, autoincrement=True, index=True)
-    patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
-    fillerNumber = Column("filler_number", String(13), nullable=False, unique=True, index=True)
+    orderId = Column("order_id", String(13), primary_key=True, index=True)
+    patientId = Column("patient_id", String(12), ForeignKey("patients.id"), nullable=False, index=True)
     placerNumber = Column("placer_number", String(13), nullable=True, unique=True, index=True)
     orderDate = Column("order_date", DateTime(timezone=True), nullable=False)
 
@@ -38,7 +37,7 @@ class Order(Base):
     clinicalNotes = Column("clinical_notes", String, nullable=True)
     referentDoctorId = Column(
         "referent_doctor_id",
-        Integer,
+        String(10),
         ForeignKey("referent_doctors.referent_doctor_id"),
         nullable=True,
         index=True,
@@ -79,11 +78,6 @@ class Order(Base):
         return self.patient.fullName if self.patient else "Unknown"
 
     @property
-    def patientMrn(self) -> str:
-        """Medical record number from the linked patient."""
-        return self.patient.mrn if self.patient else ""
-
-    @property
     def patientDob(self) -> str | None:
         return self.patient.dateOfBirth if self.patient else None
 
@@ -118,7 +112,7 @@ class OrderTest(Base):
     __tablename__ = "order_tests"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    orderId = Column("order_id", String(13), ForeignKey("orders.order_id"), nullable=False, index=True)
     testCode = Column("test_code", String, ForeignKey("tests.code"), nullable=False, index=True)
 
     # Order-specific state
@@ -130,7 +124,7 @@ class OrderTest(Base):
     # Sample linkage
     sampleId = Column(
         "sample_id",
-        Integer,
+        String(20),
         ForeignKey("samples.sample_id", ondelete="SET NULL"),
         nullable=True,
         index=True,
@@ -203,7 +197,3 @@ class OrderTest(Base):
         """Get test sample type from relationship"""
         return self.test.sampleType if self.test else "Unknown"
 
-    @property
-    def accessionNumber(self) -> str | None:
-        """Accession from the linked sample, when one exists."""
-        return self.sample.accessionNumber if self.sample else None

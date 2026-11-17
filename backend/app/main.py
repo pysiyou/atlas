@@ -31,8 +31,13 @@ async def lifespan(app: FastAPI):
 
         db = SessionLocal()
         try:
-            from app.domains.catalog.test_catalog_service import TestCatalogService
+            from app.domains.catalog.test_catalog_service import (
+                TestCatalogService,
+                ensure_loinc_code_column,
+            )
 
+            # Existing DBs still have tests.loinc_codes JSON; add loinc_code first.
+            ensure_loinc_code_column(db)
             panel_svc = CatalogPanelService(db)
             panel_svc.sync_test_panel_ids_from_contract()
             TestCatalogService(db).sync_parameter_loinc_from_contract()

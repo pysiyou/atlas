@@ -15,12 +15,6 @@ import type { QualityIssueOptions } from '@/types';
 import { useLabCopy } from '@/strings';
 import type { RemedyType } from '@/types';
 
-function parseNumericSampleId(sampleId: string): number | undefined {
-  return typeof sampleId === 'string' && /^\d+$/.test(sampleId)
-    ? parseInt(sampleId, 10)
-    : undefined;
-}
-
 function useQualityIssueFormState() {
   const [reason, setReason] = useState('');
   const [notes, setNotes] = useState('');
@@ -39,7 +33,6 @@ interface CollectionRejectionPopoverContentProps {
   onSuccess: () => void;
   onCancel: () => void;
   sampleId: string;
-  accessionNumber?: string | null;
   testCodes: string[];
   sampleType?: string;
   patientName?: string;
@@ -50,7 +43,6 @@ function CollectionRejectionPopoverContent({
   onSuccess,
   onCancel,
   sampleId,
-  accessionNumber,
   testCodes,
   sampleType,
   patientName,
@@ -66,7 +58,6 @@ function CollectionRejectionPopoverContent({
     setPreferredRemedy,
     reset,
   } = useQualityIssueFormState();
-  const numericSampleId = parseNumericSampleId(sampleId);
   const { reportIssue, isSubmitting } = useSubmitQualityIssue({ onSuccess });
   const [options, setOptions] = React.useState<QualityIssueOptions | undefined>();
 
@@ -80,11 +71,11 @@ function CollectionRejectionPopoverContent({
   const canSubmit = !!reason && (!requiresUnfinishedChoice || effectiveRemedy !== '');
 
   const handleConfirm = useCallback(async () => {
-    if (!numericSampleId || !reason) return;
+    if (!sampleId || !reason) return;
     if (requiresUnfinishedChoice && !effectiveRemedy) return;
     await reportIssue(
       'sample',
-      numericSampleId,
+      sampleId,
       reason,
       notes,
       effectiveRemedy || undefined
@@ -92,7 +83,7 @@ function CollectionRejectionPopoverContent({
     reset();
     onSuccess();
   }, [
-    numericSampleId,
+    sampleId,
     reason,
     notes,
     effectiveRemedy,
@@ -103,7 +94,7 @@ function CollectionRejectionPopoverContent({
   ]);
 
   const subtitle = [
-    displayId.sample(accessionNumber),
+    displayId.sample(sampleId),
     sampleType,
     patientName,
     isRecollection ? 'Recollection' : null,
@@ -123,10 +114,10 @@ function CollectionRejectionPopoverContent({
       isSubmitting={isSubmitting}
       disabled={!canSubmit}
     >
-      {numericSampleId ? (
+      {sampleId ? (
         <QualityIssueForm
           targetType="sample"
-          targetId={numericSampleId}
+          targetId={sampleId}
           title={labCopy.quality.sampleIssue}
           reason={reason}
           notes={notes}
@@ -144,7 +135,6 @@ function CollectionRejectionPopoverContent({
 
 interface CollectionRejectionPopoverProps {
   sampleId: string;
-  accessionNumber?: string | null;
   testCodes: string[];
   sampleType?: string;
   patientName?: string;
@@ -155,7 +145,6 @@ interface CollectionRejectionPopoverProps {
 
 export function SampleRejectionPopover({
   sampleId,
-  accessionNumber,
   testCodes,
   sampleType,
   patientName,
@@ -177,7 +166,6 @@ export function SampleRejectionPopover({
       {({ close }) => (
         <CollectionRejectionPopoverContent
           sampleId={sampleId}
-          accessionNumber={accessionNumber}
           testCodes={testCodes}
           sampleType={sampleType}
           patientName={patientName}

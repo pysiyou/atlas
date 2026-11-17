@@ -41,14 +41,14 @@ export function SampleContainerInfo({
  */
 
 interface SampleCollectionMetaLineProps {
-  accessionNumber?: string | null;
+  sampleId?: string | null;
   collectedAt?: string;
   collectedBy?: string;
   className?: string;
 }
 
 export function SampleCollectionMetaLine({
-  accessionNumber,
+  sampleId,
   collectedAt,
   collectedBy,
   className,
@@ -56,10 +56,10 @@ export function SampleCollectionMetaLine({
   if (!collectedAt) return null;
 
   const line =
-    accessionNumber
+    sampleId
       ? {
           type: 'sample-collected' as const,
-          accessionNumber,
+          sampleId,
           collectedAt,
           collectedBy,
         }

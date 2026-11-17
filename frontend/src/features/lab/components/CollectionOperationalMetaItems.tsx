@@ -12,7 +12,7 @@ function CollectionOperationalMetaItemNode({ item }: { item: CollectionOperation
   }
   if (item.type === 'recollection-requested') {
     return (
-      <RecollectionRequestedMeta recollectionAccessionNumber={item.recollectionAccessionNumber} />
+      <RecollectionRequestedMeta recollectionSampleId={item.recollectionSampleId} />
     );
   }
   return <span className={item.className}>{item.text}</span>;

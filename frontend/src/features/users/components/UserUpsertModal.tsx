@@ -26,7 +26,7 @@ export interface UserUpsertModalProps {
   onClose: () => void;
   user: UserAdminRecord | null;
   users: UserAdminRecord[];
-  currentUserId: number | null;
+  currentUserId: string | null;
 }
 
 function AccountStatusActions({

@@ -43,7 +43,7 @@ def list_reportable_orders(
     status_code=status.HTTP_200_OK,
 )
 def get_reportable_order(
-    orderId: int,
+    orderId: str,
     db: Session = Depends(get_db),
     _current_user: User = Depends(get_current_user),
 ):
@@ -56,7 +56,7 @@ def get_reportable_order(
     status_code=status.HTTP_200_OK,
 )
 def download_order_report(
-    orderId: int,
+    orderId: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -65,7 +65,7 @@ def download_order_report(
 
 @router.get("/reports/orders/{orderId}/pdf")
 def download_order_report_pdf(
-    orderId: int,
+    orderId: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

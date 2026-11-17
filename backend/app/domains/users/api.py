@@ -38,7 +38,7 @@ def create_user(
 
 @router.put("/users/{user_id}", response_model=UserResponse)
 def update_user(
-    user_id: int,
+    user_id: str,
     user_data: UserUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),

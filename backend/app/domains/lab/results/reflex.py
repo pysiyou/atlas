@@ -68,7 +68,7 @@ class ReflexEngine:
     def evaluate_after_validation(
         self,
         order_test: OrderTest,
-        user_id: int,
+        user_id: str,
     ) -> list[ReflexTriggerResult]:
         if not order_test.results:
             return []

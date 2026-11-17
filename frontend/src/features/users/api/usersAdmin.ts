@@ -18,7 +18,7 @@ export const usersAdminAPI = {
   create(body: UserAdminCreate): Promise<UserAdminRecord> {
     return apiClient.post<UserAdminRecord>('/users', body);
   },
-  update(userId: number, body: UserAdminUpdate): Promise<UserAdminRecord> {
+  update(userId: string, body: UserAdminUpdate): Promise<UserAdminRecord> {
     return apiClient.put<UserAdminRecord>(`/users/${userId}`, body);
   },
 };
@@ -70,7 +70,7 @@ export function useCreateUser() {
 export function useUpdateUser() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ userId, body }: { userId: number; body: UserAdminUpdate }) =>
+    mutationFn: ({ userId, body }: { userId: string; body: UserAdminUpdate }) =>
       usersAdminAPI.update(userId, body),
     onSuccess: async () => {
       await Promise.all([

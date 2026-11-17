@@ -17,7 +17,6 @@ export function getSampleCollectionViewModel(display: SampleCollectionQueueItem,
 
   return {
     orderId: display.orderId,
-    fillerNumber: display.fillerNumber,
     orderDate: display.orderDate,
     referentDoctorName: display.referentDoctorName ?? undefined,
     isPending,

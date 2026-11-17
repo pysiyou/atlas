@@ -12,13 +12,13 @@ import { BADGE, WORKLIST_CARD_BADGE_SIZE } from '@/theme/recipes';
 const badgeIconClass = BADGE.icon.xs;
 
 interface RecollectionOfBadgeProps {
-  originalAccessionNumber: string;
+  originalSampleId: string;
   size?: BadgeSize;
   className?: string;
 }
 
 export function RecollectionOfBadge({
-  originalAccessionNumber,
+  originalSampleId,
   size = WORKLIST_CARD_BADGE_SIZE,
   className = '',
 }: RecollectionOfBadgeProps) { return (
@@ -28,7 +28,7 @@ export function RecollectionOfBadge({
     className={`flex items-center gap-space-1 ${className}`}
   >
     <Icon iconKey={IconKeys.actions.alertCircle} className={badgeIconClass} />
-    Recollection of <RecordId type="sample" value={originalAccessionNumber} />
+    Recollection of <RecordId type="sample" value={originalSampleId} />
   </Badge>
 ); }
 

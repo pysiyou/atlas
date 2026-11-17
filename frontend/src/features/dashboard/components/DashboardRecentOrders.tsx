@@ -52,7 +52,7 @@ export function DashboardRecentOrders({
                 {order.patientName || '—'}
               </p>
               <p className={text({ role: 'body', intent: 'muted' })}>
-                <RecordId type="order" value={order.fillerNumber} /> •{' '}
+                <RecordId type="order" value={order.orderId} /> •{' '}
                 {order.testCount ?? order.tests?.length ?? 0} test(s)
               </p>
             </div>

@@ -21,7 +21,7 @@ function InlineDot() {
 
 export interface SampleCollectionCardLeftColumnProps {
   patientName: string;
-  fillerNumber?: string | null;
+  orderId?: string | null;
   referentDoctorName?: string;
   orderDate?: string;
   sample: Sample;
@@ -45,14 +45,14 @@ export interface SampleCollectionCardLeftColumnProps {
  */
 function SampleCollectionIdentityLines({
   patientName,
-  accessionNumber,
-  fillerNumber,
+  sampleId,
+  orderId,
   referentDoctorName,
   orderDate,
 }: {
   patientName: string;
-  accessionNumber?: string | null;
-  fillerNumber?: string | null;
+  sampleId?: string | null;
+  orderId?: string | null;
   referentDoctorName?: string;
   orderDate?: string;
 }) {
@@ -66,9 +66,9 @@ function SampleCollectionIdentityLines({
       </span>
     );
   }
-  if (accessionNumber) {
+  if (sampleId) {
     if (line1.length > 0) line1.push(<InlineDot key="dot-acc" />);
-    line1.push(<RecordId key="acc" type="sample" value={accessionNumber} className={idClass} />);
+    line1.push(<RecordId key="acc" type="sample" value={sampleId} className={idClass} />);
   }
 
   const line2: ReactNode[] = [];
@@ -79,10 +79,10 @@ function SampleCollectionIdentityLines({
       </span>
     );
   }
-  if (fillerNumber) {
+  if (orderId) {
     if (line2.length > 0) line2.push(<InlineDot key="dot-ord" />);
     line2.push(
-      <RecordId key="ord" type="order" value={fillerNumber} emphasis="headerMuted" className={idClass} />
+      <RecordId key="ord" type="order" value={orderId} emphasis="headerMuted" className={idClass} />
     );
   }
   if (orderDate) {
@@ -132,7 +132,7 @@ function SampleCollectionOperationsRow(
  */
 export function SampleCollectionCardLeftColumn({
   patientName,
-  fillerNumber,
+  orderId,
   referentDoctorName,
   orderDate,
   sample,
@@ -155,7 +155,6 @@ export function SampleCollectionCardLeftColumn({
     collectedBy,
     isRecollection: sample.isRecollection,
     originalSampleId: sample.originalSampleId,
-    originalAccessionNumber: sample.originalAccessionNumber,
     originalSampleCollectedAt: sample.originalSampleCollectedAt,
   });
 
@@ -166,8 +165,8 @@ export function SampleCollectionCardLeftColumn({
       identity={
         <SampleCollectionIdentityLines
           patientName={patientName}
-          accessionNumber={sample.accessionNumber}
-          fillerNumber={fillerNumber}
+          sampleId={sample.sampleId}
+          orderId={orderId}
           referentDoctorName={referentDoctorName}
           orderDate={orderDate}
         />

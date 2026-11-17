@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.get("/payments/order/{orderId}", response_model=list[PaymentResponse])
 def get_payments_by_order(
-    orderId: int,
+    orderId: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

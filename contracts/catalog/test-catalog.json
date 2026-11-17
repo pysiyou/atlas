@@ -13,14 +13,6 @@
       "panels": [
         "HEMFULL"
       ],
-      "loinc_codes": [
-        "6690-2",
-        "789-8",
-        "718-7",
-        "4544-3",
-        "787-2",
-        "777-3"
-      ],
       "method_common": "Automated hematology analyzer (Sysmex, Mindray)",
       "turnaround_time_hours": 2,
       "sample": {
@@ -244,10 +236,6 @@
       "panels": [
         "ANEMIA"
       ],
-      "loinc_codes": [
-        "17849-1",
-        "60474-4"
-      ],
       "method_common": "Automated flow cytometry or manual supravital staining",
       "turnaround_time_hours": 4,
       "sample": {
@@ -344,10 +332,6 @@
       "category": "Hematology",
       "panels": [
         "MDIFF"
-      ],
-      "loinc_codes": [
-        "18314-5",
-        "17784-0"
       ],
       "method_common": "Microscopy - Wright-Giemsa staining",
       "turnaround_time_hours": 3,
@@ -449,9 +433,7 @@
       "panels": [
         "INFLAMM"
       ],
-      "loinc_codes": [
-        "4537-7"
-      ],
+      "loinc_code": "4537-7",
       "order_obs": "both",
       "method_common": "Westergren method (1-hour reading)",
       "turnaround_time_hours": 2,
@@ -536,10 +518,6 @@
       "category": "Hematology - Transfusion Medicine",
       "panels": [
         "TXFUSE"
-      ],
-      "loinc_codes": [
-        "883-9",
-        "10331-7"
       ],
       "method_common": "Gel card or tube technique; forward and reverse grouping",
       "turnaround_time_hours": 1,
@@ -643,9 +621,7 @@
         "CMP",
         "DMSCR"
       ],
-      "loinc_codes": [
-        "1558-6"
-      ],
+      "loinc_code": "1558-6",
       "order_obs": "both",
       "method_common": "Hexokinase enzymatic method",
       "turnaround_time_hours": 1,
@@ -735,9 +711,7 @@
       "panels": [
         "DMPANEL"
       ],
-      "loinc_codes": [
-        "2345-7"
-      ],
+      "loinc_code": "2345-7",
       "order_obs": "both",
       "method_common": "Hexokinase enzymatic method",
       "turnaround_time_hours": 1,
@@ -826,9 +800,7 @@
       "panels": [
         "DMGMT"
       ],
-      "loinc_codes": [
-        "4548-4"
-      ],
+      "loinc_code": "4548-4",
       "order_obs": "both",
       "method_common": "HPLC or immunoassay",
       "turnaround_time_hours": 2,
@@ -909,9 +881,7 @@
         "RENAL",
         "CMP"
       ],
-      "loinc_codes": [
-        "2160-0"
-      ],
+      "loinc_code": "2160-0",
       "order_obs": "both",
       "method_common": "Enzymatic method (preferred)",
       "turnaround_time_hours": 1,
@@ -1004,9 +974,7 @@
         "RENAL",
         "CMP"
       ],
-      "loinc_codes": [
-        "3094-0"
-      ],
+      "loinc_code": "3094-0",
       "order_obs": "both",
       "method_common": "Enzymatic method (urease)",
       "turnaround_time_hours": 1,
@@ -1094,9 +1062,7 @@
       "panels": [
         "RENAL"
       ],
-      "loinc_codes": [
-        "33914-3"
-      ],
+      "loinc_code": "33914-3",
       "order_obs": "both",
       "method_common": "Calculated from serum creatinine (CKD-EPI recommended)",
       "turnaround_time_hours": 0,
@@ -1181,9 +1147,7 @@
         "LYTES",
         "CMP"
       ],
-      "loinc_codes": [
-        "2951-2"
-      ],
+      "loinc_code": "2951-2",
       "order_obs": "both",
       "method_common": "Ion-selective electrode (ISE)",
       "turnaround_time_hours": 1,
@@ -1272,9 +1236,7 @@
       "panels": [
         "LYTES"
       ],
-      "loinc_codes": [
-        "2823-3"
-      ],
+      "loinc_code": "2823-3",
       "order_obs": "both",
       "method_common": "Ion-selective electrode (ISE)",
       "turnaround_time_hours": 1,
@@ -1365,9 +1327,7 @@
       "panels": [
         "LYTES"
       ],
-      "loinc_codes": [
-        "2075-0"
-      ],
+      "loinc_code": "2075-0",
       "order_obs": "both",
       "method_common": "Ion-selective electrode (ISE)",
       "turnaround_time_hours": 1,
@@ -1452,9 +1412,7 @@
       "panels": [
         "LYTES"
       ],
-      "loinc_codes": [
-        "1963-8"
-      ],
+      "loinc_code": "1963-8",
       "order_obs": "both",
       "method_common": "Calculation or direct ISE measurement",
       "turnaround_time_hours": 1,
@@ -1538,9 +1496,7 @@
       "panels": [
         "MINERAL"
       ],
-      "loinc_codes": [
-        "17861-6"
-      ],
+      "loinc_code": "17861-6",
       "order_obs": "both",
       "method_common": "Spectrophotometry (colorimetric)",
       "turnaround_time_hours": 1,
@@ -1628,9 +1584,7 @@
       "panels": [
         "MINERAL"
       ],
-      "loinc_codes": [
-        "19123-9"
-      ],
+      "loinc_code": "19123-9",
       "order_obs": "both",
       "method_common": "Spectrophotometry",
       "turnaround_time_hours": 1,
@@ -1714,9 +1668,7 @@
       "panels": [
         "MINERAL"
       ],
-      "loinc_codes": [
-        "2777-1"
-      ],
+      "loinc_code": "2777-1",
       "order_obs": "both",
       "method_common": "Colorimetric method",
       "turnaround_time_hours": 1,
@@ -1800,9 +1752,7 @@
       "panels": [
         "LFT"
       ],
-      "loinc_codes": [
-        "1742-6"
-      ],
+      "loinc_code": "1742-6",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -1894,9 +1844,7 @@
       "panels": [
         "LFT"
       ],
-      "loinc_codes": [
-        "1920-8"
-      ],
+      "loinc_code": "1920-8",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -1989,9 +1937,7 @@
       "panels": [
         "LFT"
       ],
-      "loinc_codes": [
-        "6768-6"
-      ],
+      "loinc_code": "6768-6",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -2075,9 +2021,7 @@
       "panels": [
         "LFT"
       ],
-      "loinc_codes": [
-        "2324-2"
-      ],
+      "loinc_code": "2324-2",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -2161,9 +2105,7 @@
       "panels": [
         "LFT"
       ],
-      "loinc_codes": [
-        "1975-2"
-      ],
+      "loinc_code": "1975-2",
       "order_obs": "both",
       "method_common": "Van den Bergh colorimetric method",
       "turnaround_time_hours": 1,
@@ -2253,9 +2195,7 @@
       "panels": [
         "LFT"
       ],
-      "loinc_codes": [
-        "1968-7"
-      ],
+      "loinc_code": "1968-7",
       "order_obs": "both",
       "method_common": "Van den Bergh method",
       "turnaround_time_hours": 1,
@@ -2339,9 +2279,7 @@
       "panels": [
         "LFT"
       ],
-      "loinc_codes": [
-        "1751-7"
-      ],
+      "loinc_code": "1751-7",
       "order_obs": "both",
       "method_common": "Dye-binding method",
       "turnaround_time_hours": 1,
@@ -2425,9 +2363,7 @@
       "panels": [
         "CMP"
       ],
-      "loinc_codes": [
-        "2885-2"
-      ],
+      "loinc_code": "2885-2",
       "order_obs": "both",
       "method_common": "Biuret colorimetric method",
       "turnaround_time_hours": 1,
@@ -2511,9 +2447,7 @@
       "panels": [
         "LIPID"
       ],
-      "loinc_codes": [
-        "2093-3"
-      ],
+      "loinc_code": "2093-3",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -2598,9 +2532,7 @@
       "panels": [
         "LIPID"
       ],
-      "loinc_codes": [
-        "2085-9"
-      ],
+      "loinc_code": "2085-9",
       "order_obs": "both",
       "method_common": "Direct immunochemical method",
       "turnaround_time_hours": 1,
@@ -2688,9 +2620,7 @@
       "panels": [
         "LIPID"
       ],
-      "loinc_codes": [
-        "2089-1"
-      ],
+      "loinc_code": "2089-1",
       "order_obs": "both",
       "method_common": "Direct immunochemical or calculated",
       "turnaround_time_hours": 1,
@@ -2774,9 +2704,7 @@
       "panels": [
         "LIPID"
       ],
-      "loinc_codes": [
-        "2571-8"
-      ],
+      "loinc_code": "2571-8",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -2861,9 +2789,7 @@
       "panels": [
         "PANC"
       ],
-      "loinc_codes": [
-        "1798-8"
-      ],
+      "loinc_code": "1798-8",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -2946,9 +2872,7 @@
       "panels": [
         "PANC"
       ],
-      "loinc_codes": [
-        "3040-3"
-      ],
+      "loinc_code": "3040-3",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -3032,9 +2956,7 @@
       "panels": [
         "INFLAMM"
       ],
-      "loinc_codes": [
-        "1988-5"
-      ],
+      "loinc_code": "1988-5",
       "order_obs": "both",
       "method_common": "High-sensitivity immunoassay",
       "turnaround_time_hours": 2,
@@ -3114,9 +3036,7 @@
       "panels": [
         "ACS"
       ],
-      "loinc_codes": [
-        "10839-9"
-      ],
+      "loinc_code": "10839-9",
       "order_obs": "both",
       "method_common": "High-sensitivity troponin immunoassay",
       "turnaround_time_hours": 1,
@@ -3206,9 +3126,7 @@
       "panels": [
         "ACS"
       ],
-      "loinc_codes": [
-        "32673-6"
-      ],
+      "loinc_code": "32673-6",
       "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
@@ -3288,9 +3206,7 @@
       "panels": [
         "IRON"
       ],
-      "loinc_codes": [
-        "2498-4"
-      ],
+      "loinc_code": "2498-4",
       "order_obs": "both",
       "method_common": "Colorimetric method",
       "turnaround_time_hours": 1,
@@ -3374,9 +3290,7 @@
       "panels": [
         "IRON"
       ],
-      "loinc_codes": [
-        "2276-4"
-      ],
+      "loinc_code": "2276-4",
       "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
@@ -3460,9 +3374,7 @@
       "panels": [
         "IRON"
       ],
-      "loinc_codes": [
-        "2500-7"
-      ],
+      "loinc_code": "2500-7",
       "order_obs": "both",
       "method_common": "Colorimetric",
       "turnaround_time_hours": 2,
@@ -3542,9 +3454,7 @@
       "panels": [
         "MACANEM"
       ],
-      "loinc_codes": [
-        "2132-9"
-      ],
+      "loinc_code": "2132-9",
       "order_obs": "both",
       "method_common": "Electrochemiluminescence immunoassay",
       "turnaround_time_hours": 2,
@@ -3623,9 +3533,7 @@
       "panels": [
         "MACANEM"
       ],
-      "loinc_codes": [
-        "2284-8"
-      ],
+      "loinc_code": "2284-8",
       "order_obs": "both",
       "method_common": "Microbiologic assay or immunoassay",
       "turnaround_time_hours": 2,
@@ -3705,9 +3613,7 @@
       "panels": [
         "BONE"
       ],
-      "loinc_codes": [
-        "62292-8"
-      ],
+      "loinc_code": "62292-8",
       "order_obs": "both",
       "method_common": "LC-MS or immunoassay",
       "turnaround_time_hours": 3,
@@ -3785,10 +3691,6 @@
       "category": "Coagulation",
       "panels": [
         "COAG"
-      ],
-      "loinc_codes": [
-        "5902-2",
-        "6301-6"
       ],
       "method_common": "Clot-based method",
       "turnaround_time_hours": 2,
@@ -3900,9 +3802,7 @@
       "panels": [
         "COAG"
       ],
-      "loinc_codes": [
-        "14979-9"
-      ],
+      "loinc_code": "14979-9",
       "order_obs": "both",
       "method_common": "Clot-based method",
       "turnaround_time_hours": 2,
@@ -3994,9 +3894,7 @@
         "COAG",
         "DIC"
       ],
-      "loinc_codes": [
-        "3255-7"
-      ],
+      "loinc_code": "3255-7",
       "order_obs": "both",
       "method_common": "Clauss method",
       "turnaround_time_hours": 2,
@@ -4081,9 +3979,7 @@
       "panels": [
         "VTE"
       ],
-      "loinc_codes": [
-        "48065-7"
-      ],
+      "loinc_code": "48065-7",
       "order_obs": "both",
       "method_common": "Latex agglutination or immunoassay",
       "turnaround_time_hours": 1,
@@ -4165,20 +4061,6 @@
       "category": "Urinalysis",
       "panels": [
         "UAPANEL"
-      ],
-      "loinc_codes": [
-        "5778-6",
-        "5767-9",
-        "5811-5",
-        "5803-2",
-        "5804-0",
-        "5792-7",
-        "5794-3",
-        "5799-2",
-        "5802-4",
-        "5821-4",
-        "13945-1",
-        "5769-5"
       ],
       "method_common": "Dipstick + microscopy",
       "turnaround_time_hours": 2,
@@ -4489,9 +4371,7 @@
       "panels": [
         "PREG"
       ],
-      "loinc_codes": [
-        "2106-3"
-      ],
+      "loinc_code": "2106-3",
       "order_obs": "both",
       "method_common": "Immunochromatographic rapid test",
       "turnaround_time_hours": 0.25,
@@ -4571,9 +4451,7 @@
       "panels": [
         "PREG"
       ],
-      "loinc_codes": [
-        "21198-7"
-      ],
+      "loinc_code": "21198-7",
       "order_obs": "both",
       "method_common": "Immunoassay (chemiluminescent)",
       "turnaround_time_hours": 2,
@@ -4661,9 +4539,7 @@
       "panels": [
         "TFT"
       ],
-      "loinc_codes": [
-        "3016-3"
-      ],
+      "loinc_code": "3016-3",
       "order_obs": "both",
       "method_common": "3rd generation immunoassay or higher",
       "turnaround_time_hours": 2,
@@ -4749,9 +4625,7 @@
       "panels": [
         "TFT"
       ],
-      "loinc_codes": [
-        "3024-7"
-      ],
+      "loinc_code": "3024-7",
       "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
@@ -4838,9 +4712,7 @@
       "panels": [
         "HIV"
       ],
-      "loinc_codes": [
-        "56888-1"
-      ],
+      "loinc_code": "56888-1",
       "order_obs": "both",
       "method_common": "EIA or CIA; WHO-recommended algorithm",
       "turnaround_time_hours": 2,
@@ -4923,9 +4795,7 @@
       "panels": [
         "HIV"
       ],
-      "loinc_codes": [
-        "44873-8"
-      ],
+      "loinc_code": "44873-8",
       "order_obs": "observation",
       "method_common": "Immunoblot or HIV-1 RNA real-time PCR",
       "turnaround_time_hours": 5,
@@ -5007,9 +4877,7 @@
       "panels": [
         "HIVMGMT"
       ],
-      "loinc_codes": [
-        "20447-9"
-      ],
+      "loinc_code": "20447-9",
       "order_obs": "both",
       "method_common": "Real-time RT-PCR",
       "turnaround_time_hours": 24,
@@ -5090,9 +4958,7 @@
       "panels": [
         "HEP"
       ],
-      "loinc_codes": [
-        "5195-3"
-      ],
+      "loinc_code": "5195-3",
       "order_obs": "both",
       "method_common": "ELISA or RDT",
       "turnaround_time_hours": 2,
@@ -5171,9 +5037,7 @@
       "panels": [
         "HEP"
       ],
-      "loinc_codes": [
-        "13952-7"
-      ],
+      "loinc_code": "13952-7",
       "order_obs": "both",
       "method_common": "ELISA",
       "turnaround_time_hours": 2,
@@ -5251,9 +5115,7 @@
       "panels": [
         "HEP"
       ],
-      "loinc_codes": [
-        "5193-8"
-      ],
+      "loinc_code": "5193-8",
       "order_obs": "both",
       "method_common": "ELISA",
       "turnaround_time_hours": 2,
@@ -5331,9 +5193,7 @@
       "panels": [
         "HEP"
       ],
-      "loinc_codes": [
-        "16128-1"
-      ],
+      "loinc_code": "16128-1",
       "order_obs": "both",
       "method_common": "3rd generation ELISA",
       "turnaround_time_hours": 2,
@@ -5416,9 +5276,7 @@
         "SYPH",
         "STI"
       ],
-      "loinc_codes": [
-        "20507-0"
-      ],
+      "loinc_code": "20507-0",
       "order_obs": "both",
       "method_common": "Rapid plasma reagin (RPR) or VDRL",
       "turnaround_time_hours": 1,
@@ -5498,9 +5356,7 @@
       "panels": [
         "SYPH"
       ],
-      "loinc_codes": [
-        "8041-6"
-      ],
+      "loinc_code": "8041-6",
       "order_obs": "both",
       "method_common": "TPHA, TPPA, or FTA-Abs",
       "turnaround_time_hours": 2,
@@ -5579,9 +5435,7 @@
       "panels": [
         "ULCER"
       ],
-      "loinc_codes": [
-        "16126-5"
-      ],
+      "loinc_code": "16126-5",
       "order_obs": "both",
       "method_common": "ELISA or rapid test",
       "turnaround_time_hours": 2,
@@ -5660,10 +5514,6 @@
       "category": "Serology / Infectious Disease - Parasitic",
       "panels": [
         "PREGSER"
-      ],
-      "loinc_codes": [
-        "22580-5",
-        "25542-2"
       ],
       "method_common": "ELISA or IFA",
       "turnaround_time_hours": 2,
@@ -5761,10 +5611,6 @@
       "panels": [
         "IMMCOMP"
       ],
-      "loinc_codes": [
-        "5124-3",
-        "5126-8"
-      ],
       "method_common": "ELISA or chemiluminescence",
       "turnaround_time_hours": 2,
       "sample": {
@@ -5860,11 +5706,6 @@
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
         "INFACUTE"
-      ],
-      "loinc_codes": [
-        "30340-4",
-        "30339-6",
-        "7883-2"
       ],
       "method_common": "ELISA",
       "turnaround_time_hours": 2,
@@ -5981,9 +5822,7 @@
       "panels": [
         "PRENATAL"
       ],
-      "loinc_codes": [
-        "40667-8"
-      ],
+      "loinc_code": "40667-8",
       "order_obs": "both",
       "method_common": "ELISA",
       "turnaround_time_hours": 2,
@@ -6062,9 +5901,7 @@
       "panels": [
         "FEVER"
       ],
-      "loinc_codes": [
-        "70569-9"
-      ],
+      "loinc_code": "70569-9",
       "order_obs": "both",
       "method_common": "Rapid immunochromatographic test",
       "turnaround_time_hours": 0.25,
@@ -6150,9 +5987,7 @@
       "panels": [
         "FEVER"
       ],
-      "loinc_codes": [
-        "32206-5"
-      ],
+      "loinc_code": "32206-5",
       "order_obs": "both",
       "method_common": "Microscopy - Wright-Giemsa staining",
       "turnaround_time_hours": 2,
@@ -6229,10 +6064,6 @@
       "category": "Hematology - Hemoglobinopathy",
       "panels": [
         "HBPATH"
-      ],
-      "loinc_codes": [
-        "6864-3",
-        "49316-3"
       ],
       "method_common": "HPLC or isoelectric focusing",
       "turnaround_time_hours": 4,
@@ -6336,9 +6167,7 @@
       "panels": [
         "HEMOLYS"
       ],
-      "loinc_codes": [
-        "2356-4"
-      ],
+      "loinc_code": "2356-4",
       "order_obs": "both",
       "method_common": "Quantitative enzymatic assay or Fluorescent Spot Test",
       "turnaround_time_hours": 2,
@@ -6421,9 +6250,7 @@
       "panels": [
         "DIARRHEA"
       ],
-      "loinc_codes": [
-        "10704-5"
-      ],
+      "loinc_code": "10704-5",
       "order_obs": "both",
       "method_common": "Microscopy of fresh/preserved stool",
       "turnaround_time_hours": 2,
@@ -6501,9 +6328,7 @@
       "panels": [
         "TB"
       ],
-      "loinc_codes": [
-        "647-8"
-      ],
+      "loinc_code": "647-8",
       "order_obs": "both",
       "method_common": "Ziehl-Neelsen staining or fluorescence microscopy",
       "turnaround_time_hours": 1,
@@ -6591,10 +6416,7 @@
         "TB",
         "DRTB"
       ],
-      "loinc_codes": [
-        "85362-2",
-        "33634-7"
-      ],
+      "loinc_code": "85362-2",
       "order_obs": "both",
       "method_common": "Real-time PCR",
       "turnaround_time_hours": 2,
@@ -6675,10 +6497,6 @@
       "category": "Microbiology - Culture",
       "panels": [
         "INFECT"
-      ],
-      "loinc_codes": [
-        "19090-0",
-        "630-4"
       ],
       "method_common": "Quantitative culture + AST",
       "turnaround_time_hours": 48,
@@ -6795,9 +6613,7 @@
       "panels": [
         "DIARRHEA"
       ],
-      "loinc_codes": [
-        "625-4"
-      ],
+      "loinc_code": "625-4",
       "order_obs": "both",
       "method_common": "Culture on selective media",
       "turnaround_time_hours": 48,
@@ -6895,9 +6711,7 @@
       "panels": [
         "SEPSIS"
       ],
-      "loinc_codes": [
-        "600-7"
-      ],
+      "loinc_code": "600-7",
       "order_obs": "both",
       "method_common": "Automated blood culture system or manual broth",
       "turnaround_time_hours": 24,
@@ -7003,9 +6817,7 @@
       "panels": [
         "COVID"
       ],
-      "loinc_codes": [
-        "94500-6"
-      ],
+      "loinc_code": "94500-6",
       "order_obs": "both",
       "method_common": "Real-time RT-qPCR",
       "turnaround_time_hours": 4,
@@ -7086,9 +6898,7 @@
       "panels": [
         "COVID"
       ],
-      "loinc_codes": [
-        "95209-3"
-      ],
+      "loinc_code": "95209-3",
       "order_obs": "both",
       "method_common": "Lateral flow immunochromatographic assay",
       "turnaround_time_hours": 0.25,
@@ -7168,10 +6978,6 @@
       "category": "Virology / Infectious Disease - Dengue",
       "panels": [
         "FEVER"
-      ],
-      "loinc_codes": [
-        "25338-5",
-        "29676-4"
       ],
       "method_common": "ELISA, RDT, or RT-PCR",
       "turnaround_time_hours": 2,
@@ -7269,9 +7075,7 @@
       "panels": [
         "FEVER"
       ],
-      "loinc_codes": [
-        "57934-2"
-      ],
+      "loinc_code": "57934-2",
       "order_obs": "both",
       "method_common": "Rapid immunochromatographic assay",
       "turnaround_time_hours": 0.5,
@@ -7350,9 +7154,7 @@
       "panels": [
         "TXFUSE"
       ],
-      "loinc_codes": [
-        "1250-0"
-      ],
+      "loinc_code": "1250-0",
       "order_obs": "observation",
       "method_common": "Gel card or tube agglutination",
       "turnaround_time_hours": 1,
@@ -7433,9 +7235,7 @@
       "panels": [
         "PSASCR"
       ],
-      "loinc_codes": [
-        "2857-1"
-      ],
+      "loinc_code": "2857-1",
       "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
@@ -7513,9 +7313,7 @@
       "panels": [
         "COLON"
       ],
-      "loinc_codes": [
-        "2039-6"
-      ],
+      "loinc_code": "2039-6",
       "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
@@ -7597,9 +7395,7 @@
       "panels": [
         "NUTRI"
       ],
-      "loinc_codes": [
-        "14338-8"
-      ],
+      "loinc_code": "14338-8",
       "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
@@ -7676,9 +7472,7 @@
       "panels": [
         "LACTATE"
       ],
-      "loinc_codes": [
-        "2524-7"
-      ],
+      "loinc_code": "2524-7",
       "order_obs": "both",
       "method_common": "Enzymatic method",
       "turnaround_time_hours": 1,
@@ -7757,9 +7551,7 @@
       "panels": [
         "HBPATH"
       ],
-      "loinc_codes": [
-        "49322-1"
-      ],
+      "loinc_code": "49322-1",
       "order_obs": "observation",
       "method_common": "HPLC (high performance liquid chromatography)",
       "turnaround_time_hours": 4,
@@ -7836,9 +7628,7 @@
       "panels": [
         "MPROTEIN"
       ],
-      "loinc_codes": [
-        "12851-2"
-      ],
+      "loinc_code": "12851-2",
       "order_obs": "both",
       "method_common": "Capillary or cellulose acetate electrophoresis",
       "turnaround_time_hours": 3,
@@ -7914,9 +7704,7 @@
       "panels": [
         "UTI"
       ],
-      "loinc_codes": [
-        "19090-0"
-      ],
+      "loinc_code": "19090-0",
       "order_obs": "both",
       "method_common": "Quantitative culture on blood agar",
       "turnaround_time_hours": 48,
@@ -7994,10 +7782,6 @@
       "category": "Virology / Infectious Disease - Arboviruses",
       "panels": [
         "FEVER"
-      ],
-      "loinc_codes": [
-        "41216-3",
-        "41217-1"
       ],
       "method_common": "ELISA or plaque reduction neutralization test",
       "turnaround_time_hours": 3,

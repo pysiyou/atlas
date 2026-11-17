@@ -15,7 +15,7 @@ import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 import { usePanelCopy } from '@/strings';
 
 type LabRelatedTestsPanelProps = {
-  orderId: number;
+  orderId: string;
   orderTestId: number;
   isOpen: boolean;
   /** When the parent modal already loaded the order, skip a duplicate fetch. */
@@ -29,8 +29,8 @@ export function LabRelatedTestsPanel({
   order: orderProp,
 }: LabRelatedTestsPanelProps) {
   const { openModal } = useModal();
-  const shouldFetchOrder = isOpen && orderId > 0 && orderProp?.orderId !== orderId;
-  const { order: fetchedOrder } = useOrder(shouldFetchOrder ? String(orderId) : undefined);
+  const shouldFetchOrder = isOpen && Boolean(orderId) && orderProp?.orderId !== orderId;
+  const { order: fetchedOrder } = useOrder(shouldFetchOrder ? orderId : undefined);
   const order = orderProp?.orderId === orderId ? orderProp : fetchedOrder;
 
   const orderTest = useMemo(
@@ -59,7 +59,7 @@ export function LabRelatedTestsPanel({
 type LabRelatedSamplesPanelProps = {
   sample: Sample;
   isOpen: boolean;
-  onOpenSample: (sampleId: number) => void;
+  onOpenSample: (sampleId: string) => void;
 };
 
 export function LabRelatedSamplesPanel({
@@ -69,9 +69,9 @@ export function LabRelatedSamplesPanel({
 }: LabRelatedSamplesPanelProps) {
   const panels = usePanelCopy();
   const { data: orderSamples = [] } = useQuery({
-    queryKey: queryKeys.samples.byOrder(String(sample.orderId)),
-    queryFn: () => sampleAPI.getAll({ orderId: String(sample.orderId) }),
-    enabled: isOpen && sample.orderId > 0,
+    queryKey: queryKeys.samples.byOrder(sample.orderId),
+    queryFn: () => sampleAPI.getAll({ orderId: sample.orderId }),
+    enabled: isOpen && Boolean(sample.orderId),
     ...cacheConfig.dynamic,
   });
 
@@ -101,7 +101,7 @@ export function LabRelatedSamplesPanel({
                 className="flex flex-wrap items-baseline justify-between gap-x-space-3 gap-y-space-1"
               >
                 <div className="flex flex-wrap items-baseline gap-x-space-2">
-                  <span className="font-medium">{s.accessionNumber}</span>
+                  <span className="font-medium">{s.sampleId}</span>
                   <span className={text({ role: 'body', intent: 'muted' })}>{formatStatusBadgeLabel(s.status)}</span>
                   {s.isRecollection ? <span className={text({ role: 'body', intent: 'muted' })}>Recollection</span> : null}
                 </div>
@@ -126,7 +126,7 @@ export function LabRelatedSamplesPanel({
                 className="flex flex-wrap items-baseline justify-between gap-x-space-3 gap-y-space-1"
               >
                 <div className="flex flex-wrap items-baseline gap-x-space-2">
-                  <span className="font-medium">{s.accessionNumber}</span>
+                  <span className="font-medium">{s.sampleId}</span>
                   <span className={text({ role: 'body', intent: 'muted' })}>
                     Aliquot {s.aliquotIndex ?? ''}
                   </span>

@@ -15,7 +15,7 @@ import { BADGE, TABLE_TYPE, FG } from '@/theme/recipes';
 
 
 const CATALOG_VIEWS = {
-  full: ['code', 'name', 'category', 'sampleType', 'loincCodes', 'price'],
+  full: ['code', 'name', 'category', 'sampleType', 'loincCode', 'price'],
   medium: ['code', 'name', 'category', 'sampleType', 'price'],
   compact: ['code', 'name', 'price'],
 } as const;
@@ -50,18 +50,19 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
         </div>
       ),
     },
-    loincCodes: {
-      key: 'loincCodes',
+    loincCode: {
+      key: 'loincCode',
       header: 'LOINC',
       width: TABLE_COLUMN_WIDTH.code,
-      accessor: (test: TestSummary) => test.loincCodes?.join(', ') ?? '',
+      accessor: (test: TestSummary) => test.loincCode?.trim() ?? '',
       render: (test: TestSummary) => {
-        if (!test.loincCodes || test.loincCodes.length === 0) {
+        const loinc = test.loincCode?.trim();
+        if (!loinc) {
           return <div className={`${TABLE_TYPE.meta} ${FG.disabled} truncate font-normal`}>-</div>;
         }
         return (
           <div className={`${TABLE_TYPE.cell} truncate font-normal`}>
-            {test.loincCodes.join(', ')}
+            {loinc}
           </div>
         );
       },

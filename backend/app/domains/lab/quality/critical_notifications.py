@@ -27,9 +27,9 @@ class CriticalNotification:
     """Represents a critical value notification"""
 
     order_test_id: int
-    order_id: int
+    order_id: str
     test_code: str
-    patient_id: int
+    patient_id: str
     patient_name: str
     critical_values: list[dict[str, Any]]
     notified_to: str | None
@@ -154,13 +154,11 @@ class CriticalNotificationService:
         return CriticalValueResponse(
             id=test.id,
             orderId=test.orderId,
-            fillerNumber=order.fillerNumber,
             testCode=test.testCode,
             testName=test.testName,
             patientId=order.patientId,
-            patientMrn=patient.mrn if patient else "",
             patientName=order.patientName,
-            accessionNumber=sample.accessionNumber if sample else None,
+            sampleId=sample.sampleId if sample else None,
             flags=test.flags,
             criticalNotificationSent=test.criticalNotificationSent,
             criticalNotifiedAt=test.criticalNotifiedAt,
@@ -207,7 +205,7 @@ class CriticalNotificationService:
                 )
         return critical_flags
 
-    def notify(self, test_id: int, request: NotifyRequest, user_id: int) -> dict:
+    def notify(self, test_id: int, request: NotifyRequest, user_id: str) -> dict:
         test = self.db.query(OrderTest).filter(OrderTest.id == test_id).with_for_update().first()
         if not test:
             raise LabOperationError("Test not found", status_code=404)
@@ -241,7 +239,7 @@ class CriticalNotificationService:
             else None,
         }
 
-    def acknowledge(self, test_id: int, request: AcknowledgeRequest, user_id: int) -> dict:
+    def acknowledge(self, test_id: int, request: AcknowledgeRequest, user_id: str) -> dict:
         test = self.db.query(OrderTest).filter(OrderTest.id == test_id).with_for_update().first()
         if not test:
             raise LabOperationError("Test not found", status_code=404)

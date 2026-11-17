@@ -62,7 +62,7 @@ class DashboardService:
             .all()
         )
         recent_ids = [order.orderId for order in recent]
-        test_counts: dict[int, int] = {}
+        test_counts: dict[str, int] = {}
         if recent_ids:
             rows = (
                 self.db.query(OrderTest.orderId, func.count(OrderTest.id))

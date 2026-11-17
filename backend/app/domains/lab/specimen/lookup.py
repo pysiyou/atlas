@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 
 def get_sample_or_error(
     db: Session,
-    sample_id: int,
+    sample_id: str,
     *,
     for_update: bool = False,
 ) -> Sample:
@@ -44,12 +44,12 @@ def linked_order_tests_for_sample(
 
 def linked_order_tests_by_sample_ids(
     db: Session,
-    sample_ids: Iterable[int],
+    sample_ids: Iterable[str],
     *,
     exclude_statuses: Iterable[TestStatus] | None = None,
-) -> dict[int, list[OrderTest]]:
+) -> dict[str, list[OrderTest]]:
     ids = list(sample_ids)
-    grouped: dict[int, list[OrderTest]] = {sid: [] for sid in ids}
+    grouped: dict[str, list[OrderTest]] = {sid: [] for sid in ids}
     if not ids:
         return grouped
     query = db.query(OrderTest).filter(OrderTest.sampleId.in_(ids))

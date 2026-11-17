@@ -20,7 +20,7 @@ export type {
 } from '@/types/generated/audit';
 
 export interface EventLogActorSnapshot {
-  userId: number | 'system';
+  userId: string | 'system';
   name: string;
   role: string;
   ipAddress?: string;
@@ -35,16 +35,14 @@ export interface EventLogRecord {
   eventId: string;
   createdAt: string;
   eventType: string;
-  actorId?: number | null;
+  actorId?: string | null;
   actorSnapshot: EventLogActorSnapshot;
   targetType: string;
-  targetId: number;
-  patientId?: number | null;
-  patientMrn?: string | null;
-  orderId?: number | null;
-  fillerNumber?: string | null;
+  targetId: string;
+  patientId?: string | null;
+  orderId?: string | null;
   testId?: number | null;
-  accessionNumber?: string | null;
+  sampleId?: string | null;
   eventScope?: string | null;
   changes?: EventLogChanges | null;
   metadata?: Record<string, unknown> | null;
@@ -100,10 +98,10 @@ export type EventLogVerbosity = 'summary' | 'detailed' | 'debug';
 /** Server query for audit events — fixed constraints and/or merged user filters. */
 export interface EventLogQuery {
   scope: EventLogScopeName;
-  orderId?: number;
-  patientId?: number;
+  orderId?: string;
+  patientId?: string;
   testId?: number;
-  sampleId?: number;
+  sampleId?: string;
   hours?: number;
   createdFrom?: string;
   createdTo?: string;
@@ -117,7 +115,7 @@ export interface EventLogQuery {
   /** Newest-first page cursor (eventId of the last row). */
   cursorEventId?: string;
   /** When set, only events performed by this user id (fixed panel queries). */
-  actorId?: number;
+  actorId?: string;
   /** Filter by actor_snapshot.role at event time. */
   actorRoles?: UserRole[];
   /** Partial match on actor display name or account username. */
@@ -151,10 +149,10 @@ export interface EventLogUserFilters {
   actorRoles: UserRole[];
   actorSearch: string;
   search: string;
-  orderId: number | null;
+  orderId: string | null;
   testId: number | null;
-  sampleId: number | null;
-  patientId: number | null;
+  sampleId: string | null;
+  patientId: string | null;
 }
 
 export const DEFAULT_EVENT_LOG_USER_FILTERS: EventLogUserFilters = {

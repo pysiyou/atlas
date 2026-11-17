@@ -107,7 +107,7 @@ export const queryKeys = {
     list: (
       filters?: {
         patientId?: string;
-        orderId?: number;
+        orderId?: string;
         status?: OrderStatus[];
         paymentStatus?: PaymentStatus[];
         paymentMethod?: PaymentMethod[];
@@ -119,7 +119,7 @@ export const queryKeys = {
     paginated: (
       params: {
         patientId?: string;
-        orderId?: number;
+        orderId?: string;
         status?: OrderStatus[];
         paymentStatus?: PaymentStatus[];
         paymentMethod?: PaymentMethod[];
@@ -166,7 +166,7 @@ export const queryKeys = {
    */
   qualityIssues: {
     all: ['quality-issues'] as const,
-    options: (targetType?: string, targetId?: number) =>
+    options: (targetType?: string, targetId?: string) =>
       [...queryKeys.qualityIssues.all, 'options', targetType, targetId] as const,
   },
 
@@ -217,7 +217,7 @@ export const queryKeys = {
         dateTo?: string;
       } & PaginationParams
     ) => [...queryKeys.reports.all, 'paginated', params] as const,
-    byOrder: (orderId: number) => [...queryKeys.reports.all, 'order', orderId] as const,
+    byOrder: (orderId: string) => [...queryKeys.reports.all, 'order', orderId] as const,
   },
 
   worklists: {

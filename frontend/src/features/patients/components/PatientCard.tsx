@@ -23,7 +23,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
 
   const handleAddOrder = (e: React.MouseEvent) => {
     e.stopPropagation();
-    openModal({ type: ModalType.NEW_ORDER, patientId: patient.id.toString() });
+    openModal({ type: ModalType.NEW_ORDER, patientId: patient.id });
   };
 
   return (
@@ -34,7 +34,7 @@ export function PatientCard({ item: patient, onClick }: CardComponentProps<Patie
             primaryText={patient.fullName}
             primaryTextClassName=""
             secondarySlot="entity"
-            secondaryText={<RecordId type="patient" value={patient.mrn} emphasis="mutedBlock" />}
+            secondaryText={<RecordId type="patient" value={patient.id} emphasis="mutedBlock" />}
             size="xs"
           />
         }

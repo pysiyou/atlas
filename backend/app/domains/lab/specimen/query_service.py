@@ -14,7 +14,7 @@ class SpecimenQueryService:
         self,
         skip: int,
         limit: int,
-        order_id: int | None = None,
+        order_id: str | None = None,
         sample_status: SampleStatus | None = None,
         paginated: bool = False,
     ):
@@ -51,15 +51,7 @@ class SpecimenQueryService:
                 parent = related.get(sample.originalSampleId) if sample.originalSampleId else None
                 if parent:
                     parent_data = SampleResponse.model_validate(parent).model_dump(mode="json")
-                    data["originalAccessionNumber"] = parent_data["accessionNumber"]
                     data["originalSampleCollectedAt"] = parent_data["collectedAt"]
-                child = (
-                    related.get(sample.recollectionSampleId)
-                    if sample.recollectionSampleId
-                    else None
-                )
-                if child:
-                    data["recollectionAccessionNumber"] = child.accessionNumber
                 serialized.append(data)
         except Exception:
             import logging
@@ -73,7 +65,7 @@ class SpecimenQueryService:
             return create_paginated_response(serialized, total, skip_to_page(skip, limit), limit)
         return serialized
 
-    def get_by_id(self, sample_id: int) -> Sample:
+    def get_by_id(self, sample_id: str) -> Sample:
         from fastapi import HTTPException
         from fastapi import status as http_status
 

@@ -121,7 +121,7 @@ def _accumulate_age(acc: dict[str, Any], hours: float, status: TatStatus) -> Non
 def _attention_candidate(
     *,
     stage: QueueStage,
-    order_id: int,
+    order_id: str,
     patient_name: str,
     priority: str,
     waiting_hours: float,
@@ -130,9 +130,8 @@ def _attention_candidate(
     order_test_ids: list[int],
     attention_type: str,
     work_item_count: int = 1,
-    filler_number: str | None = None,
-    patient_mrn: str | None = None,
-    accession_number: str | None = None,
+    patient_id: str | None = None,
+    sample_id: str | None = None,
     test_codes: list[str] | None = None,
 ) -> dict[str, Any]:
     return {
@@ -140,10 +139,9 @@ def _attention_candidate(
         "stage": stage,
         "stageLabel": STAGE_LABELS[stage],
         "orderId": order_id,
-        "fillerNumber": filler_number,
+        "patientId": patient_id,
         "patientName": patient_name or "Unknown patient",
-        "patientMrn": patient_mrn,
-        "accessionNumber": accession_number,
+        "sampleId": sample_id,
         "testCodes": list(test_codes or []),
         "priority": priority,
         "waitingHours": round(waiting_hours, 2),
@@ -182,11 +180,8 @@ def finalize_attention_items(
         existing["orderTestIds"] = list(
             dict.fromkeys([*existing["orderTestIds"], *item["orderTestIds"]])
         )
-        existing["fillerNumber"] = existing.get("fillerNumber") or item.get("fillerNumber")
-        existing["patientMrn"] = existing.get("patientMrn") or item.get("patientMrn")
-        existing["accessionNumber"] = existing.get("accessionNumber") or item.get(
-            "accessionNumber"
-        )
+        existing["patientId"] = existing.get("patientId") or item.get("patientId")
+        existing["sampleId"] = existing.get("sampleId") or item.get("sampleId")
         existing["testCodes"] = list(
             dict.fromkeys([*(existing.get("testCodes") or []), *(item.get("testCodes") or [])])
         )
@@ -339,9 +334,8 @@ def assemble_board(
                     since=since,
                     order_test_ids=[],
                     attention_type=attention_type_for(attention, status, priority),
-                    filler_number=row.get("filler_number"),
-                    patient_mrn=row.get("patient_mrn"),
-                    accession_number=row.get("accession_number"),
+                    patient_id=row.get("patient_id"),
+                    sample_id=row.get("sample_id"),
                     test_codes=row.get("test_codes") or [],
                 )
             )
@@ -369,9 +363,8 @@ def assemble_board(
                     since=since,
                     order_test_ids=[order_test_id] if order_test_id is not None else [],
                     attention_type=attention_type_for(attention, status, priority),
-                    filler_number=row.get("filler_number"),
-                    patient_mrn=row.get("patient_mrn"),
-                    accession_number=row.get("accession_number"),
+                    patient_id=row.get("patient_id"),
+                    sample_id=row.get("sample_id"),
                     test_codes=row.get("test_codes") or [],
                 )
             )
@@ -399,9 +392,8 @@ def assemble_board(
                     since=since,
                     order_test_ids=[order_test_id] if order_test_id is not None else [],
                     attention_type=attention_type_for(attention, status, priority),
-                    filler_number=row.get("filler_number"),
-                    patient_mrn=row.get("patient_mrn"),
-                    accession_number=row.get("accession_number"),
+                    patient_id=row.get("patient_id"),
+                    sample_id=row.get("sample_id"),
                     test_codes=row.get("test_codes") or [],
                 )
             )
@@ -430,9 +422,8 @@ def assemble_board(
                 since=since,
                 order_test_ids=[order_test_id] if order_test_id is not None else [],
                 attention_type=attention_type_for(attention, status, priority),
-                filler_number=row.get("filler_number"),
-                patient_mrn=row.get("patient_mrn"),
-                accession_number=row.get("accession_number"),
+                patient_id=row.get("patient_id"),
+                sample_id=row.get("sample_id"),
                 test_codes=row.get("test_codes") or [],
             )
         )

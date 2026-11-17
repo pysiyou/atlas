@@ -33,7 +33,7 @@ class TestIssueCommands:
     def report_test_issue(
         self,
         order_test_id: int,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
         preferred_remedy: RemedyType | None,
@@ -87,7 +87,7 @@ class TestIssueCommands:
     def report_test_validation_issue(
         self,
         order_test_id: int,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
         preferred_remedy: RemedyType | None = None,
@@ -98,7 +98,7 @@ class TestIssueCommands:
     def cancel_test_issue(
         self,
         order_test: OrderTest,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
         domain: QualityDomain,
@@ -141,7 +141,7 @@ class TestIssueCommands:
     def retry_test_issue(
         self,
         order_test: OrderTest,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
     ) -> QualityIssueResult:
@@ -181,7 +181,7 @@ class TestIssueCommands:
     def request_recollection_from_validation(
         self,
         order_test: OrderTest,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
     ) -> QualityIssueResult:

@@ -10,7 +10,7 @@ export function getRelatedSamplesForOrderTest(
   orderTest: OrderTest,
   orderSamples: Sample[]
 ): Sample[] {
-  const byId = new Map<number, Sample>();
+  const byId = new Map<string, Sample>();
 
   for (const sample of orderSamples) {
     if (sample.testCodes?.includes(orderTest.testCode)) {
@@ -31,7 +31,7 @@ export function getRelatedSamplesForOrderTest(
       if (a.sampleId === linkedId) return -1;
       if (b.sampleId === linkedId) return 1;
     }
-    return a.sampleId - b.sampleId;
+    return a.sampleId.localeCompare(b.sampleId, undefined, { numeric: true });
   });
 
   return expandSamplesWithRecollectionChain(byTestCode, orderSamples, linkedId);

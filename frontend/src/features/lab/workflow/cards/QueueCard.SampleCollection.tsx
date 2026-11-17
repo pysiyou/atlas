@@ -81,7 +81,7 @@ function SampleCollectionCardLeftColumnFromVm({
   return (
     <SampleCollectionCardLeftColumn
       patientName={patientName}
-      fillerNumber={vm.fillerNumber}
+      orderId={vm.orderId}
       referentDoctorName={vm.referentDoctorName}
       orderDate={vm.orderDate}
       sample={sample}
@@ -157,8 +157,7 @@ export function SampleCollectionCardDesktop({
             <>
               {vm.isCollected ? (
                 <SampleRejectionPopover
-                  sampleId={sample.sampleId.toString()}
-                  accessionNumber={sample.accessionNumber}
+                  sampleId={sample.sampleId}
                   testCodes={sample.testCodes ?? []}
                   sampleType={sample.sampleType}
                   patientName={patientName}
@@ -274,7 +273,7 @@ export function useSampleCollectionCardData(
       if (sample?.sampleId == null) return;
       openModal({
         type: ModalType.SAMPLE_DETAIL,
-        sampleId: sample.sampleId.toString(),
+        sampleId: sample.sampleId,
       });
     };
   }, [sample, openModal]);

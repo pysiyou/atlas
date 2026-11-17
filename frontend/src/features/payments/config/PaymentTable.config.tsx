@@ -34,7 +34,7 @@ function getTestsSortValue(item: OrderPaymentView): string {
 
 export const createPaymentTableConfig = (
   _navigate: NavigateFunction,
-  getPatientNameFn: (patientId: number | string) => string,
+  getPatientNameFn: (patientId: string) => string,
   getTestName: (testCode: string) => string,
   onPaymentSuccess?: () => void
 ): TableViewConfig<OrderPaymentView> => {
@@ -57,7 +57,7 @@ export const createPaymentTableConfig = (
       getTestsSortValue: item => getTestsSortValue(item),
     },
     {
-      renderOrderId: item => renderOrderId(item.order.fillerNumber),
+      renderOrderId: item => renderOrderId(item.order.orderId),
     },
     { testsSortable: true, getTestName }
   );

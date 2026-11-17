@@ -176,7 +176,7 @@ function ResultValidationCardDesktop({
           {isSampleRejected && (
             <div className="mb-space-3">
               <SampleRejectedBanner
-                accessionNumber={sampleRejection.accessionNumber}
+                sampleId={sampleRejection.sampleId}
                 sampleRejectionReason={sampleRejectionReason}
               />
             </div>
@@ -244,7 +244,7 @@ function ResultValidationCardMobile({
       {isSampleRejected && (
         <div className="mb-space-2">
           <SampleRejectedBanner
-            accessionNumber={sampleRejection.accessionNumber}
+            sampleId={sampleRejection.sampleId}
             sampleRejectionReason={sampleRejectionReason}
             size="compact"
           />

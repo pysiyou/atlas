@@ -21,7 +21,7 @@ export function useSubmitQualityIssue(options?: UseSubmitQualityIssueOptions) {
   const reportIssue = useCallback(
     async (
       targetType: QualityIssueTargetType,
-      targetId: number,
+      targetId: string,
       reason: string,
       notes?: string,
       preferredRemedy?: RemedyType,

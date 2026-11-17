@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 
 @dataclass(frozen=True)
 class RecollectionExecuteResult:
-    created_sample_id: int
+    created_sample_id: str
     created_test_id: int | None
     message: str = "Pending sample created for collection."
 
@@ -27,7 +27,7 @@ class RecollectionExecutionService:
         self,
         *,
         rejected_sample: Sample,
-        user_id: int,
+        user_id: str,
         reason: str,
         stage: QualityStage,
         order_test_id: int | None = None,

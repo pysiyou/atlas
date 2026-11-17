@@ -44,7 +44,7 @@ function resolveLabelDateTime(sample: Sample, eventAt?: string | null): string {
 
 function assertSampleLabelPrintable(
   sample: Sample | null | undefined
-): asserts sample is Sample & { sampleId: number } {
+): asserts sample is Sample & { sampleId: string } {
   if (sample?.sampleId == null) {
     throw new Error(feedbackTitle('lab.collection.printLabel.uncollected'));
   }
@@ -131,7 +131,7 @@ const TUBE_LABEL_PRINT_CSS = `
 export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleLabelPrintInput): string => {
   assertSampleLabelPrintable(sample);
 
-  const accessionDisplay = displayId.accession(sample.accessionNumber);
+  const accessionDisplay = displayId.accession(sample.sampleId);
   const sampleType = sampleTypeLabel(sample.sampleType || 'other').toUpperCase();
   const dateTime = resolveLabelDateTime(sample, eventAt);
 

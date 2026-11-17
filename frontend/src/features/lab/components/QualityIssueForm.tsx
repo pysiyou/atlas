@@ -53,7 +53,7 @@ function getCollectionFormCopy(options: QualityIssueOptions): CollectionFormCopy
 
 export interface QualityIssueFormProps {
   targetType: QualityIssueTargetType;
-  targetId: number;
+  targetId: string;
   title: string;
   subtitle?: string;
   error?: string | null;

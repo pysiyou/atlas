@@ -16,8 +16,8 @@ from sqlalchemy.sql import func
 class Sample(Base):
     __tablename__ = "samples"
 
-    sampleId = Column("sample_id", Integer, primary_key=True, autoincrement=True, index=True)
-    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    sampleId = Column("sample_id", String(20), primary_key=True, index=True)
+    orderId = Column("order_id", String(13), ForeignKey("orders.order_id"), nullable=False, index=True)
     sampleType = Column("sample_type", contract_enum(SampleType), nullable=False)
     status = Column(
         contract_enum(SampleStatus), nullable=False, default=SampleStatus.PENDING, index=True
@@ -66,21 +66,19 @@ class Sample(Base):
     rejectionNotes = Column("rejection_notes", String, nullable=True)
     # Recollection
     recollectionRequired = Column("recollection_required", Boolean, default=False)
-    recollectionSampleId = Column("recollection_sample_id", Integer, nullable=True)
+    recollectionSampleId = Column("recollection_sample_id", String(20), nullable=True)
 
     # New fields for recollection tracking
     isRecollection = Column("is_recollection", Boolean, default=False)
     originalSampleId = Column(
-        "original_sample_id", Integer, nullable=True
+        "original_sample_id", String(20), nullable=True
     )  # Pointer to the sample this replaced
     recollectionReason = Column("recollection_reason", String, nullable=True)
     recollectionAttempt = Column(
         "recollection_attempt", Integer, default=1
     )  # 1 = original/first collection, 2 = 1st recollection, etc.
 
-    accessionNumber = Column("accession_number", String, nullable=False, unique=True, index=True)
-
-    parentSampleId = Column("parent_sample_id", Integer, nullable=True, index=True)
+    parentSampleId = Column("parent_sample_id", String(20), nullable=True, index=True)
     isAliquot = Column("is_aliquot", Boolean, default=False)
     aliquotIndex = Column("aliquot_index", Integer, nullable=True)
     aliquotVolume = Column("aliquot_volume", Float, nullable=True)

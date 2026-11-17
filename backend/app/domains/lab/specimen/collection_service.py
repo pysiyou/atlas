@@ -54,7 +54,7 @@ class SampleCollectionService:
     def create_initial_pending_sample(
         self,
         *,
-        order_id: int,
+        order_id: str,
         sample_type: SampleType,
         test_codes: list[str],
         required_volume: float,
@@ -86,7 +86,7 @@ class SampleCollectionService:
     def request_recollection(
         self,
         source_sample: Sample,
-        user_id: int,
+        user_id: str,
         reason: str,
         *,
         test_codes: list[str] | None = None,

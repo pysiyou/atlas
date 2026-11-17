@@ -283,7 +283,7 @@ export function ResultEntryDetailModal({
     ? labModalHeaderContext({
         stage: 'entry',
         contextLabel: testDisplayName,
-        orderId: workItem?.fillerNumber,
+        orderId: workItem?.orderId,
         badges: headerBadges ?? undefined,
       })
     : { title: labCopy.workflow.entry, subtitle: '' };

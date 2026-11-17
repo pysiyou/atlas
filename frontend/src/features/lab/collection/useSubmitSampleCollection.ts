@@ -54,7 +54,7 @@ export function useSubmitSampleCollection({
 
     try {
       await collectSampleMutation.mutateAsync({
-        sampleId: display.sample.sampleId.toString(),
+        sampleId: display.sample.sampleId,
         collectedVolume: volume,
         actualContainerType: selectedContainerType,
         actualContainerColor: selectedColor as ContainerTopColor,

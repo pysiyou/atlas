@@ -30,8 +30,8 @@ class SampleIssueCommands:
 
     def report_sample_issue(
         self,
-        sample_id: int,
-        user_id: int,
+        sample_id: str,
+        user_id: str,
         reason: str,
         notes: str | None,
         preferred_remedy: RemedyType | None,
@@ -113,7 +113,7 @@ class SampleIssueCommands:
     def _request_recollection_from_collection(
         self,
         sample,
-        user_id: int,
+        user_id: str,
         reason: str,
         notes: str | None,
     ) -> QualityIssueResult:

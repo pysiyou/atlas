@@ -24,9 +24,9 @@ export type { PaginatedResponse, PaginationMeta };
 
 /** Invoice payload on order detail (`include=invoices`) — API uses `paymentStatus`. */
 export interface OrderDetailInvoice {
-  invoiceId: number;
-  orderId: number;
-  patientId: number;
+  invoiceId: string;
+  orderId: string;
+  patientId: string;
   patientName: string;
   items: Invoice['items'];
   subtotal: number;
@@ -49,7 +49,7 @@ export interface OrderDetailApiResponse extends Order {
 
 export interface OrdersFilter {
   patientId?: string;
-  orderId?: number;
+  orderId?: string;
   status?: OrderStatus[];
   paymentStatus?: PaymentStatus[];
   paymentMethod?: PaymentMethod[];
@@ -133,7 +133,7 @@ export const orderAPI = {
   },
 
   async approveForCollection(orderId: string): Promise<{
-    orderId: number;
+    orderId: string;
     doctorApprovedBy: string;
     doctorApprovedAt: string;
     message: string;
@@ -155,7 +155,7 @@ export const orderAPI = {
  */
 export interface OrdersFilters {
   patientId?: string;
-  orderId?: number;
+  orderId?: string;
   status?: OrderStatus[];
   paymentStatus?: PaymentStatus[];
   paymentMethod?: PaymentMethod[];
@@ -348,21 +348,19 @@ export function useUpdateOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ orderId, data }: { orderId: number; data: unknown }) => {
+    mutationFn: async ({ orderId, data }: { orderId: string; data: unknown }) => {
       const validated = orderUpdateSchema.parse(data);
       const transformed = formInputToPayload(validated, { includePatientId: false });
-      const response = await orderAPI.update(orderId.toString(), transformed);
+      const response = await orderAPI.update(orderId, transformed);
       return orderSchema.parse(response) as Order;
     },
     onMutate: async ({ orderId, data }) => {
-      const orderIdStr = orderId.toString();
-
       await queryClient.cancelQueries({ queryKey: queryKeys.orders.all });
 
-      const previousOrder = queryClient.getQueryData<Order>(queryKeys.orders.byId(orderIdStr));
+      const previousOrder = queryClient.getQueryData<Order>(queryKeys.orders.byId(orderId));
 
       if (previousOrder) {
-        queryClient.setQueryData<Order>(queryKeys.orders.byId(orderIdStr), {
+        queryClient.setQueryData<Order>(queryKeys.orders.byId(orderId), {
           ...previousOrder,
           ...(typeof data === 'object' && data !== null ? data : {}),
           updatedAt: new Date().toISOString(),
@@ -372,9 +370,8 @@ export function useUpdateOrder() {
       return { previousOrder };
     },
     onError: (error, variables, context) => {
-      const orderIdStr = variables.orderId.toString();
       if (context?.previousOrder) {
-        queryClient.setQueryData(queryKeys.orders.byId(orderIdStr), context.previousOrder);
+        queryClient.setQueryData(queryKeys.orders.byId(variables.orderId), context.previousOrder);
       }
       notify.apiError('order.update.error', error);
     },
@@ -382,8 +379,7 @@ export function useUpdateOrder() {
       notify.show('order.update.success');
     },
     onSettled: (_data, _error, variables) => {
-      const orderIdStr = variables.orderId.toString();
-      return invalidateOrderQueries(queryClient, { orderId: orderIdStr, samples: true });
+      return invalidateOrderQueries(queryClient, { orderId: variables.orderId, samples: true });
     },
   });
 }
@@ -395,10 +391,7 @@ export function useDeleteOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (orderId: number | string) => {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      return orderAPI.delete(orderIdStr);
-    },
+    mutationFn: (orderId: string) => orderAPI.delete(orderId),
     onSuccess: async () => {
       await invalidateOrderQueries(queryClient, { samples: true });
       notify.show('order.delete.success');
@@ -421,17 +414,14 @@ export function useUpdatePaymentStatus() {
       paymentStatus,
       amountPaid,
     }: {
-      orderId: number | string;
+      orderId: string;
       paymentStatus: string;
       amountPaid?: number;
     }) => {
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
-      return orderAPI.updatePaymentStatus(orderIdStr, paymentStatus, amountPaid);
+      return orderAPI.updatePaymentStatus(orderId, paymentStatus, amountPaid);
     },
     onSuccess: async (_, variables) => {
-      const orderIdStr =
-        typeof variables.orderId === 'string' ? variables.orderId : variables.orderId.toString();
-      await invalidateOrderQueries(queryClient, { orderId: orderIdStr, payments: true });
+      await invalidateOrderQueries(queryClient, { orderId: variables.orderId, payments: true });
       notify.show('order.paymentStatus.success');
     },
   });

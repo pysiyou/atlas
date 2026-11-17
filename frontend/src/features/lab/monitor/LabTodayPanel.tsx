@@ -3,7 +3,7 @@
  */
 import { useMemo } from 'react';
 import { EmptyState } from '@/components/display';
-import { getEmptyCopy, DENSE_EMPTY_STATE_TEXT } from '@/strings';
+import { getEmptyCopy, DENSE_EMPTY_STATE } from '@/strings';
 
 import { Panel } from '@/components/surfaces/Panel';
 import type { LabTodayPanelSnapshot } from './monitorModel';
@@ -60,70 +60,68 @@ export function LabTodayPanel({
         )
       }
     >
-      <div className={KPI_PANEL.body}>
-        {totalTests === 0 ? (
-          <EmptyState
-            {...DENSE_EMPTY_STATE_TEXT}
-            title={getEmptyCopy().dashboardTodayKpi.title}
-            description={getEmptyCopy().dashboardTodayKpi.description}
-          />
-        ) : (
-          <>
-            <div className={KPI_PANEL.main} aria-label={labCopy.dashboardToday.summaryAria}>
-              <div className={KPI_PANEL.stack}>
-                <div className={METER_KPI.tableStage} role="table">
-                  <div className={METER_KPI.tableHeadRowStage} role="row">
-                    <span className={METER_KPI.tableHeadCell} role="columnheader">
-                      {labCopy.dashboardToday.columnStage}
-                    </span>
-                    <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
-                      {labCopy.dashboardToday.columnInQueue}
-                    </span>
-                    <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
-                      {labCopy.dashboardToday.columnToday}
-                    </span>
-                    <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
-                      {labCopy.dashboardToday.columnMix}
-                    </span>
-                  </div>
-                  <div className={METER_KPI.tableBody} role="rowgroup">
-                    {segments.map(segment => (
-                      <TodayStageRow
-                        key={segment.stage}
-                        segment={segment}
-                        totalTests={totalTests}
-                      />
-                    ))}
-                  </div>
+      {totalTests === 0 ? (
+        <EmptyState
+          {...DENSE_EMPTY_STATE}
+          title={getEmptyCopy().dashboardTodayKpi.title}
+          description={getEmptyCopy().dashboardTodayKpi.description}
+        />
+      ) : (
+        <div className={KPI_PANEL.body}>
+          <div className={KPI_PANEL.main} aria-label={labCopy.dashboardToday.summaryAria}>
+            <div className={KPI_PANEL.stack}>
+              <div className={METER_KPI.tableStage} role="table">
+                <div className={METER_KPI.tableHeadRowStage} role="row">
+                  <span className={METER_KPI.tableHeadCell} role="columnheader">
+                    {labCopy.dashboardToday.columnStage}
+                  </span>
+                  <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
+                    {labCopy.dashboardToday.columnInQueue}
+                  </span>
+                  <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
+                    {labCopy.dashboardToday.columnToday}
+                  </span>
+                  <span className={METER_KPI.tableHeadCellMetric} role="columnheader">
+                    {labCopy.dashboardToday.columnMix}
+                  </span>
                 </div>
-                <p className={METER_KPI.footerCaption}>{labCopy.dashboardToday.footnote}</p>
+                <div className={METER_KPI.tableBody} role="rowgroup">
+                  {segments.map(segment => (
+                    <TodayStageRow
+                      key={segment.stage}
+                      segment={segment}
+                      totalTests={totalTests}
+                    />
+                  ))}
+                </div>
               </div>
+              <p className={METER_KPI.footerCaption}>{labCopy.dashboardToday.footnote}</p>
             </div>
+          </div>
 
-            <div className={KPI_PANEL.footer}>
-              <div className={METER_KPI.tableTotalStage} role="row">
-                <span className={METER_KPI.tableTotalLabel}>{labCopy.dashboardToday.footerInPipeline}</span>
-                <span className={METER_KPI.tableMetricCell}>
-                  <span className={METER_KPI.tablePercent}>
-                    {totalTests > 0 ? Math.min(100, Math.round((inPipelineNow / totalTests) * 100)) : 0}%
-                  </span>
-                  <span className={METER_KPI.tableCount}> · {inPipelineNow.toLocaleString()}</span>
+          <div className={KPI_PANEL.footer}>
+            <div className={METER_KPI.tableTotalStage} role="row">
+              <span className={METER_KPI.tableTotalLabel}>{labCopy.dashboardToday.footerInPipeline}</span>
+              <span className={METER_KPI.tableMetricCell}>
+                <span className={METER_KPI.tablePercent}>
+                  {totalTests > 0 ? Math.min(100, Math.round((inPipelineNow / totalTests) * 100)) : 0}%
                 </span>
-                <span className={METER_KPI.tableMetricCell}>
-                  <span className={METER_KPI.tablePercent}>
-                    {snapshot.testsUpdatedToday.toLocaleString()}
-                  </span>
-                  <span className={METER_KPI.tableCount}> {labCopy.dashboardToday.testsWorked}</span>
+                <span className={METER_KPI.tableCount}> · {inPipelineNow.toLocaleString()}</span>
+              </span>
+              <span className={METER_KPI.tableMetricCell}>
+                <span className={METER_KPI.tablePercent}>
+                  {snapshot.testsUpdatedToday.toLocaleString()}
                 </span>
-                <span className={METER_KPI.tableTotalValue}>
-                  {totalTests.toLocaleString()}
-                  <span className={METER_KPI.tableCount}> {labCopy.dashboardToday.footerUniverse}</span>
-                </span>
-              </div>
+                <span className={METER_KPI.tableCount}> {labCopy.dashboardToday.testsWorked}</span>
+              </span>
+              <span className={METER_KPI.tableTotalValue}>
+                {totalTests.toLocaleString()}
+                <span className={METER_KPI.tableCount}> {labCopy.dashboardToday.footerUniverse}</span>
+              </span>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </Panel>
   );
 }

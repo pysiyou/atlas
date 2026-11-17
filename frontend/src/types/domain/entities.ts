@@ -75,8 +75,7 @@ export interface MedicalHistory {
 }
 
 export interface Patient {
-  id: number;
-  mrn: string;
+  id: string;
   fullName: string;
   dateOfBirth: string;
   gender: Gender;
@@ -154,8 +153,7 @@ export interface OrderTest {
   priceAtOrder: number; // Snapshot for billing
 
   // Sample linkage
-  sampleId?: number; // Links to Sample (assigned after sample generation)
-  accessionNumber?: string | null;
+  sampleId?: string; // Links to Sample (assigned after sample generation)
 
   // Results (order-specific)
   results: Record<string, TestResult> | null;
@@ -206,18 +204,16 @@ export function getOrderTestCount(order: Pick<Order, 'tests' | 'testCount'>): nu
 }
 
 export interface LatestPaymentSnippet {
-  paymentId: number;
+  paymentId: string;
   paymentMethod: string;
   paidAt: string;
 }
 
 export interface Order {
   // Identity
-  orderId: number;
-  fillerNumber?: string | null;
+  orderId: string;
   placerNumber?: string | null;
-  patientId: number;
-  patientMrn?: string | null;
+  patientId: string;
   patientName: string; // From API relationship
   patientDob?: string;
   patientGender?: Gender;
@@ -243,7 +239,7 @@ export interface Order {
   specialInstructions?: string[];
   patientPrepInstructions?: string;
   clinicalNotes?: string;
-  referentDoctorId?: number | null;
+  referentDoctorId?: string | null;
   referentDoctorName?: string | null;
   referentDoctorEmail?: string | null;
   referentDoctorPhone?: string | null;
@@ -283,7 +279,7 @@ export interface ValidationRecord {
 export interface BatchCollectionGroup {
   batchId: string;
   sampleType: string;
-  orderIds: number[];
+  orderIds: string[];
   patientCount: number;
   totalTests: number;
   priority: PriorityLevel;
@@ -300,8 +296,8 @@ export interface BatchCollectionGroup {
 /** Physical sample entity (pending, collected, rejected). */
 
 interface BaseSample {
-  sampleId: number;
-  orderId: number;
+  sampleId: string;
+  orderId: string;
   sampleType: SampleType;
   testCodes: string[];
   requiredVolume: number;
@@ -309,13 +305,11 @@ interface BaseSample {
   requiredContainerTypes: ContainerType[];
   requiredContainerColors: ContainerTopColor[];
   isRecollection?: boolean;
-  originalSampleId?: number;
+  originalSampleId?: string;
   originalSampleCollectedAt?: string;
-  originalAccessionNumber?: string | null;
   recollectionReason?: string;
   recollectionAttempt?: number;
-  accessionNumber?: string | null;
-  parentSampleId?: number | null;
+  parentSampleId?: string | null;
   isAliquot?: boolean;
   aliquotIndex?: number | null;
   aliquotVolume?: number | null;
@@ -355,8 +349,7 @@ export interface RejectedSample extends BaseSample {
   rejectionReasons?: string[];
   rejectionNotes?: string;
   recollectionRequired: boolean;
-  recollectionSampleId?: number;
-  recollectionAccessionNumber?: string | null;
+  recollectionSampleId?: string;
 }
 
 export type Sample = PendingSample | CollectedSample | RejectedSample;
@@ -375,8 +368,7 @@ export function isRejectedSample(sample: Sample): sample is RejectedSample {
 // =============================================================================
 /** Staff users and authenticated session shape. */
 export interface User {
-  id: number;
-  employeeNumber?: string | null;
+  id: string;
   username: string;
   password: string;
   name: string;
@@ -390,9 +382,8 @@ export interface User {
 
 /** Authenticated session user (subset of User) */
 export interface AuthUser {
-  id: number;
+  id: string;
   username: string;
-  employeeNumber?: string | null;
   name: string;
   role: UserRole;
   email?: string;
@@ -507,7 +498,8 @@ export interface TestCatalogEntry {
   synonyms: string[];
   category: string;
   panels?: string[];
-  loinc_codes?: string[];
+  /** Unique observation LOINC for this test when it is one analyte. */
+  loinc_code?: string;
   /** LOINC ORDER_OBS for a single-parameter orderable test. */
   order_obs?: 'observation' | 'both';
   method_common?: string;
@@ -544,7 +536,8 @@ export interface TestSummary {
   containerTypes: ContainerType[];
   containerTopColors: ContainerTopColor[];
   panels?: string[];
-  loincCodes?: string[];
+  /** Unique observation LOINC for this test; omitted for multi-parameter batteries. */
+  loincCode?: string;
   fastingRequired?: boolean;
 }
 
@@ -605,13 +598,13 @@ export interface TestParameter {
  * Order[] + Sample[] + Patient[] + Test[] into this unified shape.
  */
 export interface TestWithContext {
-  orderId: number;
-  patientId: number;
+  orderId: string;
+  patientId: string;
   patientName: string;
   testName: string;
   testCode: string;
   sampleType?: string;
-  sampleId?: number;
+  sampleId?: string;
   priority: string;
   status: string;
   collectedAt?: string;
@@ -620,7 +613,7 @@ export interface TestWithContext {
   enteredBy?: string;
   resultValidatedAt?: string;
   validatedBy?: string;
-  referentDoctorId?: number | null;
+  referentDoctorId?: string | null;
   referentDoctorName?: string | null;
   referentDoctorEmail?: string | null;
   referentDoctorPhone?: string | null;
@@ -661,7 +654,7 @@ export interface TestWithContext {
   // Sample recollection tracking fields (for sample re-collect flow)
   sampleStatus?: string;
   sampleIsRecollection?: boolean;
-  sampleOriginalSampleId?: number;
+  sampleOriginalSampleId?: string;
   sampleRecollectionReason?: string;
   sampleRecollectionAttempt?: number;
 
@@ -703,9 +696,9 @@ export interface InvoiceItem {
 }
 
 export interface Invoice {
-  invoiceId: number;
-  orderId: number;
-  patientId: number;
+  invoiceId: string;
+  orderId: string;
+  patientId: string;
   patientName?: string;
   status: PaymentStatus;
   items: InvoiceItem[];
@@ -720,9 +713,9 @@ export interface Invoice {
 }
 
 export interface Payment {
-  paymentId: number;
-  orderId: number;
-  invoiceId: number | null;
+  paymentId: string;
+  orderId: string;
+  invoiceId: string | null;
   amount: number;
   paymentMethod: PaymentMethod;
   paidAt: string;

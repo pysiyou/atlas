@@ -51,14 +51,14 @@ export function PendingCriticalValuesPanel({
             <div className="flex items-center justify-between gap-space-2">
               <div className={`flex items-center gap-space-2 ${text({ role: 'body' })}`}>
                 <Icon iconKey={IconKeys.actions.alertCircle} className={`w-4 h-4 ${TONE.danger.fg}`} />
-                <RecordId type="orderTest" value={formatOrderTestDisplay(record.accessionNumber, record.testCode)} />
+                <RecordId type="orderTest" value={formatOrderTestDisplay(record.sampleId, record.testCode)} />
                 {record.testName ?? record.testCode}
               </div>
               <Link
                 to={getLabQueueUrl('validation', {
-                  search: formatOrderTestDisplay(record.accessionNumber, record.testCode) !== '-'
-                    ? formatOrderTestDisplay(record.accessionNumber, record.testCode)
-                    : record.fillerNumber || record.testCode,
+                  search: formatOrderTestDisplay(record.sampleId, record.testCode) !== '-'
+                    ? formatOrderTestDisplay(record.sampleId, record.testCode)
+                    : record.orderId || record.testCode,
                 })}
                 className={`${text({ role: 'caption' })} ${TONE.brand.fg} hover:underline`}
               >

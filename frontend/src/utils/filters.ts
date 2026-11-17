@@ -140,7 +140,7 @@ export function navigateWithUrlFilters(
 
 export function navigateToOrdersWithPatient(
   navigate: NavigateFunction,
-  patientId: string | number
+  patientId: string
 ): void {
   const id = normalizeUrlFilterValue(patientId);
   if (!id) return;
@@ -149,7 +149,7 @@ export function navigateToOrdersWithPatient(
 
 export function navigateToOrdersWithOrder(
   navigate: NavigateFunction,
-  orderId: string | number
+  orderId: string
 ): void {
   const id = normalizeUrlFilterValue(orderId);
   if (!id) return;
@@ -161,7 +161,7 @@ export function navigateToOrdersWithOrder(
  */
 export function navigateToLabWithSample(
   navigate: NavigateFunction,
-  sampleId: string | number,
+  sampleId: string,
   tab: LabTabId = 'collection'
 ): void {
   const id = normalizeUrlFilterValue(sampleId);
@@ -173,7 +173,7 @@ export function navigateToLabWithSample(
 
 export function navigateToLabWithOrder(
   navigate: NavigateFunction,
-  orderId: string | number,
+  orderId: string,
   tab: LabTabId = 'collection'
 ): void {
   const id = normalizeUrlFilterValue(orderId);
@@ -185,7 +185,7 @@ export function navigateToLabWithOrder(
 
 export function navigateToPatientsWithPatient(
   navigate: NavigateFunction,
-  patientId: string | number
+  patientId: string
 ): void {
   const id = normalizeUrlFilterValue(patientId);
   if (!id) return;
@@ -204,7 +204,7 @@ export type EntityNavigateTarget = {
  */
 export function createEntityFilterNavigateHandler(
   navigate: NavigateFunction,
-  value: string | number,
+  value: string,
   target: EntityNavigateTarget
 ): () => void {
   const id = normalizeUrlFilterValue(value);

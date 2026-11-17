@@ -27,11 +27,9 @@ class WorklistPagination(BaseModel):
 
 
 class CollectionWorklistItem(BaseModel):
-    sampleId: int
-    orderId: int
-    fillerNumber: str
-    patientId: int
-    patientMrn: str
+    sampleId: str
+    orderId: str
+    patientId: str
     patientName: str
     sampleType: str
     status: SampleStatus
@@ -39,15 +37,12 @@ class CollectionWorklistItem(BaseModel):
     paymentStatus: PaymentStatus
     orderDate: datetime
     testCodes: list[str]
-    accessionNumber: str
     isAliquot: bool = False
-    parentSampleId: int | None = None
+    parentSampleId: str | None = None
     isRecollection: bool
-    originalSampleId: int | None = None
+    originalSampleId: str | None = None
     originalSampleCollectedAt: datetime | None = None
-    originalAccessionNumber: str | None = None
-    recollectionSampleId: int | None = None
-    recollectionAccessionNumber: str | None = None
+    recollectionSampleId: str | None = None
     recollectionReason: str | None = None
     recollectionAttempt: int = 1
     pipelineStage: PipelineStage | None = None
@@ -64,7 +59,7 @@ class CollectionWorklistItem(BaseModel):
     collectedAt: datetime | None = None
     collectedBy: str | None = None
     collectedVolume: float | None = None
-    referentDoctorId: int | None = None
+    referentDoctorId: str | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
     referentDoctorPhone: str | None = None
@@ -78,16 +73,13 @@ class CollectionWorklistItem(BaseModel):
 
 class EntryWorklistItem(BaseModel):
     orderTestId: int
-    orderId: int
-    fillerNumber: str
-    patientId: int
-    patientMrn: str
+    orderId: str
+    patientId: str
     patientName: str
     testCode: str
     testName: str
-    sampleId: int | None
+    sampleId: str | None
     sampleType: str
-    accessionNumber: str | None = None
     priority: PriorityLevel
     status: TestStatus
     collectedAt: datetime | None
@@ -99,10 +91,9 @@ class EntryWorklistItem(BaseModel):
     retestNumber: int = 0
     priorTestDisplay: str | None = None
     sampleIsRecollection: bool = False
-    sampleOriginalSampleId: int | None = None
-    sampleOriginalAccessionNumber: str | None = None
+    sampleOriginalSampleId: str | None = None
     sampleRecollectionAttempt: int | None = None
-    referentDoctorId: int | None = None
+    referentDoctorId: str | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
     referentDoctorPhone: str | None = None
@@ -124,10 +115,8 @@ class DashboardWorklistItem(BaseModel):
     """In-pipeline order tests plus rows updated today (any status)."""
 
     orderTestId: int
-    orderId: int
-    fillerNumber: str
-    patientId: int
-    patientMrn: str
+    orderId: str
+    patientId: str
     patientName: str
     patientDob: str
     patientGender: Gender
@@ -139,7 +128,7 @@ class DashboardWorklistItem(BaseModel):
     stage: Literal["collection", "entry", "validation"]
     activityAt: datetime
     orderDate: datetime
-    referentDoctorId: int | None = None
+    referentDoctorId: str | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
     referentDoctorPhone: str | None = None
@@ -153,23 +142,20 @@ class DashboardWorklistItem(BaseModel):
 
 class ValidationWorklistItem(BaseModel):
     orderTestId: int
-    orderId: int
-    fillerNumber: str
-    patientId: int
-    patientMrn: str
+    orderId: str
+    patientId: str
     patientName: str
     testCode: str
     testName: str
     sampleType: str
-    accessionNumber: str | None = None
     priority: PriorityLevel
     status: TestStatus
-    sampleId: int | None = None
+    sampleId: str | None = None
     sampleStatus: SampleStatus | None = None
     results: TestResultsDict | None = None
     flags: list[str] | None = None
     enteredBy: str | None = None
-    referentDoctorId: int | None = None
+    referentDoctorId: str | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
     referentDoctorPhone: str | None = None
@@ -180,8 +166,7 @@ class ValidationWorklistItem(BaseModel):
     retestNumber: int = 0
     priorTestDisplay: str | None = None
     sampleIsRecollection: bool = False
-    sampleOriginalSampleId: int | None = None
-    sampleOriginalAccessionNumber: str | None = None
+    sampleOriginalSampleId: str | None = None
     sampleRecollectionAttempt: int | None = None
     resultEnteredAt: datetime | None
     orderDate: datetime
@@ -209,11 +194,10 @@ class WorksheetRow(BaseModel):
     """One bench-worksheet line for a single order test."""
 
     orderTestId: int
-    orderId: int
-    fillerNumber: str
+    orderId: str
+    patientId: str
     patientName: str
-    patientMrn: str
-    accessionNumber: str
+    sampleId: str
     sampleType: str
     priority: PriorityLevel
     testCode: str
@@ -289,11 +273,10 @@ class BoardAttentionItem(BaseModel):
     id: str
     stage: Literal["collection", "entry", "validation"]
     stageLabel: str
-    orderId: int
-    fillerNumber: str
+    orderId: str
+    patientId: str | None = None
     patientName: str
-    patientMrn: str
-    accessionNumber: str | None = None
+    sampleId: str | None = None
     testCodes: list[str] = Field(default_factory=list)
     priority: PriorityLevel
     waitingHours: float

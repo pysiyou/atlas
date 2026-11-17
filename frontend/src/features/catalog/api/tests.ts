@@ -119,7 +119,7 @@ function transformAPITestSummary(apiTest: ApiTestSummaryResponse): TestSummary {
     containerTypes: (apiTest.containerTypes ?? []) as ContainerType[],
     containerTopColors: (apiTest.containerTopColors ?? []) as ContainerTopColor[],
     panels: apiTest.panels ?? undefined,
-    loincCodes: apiTest.loincCodes ?? undefined,
+    loincCode: apiTest.loincCode ?? undefined,
     fastingRequired: apiTest.fastingRequired ?? undefined,
   };
 }
@@ -306,7 +306,7 @@ export function useTestSearch(searchQuery: string) {
           test.name.toLowerCase().includes(query) ||
           test.code.toLowerCase().includes(query) ||
           test.synonyms?.some(syn => syn.toLowerCase().includes(query)) ||
-          test.loincCodes?.some(loinc => loinc.toLowerCase().includes(query)) ||
+          (test.loincCode?.toLowerCase().includes(query) ?? false) ||
           test.panels?.some(
             panel =>
               panel.toLowerCase().includes(query) ||

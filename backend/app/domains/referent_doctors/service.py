@@ -1,6 +1,7 @@
 """Referent doctor directory service."""
 from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.referent_doctors.schemas import ReferentDoctorCreate, ReferentDoctorResponse
+from app.platform.utils import allocate_npi
 from fastapi import HTTPException, status
 from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError
@@ -26,13 +27,13 @@ class ReferentDoctorService:
                     ReferentDoctor.email.ilike(term),
                     ReferentDoctor.phone.ilike(term),
                     ReferentDoctor.username.ilike(term),
-                    ReferentDoctor.npi.ilike(term),
+                    ReferentDoctor.referentDoctorId.ilike(term),
                 )
             )
         rows = query.order_by(ReferentDoctor.fullName.asc()).limit(min(limit, 100)).all()
         return [ReferentDoctorResponse.model_validate(row) for row in rows]
 
-    def get_by_id(self, referent_doctor_id: int) -> ReferentDoctor | None:
+    def get_by_id(self, referent_doctor_id: str) -> ReferentDoctor | None:
         return (
             self.db.query(ReferentDoctor)
             .filter(
@@ -57,8 +58,8 @@ class ReferentDoctorService:
         if existing:
             return ReferentDoctorResponse.model_validate(existing)
         row = ReferentDoctor(
+            referentDoctorId=payload.npi or allocate_npi(self.db),
             fullName=full_name,
-            npi=payload.npi,
             username=payload.username,
             email=payload.email,
             phone=payload.phone,

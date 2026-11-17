@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 
 def generate_samples_for_order(
-    orderId: int,
+    orderId: str,
     db: Session,
     createdBy: int,
     emitter: AuditEmitter | None = None,
@@ -183,7 +183,7 @@ def _choose_active_sample(existing: list[Sample]) -> Sample | None:
 
 def _dedupe_pending_samples(
     db: Session,
-    order_id: int,
+    order_id: str,
     keep: Sample,
     existing: list[Sample],
 ) -> None:
@@ -230,7 +230,7 @@ def _pending_recollection_sample(
 
 
 def _reassign_order_tests_to_sample(
-    db: Session, order_id: int, from_sample_id: int, to_sample_id: int
+    db: Session, order_id: str, from_sample_id: str, to_sample_id: str
 ) -> None:
     db.query(OrderTest).filter(
         OrderTest.orderId == order_id,
@@ -238,7 +238,7 @@ def _reassign_order_tests_to_sample(
     ).update({OrderTest.sampleId: to_sample_id}, synchronize_session="fetch")
 
 
-def _delete_pending_samples_for_order(order_id: int, db: Session, keep_sample_types: set) -> None:
+def _delete_pending_samples_for_order(order_id: str, db: Session, keep_sample_types: set) -> None:
     """Delete samples for this order that are PENDING, not collected, and not in keep_sample_types."""
     to_delete = (
         db.query(Sample)
@@ -256,7 +256,7 @@ def _delete_pending_samples_for_order(order_id: int, db: Session, keep_sample_ty
             db.delete(s)
 
 
-def _link_order_tests_to_samples(db: Session, order_id: int, samples: list[Sample]) -> None:
+def _link_order_tests_to_samples(db: Session, order_id: str, samples: list[Sample]) -> None:
     """Link collectable order tests to the active pending sample for their type."""
     linkable_statuses = [
         TestStatus.PENDING,

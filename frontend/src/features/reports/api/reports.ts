@@ -36,7 +36,6 @@ export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
   const age = item.patientDob ? calculateAge(item.patientDob) : undefined;
   return {
     orderId: item.orderId,
-    fillerNumber: item.fillerNumber,
     orderDate: item.orderDate,
     overallStatus: item.overallStatus,
     statusPresentation: item.statusPresentation ?? {
@@ -44,7 +43,6 @@ export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
       variant: 'gray',
     },
     patientId: item.patientId,
-    patientMrn: item.patientMrn,
     patientName: item.patientName,
     patientAge: age,
     patientDob: item.patientDob ?? undefined,
@@ -64,7 +62,7 @@ export function toReportableOrder(item: ReportableOrderItem): ReportableOrder {
  */
 function findReportableOrderInPaginatedCache(
   queryClient: ReturnType<typeof useQueryClient>,
-  orderId: number | null
+  orderId: string | null
 ): ReportableOrderItem | undefined {
   if (orderId == null) return undefined;
   const queries = queryClient.getQueriesData<PaginatedResponse<ReportableOrderItem>>({
@@ -90,13 +88,13 @@ export const reportsAPI = {
     if (filters?.dateTo) params.dateTo = filters.dateTo;
     return apiClient.get<PaginatedResponse<ReportableOrderItem>>('/reports/orders', params);
   },
-  getReportableOrder(orderId: number): Promise<ReportableOrderItem> {
+  getReportableOrder(orderId: string): Promise<ReportableOrderItem> {
     return apiClient.get<ReportableOrderItem>(`/reports/orders/${orderId}`);
   },
-  recordOrderReportDownload(orderId: number): Promise<ReportableOrderItem> {
+  recordOrderReportDownload(orderId: string): Promise<ReportableOrderItem> {
     return apiClient.get<ReportableOrderItem>(`/reports/orders/${orderId}/download`);
   },
-  downloadPdf(orderId: number): Promise<Blob> {
+  downloadPdf(orderId: string): Promise<Blob> {
     return apiClient.getBlob(`/reports/orders/${orderId}/pdf`);
   },
 };
@@ -110,7 +108,7 @@ function triggerBlobDownload(blob: Blob, filename: string): void {
   URL.revokeObjectURL(url);
 }
 
-export async function downloadServerReportPdf(orderId: number): Promise<void> {
+export async function downloadServerReportPdf(orderId: string): Promise<void> {
   const blob = await reportsAPI.downloadPdf(orderId);
   triggerBlobDownload(blob, `lab-report-${orderId}.pdf`);
 }
@@ -193,12 +191,12 @@ export function usePaginatedReportableOrders(
  * Load one reportable order by id. Uses the current paginated page as placeholder
  * so preview can open immediately after a row click.
  */
-export function useReportableOrder(orderId: number | null) {
+export function useReportableOrder(orderId: string | null) {
   const queryClient = useQueryClient();
-  const enabled = useAuthQueryEnabled(orderId != null && Number.isFinite(orderId));
+  const enabled = useAuthQueryEnabled(orderId != null && orderId !== '');
 
   const query = useQuery({
-    queryKey: queryKeys.reports.byOrder(orderId ?? 0),
+    queryKey: queryKeys.reports.byOrder(orderId ?? ''),
     queryFn: () => reportsAPI.getReportableOrder(orderId!),
     enabled,
     ...cacheConfig.dynamic,

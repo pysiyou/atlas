@@ -71,25 +71,25 @@ const PATIENT_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
 const ORDER_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
   'order.create': (r, c) => {
     const orderId = resolveOrderId(r);
-    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ', r.fillerNumber)) : appendText([], 'Order ');
+    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
     parts = appendText(parts, ' created');
     const patientId = resolvePatientId(r);
     if (patientId != null) {
       parts = appendText(parts, ' for patient ');
-      parts = append(parts, patientRecordPhrase(patientId, c, '', r.patientMrn));
+      parts = append(parts, patientRecordPhrase(patientId, c, ''));
     }
     return parts;
   },
   'order.update': r => {
     const orderId = resolveOrderId(r);
-    const parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ', r.fillerNumber)) : appendText([], 'Order ');
+    const parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
     return appendText(parts, ' updated');
   },
   'order.delete': r => appendText(append([], targetOrder(r, 'Order ')), ' cancelled'),
   'order.status': r => {
     const statusLabel = formatOrderStatusLabel(changeNew(r, 'status'));
     const orderId = resolveOrderId(r);
-    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ', r.fillerNumber)) : appendText([], 'Order ');
+    let parts = orderId ? append([], orderRecordPhrase(orderId, 'Order ')) : appendText([], 'Order ');
     parts = appendText(parts, ' status changed to ');
     return append(parts, mainPart(statusLabel));
   },
@@ -97,14 +97,14 @@ const ORDER_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
     let parts = append([], ...targetOrderTestRef(r, c));
     parts = appendText(parts, ' added to ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order ', r.fillerNumber));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order '));
     return parts;
   },
   'order.test.remove': (r, c) => {
     let parts = append([], ...targetOrderTestRef(r, c));
     parts = appendText(parts, ' removed from ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order ', r.fillerNumber));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order '));
     return parts;
   },
   'order.test.cancel': (r, c) => {
@@ -124,7 +124,7 @@ const ORDER_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
     parts = append(parts, testHighlightFromMetaKey(r, 'added_test_code', c) ?? mainPart('—'));
     parts = appendText(parts, ' added to ');
     const orderId = resolveOrderId(r);
-    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order ', r.fillerNumber));
+    if (orderId) parts = append(parts, orderRecordPhrase(orderId, 'order '));
     return appendTriggeredByClause(parts, r, c);
   },
 };
@@ -206,7 +206,7 @@ const SYSTEM_HEADLINE_BUILDERS: Record<string, EventHeadlineBuilder> = {
     const orderId = resolveOrderId(r);
     if (orderId) {
       parts = appendText(parts, 'for ');
-      parts = append(parts, orderRecordPhrase(orderId, 'order ', r.fillerNumber));
+      parts = append(parts, orderRecordPhrase(orderId, 'order '));
     }
     return parts;
   },

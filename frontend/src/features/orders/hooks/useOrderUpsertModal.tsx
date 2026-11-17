@@ -22,7 +22,7 @@ import { useModuleListTitles } from '@/strings';
 export interface UseOrderUpsertModalParams {
   isOpen: boolean;
   order?: Order;
-  orderId?: number;
+  orderId?: string;
   mode: 'create' | 'edit';
   patientId?: string;
   onClose: () => void;
@@ -53,10 +53,7 @@ export function useOrderUpsertModal({
   const { mutate: createPaymentMutation, isPending: isProcessingPayment } = useCreatePayment();
 
   const initialPatientId = useMemo(() => {
-    if (mode === 'create' && patientId) {
-      const parsed = parseInt(patientId, 10);
-      return isNaN(parsed) ? undefined : parsed;
-    }
+    if (mode === 'create' && patientId) return patientId;
     return undefined;
   }, [mode, patientId]);
 
@@ -88,7 +85,7 @@ export function useOrderUpsertModal({
           await new Promise<void>((resolve, reject) => {
             createPaymentMutation(
               {
-                orderId: createdOrder.orderId.toString(),
+                orderId: createdOrder.orderId,
                 amount: createdOrder.totalPrice,
                 paymentMethod,
               },
@@ -142,7 +139,7 @@ export function useOrderUpsertModal({
   }, [order]);
 
   const [referentDoctorOverride, setReferentDoctorOverride] = useState<
-    { orderId?: number; doctor: ReferentDoctor | null } | undefined
+    { orderId?: string; doctor: ReferentDoctor | null } | undefined
   >(undefined);
 
   const selectedReferentDoctor = useMemo(() => {
@@ -196,14 +193,14 @@ export function useOrderUpsertModal({
   const subtitle = useMemo((): React.ReactNode => {
     if (mode === 'edit' && order) {
       return (
-        <ModalContextSubtitle label={order.patientName} orderId={order.fillerNumber} />
+        <ModalContextSubtitle label={order.patientName} orderId={order.orderId} />
       );
     }
     if (selectedPatient) {
       return (
         <ModalContextSubtitle
           label={selectedPatient.fullName}
-          patientId={selectedPatient.mrn}
+          patientId={selectedPatient.id}
         />
       );
     }

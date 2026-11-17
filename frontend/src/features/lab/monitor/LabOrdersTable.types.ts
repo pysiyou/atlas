@@ -11,7 +11,7 @@ export interface LabOrderTableRow {
   testCode: string;
   testName: string;
   patientName: string;
-  patientId: number;
+  patientId: string;
   patientDob: string;
   patientGender: Gender;
   referentDoctorName: string | null;
@@ -21,7 +21,7 @@ export interface LabOrderTableRow {
   priority: PriorityLevel;
   status: TestStatus;
   date: string;
-  orderId: number;
+  orderId: string;
   orderTestId: number;
   statusPresentation?: StatusPresentation | null;
 }

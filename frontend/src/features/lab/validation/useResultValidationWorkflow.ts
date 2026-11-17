@@ -25,7 +25,7 @@ export interface ResultValidationWorkflowController {
   handleCommentsChange: (commentKey: string, value: string) => void;
   handleValidate: (
     orderTestId: number,
-    orderId: number | string,
+    orderId: string,
     approve: boolean,
     rejectionResult?: QualityIssueResult,
     criticalSeen?: boolean
@@ -69,14 +69,13 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
   const handleValidate = useCallback(
     async (
       orderTestId: number,
-      orderId: number | string,
+      orderId: string,
       approve: boolean,
       rejectionResult?: QualityIssueResult,
       criticalSeen?: boolean
     ): Promise<void> => {
       if (queueLoading) return;
 
-      const orderIdStr = typeof orderId === 'string' ? orderId : orderId.toString();
       const commentKey = orderTestKey(orderTestId);
       const clearPending = () => setPendingValidateKey(null);
 
@@ -84,7 +83,7 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
         setPendingValidateKey(commentKey);
         try {
           await validateMutation.mutateAsync({
-            orderId: orderIdStr,
+            orderId,
             orderTestId,
             validationNotes: useLabDraftStore.getState().getValidationComments(orderTestId) || undefined,
             criticalSeen,
@@ -108,7 +107,7 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
       if (rejectionResult) {
         await invalidateAfterLabMutation(queryClient, {
           kind: 'qualityIssue',
-          orderId: orderIdStr,
+          orderId,
           orderTestId,
         });
       }

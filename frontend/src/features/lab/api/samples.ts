@@ -10,7 +10,7 @@ import {
 } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { useEntityLookup, parseNumericKey } from '@/hooks';
+import { useEntityLookup } from '@/hooks';
 import { queryKeys, cacheConfig, getQueryClient, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateCollectionQueries } from '@/lib/query';
 import { LAB_PATHS } from '../constants/labConstants';
@@ -68,7 +68,7 @@ export const sampleAPI = {
   /**
    * Server eligibility and queue display for a sample (deep-link / modal).
    */
-  async getWorkContext(sampleId: string | number): Promise<CollectionWorklistItem> {
+  async getWorkContext(sampleId: string): Promise<CollectionWorklistItem> {
     return apiClient.get<CollectionWorklistItem>(LAB_PATHS.samples.workContext(sampleId));
   },
 
@@ -85,7 +85,7 @@ export const sampleAPI = {
   },
 
   async createAliquots(
-    sampleId: string | number,
+    sampleId: string,
     data: { count: number; aliquotVolume: number; testCodes?: string[] }
   ): Promise<Sample[]> {
     return apiClient.post<Sample[]>(LAB_PATHS.samples.aliquots(sampleId), data);
@@ -162,8 +162,8 @@ export function useSamplesList(filters?: SamplesFilters, refetchOptions?: LabQue
  * Used by report generation so list pages do not mount a 500-row sample query.
  */
 export async function createSampleLookupForOrder(
-  orderId: number
-): Promise<(sampleId: number) => Sample | undefined> {
+  orderId: string
+): Promise<(sampleId: string) => Sample | undefined> {
   const client = getQueryClient();
   const samples = await client.fetchQuery({
     queryKey: queryKeys.samples.byOrder(String(orderId)),
@@ -171,21 +171,19 @@ export async function createSampleLookupForOrder(
     ...cacheConfig.dynamic,
   });
   const byId = new Map(samples.map(sample => [sample.sampleId, sample]));
-  return (sampleId: number) => byId.get(sampleId);
+  return (sampleId: string) => byId.get(sampleId);
 }
 
 export function useSampleLookup() {
   const { samples, isLoading } = useSamplesList();
   const { get: getSample } = useEntityLookup(samples, s => s.sampleId, {
     isLoading,
-    normalizeKey: parseNumericKey,
   });
 
   const getSamplesByOrder = useCallback(
-    (orderId: number | string): Sample[] => {
-      const numericOrderId = typeof orderId === 'string' ? parseInt(orderId, 10) : orderId;
-      if (isNaN(numericOrderId)) return [];
-      return samples.filter(s => s.orderId === numericOrderId);
+    (orderId: string): Sample[] => {
+      if (!orderId) return [];
+      return samples.filter(s => s.orderId === orderId);
     },
     [samples]
   );
@@ -254,7 +252,7 @@ export function useCreateAliquots() {
       aliquotVolume,
       testCodes,
     }: {
-      sampleId: string | number;
+      sampleId: string;
       count: number;
       aliquotVolume: number;
       testCodes?: string[];

@@ -47,11 +47,11 @@ def _patient_search_filter(search_term: str):
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
         Patient.phone.contains(term),
-        Patient.mrn.ilike(f"%{term}%"),
+        Patient.id.ilike(f"%{term}%"),
     ]
     compact = compact_identifier(term)
     if looks_like_mrn(term):
-        predicates.append(Patient.mrn == compact)
+        predicates.append(Patient.id == compact)
     return or_(*predicates)
 
 
@@ -102,7 +102,7 @@ def _attach_order_summaries(db: Session, patients_data: list[dict]) -> list[dict
         .order_by(Order.patientId, Order.orderDate.desc())
         .all()
     )
-    last_status_by_patient: dict[int, str | None] = {}
+    last_status_by_patient: dict[str, str | None] = {}
     for patient_id, overall_status in last_orders:
         last_status_by_patient[patient_id] = (
             overall_status.value if hasattr(overall_status, "value") else overall_status
@@ -134,7 +134,7 @@ class PatientService:
         search: str | None = None,
         paginated: bool = False,
         include_order_summary: bool = False,
-        patient_id: int | None = None,
+        patient_id: str | None = None,
         genders: list[Gender] | None = None,
         affiliation_statuses: list[str] | None = None,
         age_min: int | None = None,
@@ -181,7 +181,7 @@ class PatientService:
         )
         return [serialize_patient(p) for p in patients]
 
-    def get_by_id(self, patient_id: int, viewer_user_id: int | None = None) -> dict:
+    def get_by_id(self, patient_id: str, viewer_user_id: str | None = None) -> dict:
         patient = self.db.query(Patient).filter(Patient.id == patient_id).first()
         if not patient:
             raise HTTPException(
@@ -214,7 +214,7 @@ class PatientService:
         return matches
 
     def create(
-        self, patient_data: PatientCreate, user_id: int, *, force_create: bool = False
+        self, patient_data: PatientCreate, user_id: str, *, force_create: bool = False
     ) -> dict:
         # Check workflow: requireEmergencyContact
         require_emergency = client_config.workflows.get("requireEmergencyContact", True)
@@ -243,7 +243,7 @@ class PatientService:
             else MedicalHistory().model_dump()
         )
         patient = Patient(
-            mrn=allocate_mrn(self.db),
+            id=allocate_mrn(self.db),
             fullName=patient_data.fullName,
             dateOfBirth=patient_data.dateOfBirth,
             gender=patient_data.gender,
@@ -273,7 +273,7 @@ class PatientService:
         self.db.refresh(patient)
         return serialize_patient_full(patient)
 
-    def update(self, patient_id: int, patient_data: PatientUpdate, user_id: int) -> dict:
+    def update(self, patient_id: str, patient_data: PatientUpdate, user_id: str) -> dict:
         patient = self.db.query(Patient).filter(Patient.id == patient_id).first()
         if not patient:
             raise HTTPException(

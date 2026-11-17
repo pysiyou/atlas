@@ -64,7 +64,7 @@ export function ResultEntryDetailGrid({
               value: (
                 <RecordId
                   type="orderTest"
-                  value={formatOrderTestDisplay(workItem.accessionNumber, workItem.testCode)}
+                  value={formatOrderTestDisplay(workItem.sampleId, workItem.testCode)}
                   emphasis="block"
                   className="text-right"
                 />
@@ -82,10 +82,10 @@ export function ResultEntryDetailGrid({
             },
             {
               label: 'Sample ID',
-              value: workItem.accessionNumber ? (
+              value: workItem.sampleId ? (
                 <RecordId
                   type="sample"
-                  value={workItem.accessionNumber}
+                  value={workItem.sampleId}
                   emphasis="block"
                   className="text-right"
                 />

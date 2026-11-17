@@ -32,17 +32,15 @@ export interface SampleCollectionRequirement {
   containerTypes: ContainerType[];
   containerTopColors: ContainerTopColor[];
   priority: PriorityLevel;
-  orderId: number;
+  orderId: string;
 }
 
 /** Collection queue row mapped from `CollectionWorklistItem`. */
 export interface CollectionQueueRow {
   sample: Sample;
-  patientId: number;
-  patientMrn?: string | null;
+  patientId: string;
   patientName: string;
-  orderId: number;
-  fillerNumber?: string | null;
+  orderId: string;
   orderDate: string;
   paymentStatus: PaymentStatus;
   priority: PriorityLevel;
@@ -51,7 +49,7 @@ export interface CollectionQueueRow {
   denyReason?: string | null;
   denyMessage?: string | null;
   statusPresentation?: StatusPresentation | null;
-  referentDoctorId?: number | null;
+  referentDoctorId?: string | null;
   referentDoctorName?: string | null;
   referentDoctorEmail?: string | null;
   referentDoctorPhone?: string | null;
@@ -68,16 +66,16 @@ export type SampleRequirement = SampleCollectionRequirement;
 /** Target entity for a quality issue report. */
 export interface QualityIssueTarget {
   type: QualityIssueTargetType;
-  id: number;
+  id: string;
 }
 
 /** Server-provided options when reporting a quality issue. */
 export interface QualityIssueOptions {
   targetType: QualityIssueTargetType;
-  targetId: number;
-  orderId: number;
+  targetId: string;
+  orderId: string;
   testCode?: string;
-  sampleId?: number;
+  sampleId?: string;
   stage: QualityStage;
   allowedCriteria: string[];
   /** Remedies the operator may choose (validation destinations / sample unfinished fate). */
@@ -114,21 +112,21 @@ export interface QualityIssueResult {
   remedy: RemedyType;
   message: string;
   qualityIssueId: number;
-  orderId: number;
+  orderId: string;
   testCode?: string;
-  sampleId?: number;
+  sampleId?: string;
   orderTestId?: number;
   createdTestId?: number;
-  createdSampleId?: number;
+  createdSampleId?: string;
   escalationRequired: boolean;
 }
 
 /** Persisted quality issue record. */
 export interface QualityIssueRecord {
   id: number;
-  orderId: number;
+  orderId: string;
   orderTestId?: number;
-  sampleId?: number;
+  sampleId?: string;
   testCode?: string;
   stage: QualityStage;
   domain: QualityDomain;
@@ -136,7 +134,7 @@ export interface QualityIssueRecord {
   notes?: string;
   remedy: RemedyType;
   createdTestId?: number;
-  createdSampleId?: number;
+  createdSampleId?: string;
   createdBy: string;
   createdAt: string;
 }
@@ -164,7 +162,7 @@ export interface EscalationResolveResult {
   message: string;
   escalatedTestId: number;
   newTestId?: number;
-  newSampleId?: number;
+  newSampleId?: string;
 }
 
 // =============================================================================
@@ -174,13 +172,11 @@ export interface EscalationResolveResult {
 
 /** One reportable order row for the reports module. */
 export interface ReportableOrder {
-  orderId: number;
-  fillerNumber?: string | null;
+  orderId: string;
   orderDate: string;
   overallStatus: OrderStatus;
   statusPresentation: StatusPresentation;
-  patientId: number;
-  patientMrn?: string | null;
+  patientId: string;
   patientName: string;
   patientAge?: number;
   /** ISO date of birth from the report DTO; used on the printable header. */
@@ -203,7 +199,7 @@ export const RESULT_NOT_AVAILABLE = 'Not available';
 /** Data structure for lab report preview and PDF export. */
 export interface LabReportPayload {
   order: Order;
-  patientId: number;
+  patientId: string;
   patientName: string;
   patientAge?: number;
   /** ISO date of birth for the header Date of Birth field. */

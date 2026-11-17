@@ -5,7 +5,6 @@
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebouncedValue } from '@/hooks';
-import { parseNumericKey } from '@/hooks';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useInvalidateQueryKey, invalidateOrderDetailQuery } from '@/lib/query';
@@ -47,10 +46,9 @@ export function useOrderSearch(searchQuery: string) {
 export function useOrderLookup() {
   const queryClient = useQueryClient();
 
-  const getOrder = (orderId: number | string): Order | undefined => {
-    const key = parseNumericKey(orderId);
-    if (key == null) return undefined;
-    return queryClient.getQueryData<Order>(queryKeys.orders.byId(String(key)));
+  const getOrder = (orderId: string): Order | undefined => {
+    if (!orderId) return undefined;
+    return queryClient.getQueryData<Order>(queryKeys.orders.byId(orderId));
   };
 
   return {

@@ -51,9 +51,12 @@ export function useQualityIssuePopover({
   const [rejectionNotes, setRejectionNotes] = useState('');
   const [preferredRemedy, setPreferredRemedy] = useState<RemedyType | ''>('');
 
+  /** Test quality issues target the integer order-test PK, serialized as a string. */
+  const testTargetId = String(orderTestId);
+
   const { data: options, isLoading, error: fetchError, refetch } = useQualityIssueOptions(
     'test',
-    orderTestId
+    testTargetId
   );
 
   useListLoadErrorToast(
@@ -110,7 +113,7 @@ export function useQualityIssuePopover({
     try {
       await reportIssue(
         'test',
-        orderTestId,
+        testTargetId,
         rejectionReason,
         rejectionNotes.trim() || undefined,
         effectivePreferredRemedy

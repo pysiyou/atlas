@@ -16,9 +16,7 @@ def enrich_payment(payment: Payment, order: Order | None) -> dict:
     """Build PaymentResponse dict from payment and optional order."""
     return {
         "paymentId": payment.paymentId,
-        "receiptNumber": payment.receiptNumber,
         "orderId": payment.orderId,
-        "fillerNumber": order.fillerNumber if order else None,
         "invoiceId": payment.invoiceId,
         "amount": payment.amount,
         "paymentMethod": payment.paymentMethod,
@@ -44,7 +42,7 @@ class PaymentService:
             joinedload(Payment.order).selectinload(Order.tests),
         )
 
-    def list_by_order(self, order_id: int) -> list[dict]:
+    def list_by_order(self, order_id: str) -> list[dict]:
         payments = (
             self._payment_query()
             .filter(Payment.orderId == order_id)
@@ -53,7 +51,7 @@ class PaymentService:
         )
         return [enrich_payment(p, p.order) for p in payments]
 
-    def create_payment(self, payment_data: PaymentCreate, user_id: int) -> dict:
+    def create_payment(self, payment_data: PaymentCreate, user_id: str) -> dict:
         order = (
             self.db.query(Order)
             .filter(Order.orderId == payment_data.orderId)
@@ -95,7 +93,7 @@ class PaymentService:
                 ),
             )
         payment = Payment(
-            receiptNumber=allocate_receipt_number(self.db),
+            paymentId=allocate_receipt_number(self.db),
             orderId=payment_data.orderId,
             invoiceId=None,
             amount=amount,

@@ -18,7 +18,7 @@ def create_aliquots(
     count: int,
     aliquot_volume: float,
     test_codes: list[str] | None,
-    user_id: int,
+    user_id: str,
     emitter: AuditEmitter | None = None,
 ) -> list[Sample]:
     """

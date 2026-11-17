@@ -34,7 +34,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
         leading={
           hidePatientName ? (
             <div className="min-w-0">
-              <RecordId type="order" value={order.fillerNumber} emphasis="block" />
+              <RecordId type="order" value={order.orderId} emphasis="block" />
               {order.orderDate ? (
                 <p className="mt-space-0-5">{renderCardDateTimeSecondary(order.orderDate)}</p>
               ) : null}
@@ -80,7 +80,7 @@ export function OrderTableCard({ item: order, onClick, hidePatientName = false }
         ) : (
           <>
             <div>
-              <RecordId type="order" value={order.fillerNumber} emphasis="mutedBlock" />
+              <RecordId type="order" value={order.orderId} emphasis="mutedBlock" />
               <span className="block mt-space-0-5">{renderCardDateTimeSecondary(order.orderDate)}</span>
             </div>
             <div className="flex items-center gap-space-2 shrink-0">

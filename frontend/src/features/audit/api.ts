@@ -6,10 +6,10 @@ import type { EventLogActorSnapshot, EventLogChanges, EventLogRecord } from './t
 
 export interface AuditEventQueryParams {
   scope?: string;
-  orderId?: number;
-  patientId?: number;
+  orderId?: string;
+  patientId?: string;
   testId?: number;
-  sampleId?: number;
+  sampleId?: string;
   hours?: number;
   createdFrom?: string;
   createdTo?: string;
@@ -19,7 +19,7 @@ export interface AuditEventQueryParams {
   eventScope?: string;
   cursorCreatedAt?: string;
   cursorEventId?: string;
-  actorId?: number;
+  actorId?: string;
   actorRoles?: string;
   actorSearch?: string;
   search?: string;
@@ -39,10 +39,10 @@ function normalizeActorSnapshot(raw: unknown): EventLogActorSnapshot {
   const userId =
     userIdRaw === 'system' || userIdRaw === null || userIdRaw === undefined
       ? 'system'
-      : Number(userIdRaw);
+      : String(userIdRaw);
 
   return {
-    userId: Number.isFinite(userId as number) ? (userId as number) : 'system',
+    userId: userId || 'system',
     name: String(snap.name ?? 'Unknown'),
     role: String(snap.role ?? 'unknown'),
     ipAddress:
@@ -76,16 +76,14 @@ export function normalizeAuditEvent(raw: Record<string, unknown>): EventLogRecor
     eventId: String(raw.eventId ?? raw.event_id ?? ''),
     createdAt: String(raw.createdAt ?? raw.created_at ?? new Date().toISOString()),
     eventType: String(raw.eventType ?? raw.event_type ?? ''),
-    actorId: (raw.actorId ?? raw.actor_id) as number | null | undefined,
+    actorId: (raw.actorId ?? raw.actor_id) as string | null | undefined,
     actorSnapshot: normalizeActorSnapshot(raw.actorSnapshot ?? raw.actor_snapshot),
     targetType: String(raw.targetType ?? raw.target_type ?? ''),
-    targetId: Number(raw.targetId ?? raw.target_id ?? 0),
-    patientId: (raw.patientId ?? raw.patient_id) as number | null | undefined,
-    patientMrn: (raw.patientMrn ?? raw.patient_mrn) as string | null | undefined,
-    orderId: (raw.orderId ?? raw.order_id) as number | null | undefined,
-    fillerNumber: (raw.fillerNumber ?? raw.filler_number) as string | null | undefined,
+    targetId: String(raw.targetId ?? raw.target_id ?? ''),
+    patientId: (raw.patientId ?? raw.patient_id) as string | null | undefined,
+    orderId: (raw.orderId ?? raw.order_id) as string | null | undefined,
     testId: (raw.testId ?? raw.test_id) as number | null | undefined,
-    accessionNumber: (raw.accessionNumber ?? raw.accession_number) as string | null | undefined,
+    sampleId: (raw.sampleId ?? raw.sample_id) as string | null | undefined,
     eventScope: (raw.eventScope ?? raw.event_scope) as string | null | undefined,
     changes: normalizeChanges(raw.changes),
     metadata,
@@ -121,15 +119,15 @@ export interface AuditSearchPreviewResponse {
     textTerm?: string | null;
     dimensions?: string[];
     parsedIds?: {
-      orderId?: number | null;
+      orderId?: string | null;
       testId?: number | null;
-      sampleId?: number | null;
-      patientId?: number | null;
+      sampleId?: string | null;
+      patientId?: string | null;
     } | null;
     displayToken?: string | null;
   };
-  patients: Array<{ id: number; fullName: string; displayId: string }>;
-  users: Array<{ id: number; name: string; username: string }>;
+  patients: Array<{ id: string; fullName: string; displayId: string }>;
+  users: Array<{ id: string; name: string; username: string }>;
   eventCount?: number | null;
 }
 

@@ -208,7 +208,7 @@ type TestDetailModalBodyProps = {
   catalogTest: Test | undefined;
   relatedSamples: Sample[];
   detailGridSections: DetailGridSectionConfig[] | undefined;
-  onViewFullSample: (sampleId: number) => void;
+  onViewFullSample: (sampleId: string) => void;
   onOpenLinkedTest: (linkedTest: OrderTest) => void;
   orderTestId: number | undefined;
   patient?: Patient;
@@ -242,7 +242,7 @@ export function TestDetailModalBody({
       {sampleRejection.showBanner ? (
         <div className="mb-space-4">
           <SampleRejectedBanner
-            accessionNumber={sampleRejection.accessionNumber}
+            sampleId={sampleRejection.sampleId}
             sampleRejectionReason={sampleRejection.sampleRejectionReason}
           />
         </div>

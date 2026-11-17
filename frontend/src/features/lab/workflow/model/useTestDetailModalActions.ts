@@ -23,7 +23,7 @@ export function useTestDetailModalActions({
 }: {
   interaction: TestDetailInteraction;
   orderTestId: number;
-  orderId: number | string | undefined;
+  orderId: string | undefined;
   onClose: () => void;
 }) {
   const { openModal } = useModal();
@@ -40,10 +40,9 @@ export function useTestDetailModalActions({
   const approveHandler = useCallback(
     async (_signal: AbortSignal) => {
       if (interaction !== 'validate') return;
-      const orderIdStr = orderId == null ? undefined : String(orderId);
       try {
         await validateMutation.mutateAsync({
-          orderId: orderIdStr,
+          orderId,
           orderTestId,
           validationNotes: getValidationComments(orderTestId) || undefined,
           criticalSeen,
@@ -82,10 +81,9 @@ export function useTestDetailModalActions({
       // full-screen scrim does not sit under the toast and swallow sidebar / route clicks.
       clearValidationComments(orderTestId);
       onClose();
-      const orderIdStr = orderId == null ? undefined : String(orderId);
       void invalidateAfterLabMutation(queryClient, {
         kind: 'qualityIssue',
-        orderId: orderIdStr,
+        orderId,
         orderTestId,
       });
     },
@@ -109,7 +107,7 @@ export function useTestDetailModalActions({
   );
 
   const handleViewFullSample = useCallback(
-    (sampleId: number) => {
+    (sampleId: string) => {
       openModal({
         type: ModalType.SAMPLE_DETAIL,
         sampleId: String(sampleId),

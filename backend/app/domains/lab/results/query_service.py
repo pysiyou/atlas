@@ -48,7 +48,7 @@ class ResultQueryService:
                 detail=f"Order test {order_test_id} not found",
             )
 
-        samples_by_id: dict[int, Sample] = {}
+        samples_by_id: dict[str, Sample] = {}
         if order_test.sampleId:
             sample = self.db.query(Sample).filter(Sample.sampleId == order_test.sampleId).first()
             if sample:
@@ -89,23 +89,10 @@ class ResultQueryService:
         if prior.sampleId and prior_sample is None:
             prior_sample = self.db.query(Sample).filter(Sample.sampleId == prior.sampleId).first()
         display = format_order_test_display(
-            prior_sample.accessionNumber if prior_sample else None,
+            prior_sample.sampleId if prior_sample else None,
             prior.testCode,
         )
         return display if display and display != "-" else None
-
-    def _original_accession_number(self, sample, samples_by_id) -> str | None:
-        """Parent tube accession for a recollection sample."""
-        from app.domains.lab.models.sample import Sample
-
-        if not sample or not sample.originalSampleId:
-            return None
-        parent = samples_by_id.get(sample.originalSampleId)
-        if parent is None:
-            parent = (
-                self.db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
-            )
-        return parent.accessionNumber if parent else None
 
     def _enrich_order_test(self, t, samples_by_id, tickets_by_test=None):
         """Build the order-test DTO with stored clinical identifiers, never integer PKs for display."""
@@ -120,21 +107,19 @@ class ResultQueryService:
         from app.domains.lab.rules.eligibility import escalation_action_flags
 
         flags = escalation_action_flags(t, reason_code=reason_code)
-        if order is None or not order.fillerNumber:
+        if order is None or not order.orderId:
             from fastapi import HTTPException
             from fastapi import status as http_status
 
             raise HTTPException(
                 status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Order test {t.id} is missing a filler number",
+                detail=f"Order test {t.id} is missing an order id",
             )
         return PendingEscalationItemResponse(
             id=t.id,
             orderId=t.orderId,
-            fillerNumber=order.fillerNumber,
             orderDate=order.orderDate,
             patientId=order.patientId,
-            patientMrn=patient.mrn if patient else "",
             patientName=patient.fullName if patient else "Unknown",
             patientDob=patient.dateOfBirth if patient else None,
             testCode=t.testCode,
@@ -142,7 +127,6 @@ class ResultQueryService:
             sampleType=test_def.sampleType if test_def else "Unknown",
             status=t.status.value,
             sampleId=t.sampleId,
-            accessionNumber=sample.accessionNumber if sample else None,
             results=t.results,
             resultEnteredAt=t.resultEnteredAt,
             enteredBy=t.enteredBy,
@@ -167,7 +151,6 @@ class ResultQueryService:
             collectedBy=sample.collectedBy if sample else None,
             sampleIsRecollection=sample.isRecollection if sample else False,
             sampleOriginalSampleId=sample.originalSampleId if sample else None,
-            sampleOriginalAccessionNumber=self._original_accession_number(sample, samples_by_id),
             sampleRecollectionReason=sample.recollectionReason if sample else None,
             sampleRecollectionAttempt=sample.recollectionAttempt if sample else None,
             ticketId=ticket.id if ticket else None,

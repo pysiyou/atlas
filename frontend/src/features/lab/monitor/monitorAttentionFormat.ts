@@ -30,7 +30,7 @@ type AttentionHandler = (item: LabAttentionQueueItem) => FormattedLabAttentionQu
 function orderLink(item: LabAttentionQueueItem): AttentionDetail {
   return {
     type: 'link',
-    value: displayId.order(item.fillerNumber),
+    value: displayId.order(item.orderId),
     to: `/orders/${item.orderId}`,
   };
 }
@@ -44,7 +44,7 @@ function testIdChip(item: LabAttentionQueueItem): AttentionDetail | null {
   if (codes.length === 1) {
     return {
       type: 'testId',
-      value: formatOrderTestDisplay(item.accessionNumber, codes[0]),
+      value: formatOrderTestDisplay(item.sampleId, codes[0]),
     };
   }
   if (codes.length > 1) {
@@ -52,8 +52,8 @@ function testIdChip(item: LabAttentionQueueItem): AttentionDetail | null {
     const suffix = codes.length > 2 ? ` +${codes.length - 2}` : '';
     return { type: 'testId', value: `${preview}${suffix}` };
   }
-  if (item.accessionNumber) {
-    return { type: 'testId', value: displayId.sample(item.accessionNumber) };
+  if (item.sampleId) {
+    return { type: 'testId', value: displayId.sample(item.sampleId) };
   }
   return null;
 }

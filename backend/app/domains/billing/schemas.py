@@ -15,10 +15,9 @@ class InvoiceItem(BaseModel):
 
 
 class InvoiceResponse(BaseModel):
-    invoiceId: int
-    invoiceNumber: str = Field(..., pattern=INVOICE_NUMBER_PATTERN)
-    orderId: int
-    patientId: int
+    invoiceId: str = Field(..., pattern=INVOICE_NUMBER_PATTERN)
+    orderId: str
+    patientId: str
     patientName: str
     items: list[InvoiceItem]
     subtotal: float

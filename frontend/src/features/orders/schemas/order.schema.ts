@@ -1,8 +1,11 @@
 import { z } from 'zod';
 import {
+  accessionSchema,
   dateStringSchema,
+  orderIdSchema,
+  mrnSchema,
+  npiSchema,
   nullableApiDatetimeSchema,
-  positiveIntSchema,
 } from '@/types/zod';
 import { GENDER_VALUES, PAYMENT_STATUS_VALUES } from '@/types/generated/enums';
 import {
@@ -24,13 +27,10 @@ export const orderTestSchema = z.object({
   sampleType: z.string(),
   status: normalizedStatusSchema,
   priceAtOrder: z.number().min(0),
-  sampleId: z
-    .number()
-    .int()
-    .positive()
+  sampleId: accessionSchema
     .nullable()
     .optional()
-    .transform(v => (v === null ? undefined : v)), // Backend returns null; normalize to undefined
+    .transform(v => (v === null ? undefined : v)),
   results: z.record(z.string(), z.unknown()).nullable().optional(),
   resultEnteredAt: nullableApiDatetimeSchema,
   enteredBy: z.string().nullable().optional(), // Backend returns null
@@ -51,11 +51,9 @@ export const orderTestSchema = z.object({
 });
 
 export const orderSchema = z.object({
-  orderId: positiveIntSchema, // Backend returns orderId, not id
-  fillerNumber: z.string().optional(),
+  orderId: orderIdSchema,
   placerNumber: z.string().nullable().optional(),
-  patientId: positiveIntSchema,
-  patientMrn: z.string().nullable().optional(),
+  patientId: mrnSchema,
   patientName: z.string(), // From backend relationship
   patientDob: dateStringSchema.optional(),
   patientGender: zEnumFromValues(GENDER_VALUES).optional(),
@@ -65,7 +63,7 @@ export const orderSchema = z.object({
   paymentStatus: zEnumFromValues(PAYMENT_STATUS_VALUES),
   overallStatus: zEnumFromValues(ORDER_STATUS_VALUES),
   priority: zEnumFromValues(PRIORITY_LEVEL_VALUES),
-  referentDoctorId: z.number().int().positive().nullable().optional(),
+  referentDoctorId: npiSchema.nullable().optional(),
   referentDoctorName: z.string().nullable().optional(),
   referentDoctorEmail: z.string().nullable().optional(),
   referentDoctorPhone: z.string().nullable().optional(),
@@ -84,8 +82,8 @@ export type OrderTest = z.infer<typeof orderTestSchema>;
 
 // Form schema for CREATE (all required fields enforced)
 export const orderCreateSchema = z.object({
-  patientId: positiveIntSchema,
-  referentDoctorId: z.number().int().positive().nullable().optional(),
+  patientId: mrnSchema,
+  referentDoctorId: npiSchema.nullable().optional(),
   priority: zEnumFromValues(PRIORITY_LEVEL_VALUES),
   clinicalNotes: z.string().optional(),
   testCodes: z.array(z.string()).min(1, 'At least one test is required'),

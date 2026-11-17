@@ -121,7 +121,7 @@ def _record_id_clauses(term: str) -> list:
         clauses.extend(
             [
                 exists().where(
-                    and_(Order.fillerNumber == compact, AuditEvent.orderId == Order.orderId)
+                    and_(Order.orderId == compact, AuditEvent.orderId == Order.orderId)
                 ),
                 exists().where(
                     and_(
@@ -135,7 +135,7 @@ def _record_id_clauses(term: str) -> list:
         clauses.append(
             exists().where(
                 and_(
-                    Sample.accessionNumber == trimmed,
+                    Sample.sampleId == trimmed,
                     AuditEvent.targetType == "sample",
                     AuditEvent.targetId == Sample.sampleId,
                 )
@@ -144,10 +144,10 @@ def _record_id_clauses(term: str) -> list:
     elif looks_like_mrn(trimmed):
         clauses.extend(
             [
-                exists().where(and_(Patient.mrn == compact, AuditEvent.patientId == Patient.id)),
+                exists().where(and_(Patient.id == compact, AuditEvent.patientId == Patient.id)),
                 exists().where(
                     and_(
-                        Patient.mrn == compact,
+                        Patient.id == compact,
                         AuditEvent.targetType == "patient",
                         AuditEvent.targetId == Patient.id,
                     )
@@ -172,9 +172,9 @@ def apply_unified_search(query, term: str, *, scope: str = "stream"):
     text_clauses = [
         AuditEvent.actorSnapshot["name"].astext.ilike(pattern),
         User.username.ilike(pattern),
-        Patient.mrn.ilike(pattern),
-        Order.fillerNumber.ilike(pattern),
-        Sample.accessionNumber.ilike(pattern),
+        Patient.id.ilike(pattern),
+        Order.orderId.ilike(pattern),
+        Sample.sampleId.ilike(pattern),
     ]
     if scope != "system":
         text_clauses.append(Patient.fullName.ilike(pattern))

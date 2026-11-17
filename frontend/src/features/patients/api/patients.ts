@@ -12,7 +12,7 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tansta
 import { useCallback, useMemo } from 'react';
 import { useResettablePage } from '@/hooks';
 import { usePaginatedPageSize } from '@/hooks';
-import { useEntityLookup, parseNumericKey } from '@/hooks';
+import { useEntityLookup } from '@/hooks';
 import { useDebouncedValue } from '@/hooks';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query';
@@ -266,7 +266,7 @@ export function usePaginatedPatientContextList(filters?: PatientsFilter) {
  *
  * @example
  * ```tsx
- * const { patient, isLoading } = usePatient('1'); // internal PK; display uses patient.mrn
+ * const { patient, isLoading } = usePatient('1'); // internal PK; display uses patient.id
  * ```
  */
 export function usePatient(patientId: string | undefined) {
@@ -374,14 +374,14 @@ export function usePatientNames() {
     ...cacheConfig.semiStatic,
     // SELECT PATTERN: Transform to Map for efficient lookups
     select: (patients: Patient[]) => {
-      const map = new Map<number, string>();
+      const map = new Map<string, string>();
       patients.forEach(p => map.set(p.id, p.fullName));
       return map;
     },
   });
 
   return {
-    namesMap: query.data ?? new Map<number, string>(),
+    namesMap: query.data ?? new Map<string, string>(),
     isLoading: query.isLoading,
     isError: query.isError,
   };
@@ -403,11 +403,10 @@ export function usePatientNameLookup() {
   const { patients, isLoading } = usePatientsList();
   const { get: getPatient, map: patientsMap } = useEntityLookup(patients, p => p.id, {
     isLoading,
-    normalizeKey: parseNumericKey,
   });
 
   const getPatientName = useCallback(
-    (patientId: number | string): string => {
+    (patientId: string): string => {
       const patient = getPatient(patientId);
       return patient?.fullName ?? 'Unknown Patient';
     },
@@ -466,10 +465,10 @@ export function useUpdatePatient() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: number; data: unknown }) => {
+    mutationFn: async ({ id, data }: { id: string; data: unknown }) => {
       const validated = patientUpdateSchema.parse(data);
       const transformed = formInputToPayload(validated);
-      const response = await patientAPI.update(id.toString(), transformed);
+      const response = await patientAPI.update(id, transformed);
       return patientSchema.parse(response);
     },
     onSuccess: (_, { id }) => {

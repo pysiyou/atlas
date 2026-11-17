@@ -56,7 +56,7 @@ class UserService:
 
         user = User(
             username=username,
-            employeeNumber=allocate_employee_number(self.db),
+            id=allocate_employee_number(self.db),
             hashedPassword=get_password_hash(password),
             name=name,
             role=UserRole.ADMIN,
@@ -85,7 +85,7 @@ class UserService:
         """Return every user, including disabled accounts, so historical names still resolve."""
         return self.list_all()
 
-    def get_by_id(self, user_id: int) -> User:
+    def get_by_id(self, user_id: str) -> User:
         user = self.db.query(User).filter(User.id == user_id).first()
         if not user:
             raise HTTPException(
@@ -110,7 +110,7 @@ class UserService:
         self,
         user: User,
         update_data: dict,
-        actor_user_id: int,
+        actor_user_id: str,
     ) -> None:
         """Reject self-disable and last-active-admin disable/demotion."""
         next_is_active = update_data.get("isActive", user.isActive)
@@ -146,7 +146,7 @@ class UserService:
             metadata["isActive"] = update_data["isActive"]
         return metadata or None
 
-    def create(self, user_data: UserCreate, actor_user_id: int) -> User:
+    def create(self, user_data: UserCreate, actor_user_id: str) -> User:
         existing = self.db.query(User).filter(User.username == user_data.username).first()
         if existing:
             raise HTTPException(
@@ -155,7 +155,7 @@ class UserService:
             )
         user = User(
             username=user_data.username,
-            employeeNumber=allocate_employee_number(self.db),
+            id=allocate_employee_number(self.db),
             hashedPassword=get_password_hash(user_data.password),
             name=user_data.name,
             role=user_data.role,
@@ -178,7 +178,7 @@ class UserService:
             )
         return user
 
-    def update(self, user_id: int, user_data: UserUpdate, actor_user_id: int) -> User:
+    def update(self, user_id: str, user_data: UserUpdate, actor_user_id: str) -> User:
         user = self.get_by_id(user_id)
         update_data = user_data.model_dump(exclude_unset=True)
         self._assert_account_lifecycle_guards(user, update_data, actor_user_id)

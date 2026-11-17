@@ -201,14 +201,13 @@ export function renderCardDateTimeSecondary(
 }
 
 export function renderNavigableOrderId(
-  orderId: string | number,
+  orderId: string,
   navigate: NavigateFunction,
-  fillerNumber?: string | null,
 ): ReactNode {
   return (
     <RecordId
       type="order"
-      value={fillerNumber}
+      value={orderId}
       emphasis="interactive"
       as="button"
       onClick={(e: MouseEvent<HTMLElement>) => {
@@ -219,11 +218,11 @@ export function renderNavigableOrderId(
   );
 }
 
-export function renderNavigableSampleId(accessionNumber: string): ReactNode {
+export function renderNavigableSampleId(sampleId: string): ReactNode {
   return (
     <RecordId
       type="sample"
-      value={accessionNumber}
+      value={sampleId}
       emphasis="interactive"
       navigateToFiltered={{
         targetPage: '/laboratory/collection',
@@ -355,8 +354,8 @@ export function renderOrderTestsBlockFromTests(
   return <OrderTestsCell activeTests={activeTests} variant="namesFirst" {...options} />;
 }
 
-export function renderOrderId(fillerNumber: string | null | undefined, clickable = false): ReactNode {
-  return <RecordId type="order" value={fillerNumber} emphasis={clickable ? 'interactive' : 'block'} />;
+export function renderOrderId(orderId: string | null | undefined, clickable = false): ReactNode {
+  return <RecordId type="order" value={orderId} emphasis={clickable ? 'interactive' : 'block'} />;
 }
 
 export interface OrderPatientDemographics {
@@ -447,8 +446,8 @@ export function renderPatientSexAgeSecondary(
 }
 
 export interface WorklistRowSource {
-  orderId: number;
-  patientId: number;
+  orderId: string;
+  patientId: string;
   patientName: string;
   patientDob?: string | null;
   patientGender?: string | null;
@@ -463,7 +462,7 @@ export interface WorklistRowSource {
 export interface WorklistRowPresentation {
   orderContext: ReturnType<typeof buildOrderContextPresentation>;
   testIdentity: ReactNode;
-  orderId: number;
+  orderId: string;
   testName: string;
   testCode: string;
   status: string;

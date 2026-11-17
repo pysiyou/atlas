@@ -77,7 +77,7 @@ class ReportPdfService:
             rightMargin=18 * mm,
             topMargin=16 * mm,
             bottomMargin=18 * mm,
-            title=f"Lab report {order.fillerNumber}",
+            title=f"Lab report {order.orderId}",
         )
         styles = getSampleStyleSheet()
         title_style = ParagraphStyle(
@@ -101,13 +101,13 @@ class ReportPdfService:
         story.append(Paragraph(str(header_text), title_style))
         story.append(
             Paragraph(
-                f"Order {order.fillerNumber} · {order.orderDate.strftime('%Y-%m-%d %H:%M UTC')}",
+                f"Order {order.orderId} · {order.orderDate.strftime('%Y-%m-%d %H:%M UTC')}",
                 muted,
             )
         )
         story.append(Spacer(1, 4 * mm))
 
-        patient_id_suffix = f" ({patient.mrn})" if patient else ""
+        patient_id_suffix = f" ({patient.id})" if patient else ""
         patient_lines = [
             f"<b>Patient</b>: {patient.fullName if patient else 'Unknown'}{patient_id_suffix}",
             f"<b>DOB / Sex</b>: {getattr(patient, 'dateOfBirth', '—') if patient else '—'} / "
@@ -176,7 +176,7 @@ class ReportPdfService:
         doc.build(story)
         return buffer.getvalue()
 
-    def persist_pdf(self, order: Order, pdf_bytes: bytes, user_id: int) -> ReportDocument:
+    def persist_pdf(self, order: Order, pdf_bytes: bytes, user_id: str) -> ReportDocument:
         """Write bytes under REPORTS_DIR and upsert a report_documents row."""
         digest = hashlib.sha256(pdf_bytes).hexdigest()
         path = _reports_dir() / f"order-{order.orderId}.pdf"
@@ -204,7 +204,7 @@ class ReportPdfService:
         self.db.flush()
         return row
 
-    def generate_and_store(self, order: Order, user_id: int) -> tuple[bytes, ReportDocument]:
+    def generate_and_store(self, order: Order, user_id: str) -> tuple[bytes, ReportDocument]:
         pdf_bytes = self.build_pdf_bytes(order)
         document = self.persist_pdf(order, pdf_bytes, user_id)
         return pdf_bytes, document

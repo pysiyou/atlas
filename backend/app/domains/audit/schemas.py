@@ -25,12 +25,12 @@ __all__ = [
 
 class EventTarget(BaseModel):
     entityType: str = Field(..., min_length=1, max_length=50)
-    entityId: int
+    entityId: str
 
 
 class EventContext(BaseModel):
-    patientId: int | None = None
-    orderId: int | None = None
+    patientId: str | None = None
+    orderId: str | None = None
     testId: int | None = None
 
 
@@ -48,10 +48,10 @@ class AuditEventCreate(BaseModel):
 
 
 class AuditSearchParsedIds(BaseModel):
-    orderId: int | None = None
+    orderId: str | None = None
     testId: int | None = None
-    sampleId: int | None = None
-    patientId: int | None = None
+    sampleId: str | None = None
+    patientId: str | None = None
 
 
 class AuditSearchIntent(BaseModel):
@@ -63,13 +63,13 @@ class AuditSearchIntent(BaseModel):
 
 
 class AuditSearchPreviewPatient(BaseModel):
-    id: int
+    id: str
     fullName: str
     displayId: str
 
 
 class AuditSearchPreviewUser(BaseModel):
-    id: int
+    id: str
     name: str
     username: str
 
@@ -85,16 +85,13 @@ class AuditEventResponse(BaseModel):
     eventId: UUID
     createdAt: datetime
     eventType: str
-    actorId: int | None = None
+    actorId: str | None = None
     actorSnapshot: dict[str, Any]
     targetType: str
-    targetId: int
-    patientId: int | None = None
-    patientMrn: str | None = None
-    orderId: int | None = None
-    fillerNumber: str | None = None
+    targetId: str
+    patientId: str | None = None
+    orderId: str | None = None
     testId: int | None = None
-    accessionNumber: str | None = None
     eventScope: str | None = None
     changes: dict[str, Any] | None = None
     metadata: dict[str, Any] | None = None

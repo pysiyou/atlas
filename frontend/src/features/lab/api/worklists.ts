@@ -99,10 +99,9 @@ export const worklistsAPI = {
         testName: string;
         rows: Array<{
           orderTestId: number;
-          orderId: number;
-          fillerNumber?: string | null;
+          orderId: string;
           patientName: string;
-          accessionNumber?: string | null;
+          sampleId?: string | null;
           sampleType: string;
           priority: string;
           testCode: string;

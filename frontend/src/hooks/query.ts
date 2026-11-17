@@ -74,8 +74,3 @@ export function useEntityLookup<T, K extends string | number>(
 
   return { get, map, isLoading };
 }
-
-export function parseNumericKey(key: string | number): number | undefined {
-  const numericId = typeof key === 'string' ? parseInt(key, 10) : key;
-  return Number.isNaN(numericId) ? undefined : numericId;
-}

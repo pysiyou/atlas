@@ -35,7 +35,6 @@ from app.domains.audit.search import (
     apply_unified_search,
     classify_search_term,
 )
-from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.users.models import User
@@ -146,7 +145,7 @@ def _actor_snapshot_for_api(raw: dict[str, Any] | None) -> dict[str, Any]:
     snap = raw or {}
     user_raw = snap.get("userId", snap.get("user_id"))
     if user_raw == "system" or user_raw is None:
-        user_id: int | str = "system"
+        user_id: str | str = "system"
     else:
         user_id = user_raw
 
@@ -197,7 +196,10 @@ def _load_order_test_results_map(
             continue
         if _event_has_results_payload(row.eventType, row.eventMetadata, row.changes):
             continue
-        order_test_ids.append(row.targetId)
+        try:
+            order_test_ids.append(int(row.targetId))
+        except (TypeError, ValueError):
+            continue
 
     if not order_test_ids:
         return {}
@@ -213,82 +215,9 @@ def _load_order_test_results_map(
     return out
 
 
-def _load_clinical_id_maps(db: Session, rows: list[AuditEvent]) -> dict[str, dict[int, Any]]:
-    """Batch-load MRN / filler / accession (and order-test links) for a page of events."""
-    patient_ids = {row.patientId for row in rows if row.patientId}
-    patient_ids.update(row.targetId for row in rows if row.targetType == "patient")
-    order_ids = {row.orderId for row in rows if row.orderId}
-    order_ids.update(row.targetId for row in rows if row.targetType == "order")
-    sample_ids = {row.targetId for row in rows if row.targetType == "sample"}
-    order_test_ids = {row.testId for row in rows if row.testId}
-    order_test_ids.update(row.targetId for row in rows if row.targetType == "order_test")
-
-    ot_sample: dict[int, int] = {}
-    ot_order: dict[int, int] = {}
-    if order_test_ids:
-        for order_test_id, sample_id, order_id in (
-            db.query(OrderTest.id, OrderTest.sampleId, OrderTest.orderId)
-            .filter(OrderTest.id.in_(order_test_ids))
-            .all()
-        ):
-            if sample_id:
-                ot_sample[order_test_id] = sample_id
-                sample_ids.add(sample_id)
-            if order_id:
-                ot_order[order_test_id] = order_id
-                order_ids.add(order_id)
-
-    mrns: dict[int, str] = {}
-    if patient_ids:
-        for patient in db.query(Patient).filter(Patient.id.in_(patient_ids)).all():
-            if patient.mrn:
-                mrns[patient.id] = patient.mrn
-
-    fillers: dict[int, str] = {}
-    if order_ids:
-        for order in db.query(Order).filter(Order.orderId.in_(order_ids)).all():
-            if order.fillerNumber:
-                fillers[order.orderId] = order.fillerNumber
-
-    accessions: dict[int, str] = {}
-    if sample_ids:
-        for sample in db.query(Sample).filter(Sample.sampleId.in_(sample_ids)).all():
-            if sample.accessionNumber:
-                accessions[sample.sampleId] = sample.accessionNumber
-
-    return {
-        "mrns": mrns,
-        "fillers": fillers,
-        "accessions": accessions,
-        "ot_sample": ot_sample,
-        "ot_order": ot_order,
-    }
-
-
-def _clinical_ids_for_event(
-    row: AuditEvent, maps: dict[str, dict[int, Any]] | None
-) -> tuple[str | None, str | None, str | None]:
-    """Resolve stored clinical identifiers for one audit event."""
-    if not maps:
-        return None, None, None
-    patient_id = row.patientId or (row.targetId if row.targetType == "patient" else None)
-    order_id = row.orderId or (row.targetId if row.targetType == "order" else None)
-    sample_id = row.targetId if row.targetType == "sample" else None
-    order_test_id = row.testId or (row.targetId if row.targetType == "order_test" else None)
-    if order_test_id:
-        sample_id = sample_id or maps["ot_sample"].get(order_test_id)
-        order_id = order_id or maps["ot_order"].get(order_test_id)
-    return (
-        maps["mrns"].get(patient_id) if patient_id else None,
-        maps["fillers"].get(order_id) if order_id else None,
-        maps["accessions"].get(sample_id) if sample_id else None,
-    )
-
-
 def audit_event_to_response(
     row: AuditEvent,
     order_test_results: dict[int, tuple[dict[str, Any], list[str]]] | None = None,
-    clinical_ids: dict[str, dict[int, Any]] | None = None,
 ) -> AuditEventResponse:
     metadata: dict[str, Any] | None = dict(row.eventMetadata) if row.eventMetadata else None
     if (
@@ -297,14 +226,16 @@ def audit_event_to_response(
         and row.eventType in _ENRICH_RESULTS_FROM_ORDER_TEST
         and not _event_has_results_payload(row.eventType, metadata, row.changes)
     ):
-        enriched = order_test_results.get(row.targetId)
+        try:
+            enriched = order_test_results.get(int(row.targetId))
+        except (TypeError, ValueError):
+            enriched = None
         if enriched:
             metadata = dict(metadata or {})
             metadata["results"] = enriched[0]
             if enriched[1]:
                 metadata["flags"] = enriched[1]
 
-    patient_mrn, filler_number, accession_number = _clinical_ids_for_event(row, clinical_ids)
     return AuditEventResponse(
         eventId=row.eventId,
         createdAt=row.createdAt,
@@ -314,11 +245,8 @@ def audit_event_to_response(
         targetType=row.targetType,
         targetId=row.targetId,
         patientId=row.patientId,
-        patientMrn=patient_mrn,
         orderId=row.orderId,
-        fillerNumber=filler_number,
         testId=row.testId,
-        accessionNumber=accession_number,
         eventScope=row.eventScope or stored_event_scope_for_type(row.eventType),
         changes=_changes_for_api(row.changes),
         metadata=metadata,
@@ -333,7 +261,7 @@ class AuditEventQueryService:
         self,
         *,
         test_id: int | None,
-        sample_id: int | None,
+        sample_id: str | None,
     ) -> tuple[list[int], list[int]]:
         """
         Expand a lab lens into order_test ids and sample ids.
@@ -342,7 +270,7 @@ class AuditEventQueryService:
         From a sample: that sample plus every order_test on it.
         """
         order_test_ids: list[int] = []
-        sample_ids: list[int] = []
+        sample_ids: list[str] = []
 
         if test_id is not None:
             order_test_ids.append(test_id)
@@ -363,10 +291,10 @@ class AuditEventQueryService:
         query,
         *,
         scope: str,
-        order_id: int | None,
-        patient_id: int | None,
+        order_id: str | None,
+        patient_id: str | None,
         test_id: int | None,
-        sample_id: int | None,
+        sample_id: str | None,
     ):
         """Restrict the query to one containment lens. Empty identity → no rows."""
         if scope == "order":
@@ -425,10 +353,10 @@ class AuditEventQueryService:
         self,
         *,
         scope: str = "stream",
-        order_id: int | None = None,
-        patient_id: int | None = None,
+        order_id: str | None = None,
+        patient_id: str | None = None,
         test_id: int | None = None,
-        sample_id: int | None = None,
+        sample_id: str | None = None,
         since: datetime | None = None,
         until: datetime | None = None,
         kinds: list[str] | None = None,
@@ -436,7 +364,7 @@ class AuditEventQueryService:
         event_scope: str | None = None,
         cursor_created_at: datetime | None = None,
         cursor_event_id: UUID | None = None,
-        actor_id: int | None = None,
+        actor_id: str | None = None,
         actor_roles: list[str] | None = None,
         actor_search: str | None = None,
         search: str | None = None,
@@ -515,8 +443,7 @@ class AuditEventQueryService:
             .all()
         )
         order_test_results = _load_order_test_results_map(self.db, rows)
-        clinical_ids = _load_clinical_id_maps(self.db, rows)
-        return [audit_event_to_response(row, order_test_results, clinical_ids) for row in rows]
+        return [audit_event_to_response(row, order_test_results) for row in rows]
 
     def list_recent(self, hours: float, limit: int = 500) -> list[AuditEventResponse]:
         since = datetime.now(UTC) - timedelta(hours=hours)
@@ -556,7 +483,7 @@ class AuditEventQueryService:
                 AuditSearchPreviewPatient(
                     id=row.id,
                     fullName=row.fullName,
-                    displayId=row.mrn,
+                    displayId=row.id,
                 )
                 for row in patient_rows
             ]
@@ -607,10 +534,10 @@ class AuditEventQueryService:
         self,
         *,
         scope: str = "stream",
-        order_id: int | None = None,
-        patient_id: int | None = None,
+        order_id: str | None = None,
+        patient_id: str | None = None,
         test_id: int | None = None,
-        sample_id: int | None = None,
+        sample_id: str | None = None,
         hours: float | None = None,
         created_from: datetime | None = None,
         created_to: datetime | None = None,
@@ -619,7 +546,7 @@ class AuditEventQueryService:
         event_scope: str | None = None,
         cursor_created_at: datetime | None = None,
         cursor_event_id: UUID | None = None,
-        actor_id: int | None = None,
+        actor_id: str | None = None,
         actor_roles: list[str] | None = None,
         actor_search: str | None = None,
         search: str | None = None,
@@ -659,12 +586,12 @@ class AuditEmitter:
         self.db = db
         self._writer = AuditWriter(db)
 
-    def _actor(self, user_id: int | None) -> User | None:
-        if user_id is None or user_id <= 0:
+    def _actor(self, user_id: str | None) -> User | None:
+        if not user_id:
             return None
-        return self.db.query(User).filter(User.id == user_id).first()
+        return self.db.query(User).filter(User.id == str(user_id)).first()
 
-    def _order_context(self, order_id: int, test_id: int | None = None) -> EventContext:
+    def _order_context(self, order_id: str, test_id: int | None = None) -> EventContext:
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         return EventContext(
             orderId=order_id,
@@ -672,15 +599,15 @@ class AuditEmitter:
             testId=test_id,
         )
 
-    def emit(self, create: AuditEventCreate, user_id: int | None) -> None:
+    def emit(self, create: AuditEventCreate, user_id: str | None) -> None:
         self._writer.log_event_sync(create, self._actor(user_id))
 
     def _emit(
         self,
         event_type: EventType,
         target_type: str,
-        target_id: int,
-        user_id: int | None,
+        target_id: str | int,
+        user_id: str | None,
         *,
         context: EventContext | None = None,
         changes: EventChanges | None = None,
@@ -689,7 +616,7 @@ class AuditEmitter:
         self.emit(
             AuditEventCreate(
                 eventType=event_type,
-                target=EventTarget(entityType=target_type, entityId=target_id),
+                target=EventTarget(entityType=target_type, entityId=str(target_id)),
                 context=context,
                 changes=changes,
                 metadata=metadata,
@@ -699,7 +626,7 @@ class AuditEmitter:
 
     # ── Patient ──────────────────────────────────────────────────────────
 
-    def patient_created(self, patient_id: int, user_id: int) -> None:
+    def patient_created(self, patient_id: str, user_id: str) -> None:
         self._emit(
             EventType.PATIENT_CREATE,
             "patient",
@@ -710,8 +637,8 @@ class AuditEmitter:
 
     def patient_created_forced(
         self,
-        patient_id: int,
-        user_id: int,
+        patient_id: str,
+        user_id: str,
         metadata: dict[str, Any] | None = None,
     ) -> None:
         self._emit(
@@ -724,7 +651,7 @@ class AuditEmitter:
         )
 
     def patient_updated(
-        self, patient_id: int, user_id: int, changes: dict[str, Any] | None = None
+        self, patient_id: str, user_id: str, changes: dict[str, Any] | None = None
     ) -> None:
         self._emit(
             EventType.PATIENT_UPDATE,
@@ -735,7 +662,7 @@ class AuditEmitter:
             changes=EventChanges(newValues=changes or {}) if changes else None,
         )
 
-    def patient_deleted(self, patient_id: int, user_id: int) -> None:
+    def patient_deleted(self, patient_id: str, user_id: str) -> None:
         self._emit(
             EventType.PATIENT_DELETE,
             "patient",
@@ -744,7 +671,7 @@ class AuditEmitter:
             context=EventContext(patientId=patient_id),
         )
 
-    def patient_viewed(self, patient_id: int, user_id: int) -> None:
+    def patient_viewed(self, patient_id: str, user_id: str) -> None:
         self._emit(
             EventType.PATIENT_VIEW,
             "patient",
@@ -755,7 +682,7 @@ class AuditEmitter:
 
     # ── Order ────────────────────────────────────────────────────────────
 
-    def order_created(self, order_id: int, patient_id: int, user_id: int) -> None:
+    def order_created(self, order_id: str, patient_id: str, user_id: str) -> None:
         self._emit(
             EventType.ORDER_CREATE,
             "order",
@@ -765,7 +692,7 @@ class AuditEmitter:
         )
 
     def order_updated(
-        self, order_id: int, user_id: int, metadata: dict[str, Any] | None = None
+        self, order_id: str, user_id: str, metadata: dict[str, Any] | None = None
     ) -> None:
         self._emit(
             EventType.ORDER_UPDATE,
@@ -776,7 +703,7 @@ class AuditEmitter:
             metadata=metadata,
         )
 
-    def order_deleted(self, order_id: int, user_id: int) -> None:
+    def order_deleted(self, order_id: str, user_id: str) -> None:
         self._emit(
             EventType.ORDER_DELETE,
             "order",
@@ -787,10 +714,10 @@ class AuditEmitter:
 
     def order_status_changed(
         self,
-        order_id: int,
+        order_id: str,
         old_status: str | None,
         new_status: str,
-        user_id: int | None = None,
+        user_id: str | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> None:
         meta = {"trigger": metadata.get("trigger", "automatic") if metadata else "automatic"}
@@ -810,7 +737,7 @@ class AuditEmitter:
         )
 
     def order_test_added(
-        self, order_id: int, order_test_id: int, test_code: str, user_id: int
+        self, order_id: str, order_test_id: int, test_code: str, user_id: str
     ) -> None:
         self._emit(
             EventType.ORDER_TEST_ADD,
@@ -823,10 +750,10 @@ class AuditEmitter:
 
     def order_test_removed(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         old_status: str,
     ) -> None:
         self._emit(
@@ -841,10 +768,10 @@ class AuditEmitter:
 
     def order_test_cancelled(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         reason: str | None = None,
     ) -> None:
         self._emit(
@@ -859,11 +786,11 @@ class AuditEmitter:
 
     def order_test_retest(
         self,
-        order_id: int,
+        order_id: str,
         original_test_id: int,
         new_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         reason: str | None = None,
     ) -> None:
         self._emit(
@@ -881,11 +808,11 @@ class AuditEmitter:
 
     def order_test_reflex(
         self,
-        order_id: int,
+        order_id: str,
         new_test_id: int,
         added_test_code: str,
         triggered_by_test_code: str,
-        user_id: int | None,
+        user_id: str | None,
     ) -> None:
         self._emit(
             EventType.ORDER_TEST_REFLEX,
@@ -903,9 +830,9 @@ class AuditEmitter:
 
     def sample_created(
         self,
-        sample_id: int,
-        order_id: int,
-        user_id: int | None,
+        sample_id: str,
+        order_id: str,
+        user_id: str | None,
         *,
         test_codes: list[str] | None = None,
     ) -> None:
@@ -923,10 +850,10 @@ class AuditEmitter:
 
     def sample_aliquot_created(
         self,
-        sample_id: int,
-        parent_sample_id: int,
-        order_id: int,
-        user_id: int,
+        sample_id: str,
+        parent_sample_id: str,
+        order_id: str,
+        user_id: str,
         *,
         aliquot_index: int,
     ) -> None:
@@ -944,9 +871,9 @@ class AuditEmitter:
 
     def sample_collected(
         self,
-        sample_id: int,
-        order_id: int,
-        user_id: int,
+        sample_id: str,
+        order_id: str,
+        user_id: str,
         before: dict[str, Any],
         after: dict[str, Any],
         metadata: dict[str, Any] | None = None,
@@ -963,9 +890,9 @@ class AuditEmitter:
 
     def sample_rejected(
         self,
-        sample_id: int,
-        order_id: int,
-        user_id: int,
+        sample_id: str,
+        order_id: str,
+        user_id: str,
         reason: str,
         metadata: dict[str, Any] | None = None,
         old_status: str | None = None,
@@ -985,9 +912,9 @@ class AuditEmitter:
 
     def sample_recollect_requested(
         self,
-        sample_id: int,
-        order_id: int,
-        user_id: int,
+        sample_id: str,
+        order_id: str,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1001,9 +928,9 @@ class AuditEmitter:
 
     def sample_recollect_approved(
         self,
-        sample_id: int,
-        order_id: int,
-        user_id: int,
+        sample_id: str,
+        order_id: str,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1017,9 +944,9 @@ class AuditEmitter:
 
     def sample_recollect_denied(
         self,
-        sample_id: int,
-        order_id: int,
-        user_id: int,
+        sample_id: str,
+        order_id: str,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1035,7 +962,7 @@ class AuditEmitter:
 
     def analyzer_duplicate_ingest(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
         metadata: dict[str, Any] | None = None,
@@ -1051,7 +978,7 @@ class AuditEmitter:
 
     def analyzer_ingest_rejected(
         self,
-        order_id: int | None,
+        order_id: str | None,
         order_test_id: int | None,
         test_code: str | None,
         metadata: dict[str, Any] | None = None,
@@ -1081,10 +1008,10 @@ class AuditEmitter:
 
     def result_entered(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any] | None = None,
     ) -> None:
         self._emit(
@@ -1102,10 +1029,10 @@ class AuditEmitter:
 
     def result_updated(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         old_results: dict[str, Any] | list[Any] | None,
         new_results: dict[str, Any] | list[Any] | None,
         metadata: dict[str, Any] | None = None,
@@ -1125,10 +1052,10 @@ class AuditEmitter:
 
     def result_critical_detected(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1142,10 +1069,10 @@ class AuditEmitter:
 
     def result_critical_notified(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1159,10 +1086,10 @@ class AuditEmitter:
 
     def result_critical_acknowledged(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1176,10 +1103,10 @@ class AuditEmitter:
 
     def validation_approved(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any] | None = None,
     ) -> None:
         self._emit(
@@ -1197,10 +1124,10 @@ class AuditEmitter:
 
     def validation_auto(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any] | None = None,
     ) -> None:
         self._emit(
@@ -1214,14 +1141,18 @@ class AuditEmitter:
 
     def validation_rejected(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int | None,
-        sample_id: int | None,
-        user_id: int,
+        sample_id: str | None,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         target_type = "order_test" if order_test_id else "sample"
-        target_id = order_test_id if order_test_id else (sample_id or 0)
+        target_id = (
+            str(order_test_id) if order_test_id is not None else (sample_id or "")
+        )
+        if not target_id:
+            return
         # Always attach orderId so sample-targeted rejects still appear on order scope.
         self._emit(
             EventType.LABORATORY_VALIDATION_REJECT,
@@ -1234,10 +1165,10 @@ class AuditEmitter:
 
     def escalation_triggered(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1252,10 +1183,10 @@ class AuditEmitter:
 
     def escalation_resolved(
         self,
-        order_id: int,
+        order_id: str,
         order_test_id: int,
         test_code: str,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1271,9 +1202,9 @@ class AuditEmitter:
 
     def payment_processed(
         self,
-        order_id: int,
+        order_id: str,
         payment_id: int,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any],
     ) -> None:
         self._emit(
@@ -1285,7 +1216,7 @@ class AuditEmitter:
             metadata=metadata,
         )
 
-    def invoice_generated(self, order_id: int, invoice_id: int, user_id: int | None) -> None:
+    def invoice_generated(self, order_id: str, invoice_id: str, user_id: str | None) -> None:
         self._emit(
             EventType.BILLING_INVOICE_GENERATE,
             "invoice",
@@ -1296,9 +1227,9 @@ class AuditEmitter:
 
     def invoice_voided(
         self,
-        order_id: int,
-        invoice_id: int,
-        user_id: int,
+        order_id: str,
+        invoice_id: str,
+        user_id: str,
         metadata: dict[str, Any] | None = None,
     ) -> None:
         self._emit(
@@ -1312,9 +1243,9 @@ class AuditEmitter:
 
     def insurance_submitted(
         self,
-        order_id: int,
+        order_id: str,
         claim_id: int,
-        user_id: int,
+        user_id: str,
         metadata: dict[str, Any] | None = None,
     ) -> None:
         self._emit(
@@ -1328,7 +1259,7 @@ class AuditEmitter:
 
     # ── Reporting / system ───────────────────────────────────────────────
 
-    def reporting_generated(self, order_id: int, user_id: int) -> None:
+    def reporting_generated(self, order_id: str, user_id: str) -> None:
         self._emit(
             EventType.REPORTING_GENERATE,
             "order",
@@ -1339,8 +1270,8 @@ class AuditEmitter:
 
     def reporting_downloaded(
         self,
-        order_id: int,
-        user_id: int,
+        order_id: str,
+        user_id: str,
         order_test_id: int | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> None:
@@ -1363,19 +1294,19 @@ class AuditEmitter:
             metadata=metadata,
         )
 
-    def user_login(self, user_id: int) -> None:
+    def user_login(self, user_id: str) -> None:
         self._emit(EventType.SYSTEM_USER_LOGIN, "user", user_id, user_id)
 
-    def user_logout(self, user_id: int) -> None:
+    def user_logout(self, user_id: str) -> None:
         self._emit(EventType.SYSTEM_USER_LOGOUT, "user", user_id, user_id)
 
-    def user_created(self, new_user_id: int, actor_user_id: int) -> None:
+    def user_created(self, new_user_id: str, actor_user_id: str) -> None:
         self._emit(EventType.SYSTEM_USER_CREATE, "user", new_user_id, actor_user_id)
 
     def user_updated(
         self,
-        target_user_id: int,
-        actor_user_id: int,
+        target_user_id: str,
+        actor_user_id: str,
         metadata: dict[str, Any] | None = None,
     ) -> None:
         self._emit(
@@ -1386,7 +1317,7 @@ class AuditEmitter:
             metadata=metadata,
         )
 
-    def catalog_test_created(self, test_id: int, test_code: str, actor_user_id: int) -> None:
+    def catalog_test_created(self, test_id: int, test_code: str, actor_user_id: str) -> None:
         self._emit(
             EventType.SYSTEM_CATALOG_CREATE,
             "test_catalog",
@@ -1395,7 +1326,7 @@ class AuditEmitter:
             metadata={"test_code": test_code},
         )
 
-    def catalog_test_updated(self, test_id: int, test_code: str, actor_user_id: int) -> None:
+    def catalog_test_updated(self, test_id: int, test_code: str, actor_user_id: str) -> None:
         self._emit(
             EventType.SYSTEM_CATALOG_UPDATE,
             "test_catalog",

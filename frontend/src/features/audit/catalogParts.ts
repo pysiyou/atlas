@@ -52,7 +52,7 @@ export const eventLogId = {
 // --- testDisplay.ts ---
 
 export type TestNameLookup = (testCode: string) => string;
-export type PatientNameLookup = (patientId: number) => string;
+export type PatientNameLookup = (patientId: string) => string;
 
 export function collectTestCodes(record: EventLogRecord): string[] {
   const meta = record.metadata ?? {};
@@ -242,32 +242,29 @@ function recordPhrase(label: string, idText: string): EventLogHeadlinePart {
 }
 
 export function patientRecordPhrase(
-  patientId: number,
+  patientId: string,
   context: EventLogHeadlineContext,
   label = 'patient ',
-  patientMrn?: string | null,
 ): EventLogHeadlinePart {
   const lookedUp = context.getPatientName(patientId);
-  const mrnText = eventLogId.patient(patientMrn);
+  const mrnText = eventLogId.patient(patientId);
   const nameLooksLikeId =
     !lookedUp || lookedUp === String(patientId) || lookedUp === mrnText;
   return recordPhrase(label, nameLooksLikeId ? mrnText : lookedUp);
 }
 
 export function orderRecordPhrase(
-  _orderId: number,
+  orderId?: string | null,
   label = 'order ',
-  fillerNumber?: string | null,
 ): EventLogHeadlinePart {
-  return recordPhrase(label, eventLogId.order(fillerNumber));
+  return recordPhrase(label, eventLogId.order(orderId));
 }
 
 export function sampleRecordPhrase(
-  _sampleId: number,
+  sampleId?: string | null,
   label = 'sample ',
-  accessionNumber?: string | null,
 ): EventLogHeadlinePart {
-  return recordPhrase(label, eventLogId.sample(accessionNumber));
+  return recordPhrase(label, eventLogId.sample(sampleId));
 }
 
 export function orderTestRecordPhrase(
@@ -285,8 +282,8 @@ export function invoiceRecordPhrase(invoiceNumber?: string | null): EventLogHead
   return recordPhrase('Invoice ', eventLogId.invoice(invoiceNumber));
 }
 
-export function insuranceClaimRecordPhrase(claimId: number): EventLogHeadlinePart {
-  return recordPhrase('Insurance claim ', withHashPrefix(String(claimId)));
+export function insuranceClaimRecordPhrase(claimId: string): EventLogHeadlinePart {
+  return recordPhrase('Insurance claim ', withHashPrefix(claimId));
 }
 
 export function userAccountRecordPhrase(usernameOrEmployee?: string | null): EventLogHeadlinePart {
@@ -326,16 +323,15 @@ export function targetPatient(
   context: EventLogHeadlineContext,
   label = 'patient '
 ): EventLogHeadlinePart {
-  return patientRecordPhrase(record.targetId, context, label, record.patientMrn);
+  return patientRecordPhrase(record.patientId ?? record.targetId, context, label);
 }
 
 export function targetOrder(record: EventLogRecord, label = 'order '): EventLogHeadlinePart {
-  const id = record.orderId ?? record.targetId;
-  return orderRecordPhrase(id, label, record.fillerNumber);
+  return orderRecordPhrase(record.orderId ?? record.targetId, label);
 }
 
 export function targetSample(record: EventLogRecord, label = 'sample '): EventLogHeadlinePart {
-  return sampleRecordPhrase(record.targetId, label, record.accessionNumber);
+  return sampleRecordPhrase(record.sampleId ?? record.targetId, label);
 }
 
 function metaNumber(record: EventLogRecord, key: string): number | undefined {
@@ -348,22 +344,27 @@ function metaNumber(record: EventLogRecord, key: string): number | undefined {
   return undefined;
 }
 
-export function resolveOrderId(record: EventLogRecord): number | undefined {
-  if (record.orderId != null && record.orderId > 0) return record.orderId;
-  if (record.targetType === 'order' && record.targetId > 0) return record.targetId;
+export function resolveOrderId(record: EventLogRecord): string | undefined {
+  if (record.orderId) return record.orderId;
+  if (record.targetType === 'order' && record.targetId) return record.targetId;
   return undefined;
 }
 
 export function resolveOrderTestId(record: EventLogRecord): number | undefined {
-  if (record.targetType === 'order_test' && record.targetId > 0) return record.targetId;
+  if (record.targetType === 'order_test') {
+    const parsed = Number(record.targetId);
+    if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  }
   if (record.testId != null && record.testId > 0) return record.testId;
   return metaNumber(record, 'order_test_id');
 }
 
 /** Sample id for lab headlines: sample target or metadata from quality / validation flows. */
-export function resolveSampleId(record: EventLogRecord): number | undefined {
-  if (record.targetType === 'sample' && record.targetId > 0) return record.targetId;
-  return metaNumber(record, 'sample_id') ?? metaNumber(record, 'sampleId');
+export function resolveSampleId(record: EventLogRecord): string | undefined {
+  if (record.sampleId) return record.sampleId;
+  if (record.targetType === 'sample' && record.targetId) return record.targetId;
+  const fromMeta = record.metadata?.sample_id ?? record.metadata?.sampleId;
+  return typeof fromMeta === 'string' && fromMeta.trim() ? fromMeta : undefined;
 }
 
 /** `Sample #… {action} for order #…` (connectors and action text are muted). */
@@ -378,7 +379,7 @@ export function buildLabSampleHeadline(
     parts = appendForOrderPhrase(parts, record);
     return afterOrder ? afterOrder(parts) : parts;
   }
-  let parts = append([], sampleRecordPhrase(sampleId, 'Sample ', record.accessionNumber));
+  let parts = append([], sampleRecordPhrase(sampleId, 'Sample '));
   parts = appendText(parts, ` ${action.trim()}`);
   parts = appendForOrderPhrase(parts, record);
   return afterOrder ? afterOrder(parts) : parts;
@@ -399,9 +400,9 @@ export function buildLabOrderTestHeadline(
   return afterOrder ? afterOrder(parts) : parts;
 }
 
-export function resolvePatientId(record: EventLogRecord): number | undefined {
-  if (record.targetType === 'patient' && record.targetId > 0) return record.targetId;
-  if (record.patientId != null && record.patientId > 0) return record.patientId;
+export function resolvePatientId(record: EventLogRecord): string | undefined {
+  if (record.patientId) return record.patientId;
+  if (record.targetType === 'patient' && record.targetId) return record.targetId;
   return undefined;
 }
 
@@ -411,7 +412,7 @@ export function targetPatientFromContext(
 ): EventLogHeadlinePart | null {
   const patientId = resolvePatientId(record);
   if (patientId == null) return null;
-  return patientRecordPhrase(patientId, context, 'patient ', record.patientMrn);
+  return patientRecordPhrase(patientId, context, 'patient ');
 }
 
 function partsText(parts: EventLogHeadlinePart[]): string {
@@ -427,9 +428,9 @@ export function appendForOrderPhrase(
   record: EventLogRecord
 ): EventLogHeadlinePart[] {
   const orderId = resolveOrderId(record);
-  if (!orderId || includesDisplayId(parts, eventLogId.order(record.fillerNumber))) return parts;
+  if (!orderId || includesDisplayId(parts, eventLogId.order(record.orderId))) return parts;
   const next = appendText(parts, ' for ');
-  return append(next, orderRecordPhrase(orderId, 'order ', record.fillerNumber));
+  return append(next, orderRecordPhrase(orderId, 'order '));
 }
 
 export function appendOnOrderPhrase(
@@ -437,9 +438,9 @@ export function appendOnOrderPhrase(
   record: EventLogRecord
 ): EventLogHeadlinePart[] {
   const orderId = resolveOrderId(record);
-  if (!orderId || includesDisplayId(parts, eventLogId.order(record.fillerNumber))) return parts;
+  if (!orderId || includesDisplayId(parts, eventLogId.order(record.orderId))) return parts;
   const next = appendText(parts, ' on ');
-  return append(next, orderRecordPhrase(orderId, 'order ', record.fillerNumber));
+  return append(next, orderRecordPhrase(orderId, 'order '));
 }
 
 export function targetOrderTestRef(
@@ -450,7 +451,7 @@ export function targetOrderTestRef(
   if (codes.length > 0) {
     return [mainPart('Test '), testHighlightFromCodes(codes, context)];
   }
-  return [orderTestRecordPhrase(record.accessionNumber, 'Test ')];
+  return [orderTestRecordPhrase(record.sampleId, 'Test ')];
 }
 
 function testNameRefOnly(
@@ -461,7 +462,7 @@ function testNameRefOnly(
   if (codes.length > 0) {
     return [testHighlightFromCodes(codes, context)];
   }
-  return [mainPart(eventLogId.orderTest(record.accessionNumber))];
+  return [mainPart(eventLogId.orderTest(record.sampleId))];
 }
 
 /** Appends muted `for`, primary `test`, a gap, then the test name highlight. */
@@ -537,7 +538,7 @@ export function patientProfileRef(
   context: EventLogHeadlineContext
 ): EventLogHeadlinePart[] {
   const patientId = resolvePatientId(record) ?? record.targetId;
-  return [patientRecordPhrase(patientId, context, '', record.patientMrn)];
+  return [patientRecordPhrase(patientId, context, '')];
 }
 
 export function appendTriggeredByClause(

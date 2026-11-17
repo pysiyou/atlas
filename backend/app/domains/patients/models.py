@@ -3,15 +3,14 @@ Patient Model
 """
 from app.platform.database import Base, contract_enum
 from app.shared.contracts.enums import Gender
-from sqlalchemy import JSON, Column, DateTime, Float, Integer, String
+from sqlalchemy import JSON, Column, DateTime, Float, String
 from sqlalchemy.sql import func
 
 
 class Patient(Base):
     __tablename__ = "patients"
 
-    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    mrn = Column(String(12), nullable=False, unique=True, index=True)
+    id = Column(String(12), primary_key=True, index=True)
     fullName = Column("full_name", String, nullable=False, index=True)
     dateOfBirth = Column("date_of_birth", String, nullable=False)
     gender = Column(contract_enum(Gender), nullable=False)

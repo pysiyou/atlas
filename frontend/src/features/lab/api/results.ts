@@ -114,7 +114,7 @@ export function useEnterResults() {
       technicianNotes,
     }: {
       orderTestId: number;
-      orderId?: string | number;
+      orderId?: string;
       results: Record<string, unknown>;
       technicianNotes?: string;
     }) => {
@@ -127,15 +127,9 @@ export function useEnterResults() {
       });
     },
     onSuccess: async (_, variables) => {
-      const orderIdStr =
-        variables.orderId != null
-          ? typeof variables.orderId === 'number'
-            ? variables.orderId.toString()
-            : variables.orderId
-          : undefined;
       await invalidateAfterLabMutation(queryClient, {
         kind: 'enterResults',
-        orderId: orderIdStr,
+        orderId: variables.orderId,
         orderTestId: variables.orderTestId,
       });
     },
@@ -152,7 +146,7 @@ export function useValidateResults() {
       criticalSeen,
     }: {
       orderTestId: number;
-      orderId?: string | number;
+      orderId?: string;
       validationNotes?: string;
       criticalSeen?: boolean;
     }) => {
@@ -169,15 +163,9 @@ export function useValidateResults() {
       });
     },
     onSuccess: async (_, variables) => {
-      const orderIdStr =
-        variables.orderId != null
-          ? typeof variables.orderId === 'number'
-            ? variables.orderId.toString()
-            : variables.orderId
-          : undefined;
       await invalidateAfterLabMutation(queryClient, {
         kind: 'validateResults',
-        orderId: orderIdStr,
+        orderId: variables.orderId,
         orderTestId: variables.orderTestId,
       });
     },
@@ -195,7 +183,7 @@ export function useResolveEscalation() {
       rejectionReason,
       readBack,
     }: {
-      orderId?: string | number;
+      orderId?: string;
       orderTestId: number;
       action: EscalationResolveRequest['action'];
       validationNotes?: string;
@@ -218,15 +206,9 @@ export function useResolveEscalation() {
       });
     },
     onSuccess: async (_, variables) => {
-      const orderIdStr =
-        variables.orderId != null
-          ? typeof variables.orderId === 'number'
-            ? variables.orderId.toString()
-            : variables.orderId
-          : undefined;
       await invalidateAfterLabMutation(queryClient, {
         kind: 'resolveEscalation',
-        orderId: orderIdStr,
+        orderId: variables.orderId,
         orderTestId: variables.orderTestId,
       });
     },

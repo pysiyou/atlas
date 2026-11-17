@@ -50,7 +50,7 @@ class TestSummaryResponse(TestBase):
 
     synonyms: list[str] | None = None
     panels: list[str] | None = None
-    loincCodes: list[str] | None = None
+    loincCode: str | None = None  # Unique observation LOINC; None for multi-parameter tests
     fastingRequired: bool | None = None
     createdAt: datetime
     updatedAt: datetime
@@ -74,7 +74,7 @@ class TestResponse(TestBase):
     referenceRanges: list | None = None
     resultItems: list | None = None
     panels: list[str] | None = None
-    loincCodes: list[str] | None = None
+    loincCode: str | None = None  # Unique observation LOINC; None for multi-parameter tests
     methodology: str | None = None
     confidence: str | None = None
     notes: str | None = None

@@ -11,7 +11,7 @@ const LabEventLogPanelLazy = lazy(() =>
 
 export interface LazyLabEventLogPanelProps {
   testId?: number;
-  sampleId?: number;
+  sampleId?: string;
   className?: string;
 }
 

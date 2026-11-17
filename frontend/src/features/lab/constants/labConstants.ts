@@ -203,10 +203,10 @@ export const LAB_PATHS = {
   samples: {
     list: '/lab/samples',
     pending: '/lab/samples/pending',
-    byId: (sampleId: string | number) => `/lab/samples/${sampleId}`,
-    workContext: (sampleId: string | number) => `/lab/samples/${sampleId}/work-context`,
-    collect: (sampleId: string | number) => `/lab/samples/${sampleId}/collect`,
-    aliquots: (sampleId: string | number) => `/lab/samples/${sampleId}/aliquots`,
+    byId: (sampleId: string) => `/lab/samples/${sampleId}`,
+    workContext: (sampleId: string) => `/lab/samples/${sampleId}/work-context`,
+    collect: (sampleId: string) => `/lab/samples/${sampleId}/collect`,
+    aliquots: (sampleId: string) => `/lab/samples/${sampleId}/aliquots`,
   },
   results: {
     pendingEscalation: '/lab/results/pending-escalation',
@@ -230,7 +230,7 @@ export const LAB_PATHS = {
     all: '/lab/critical-values/all',
     notify: (testId: number) => `/lab/critical-values/${testId}/notify`,
     acknowledge: (testId: number) => `/lab/critical-values/${testId}/acknowledge`,
-    forOrder: (orderId: number) => `/lab/orders/${orderId}/critical-values`,
+    forOrder: (orderId: string) => `/lab/orders/${orderId}/critical-values`,
   },
   qualityIssues: { list: '/lab/quality-issues', options: '/lab/quality-issues/options' },
   analyzer: {

@@ -28,7 +28,7 @@ const REPORT_VIEWS = {
 export const createReportTableConfig = (
   navigate: NavigateFunction,
   onPrint: (order: ReportableOrder) => void,
-  generatingOrderId: number | null
+  generatingOrderId: string | null
 ): TableViewConfig<ReportableOrder> => {
   const headers = getOrderTableColumnHeaders();
   const columnMap = {
@@ -39,7 +39,7 @@ export const createReportTableConfig = (
       sortable: true,
       accessor: (order: ReportableOrder) => order.orderId,
       render: (order: ReportableOrder) =>
-        renderNavigableOrderId(order.orderId, navigate, order.fillerNumber),
+        renderNavigableOrderId(order.orderId, navigate),
     },
     patientName: {
       key: 'patientName',

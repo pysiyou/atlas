@@ -12,15 +12,15 @@ def order_search_filter(search_term: str):
     compact = compact_identifier(term)
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
-        Order.fillerNumber.ilike(f"%{term}%"),
+        Order.orderId.ilike(f"%{term}%"),
         Order.placerNumber.ilike(f"%{term}%"),
-        Patient.mrn.ilike(f"%{term}%"),
+        Patient.id.ilike(f"%{term}%"),
     ]
     if looks_like_filler(term):
-        predicates.append(Order.fillerNumber == compact)
+        predicates.append(Order.orderId == compact)
         predicates.append(Order.placerNumber == compact)
     if looks_like_mrn(term):
-        predicates.append(Patient.mrn == compact)
+        predicates.append(Patient.id == compact)
     return or_(*predicates)
 
 

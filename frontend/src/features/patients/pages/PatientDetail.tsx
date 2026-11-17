@@ -30,7 +30,7 @@ export function PatientDetail() {
   const handleEdit = () => setIsEditModalOpen(true);
   const handleCloseEdit = () => setIsEditModalOpen(false);
   const handleNewOrder = () =>
-    openModal({ type: ModalType.NEW_ORDER, patientId: patient?.id.toString() ?? '' });
+    openModal({ type: ModalType.NEW_ORDER, patientId: patient?.id ?? '' });
   const handleOrderClick = (orderId: string) => navigate(`/orders/${orderId}`);
 
   const renderContent = () => {

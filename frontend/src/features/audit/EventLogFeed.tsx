@@ -1,10 +1,9 @@
 import { collectTestCodes } from './catalog';
-import { useEventLogCopy } from '@/strings';
+import { DENSE_EMPTY_STATE, useEventLogCopy } from '@/strings';
 import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives';
 import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
 import { parseResultEntry, ResultValueAnnotations, statusMapFromFlags } from '@/features/lab/cross';
-import { IconKeys } from '@/icons';
 import { FG, RADIUS, text, text as detailText } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { parseAppDate } from '@/utils/date';
@@ -282,12 +281,10 @@ export function EventLogFeed({
   if (items.length === 0) {
     return (
       <EmptyState
-        variant="dense"
-        fill
-        icon={IconKeys.modules.eventLog}
+        {...DENSE_EMPTY_STATE}
         title={resolvedEmptyTitle}
         description={resolvedEmptyDescription}
-        className={className}
+        className={cn(className, 'min-h-full')}
       />
     );
   }

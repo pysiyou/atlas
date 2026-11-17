@@ -24,7 +24,7 @@ class AnalyzerResultRequest(BaseModel):
 class AnalyzerResultResponse(BaseModel):
     success: bool
     message: str
-    order_id: int | None = None
+    order_id: str | None = None
     test_id: int | None = None
     status: str | None = None
     warnings: list[str] = []

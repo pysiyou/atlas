@@ -11,10 +11,9 @@ from sqlalchemy.sql import func
 class Invoice(Base):
     __tablename__ = "invoices"
 
-    invoiceId = Column("invoice_id", Integer, primary_key=True, autoincrement=True, index=True)
-    invoiceNumber = Column("invoice_number", String(12), nullable=False, unique=True, index=True)
-    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
-    patientId = Column("patient_id", Integer, ForeignKey("patients.id"), nullable=False, index=True)
+    invoiceId = Column("invoice_id", String(12), primary_key=True, index=True)
+    orderId = Column("order_id", String(13), ForeignKey("orders.order_id"), nullable=False, index=True)
+    patientId = Column("patient_id", String(12), ForeignKey("patients.id"), nullable=False, index=True)
     patientName = Column("patient_name", String, nullable=False)
 
     # Items (JSON array)
@@ -46,11 +45,10 @@ class Invoice(Base):
 class Payment(Base):
     __tablename__ = "payments"
 
-    paymentId = Column("payment_id", Integer, primary_key=True, autoincrement=True, index=True)
-    receiptNumber = Column("receipt_number", String(8), nullable=False, unique=True, index=True)
-    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    paymentId = Column("payment_id", String(8), primary_key=True, index=True)
+    orderId = Column("order_id", String(13), ForeignKey("orders.order_id"), nullable=False, index=True)
     invoiceId = Column(
-        "invoice_id", Integer, ForeignKey("invoices.invoice_id"), nullable=True, index=True
+        "invoice_id", String(12), ForeignKey("invoices.invoice_id"), nullable=True, index=True
     )
 
     amount = Column(Float, nullable=False)

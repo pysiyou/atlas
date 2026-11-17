@@ -34,8 +34,7 @@ class UserResponse(UserBase):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    employeeNumber: str = Field(..., pattern=EMPLOYEE_NUMBER_PATTERN)
+    id: str = Field(..., pattern=EMPLOYEE_NUMBER_PATTERN)
     createdAt: datetime
     isActive: bool = True
     loggedInAt: datetime | None = None
@@ -46,7 +45,7 @@ class UserLookupResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: str
     name: str
     username: str
 

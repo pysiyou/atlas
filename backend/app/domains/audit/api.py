@@ -45,10 +45,10 @@ def list_audit_events(
         "stream",
         description="Containment lens: order, lab, patient, system, or stream",
     ),
-    order_id: int | None = Query(None, alias="orderId"),
-    patient_id: int | None = Query(None, alias="patientId"),
+    order_id: str | None = Query(None, alias="orderId"),
+    patient_id: str | None = Query(None, alias="patientId"),
     test_id: int | None = Query(None, alias="testId"),
-    sample_id: int | None = Query(None, alias="sampleId"),
+    sample_id: str | None = Query(None, alias="sampleId"),
     hours: float | None = Query(
         None,
         gt=0,
@@ -84,7 +84,7 @@ def list_audit_events(
         alias="cursorEventId",
         description="Newest-first cursor: eventId of the last row from the previous page",
     ),
-    actor_id: int | None = Query(
+    actor_id: str | None = Query(
         None,
         alias="actorId",
         ge=1,

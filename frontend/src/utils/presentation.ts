@@ -303,14 +303,14 @@ export function formatReportOrderTestsPreview(order: ReportableOrderTestsInput):
 }
 
 export interface PatientListSnippet {
-  patientId?: number | string;
+  patientId?: string;
   patientName: string;
   gender?: Gender | string | null;
   dateOfBirth?: string | null;
 }
 
 export interface OrderListHeader {
-  orderId: number | string;
+  orderId: string;
   orderDate?: string;
   referentDoctor?: string | null;
 }
@@ -318,7 +318,7 @@ export interface OrderListHeader {
 export interface OrderContextPresentation {
   patientName: string;
   demographicsLine: string | null;
-  orderId?: number | string;
+  orderId?: string;
   orderDate?: string;
 }
 
@@ -336,16 +336,15 @@ export function buildOrderContextPresentation(
 }
 
 export interface ReportHeaderSource {
-  patientId: number;
+  patientId: string;
   patientName: string;
   patientDob?: string;
   patientAge?: number;
   patientGender?: string;
   patientEmail?: string;
   order: {
-    orderId: number;
-    fillerNumber?: string | null;
-    patientMrn?: string | null;
+    orderId: string;
+    patientId?: string | null;
     orderDate?: string;
     createdAt?: string;
     referentDoctorName?: string | null;
@@ -466,11 +465,11 @@ export function buildReportHeaderViewModel(
 ): ReportHeaderViewModel {
   const registeredAt = resolveRegisteredAt(source);
   const collectedAt = resolveCollectedAt(source);
-  const orderId = displayId.order(source.order.fillerNumber);
+  const orderId = displayId.order(source.order.orderId);
   const when = formatReportOnAt(registeredAt);
   const orderDisplay = when ? `${orderId} ${when}` : orderId;
 
-  const patientCode = displayId.patient(source.order.patientMrn);
+  const patientCode = displayId.patient(source.order.patientId);
   const patientDisplay = `${source.patientName}(Internal: ${patientCode})`;
 
   const email =
@@ -677,7 +676,7 @@ function appendRecollectionDescriptors(
     {
       id: 'original',
       label: 'Original',
-      value: displayId.sample(sample.originalAccessionNumber),
+      value: displayId.sample(sample.originalSampleId),
     },
     { id: 'reason', label: 'Reason', value: sample.recollectionReason },
   );

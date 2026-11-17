@@ -93,7 +93,7 @@ def decode_token(token: str, expected_type: TokenType | None = None) -> dict | N
         return None
 
 
-def create_tokens(user_id: int) -> tuple[str, str]:
+def create_tokens(user_id: str) -> tuple[str, str]:
     """
     Create both access and refresh tokens for a user.
 

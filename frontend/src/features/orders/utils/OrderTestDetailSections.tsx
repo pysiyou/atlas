@@ -33,7 +33,7 @@ export function buildOrderTestOverviewFields(
       value: (
         <RecordId
           type="orderTest"
-          value={formatOrderTestDisplay(orderTest.accessionNumber, orderTest.testCode)}
+          value={formatOrderTestDisplay(orderTest.sampleId, orderTest.testCode)}
           emphasis="block"
           className="text-right"
         />

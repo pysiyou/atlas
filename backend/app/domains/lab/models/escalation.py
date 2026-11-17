@@ -25,7 +25,7 @@ class EscalationTicket(Base):
     )
     sampleId = Column(
         "sample_id",
-        Integer,
+        String(20),
         ForeignKey("samples.sample_id", ondelete="SET NULL"),
         nullable=True,
         index=True,

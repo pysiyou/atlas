@@ -19,12 +19,12 @@ class AuditEvent(Base):
         nullable=False,
         server_default=func.now(),
     )
-    actorId = Column("actor_id", Integer, nullable=True, index=True)
+    actorId = Column("actor_id", String(6), nullable=True, index=True)
     actorSnapshot = Column("actor_snapshot", JSONB, nullable=False)
     targetType = Column("target_type", String(50), nullable=False)
-    targetId = Column("target_id", Integer, nullable=False, index=True)
-    patientId = Column("patient_id", Integer, nullable=True, index=True)
-    orderId = Column("order_id", Integer, nullable=True, index=True)
+    targetId = Column("target_id", String(32), nullable=False, index=True)
+    patientId = Column("patient_id", String(12), nullable=True, index=True)
+    orderId = Column("order_id", String(13), nullable=True, index=True)
     testId = Column("test_id", Integer, nullable=True, index=True)
     eventScope = Column("event_scope", String(20), nullable=True, index=True)
     changes = Column("changes", JSONB, nullable=True)

@@ -1,6 +1,6 @@
 """Referent doctor directory — external clinicians who order lab work."""
 from app.platform.database import Base
-from sqlalchemy import Boolean, Column, DateTime, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -8,11 +8,8 @@ from sqlalchemy.sql import func
 class ReferentDoctor(Base):
     __tablename__ = "referent_doctors"
 
-    referentDoctorId = Column(
-        "referent_doctor_id", Integer, primary_key=True, autoincrement=True, index=True
-    )
+    referentDoctorId = Column("referent_doctor_id", String(10), primary_key=True, index=True)
     fullName = Column("full_name", String(200), nullable=False)
-    npi = Column(String(10), nullable=True, unique=True, index=True)
     username = Column(String(100), nullable=True, unique=True, index=True)
     email = Column(String(255), nullable=True)
     phone = Column(String(20), nullable=True)

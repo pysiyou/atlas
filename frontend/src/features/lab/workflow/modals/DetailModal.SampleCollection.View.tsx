@@ -58,7 +58,7 @@ export function SampleCollectionDetailModalView({
   testNames: string[];
   fields: CollectionFields;
   getUserName: (userId: string) => string;
-  openSampleDetail: (sampleId: string | number) => void;
+  openSampleDetail: (sampleId: string) => void;
 }) {
   const {
     isPending,
@@ -88,14 +88,14 @@ export function SampleCollectionDetailModalView({
   const { title: modalTitle, subtitle: modalSubtitle } = labModalHeaderContext({
     stage: 'collection',
     contextLabel: patientName,
-    orderId: order?.fillerNumber,
+    orderId: order?.orderId,
     badges: headerBadges,
   });
 
   const headerLeftColumn = (
     <SampleCollectionCardLeftColumn
       patientName={patientName}
-      fillerNumber={order?.fillerNumber}
+      orderId={order?.orderId}
       referentDoctorName={order?.referentDoctorName ?? undefined}
       orderDate={order?.orderDate}
       sample={sample}
@@ -177,7 +177,7 @@ export function SampleCollectionDetailModalView({
         showBarcode={sample.sampleId != null}
       />
       <LabRelatedSamplesPanel sample={sample} isOpen={isOpen} onOpenSample={openSampleDetail} />
-      {sample.sampleId != null && <LazyLabEventLogPanel sampleId={Number(sample.sampleId)} />}
+      {sample.sampleId != null && <LazyLabEventLogPanel sampleId={sample.sampleId} />}
     </QueueModalShell>
   );
 }

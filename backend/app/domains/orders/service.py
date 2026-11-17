@@ -60,7 +60,7 @@ _STARTED_STATUSES = {
 }
 
 
-def _pending_test_has_started(test: OrderTest, samples_by_id: dict[int, Sample]) -> bool:
+def _pending_test_has_started(test: OrderTest, samples_by_id: dict[str, Sample]) -> bool:
     if not test.sampleId:
         return False
     sample = samples_by_id.get(test.sampleId)
@@ -73,7 +73,7 @@ def _pending_test_has_started(test: OrderTest, samples_by_id: dict[int, Sample])
     return False
 
 
-def _test_has_started(test: OrderTest, samples_by_id: dict[int, Sample]) -> bool:
+def _test_has_started(test: OrderTest, samples_by_id: dict[str, Sample]) -> bool:
     if test.status in _STARTED_STATUSES:
         return True
     if test.status == TestStatus.PENDING:
@@ -114,7 +114,7 @@ def _calculate_order_status(order: Order, samples: list[Sample]) -> OrderStatus:
     return OrderStatus.ORDERED
 
 
-def apply_order_status_rollup(db: Session, order_id: int) -> bool:
+def apply_order_status_rollup(db: Session, order_id: str) -> bool:
     """Recompute order.overallStatus from samples/tests; audit without committing."""
     order = (
         db.query(Order)
@@ -151,7 +151,7 @@ def apply_order_status_rollup(db: Session, order_id: int) -> bool:
     return True
 
 
-def update_order_status(db: Session, order_id: int, *, commit: bool = True) -> None:
+def update_order_status(db: Session, order_id: str, *, commit: bool = True) -> None:
     """Lab legacy entry: rollup and optionally commit (prefer facade run_lab_mutation)."""
     changed = apply_order_status_rollup(db, order_id)
     if commit and changed:
@@ -179,7 +179,7 @@ def _test_names_for_codes(codes: list[str], names_by_code: dict[str, str]) -> li
     return [names_by_code.get(code, code) for code in codes]
 
 
-def _latest_payments_by_order_id(db, order_ids: list[int]) -> dict[int, Payment]:
+def _latest_payments_by_order_id(db, order_ids: list[str]) -> dict[str, Payment]:
     if not order_ids:
         return {}
     payments = (
@@ -188,14 +188,14 @@ def _latest_payments_by_order_id(db, order_ids: list[int]) -> dict[int, Payment]
         .order_by(Payment.orderId, Payment.paidAt.desc())
         .all()
     )
-    latest: dict[int, Payment] = {}
+    latest: dict[str, Payment] = {}
     for payment in payments:
         if payment.orderId not in latest:
             latest[payment.orderId] = payment
     return latest
 
 
-def _active_test_codes_by_order_id(db, order_ids: list[int]) -> dict[int, list[str]]:
+def _active_test_codes_by_order_id(db, order_ids: list[str]) -> dict[str, list[str]]:
     if not order_ids:
         return {}
     rows = (
@@ -205,7 +205,7 @@ def _active_test_codes_by_order_id(db, order_ids: list[int]) -> dict[int, list[s
         .order_by(OrderTest.orderId, OrderTest.id)
         .all()
     )
-    codes_by_order: dict[int, list[str]] = {}
+    codes_by_order: dict[str, list[str]] = {}
     for order_id, test_code in rows:
         codes_by_order.setdefault(order_id, []).append(test_code)
     return codes_by_order
@@ -223,10 +223,8 @@ def _order_to_summary(
     codes = test_codes or []
     return OrderSummaryResponse(
         orderId=order.orderId,
-        fillerNumber=order.fillerNumber,
         placerNumber=order.placerNumber,
         patientId=order.patientId,
-        patientMrn=patient.mrn if patient else "",
         patientName=patient_name,
         patientDob=patient.dateOfBirth if patient else None,
         patientGender=patient.gender if patient else None,
@@ -267,7 +265,7 @@ class OrderService:
         self.db = db
         self.emitter = AuditEmitter(db)
 
-    def _resolve_referent_doctor_id(self, referent_doctor_id: int | None) -> None:
+    def _resolve_referent_doctor_id(self, referent_doctor_id: str | None) -> None:
         if referent_doctor_id is None:
             return
         if ReferentDoctorService(self.db).get_by_id(referent_doctor_id) is None:
@@ -349,13 +347,13 @@ class OrderService:
         self,
         skip: int,
         limit: int,
-        patient_id: int | None = None,
+        patient_id: str | None = None,
         order_status: OrderStatus | list[OrderStatus] | None = None,
         payment_status: PaymentStatus | list[PaymentStatus] | None = None,
         sort: Literal["createdAt", "updatedAt"] = "updatedAt",
         paginated: bool = True,
         summary: bool = True,
-        order_id: int | None = None,
+        order_id: str | None = None,
         payment_methods: list[PaymentMethod] | None = None,
         search: str | None = None,
         date_from: date | None = None,
@@ -419,10 +417,10 @@ class OrderService:
         try:
             if summary:
                 order_ids = [order.orderId for order in orders]
-                test_counts: dict[int, int] = {}
-                test_codes_by_order: dict[int, list[str]] = {}
+                test_counts: dict[str, int] = {}
+                test_codes_by_order: dict[str, list[str]] = {}
                 names_by_code: dict[str, str] = {}
-                latest_payments: dict[int, Payment] = {}
+                latest_payments: dict[str, Payment] = {}
                 if order_ids:
                     rows = (
                         self.db.query(OrderTest.orderId, func.count(OrderTest.id))
@@ -486,7 +484,7 @@ class OrderService:
             return create_paginated_response(serialized, total, skip_to_page(skip, limit), limit)
         return serialized
 
-    def get_order(self, order_id: int, include: str | None = None):
+    def get_order(self, order_id: str, include: str | None = None):
         includes = _parse_include(include)
         options = [
             joinedload(Order.patient),
@@ -523,7 +521,7 @@ class OrderService:
             return OrderDetailResponse(**detail)
         return self._order_response_with_lab(order)
 
-    def mark_as_reported(self, order_id: int, user_id: int) -> OrderReportResponse:
+    def mark_as_reported(self, order_id: str, user_id: str) -> OrderReportResponse:
         order = get_or_404(self.db, Order, order_id, "orderId")
         if order.overallStatus != OrderStatus.COMPLETED:
             raise HTTPException(
@@ -536,7 +534,7 @@ class OrderService:
             orderId=order_id, status="completed", message="Order is complete"
         )
 
-    def create_order(self, order_data: OrderCreate, user_id: int) -> OrderResponse:
+    def create_order(self, order_data: OrderCreate, user_id: str) -> OrderResponse:
         patient = self.db.query(Patient).filter(Patient.id == order_data.patientId).first()
         if not patient:
             raise HTTPException(
@@ -551,7 +549,7 @@ class OrderService:
         filler_number = allocate_filler_number(self.db, order_date)
         order = Order(
             patientId=order_data.patientId,
-            fillerNumber=filler_number,
+            orderId=filler_number,
             placerNumber=filler_number,
             orderDate=order_date,
             totalPrice=total_price,
@@ -590,7 +588,7 @@ class OrderService:
         order = self._order_with_relations(order.orderId)
         return self._order_response_with_lab(order)
 
-    def _order_with_relations(self, order_id: int) -> Order:
+    def _order_with_relations(self, order_id: str) -> Order:
         return (
             self.db.query(Order)
             .filter(Order.orderId == order_id)
@@ -602,7 +600,7 @@ class OrderService:
             .first()
         )
 
-    def update_order(self, order_id: int, order_data: OrderUpdate, user_id: int) -> OrderResponse:
+    def update_order(self, order_id: str, order_data: OrderUpdate, user_id: str) -> OrderResponse:
         order = (
             self.db.query(Order)
             .filter(Order.orderId == order_id)

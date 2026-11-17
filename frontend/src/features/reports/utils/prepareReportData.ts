@@ -7,7 +7,7 @@ import { calculateAge } from '@/utils/string';
 import type jsPDF from 'jspdf';
 
 interface SampleLookup {
-  (sampleId: number): { status: string; collectedAt?: string; collectedBy?: string } | undefined;
+  (sampleId: string): { status: string; collectedAt?: string; collectedBy?: string } | undefined;
 }
 
 interface PrepareReportDataOptions {
@@ -130,10 +130,10 @@ function buildTestResultEntry(
     parameters: buildParameterRows(test, catalogTest),
     technicianNotes: test.technicianNotes,
     validationNotes: test.validationNotes,
-    enteredBy: test.enteredBy?.toString(),
-    validatedBy: test.validatedBy?.toString(),
+    enteredBy: test.enteredBy,
+    validatedBy: test.validatedBy,
     validatedByName: test.validatedBy
-      ? getUserName(String(test.validatedBy).trim())
+      ? getUserName(test.validatedBy.trim())
       : undefined,
     enteredAt: test.resultEnteredAt,
     validatedAt: test.resultValidatedAt,
@@ -259,7 +259,7 @@ export async function downloadLabReport(
   formatDate: (date: Date) => string
 ): Promise<void> {
   const doc = await generateLabReport(reportData, catalogTests);
-  const filler = reportableOrder.order?.fillerNumber ?? '-';
+  const filler = reportableOrder.order?.orderId ?? '-';
   const filename = `lab-report-${filler}_${formatDate(new Date())}.pdf`;
   downloadPDF(doc, filename);
 }

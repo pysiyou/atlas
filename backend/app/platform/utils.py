@@ -74,11 +74,13 @@ KIND_INVOICE = "invoice"
 KIND_RECEIPT = "receipt"
 KIND_EMPLOYEE = "employee"
 KIND_MEMBER = "member"
+KIND_NPI = "npi"
 
 MRN_BASE = 10_000_000
 EMPLOYEE_BASE = 100_000
 MEMBER_BASE = 100_000_000_000
 RECEIPT_BASE = 10_000_000
+NPI_BASE = 1_000_000_000
 
 
 class IdentifierError(ValueError):
@@ -183,6 +185,13 @@ def format_member_id(seq: int) -> str:
     return _require_match(f"{MEMBER_BASE + seq:012d}", MEMBER_ID_RE, "member ID")
 
 
+def format_npi(seq: int) -> str:
+    """10-digit NPI used as the referent-doctor row id."""
+    if seq < 1:
+        raise IdentifierError("NPI sequence must be positive")
+    return _require_match(f"{NPI_BASE + seq:010d}", NPI_RE, "NPI")
+
+
 def allocate_mrn(db: Session) -> str:
     """Assign the next sequential MRN."""
     return format_mrn(assign_next(db, KIND_MRN))
@@ -222,6 +231,11 @@ def allocate_employee_number(db: Session) -> str:
 def allocate_member_id(db: Session) -> str:
     """Assign the next sequential payer member ID."""
     return format_member_id(assign_next(db, KIND_MEMBER))
+
+
+def allocate_npi(db: Session) -> str:
+    """Assign the next sequential NPI (referent-doctor primary key)."""
+    return format_npi(assign_next(db, KIND_NPI))
 
 
 def normalize_identifier(term: str) -> str:

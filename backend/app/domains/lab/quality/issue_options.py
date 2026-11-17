@@ -67,7 +67,7 @@ def count_retests_in_chain(db: Session, order_test: OrderTest) -> int:
     )
 
 
-def sample_options(svc: QualityIssueService, sample_id: int) -> QualityIssueOptions:
+def sample_options(svc: QualityIssueService, sample_id: str) -> QualityIssueOptions:
     sample = svc.get_sample(sample_id)
     recollection_used = svc.collection.attempts_used(sample)
     recollection_remaining = svc.collection.attempts_remaining_after(sample)

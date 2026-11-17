@@ -97,17 +97,17 @@ def _collection_search_filter(search_term: str):
     term = search_term.strip()
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
-        Sample.accessionNumber.ilike(f"%{term}%"),
-        Order.fillerNumber.ilike(f"%{term}%"),
-        Patient.mrn.ilike(f"%{term}%"),
+        Sample.sampleId.ilike(f"%{term}%"),
+        Order.orderId.ilike(f"%{term}%"),
+        Patient.id.ilike(f"%{term}%"),
     ]
     compact = compact_identifier(term)
     if looks_like_accession(term):
-        predicates.append(Sample.accessionNumber == term.strip())
+        predicates.append(Sample.sampleId == term.strip())
     if looks_like_filler(term):
-        predicates.append(Order.fillerNumber == compact)
+        predicates.append(Order.orderId == compact)
     if looks_like_mrn(term):
-        predicates.append(Patient.mrn == compact)
+        predicates.append(Patient.id == compact)
     return or_(*predicates)
 
 
@@ -118,17 +118,17 @@ def _order_test_worklist_search_filter(search_term: str):
         Patient.fullName.ilike(f"%{term}%"),
         CatalogTest.name.ilike(f"%{term}%"),
         OrderTest.testCode.ilike(f"%{term}%"),
-        Sample.accessionNumber.ilike(f"%{term}%"),
-        Order.fillerNumber.ilike(f"%{term}%"),
-        Patient.mrn.ilike(f"%{term}%"),
+        Sample.sampleId.ilike(f"%{term}%"),
+        Order.orderId.ilike(f"%{term}%"),
+        Patient.id.ilike(f"%{term}%"),
     ]
     compact = compact_identifier(term)
     if looks_like_accession(term):
-        predicates.append(Sample.accessionNumber == term.strip())
+        predicates.append(Sample.sampleId == term.strip())
     if looks_like_filler(term):
-        predicates.append(Order.fillerNumber == compact)
+        predicates.append(Order.orderId == compact)
     if looks_like_mrn(term):
-        predicates.append(Patient.mrn == compact)
+        predicates.append(Patient.id == compact)
     if looks_like_mnemonic(term):
         predicates.append(OrderTest.testCode == term.strip().upper())
     return or_(*predicates)
@@ -204,7 +204,7 @@ class LabWorklistService:
     def _linked_tests_for_collection_row(
         sample: Sample,
         order: Order,
-        linked_by_sample: dict[int, list[OrderTest]],
+        linked_by_sample: dict[str, list[OrderTest]],
     ) -> list[OrderTest]:
         codes = sample.testCodes or []
         return [
@@ -214,7 +214,7 @@ class LabWorklistService:
         ]
 
     def _original_sample(
-        self, sample: Sample, parents: dict[int, Sample] | None = None
+        self, sample: Sample, parents: dict[str, Sample] | None = None
     ) -> Sample | None:
         if not sample.originalSampleId:
             return None
@@ -223,34 +223,12 @@ class LabWorklistService:
         return self.db.query(Sample).filter(Sample.sampleId == sample.originalSampleId).first()
 
     def _original_sample_collected_at(
-        self, sample: Sample, parents: dict[int, Sample] | None = None
+        self, sample: Sample, parents: dict[str, Sample] | None = None
     ) -> datetime | None:
         parent = self._original_sample(sample, parents)
         return parent.collectedAt if parent else None
 
-    def _original_accession_number(
-        self, sample: Sample, parents: dict[int, Sample] | None = None
-    ) -> str | None:
-        parent = self._original_sample(sample, parents)
-        return parent.accessionNumber if parent else None
-
-    def _recollection_accession_number(
-        self, sample: Sample, children: dict[int, Sample] | None = None
-    ) -> str | None:
-        """Accession of the tube created to replace a rejected sample."""
-        if not sample.recollectionSampleId:
-            return None
-        if children is not None:
-            child = children.get(sample.recollectionSampleId)
-        else:
-            child = (
-                self.db.query(Sample)
-                .filter(Sample.sampleId == sample.recollectionSampleId)
-                .first()
-            )
-        return child.accessionNumber if child else None
-
-    def _samples_by_ids(self, sample_ids: list[int]) -> dict[int, Sample]:
+    def _samples_by_ids(self, sample_ids: list[str]) -> dict[str, Sample]:
         """Load samples keyed by primary key; empty input returns an empty map."""
         ids = [sample_id for sample_id in sample_ids if sample_id]
         if not ids:
@@ -261,20 +239,18 @@ class LabWorklistService:
         }
 
     def _sample_lineage_fields(
-        self, sample: Sample | None, parents: dict[int, Sample]
+        self, sample: Sample | None, parents: dict[str, Sample]
     ) -> dict[str, Any]:
         """Clinical recollection fields for order-test worklist rows."""
         if not sample:
             return {
                 "sampleIsRecollection": False,
                 "sampleOriginalSampleId": None,
-                "sampleOriginalAccessionNumber": None,
                 "sampleRecollectionAttempt": None,
             }
         return {
             "sampleIsRecollection": bool(sample.isRecollection),
             "sampleOriginalSampleId": sample.originalSampleId,
-            "sampleOriginalAccessionNumber": self._original_accession_number(sample, parents),
             "sampleRecollectionAttempt": sample.recollectionAttempt,
         }
 
@@ -303,7 +279,7 @@ class LabWorklistService:
                 continue
             prior_sample = samples.get(prior.sampleId) if prior.sampleId else None
             display = format_order_test_display(
-                prior_sample.accessionNumber if prior_sample else None,
+                prior_sample.sampleId if prior_sample else None,
                 prior.testCode,
             )
             if display and display != "-":
@@ -317,8 +293,7 @@ class LabWorklistService:
         order: Order,
         patient: Patient,
         linked_tests: list[OrderTest],
-        parents: dict[int, Sample] | None = None,
-        recolls: dict[int, Sample] | None = None,
+        parents: dict[str, Sample] | None = None,
         include_queue_metrics: bool = True,
     ) -> dict[str, Any]:
         codes = sample.testCodes or []
@@ -337,9 +312,7 @@ class LabWorklistService:
         item: dict[str, Any] = {
             "sampleId": sample.sampleId,
             "orderId": order.orderId,
-            "fillerNumber": order.fillerNumber,
             "patientId": patient.id,
-            "patientMrn": patient.mrn,
             "patientName": patient.fullName,
             "sampleType": sample.sampleType.value if sample.sampleType else "",
             "status": sample.status,
@@ -350,15 +323,12 @@ class LabWorklistService:
             **referent_doctor_projection(order),
             "testName": test_name,
             "testCategory": test_category,
-            "accessionNumber": sample.accessionNumber,
             "isAliquot": bool(sample.isAliquot),
             "parentSampleId": sample.parentSampleId,
             "isRecollection": bool(sample.isRecollection),
             "originalSampleId": sample.originalSampleId,
             "originalSampleCollectedAt": self._original_sample_collected_at(sample, parents),
-            "originalAccessionNumber": self._original_accession_number(sample, parents),
             "recollectionSampleId": sample.recollectionSampleId,
-            "recollectionAccessionNumber": self._recollection_accession_number(sample, recolls),
             "recollectionReason": sample.recollectionReason,
             "recollectionAttempt": sample.recollectionAttempt or 1,
             **work_item_fields,
@@ -404,9 +374,7 @@ class LabWorklistService:
         return {
             "orderTestId": order_test.id,
             "orderId": order.orderId,
-            "fillerNumber": order.fillerNumber,
             "patientId": patient.id,
-            "patientMrn": patient.mrn,
             "patientName": patient.fullName,
             "patientDob": patient.dateOfBirth,
             "patientGender": patient.gender,
@@ -509,13 +477,7 @@ class LabWorklistService:
         parent_ids = [
             sample.originalSampleId for sample, _order, _patient in rows if sample.originalSampleId
         ]
-        recoll_ids = [
-            sample.recollectionSampleId
-            for sample, _order, _patient in rows
-            if sample.recollectionSampleId
-        ]
         parents = self._samples_by_ids(parent_ids)
-        recolls = self._samples_by_ids(recoll_ids)
         all_codes: list[str] = []
         for sample, _order, _patient in rows:
             all_codes.extend(sample.testCodes or [])
@@ -537,12 +499,11 @@ class LabWorklistService:
                     patient=patient,
                     linked_tests=linked_tests,
                     parents=parents,
-                    recolls=recolls,
                 )
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
 
-    def get_sample_work_context(self, sample_id: int) -> dict[str, Any]:
+    def get_sample_work_context(self, sample_id: str) -> dict[str, Any]:
         """Canonical collection eligibility for one sample (deep-link / modal)."""
         from fastapi import HTTPException
         from fastapi import status as http_status
@@ -636,15 +597,12 @@ class LabWorklistService:
                 {
                     "orderTestId": ot.id,
                     "orderId": order.orderId,
-                    "fillerNumber": order.fillerNumber,
                     "patientId": patient.id,
-                    "patientMrn": patient.mrn,
                     "patientName": patient.fullName,
                     "testCode": ot.testCode,
                     "testName": test.name,
                     "sampleId": ot.sampleId,
                     "sampleType": test.sampleType or "",
-                    "accessionNumber": sample.accessionNumber if sample else None,
                     "priority": order.priority,
                     "status": ot.status,
                     "collectedAt": sample.collectedAt if sample else None,
@@ -688,7 +646,7 @@ class LabWorklistService:
         rows = query.order_by(OrderTest.testCode.asc(), Order.orderDate.asc()).limit(500).all()
         grouped: dict[str, dict[str, Any]] = {}
         for ot, order, patient, test, sample in rows:
-            if not sample or not sample.accessionNumber:
+            if not sample or not sample.sampleId:
                 continue
             bucket = grouped.setdefault(
                 ot.testCode,
@@ -698,10 +656,9 @@ class LabWorklistService:
                 {
                     "orderTestId": ot.id,
                     "orderId": order.orderId,
-                    "fillerNumber": order.fillerNumber,
+                    "patientId": patient.id,
                     "patientName": patient.fullName,
-                    "patientMrn": patient.mrn,
-                    "accessionNumber": sample.accessionNumber,
+                    "sampleId": sample.sampleId,
                     "sampleType": test.sampleType or "",
                     "priority": order.priority,
                     "testCode": ot.testCode,
@@ -763,14 +720,11 @@ class LabWorklistService:
                 {
                     "orderTestId": ot.id,
                     "orderId": order.orderId,
-                    "fillerNumber": order.fillerNumber,
                     "patientId": patient.id,
-                    "patientMrn": patient.mrn,
                     "patientName": patient.fullName,
                     "testCode": ot.testCode,
                     "testName": test.name,
                     "sampleType": test.sampleType or "",
-                    "accessionNumber": sample.accessionNumber if sample else None,
                     "sampleId": ot.sampleId,
                     "priority": order.priority,
                     "status": ot.status,
@@ -826,7 +780,7 @@ class LabWorklistService:
     def list_dashboard_work_today(
         self,
         *,
-        user_id: int,
+        user_id: str,
         page: int = 1,
         page_size: int = 50,
     ) -> dict[str, Any]:

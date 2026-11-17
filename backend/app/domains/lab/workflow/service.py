@@ -45,8 +45,8 @@ class CollectionCommandHandler:
 
     def collect_sample(
         self,
-        sample_id: int,
-        user_id: int,
+        sample_id: str,
+        user_id: str,
         collected_volume: float,
         container_type: str,
         container_color: str,
@@ -119,7 +119,7 @@ class LabOperationsService:
         self._collection = CollectionCommandHandler(self)
         self._results = ResultCommandHandler(self)
 
-    def _get_sample(self, sample_id: int, for_update: bool = False) -> Sample:
+    def _get_sample(self, sample_id: str, for_update: bool = False) -> Sample:
         from app.domains.lab.specimen.lookup import get_sample_or_error
 
         return get_sample_or_error(self.db, sample_id, for_update=for_update)
@@ -144,14 +144,18 @@ class LabOperationsService:
             )
         return order_test
 
-    def _order_id_for_order_test(self, order_test_id: int | None) -> int | None:
+    def _order_id_for_order_test(self, order_test_id: int | str | None) -> str | None:
         """Resolve order_id without raising so missing tests skip cache targeting."""
-        if not order_test_id:
+        if order_test_id is None or order_test_id == "":
             return None
-        ot = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
+        try:
+            parsed = int(order_test_id)
+        except (TypeError, ValueError):
+            return None
+        ot = self.db.query(OrderTest).filter(OrderTest.id == parsed).first()
         return ot.orderId if ot else None
 
-    def _assert_order_paid_for_collection(self, order_id: int) -> None:
+    def _assert_order_paid_for_collection(self, order_id: str) -> None:
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         if not order:
             raise LabOperationError(f"Order {order_id} not found", status_code=404)
@@ -171,19 +175,19 @@ class LabOperationsService:
             )
 
     @staticmethod
-    def _resolve_order_id(result: Any, explicit: int | None) -> int | None:
-        if explicit is not None:
+    def _resolve_order_id(result: Any, explicit: str | None) -> str | None:
+        if explicit:
             return explicit
         if result is None:
             return None
         if isinstance(result, dict):
             oid = result.get("orderId") or result.get("order_id")
-            return int(oid) if oid is not None else None
+            return str(oid) if oid is not None else None
         for attr in ("orderId", "order_id"):
             if hasattr(result, attr):
                 val = getattr(result, attr)
                 if val is not None:
-                    return int(val)
+                    return str(val)
         if hasattr(result, "sampleId"):
             return None
         return None
@@ -196,7 +200,7 @@ class LabOperationsService:
         self,
         fn: Callable[[], T],
         *,
-        order_id: int | None = None,
+        order_id: str | None = None,
     ) -> T:
         """Single commit, in-session order rollup, cache invalidate. fn must not commit."""
         try:
@@ -318,14 +322,14 @@ class LabOperationsService:
             order_id=order_id,
         )
 
-    def notify_critical_value(self, test_id: int, request: NotifyRequest, user_id: int) -> dict:
+    def notify_critical_value(self, test_id: int, request: NotifyRequest, user_id: str) -> dict:
         return self.run_lab_mutation(
             lambda: CriticalNotificationService(self.db).notify(test_id, request, user_id),
             order_id=self._order_id_for_order_test(test_id),
         )
 
     def acknowledge_critical_value(
-        self, test_id: int, request: AcknowledgeRequest, user_id: int
+        self, test_id: int, request: AcknowledgeRequest, user_id: str
     ) -> dict:
         return self.run_lab_mutation(
             lambda: CriticalNotificationService(self.db).acknowledge(test_id, request, user_id),

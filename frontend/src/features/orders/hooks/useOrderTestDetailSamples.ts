@@ -10,22 +10,22 @@ import type { OrderTest, Sample } from '@/types';
 import { getRelatedSamplesForOrderTest } from '../utils/orderTestDetailSamples';
 
 export function useOrderTestDetailSamples(
-  orderId: number,
+  orderId: string,
   orderTest: OrderTest,
   isOpen: boolean
 ): { relatedSamples: Sample[]; isLoading: boolean } {
   const { data: orderSamples = [], isLoading } = useQuery({
-    queryKey: queryKeys.samples.byOrder(String(orderId)),
-    queryFn: () => sampleAPI.getAll({ orderId: String(orderId) }),
-    enabled: isOpen && orderId > 0,
+    queryKey: queryKeys.samples.byOrder(orderId),
+    queryFn: () => sampleAPI.getAll({ orderId }),
+    enabled: isOpen && Boolean(orderId),
     ...cacheConfig.dynamic,
   });
 
   const linkedId = orderTest.sampleId;
 
   const { data: fetchedLinked } = useQuery({
-    queryKey: queryKeys.samples.byId(linkedId != null ? String(linkedId) : ''),
-    queryFn: () => sampleAPI.getById(String(linkedId!)),
+    queryKey: queryKeys.samples.byId(linkedId ?? ''),
+    queryFn: () => sampleAPI.getById(linkedId!),
     enabled: isOpen && linkedId != null && !orderSamples.some(s => s.sampleId === linkedId),
     ...cacheConfig.dynamic,
   });

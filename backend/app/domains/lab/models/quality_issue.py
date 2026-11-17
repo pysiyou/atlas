@@ -11,7 +11,7 @@ class QualityIssue(Base):
     __tablename__ = "quality_issues"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    orderId = Column("order_id", Integer, ForeignKey("orders.order_id"), nullable=False, index=True)
+    orderId = Column("order_id", String(13), ForeignKey("orders.order_id"), nullable=False, index=True)
     orderTestId = Column(
         "order_test_id",
         Integer,
@@ -21,7 +21,7 @@ class QualityIssue(Base):
     )
     sampleId = Column(
         "sample_id",
-        Integer,
+        String(20),
         ForeignKey("samples.sample_id", ondelete="SET NULL"),
         nullable=True,
         index=True,
@@ -35,7 +35,7 @@ class QualityIssue(Base):
     remedy = Column(contract_enum(RemedyType), nullable=False)
 
     createdTestId = Column("created_test_id", Integer, nullable=True)
-    createdSampleId = Column("created_sample_id", Integer, nullable=True)
+    createdSampleId = Column("created_sample_id", String(20), nullable=True)
 
     createdBy = Column("created_by", String, nullable=False)
     createdAt = Column(

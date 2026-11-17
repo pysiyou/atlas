@@ -106,7 +106,7 @@ function buildCatalogDetailTables(test: Test): TableInput[] {
         { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },
         { label: 'Methodology', value: test.methodology || '-' },
         { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms, '-') },
-        { label: 'LOINC Codes', value: formatArrayWithFallback(test.loincCodes, '-') },
+        { label: 'LOINC Code', value: test.loincCode?.trim() || '-' },
         {
           label: 'Panels',
           value: formatArrayWithFallback(
