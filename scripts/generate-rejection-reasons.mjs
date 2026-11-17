@@ -32,8 +32,6 @@ function readJson(p) {
  *   stage?: string;
  *   requires_recollection?: boolean;
  *   blocks_autoverification?: boolean;
- *   loinc_answer_id?: string;
- *   source?: string;
  * }} RejectionReasonRow
  */
 
