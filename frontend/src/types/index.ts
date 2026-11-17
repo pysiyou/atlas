@@ -85,10 +85,11 @@ export type {
   TestWithContext,
 } from './domain/entities';
 export type {
-  CatalogAnalyteContract,
-  CatalogOrderableTestContract,
+  CatalogAnalyteEntry,
+  CatalogOrderableTestEntry,
   CatalogValueType,
-} from './catalogContract';
+  CatalogReferenceRange as CatalogReferenceRangeWire,
+} from './generated/catalogContracts';
 
 // =============================================================================
 // payments

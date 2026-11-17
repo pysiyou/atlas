@@ -1,20 +1,22 @@
 /** Result entry analyte display and payload formatting. */
-import type { AnalyteDefinition, Patient, OrderableTest } from '@/types';
+import type { AnalyteDefinition, CatalogReferenceRange, CriticalRange, Patient, OrderableTest } from '@/types';
 import { formatReferenceRange, isCriticalValue } from '../utils';
 import { notify } from '@/feedback';
 
 export const getReferenceRangeDisplay = (analyte: AnalyteDefinition, patient?: Patient): string => {
-  if (analyte.catalogReferenceRange) {
-    return formatReferenceRange(analyte.catalogReferenceRange, patient);
+  const range = analyte.reference_range as CatalogReferenceRange | null | undefined;
+  if (range) {
+    return formatReferenceRange(range, patient);
   }
-  return analyte.referenceRange || 'N/A';
+  return 'N/A';
 };
 
 export const checkCriticalStatus = (analyte: AnalyteDefinition, value: string): boolean => {
-  if (analyte.valueType !== 'NUMERIC' && analyte.type !== 'numeric') return false;
+  if (analyte.value_type !== 'NUMERIC') return false;
   const numValue = parseFloat(value);
   if (isNaN(numValue)) return false;
-  return isCriticalValue(numValue, { low: analyte.criticalLow, high: analyte.criticalHigh });
+  const crit = analyte.critical_range as CriticalRange | null | undefined;
+  return isCriticalValue(numValue, crit ?? undefined);
 };
 
 /**
@@ -28,25 +30,26 @@ export function toRawResultPayload(
   const payload: Record<string, string | number> = {};
 
   for (const analyte of testDef.analytes ?? []) {
-    const value = testResults[analyte.code]?.trim();
+    const code = analyte.analyte_code;
+    const value = testResults[code]?.trim();
     if (!value) continue;
 
-    if ((analyte.valueType === 'SELECT' || analyte.type === 'select') && analyte.allowedValues) {
-      if (!analyte.allowedValues.includes(value)) {
+    if (analyte.value_type === 'SELECT' && analyte.allowed_values) {
+      if (!analyte.allowed_values.includes(value)) {
         notify.show('lab.entry.selectInvalid');
         return null;
       }
     }
 
-    if (analyte.valueType === 'NUMERIC' || analyte.type === 'numeric') {
+    if (analyte.value_type === 'NUMERIC') {
       const num = parseFloat(value);
       if (Number.isFinite(num)) {
-        payload[analyte.code] = num;
+        payload[code] = num;
         continue;
       }
     }
 
-    payload[analyte.code] = value;
+    payload[code] = value;
   }
 
   return payload;

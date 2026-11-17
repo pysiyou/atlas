@@ -83,7 +83,7 @@ export function buildDescriptionItems(
 
 /** Truncated synonym preview (e.g. `"foo, bar +2 more"`). */
 export function formatSynonymsPreview(
-  synonyms: string[] | undefined,
+  synonyms: string[] | null | undefined,
   max = 2,
 ): string | null {
   if (!synonyms?.length) {

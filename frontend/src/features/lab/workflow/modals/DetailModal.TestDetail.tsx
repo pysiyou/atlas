@@ -58,7 +58,7 @@ export function TestDetailModal({
         order={view.order}
         orderTest={view.orderTest}
         analyteCount={view.catalogTest?.analytes?.length ?? 0}
-        turnaroundHours={view.catalogTest?.turnaroundTime}
+        turnaroundHours={view.catalogTest?.turnaroundTimeHours}
       />
     ) : null;
 

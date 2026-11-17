@@ -4,7 +4,6 @@ import type { CatalogReferenceRange, CriticalRange, AnalyteDefinition, Patient, 
 import type { DemographicRange } from '@/types';
 import { calculateAge } from '@/utils/string';
 import { FG, TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
-
 export type { ResultStatus };
 
 export interface PhysiologicLimit {
@@ -135,15 +134,17 @@ export function checkReferenceRangeWithDemographics(
   analyte: AnalyteDefinition,
   patient?: Patient | { gender?: Gender; age?: number }
 ): ResultStatus {
-  if (analyte.criticalLow !== undefined && value < analyte.criticalLow) return 'critical';
-  if (analyte.criticalHigh !== undefined && value > analyte.criticalHigh) return 'critical';
-  if (analyte.catalogReferenceRange) {
-    const range = getPatientSpecificRange(analyte.catalogReferenceRange, patient);
+  const crit = analyte.critical_range as CriticalRange | null | undefined;
+  if (crit?.low !== undefined && value < crit.low) return 'critical';
+  if (crit?.high !== undefined && value > crit.high) return 'critical';
+  const catalog = analyte.reference_range as CatalogReferenceRange | null | undefined;
+  if (catalog) {
+    const range = getPatientSpecificRange(catalog, patient);
     if (range.low !== undefined && value < range.low) return 'low';
     if (range.high !== undefined && value > range.high) return 'high';
     return 'normal';
   }
-  return checkReferenceRange(value, analyte.referenceRange);
+  return 'normal';
 }
 
 function formatRangeBounds(low: number, high: number): string {
@@ -184,7 +185,7 @@ export function getAnalyteReferenceIntervalLines(
   storedReferenceRange?: string,
   patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string }
 ): ReferenceIntervalLine[] {
-  const catalog = analyte?.catalogReferenceRange;
+  const catalog = analyte?.reference_range as CatalogReferenceRange | null | undefined;
   if (catalog) {
     const male = formatDemographicRangeSegment(catalog.adult_male);
     const female = formatDemographicRangeSegment(catalog.adult_female);
@@ -201,7 +202,7 @@ export function getAnalyteReferenceIntervalLines(
     if (male || female) return singleReferenceLine(male || female);
   }
 
-  const fallback = storedReferenceRange?.trim() || analyte?.referenceRange?.trim();
+  const fallback = storedReferenceRange?.trim();
   return singleReferenceLine(fallback || '—');
 }
 

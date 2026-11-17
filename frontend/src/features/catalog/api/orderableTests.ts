@@ -1,21 +1,12 @@
 /**
  * Orderable tests API — slim list for names/search, full documents by code.
+ * Wire types come from OpenAPI; workups[] is the only client-side enrichment.
  */
 import { apiClient } from '@/lib/api';
 import { expectArray } from '@/lib/api';
 import type { ApiOrderableTestResponse, ApiOrderableTestSummaryResponse } from '@/lib/api/types';
 import { REFERENCE_DATA_LIMIT } from '@/lib/api';
-import type {
-  AnalyteDefinition,
-  ContainerTopColor,
-  ContainerType,
-  OrderableTest,
-  OrderableTestSummary,
-  SampleType,
-  TestCategory,
-} from '@/types';
-import type { CatalogAnalyteContract, CatalogOrderableTestContract } from '@/types/catalogContract';
-import { analyteDefinitionFromContract } from './mapCatalogAnalyte';
+import type { OrderableTest, OrderableTestSummary } from '@/types';
 import { useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -33,86 +24,25 @@ function workupIdsForTest(testCode: string): string[] {
     .map(workup => workup.id);
 }
 
+function withWorkupsSummary(test: ApiOrderableTestSummaryResponse): OrderableTestSummary {
+  return { ...test, workups: workupIdsForTest(test.code) };
+}
+
+function withWorkupsFull(test: ApiOrderableTestResponse): OrderableTest {
+  return { ...test, workups: workupIdsForTest(test.code) };
+}
+
 interface GetOrderableTestsParams {
-  category?: TestCategory;
+  category?: string;
   activeOnly?: boolean;
   skip?: number;
   limit?: number;
 }
 
-type ApiAnalyteSummary = {
-  analyteCode: string;
-  name: string;
-  loincCode?: string | null;
-  unit?: string | null;
-  specimen?: string | null;
-  /** Full contracts/catalog/analyte-catalog.json entry (snake_case). */
-  contract: CatalogAnalyteContract;
-};
-
-type APIOrderableTestResponse = ApiOrderableTestResponse & {
-  analytes?: ApiAnalyteSummary[];
-  /** Full contracts/catalog/orderable-tests.json entry (snake_case). */
-  contract?: CatalogOrderableTestContract | null;
-};
-
 const EMPTY_SUMMARIES: OrderableTestSummary[] = [];
 const EMPTY_SUMMARY_BY_CODE = new Map<string, OrderableTestSummary>();
 const EMPTY_FULL_TESTS: OrderableTest[] = [];
 const EMPTY_FULL_BY_CODE = new Map<string, OrderableTest>();
-
-function mapApiAnalytes(analytes?: ApiAnalyteSummary[]): AnalyteDefinition[] | undefined {
-  if (!analytes || analytes.length === 0) return undefined;
-
-  return analytes.map((item): AnalyteDefinition => {
-    const contract =
-      item.contract ??
-      ({
-        analyte_code: item.analyteCode,
-        name: item.name,
-        loinc_code: item.loincCode ?? undefined,
-        unit: item.unit ?? undefined,
-        validation: { rejection_criteria: [] },
-      } satisfies CatalogAnalyteContract);
-    return analyteDefinitionFromContract(contract, {
-      analyteCode: item.analyteCode,
-      name: item.name,
-      loincCode: item.loincCode,
-      unit: item.unit,
-    });
-  });
-}
-
-function transformSummary(apiTest: ApiOrderableTestSummaryResponse): OrderableTestSummary {
-  return {
-    code: apiTest.code,
-    name: apiTest.name,
-    synonyms: apiTest.synonyms ?? undefined,
-    category: apiTest.category as TestCategory,
-    price: apiTest.price,
-    turnaroundTime: apiTest.turnaroundTimeHours ?? 0,
-    sampleType: apiTest.sampleType as SampleType,
-    isActive: apiTest.isActive,
-    createdAt: apiTest.createdAt,
-    updatedAt: apiTest.updatedAt,
-    containerTypes: (apiTest.containerTypes ?? []) as ContainerType[],
-    containerTopColors: (apiTest.containerTopColors ?? []) as ContainerTopColor[],
-    workups: workupIdsForTest(apiTest.code),
-    loincCode: apiTest.loincCode ?? undefined,
-    fastingRequired: apiTest.fastingRequired ?? undefined,
-  };
-}
-
-function transformOrderableTest(apiTest: APIOrderableTestResponse): OrderableTest {
-  const { analytes, turnaroundTimeHours, contract, ...rest } = apiTest;
-  return {
-    ...(rest as unknown as OrderableTest),
-    turnaroundTime: turnaroundTimeHours ?? 0,
-    workups: workupIdsForTest(apiTest.code),
-    analytes: mapApiAnalytes(analytes),
-    contract: contract ?? undefined,
-  };
-}
 
 export const orderableTestAPI = {
   async getAll(params?: GetOrderableTestsParams): Promise<OrderableTestSummary[]> {
@@ -128,13 +58,13 @@ export const orderableTestAPI = {
       await apiClient.get<ApiOrderableTestSummaryResponse[]>('/orderable-tests', queryParams),
       'catalog'
     );
-    return apiTests.map(transformSummary);
+    return apiTests.map(withWorkupsSummary);
   },
 
   async getByCode(testCode: string): Promise<OrderableTest | null> {
     try {
-      const apiTest = await apiClient.get<APIOrderableTestResponse>(`/orderable-tests/${testCode}`);
-      return transformOrderableTest(apiTest);
+      const apiTest = await apiClient.get<ApiOrderableTestResponse>(`/orderable-tests/${testCode}`);
+      return withWorkupsFull(apiTest);
     } catch {
       return null;
     }
@@ -142,21 +72,21 @@ export const orderableTestAPI = {
 
   async getByCodes(codes: string[]): Promise<OrderableTest[]> {
     if (codes.length === 0) return [];
-    const apiTests = expectArray<APIOrderableTestResponse>(
-      await apiClient.get<APIOrderableTestResponse[]>('/orderable-tests/by-codes', {
+    const apiTests = expectArray<ApiOrderableTestResponse>(
+      await apiClient.get<ApiOrderableTestResponse[]>('/orderable-tests/by-codes', {
         codes: codes.join(','),
       }),
       'catalog by-codes'
     );
-    return apiTests.map(transformOrderableTest);
+    return apiTests.map(withWorkupsFull);
   },
 
   async search(query: string): Promise<OrderableTest[]> {
-    const apiTests = expectArray<APIOrderableTestResponse>(
-      await apiClient.get<APIOrderableTestResponse[]>('/orderable-tests/search', { q: query }),
+    const apiTests = expectArray<ApiOrderableTestResponse>(
+      await apiClient.get<ApiOrderableTestResponse[]>('/orderable-tests/search', { q: query }),
       'catalog search'
     );
-    return apiTests.map(transformOrderableTest);
+    return apiTests.map(withWorkupsFull);
   },
 };
 

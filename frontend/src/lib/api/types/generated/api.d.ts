@@ -348,6 +348,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/affiliations/pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Affiliation Pricing */
+        get: operations["get_affiliation_pricing_api_v1_affiliations_pricing_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/orders": {
         parameters: {
             query?: never;
@@ -503,23 +520,6 @@ export interface paths {
         put?: never;
         /** Create Payment */
         post: operations["create_payment_api_v1_payments_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/affiliations/pricing": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Affiliation Pricing */
-        get: operations["get_affiliation_pricing_api_v1_affiliations_pricing_get"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1090,26 +1090,6 @@ export interface components {
             /** Critical */
             critical: number;
         };
-        /** AnalyteSummaryResponse */
-        AnalyteSummaryResponse: {
-            /** Analytecode */
-            analyteCode: string;
-            /** Name */
-            name: string;
-            /** Loinccode */
-            loincCode?: string | null;
-            /** Unit */
-            unit?: string | null;
-            /** Specimen */
-            specimen?: string | null;
-            /**
-             * Contract
-             * @description Full analyte-catalog.json entry (snake_case: value_type, allowed_values, reference_range, …).
-             */
-            contract: {
-                [key: string]: unknown;
-            };
-        };
         /**
          * AnalyzerResultRequest
          * @description JSON ingest: specimen_id is the accession (SPM-2), not the integer sample PK.
@@ -1292,6 +1272,55 @@ export interface components {
             orderTestIds: number[];
             /** Attentiontype */
             attentionType: string;
+        };
+        /**
+         * CatalogAnalyteEntry
+         * @description One analyte-catalog.json row — shared with frontend generated types.
+         */
+        CatalogAnalyteEntry: {
+            /** Analyte Code */
+            analyte_code: string;
+            /** Name */
+            name: string;
+            /** Validation */
+            validation: components["schemas"]["CatalogValidationBlock"] | {
+                [key: string]: unknown;
+            };
+            /** Loinc Code */
+            loinc_code?: string | null;
+            /** Unit */
+            unit?: string | null;
+            /** Specimen */
+            specimen?: string | null;
+            /** Value Type */
+            value_type?: string | null;
+            /** Allowed Values */
+            allowed_values?: string[] | null;
+            /** Reference Range */
+            reference_range?: {
+                [key: string]: unknown;
+            } | null;
+            /** Critical Range */
+            critical_range?: {
+                [key: string]: unknown;
+            } | null;
+            /** Physiologic Range */
+            physiologic_range?: {
+                [key: string]: unknown;
+            } | null;
+            /** Decimals Suggested */
+            decimals_suggested?: number | null;
+            /** Citations */
+            citations?: string[] | null;
+        } & {
+            [key: string]: unknown;
+        };
+        /** CatalogValidationBlock */
+        CatalogValidationBlock: {
+            /** Rejection Criteria */
+            rejection_criteria?: string[];
+        } & {
+            [key: string]: unknown;
         };
         /** ClinicalWorkupResponse */
         ClinicalWorkupResponse: {
@@ -2339,11 +2368,8 @@ export interface components {
             rejectionCriteria?: components["schemas"]["RejectionCriterionItem"][] | null;
             /** Validationrejectioncriteria */
             validationRejectionCriteria?: components["schemas"]["RejectionCriterionItem"][] | null;
-            /**
-             * Analytes
-             * @default []
-             */
-            analytes: components["schemas"]["AnalyteSummaryResponse"][];
+            /** Analytes */
+            analytes?: components["schemas"]["CatalogAnalyteEntry"][];
             /** Loinccode */
             loincCode?: string | null;
             /** Methodology */
@@ -2354,7 +2380,7 @@ export interface components {
             notes?: string | null;
             /**
              * Contract
-             * @description Full orderable-tests.json entry (snake_case keys).
+             * @description Full orderable-tests.json entry (snake_case keys) for this test_code.
              */
             contract?: {
                 [key: string]: unknown;
@@ -4188,6 +4214,26 @@ export interface operations {
             };
         };
     };
+    get_affiliation_pricing_api_v1_affiliations_pricing_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     get_orders_api_v1_orders_get: {
         parameters: {
             query?: {
@@ -4603,26 +4649,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_affiliation_pricing_api_v1_affiliations_pricing_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
                 };
             };
         };

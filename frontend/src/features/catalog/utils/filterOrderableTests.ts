@@ -38,7 +38,7 @@ export function filterOrderableTests(tests: OrderableTestSummary[], filters: Fil
   }
 
   if (categoryFilters.length > 0) {
-    filtered = filtered.filter(test => categoryFilters.includes(test.category));
+    filtered = filtered.filter(test => categoryFilters.includes(test.category as TestCategory));
   }
 
   if (sampleTypeFilters.length > 0) {

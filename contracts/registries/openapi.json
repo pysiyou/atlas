@@ -1106,7 +1106,7 @@
     "/api/v1/orderable-tests": {
       "get": {
         "tags": [
-          "orderable-tests"
+          "catalog"
         ],
         "summary": "List Orderable Tests",
         "operationId": "list_orderable_tests_api_v1_orderable_tests_get",
@@ -1197,7 +1197,7 @@
     "/api/v1/orderable-tests/search": {
       "get": {
         "tags": [
-          "orderable-tests"
+          "catalog"
         ],
         "summary": "Search Orderable Tests",
         "operationId": "search_orderable_tests_api_v1_orderable_tests_search_get",
@@ -1260,7 +1260,7 @@
     "/api/v1/orderable-tests/by-codes": {
       "get": {
         "tags": [
-          "orderable-tests"
+          "catalog"
         ],
         "summary": "Get Orderable Tests By Codes",
         "operationId": "get_orderable_tests_by_codes_api_v1_orderable_tests_by_codes_get",
@@ -1313,7 +1313,7 @@
     "/api/v1/orderable-tests/{testCode}": {
       "get": {
         "tags": [
-          "orderable-tests"
+          "catalog"
         ],
         "summary": "Get Orderable Test",
         "operationId": "get_orderable_test_api_v1_orderable_tests__testCode__get",
@@ -1360,7 +1360,7 @@
     "/api/v1/clinical-workups": {
       "get": {
         "tags": [
-          "clinical-workups"
+          "catalog"
         ],
         "summary": "List Clinical Workups",
         "operationId": "list_clinical_workups_api_v1_clinical_workups_get",
@@ -1407,6 +1407,30 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/affiliations/pricing": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Get Affiliation Pricing",
+        "operationId": "get_affiliation_pricing_api_v1_affiliations_pricing_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/orders": {
@@ -2282,30 +2306,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
                 }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/affiliations/pricing": {
-      "get": {
-        "tags": [
-          "affiliations"
-        ],
-        "summary": "Get Affiliation Pricing",
-        "operationId": "get_affiliation_pricing_api_v1_affiliations_pricing_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
               }
             }
           }
@@ -4687,64 +4687,6 @@
         ],
         "title": "AgeBuckets"
       },
-      "AnalyteSummaryResponse": {
-        "properties": {
-          "analyteCode": {
-            "type": "string",
-            "title": "Analytecode"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "loincCode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Loinccode"
-          },
-          "unit": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Unit"
-          },
-          "specimen": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Specimen"
-          },
-          "contract": {
-            "type": "object",
-            "additionalProperties": true,
-            "title": "Contract",
-            "description": "Full analyte-catalog.json entry (snake_case: value_type, allowed_values, reference_range, …)."
-          }
-        },
-        "type": "object",
-        "required": [
-          "analyteCode",
-          "name",
-          "contract"
-        ],
-        "title": "AnalyteSummaryResponse"
-      },
       "AnalyzerResultRequest": {
         "properties": {
           "specimen_id": {
@@ -5336,6 +5278,172 @@
           "attentionType"
         ],
         "title": "BoardAttentionItem"
+      },
+      "CatalogAnalyteEntry": {
+        "properties": {
+          "analyte_code": {
+            "type": "string",
+            "title": "Analyte Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "validation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CatalogValidationBlock"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            ],
+            "title": "Validation"
+          },
+          "loinc_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loinc Code"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "specimen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Specimen"
+          },
+          "value_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Type"
+          },
+          "allowed_values": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Allowed Values"
+          },
+          "reference_range": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Range"
+          },
+          "critical_range": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Critical Range"
+          },
+          "physiologic_range": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Physiologic Range"
+          },
+          "decimals_suggested": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decimals Suggested"
+          },
+          "citations": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citations"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "analyte_code",
+          "name",
+          "validation"
+        ],
+        "title": "CatalogAnalyteEntry",
+        "description": "One analyte-catalog.json row \u2014 shared with frontend generated types."
+      },
+      "CatalogValidationBlock": {
+        "properties": {
+          "rejection_criteria": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Rejection Criteria"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "CatalogValidationBlock"
       },
       "ClinicalWorkupResponse": {
         "properties": {
@@ -8783,11 +8891,10 @@
           },
           "analytes": {
             "items": {
-              "$ref": "#/components/schemas/AnalyteSummaryResponse"
+              "$ref": "#/components/schemas/CatalogAnalyteEntry"
             },
             "type": "array",
-            "title": "Analytes",
-            "default": []
+            "title": "Analytes"
           },
           "loincCode": {
             "anyOf": [
@@ -8836,15 +8943,15 @@
           "contract": {
             "anyOf": [
               {
-                "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "type": "object"
               },
               {
                 "type": "null"
               }
             ],
             "title": "Contract",
-            "description": "Full orderable-tests.json entry (snake_case keys)."
+            "description": "Full orderable-tests.json entry (snake_case keys) for this test_code."
           },
           "createdAt": {
             "type": "string",

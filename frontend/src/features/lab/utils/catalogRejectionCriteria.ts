@@ -11,7 +11,7 @@ function criterionLabel(item: string | { reason?: string; label?: string; reason
 
 /** Format rejection criteria for display tables. */
 export function formatRejectionCriteriaList(
-  items?: Array<string | { reason?: string; label?: string; domain?: string; reasonId?: string }>
+  items?: Array<string | { reason?: string; label?: string; domain?: string; reasonId?: string }> | null
 ): string[] {
   if (!items?.length) return [];
   return items.map(item => criterionLabel(item));

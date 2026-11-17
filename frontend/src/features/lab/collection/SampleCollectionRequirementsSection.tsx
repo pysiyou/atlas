@@ -17,11 +17,13 @@ import { useLabCopy } from '@/strings';
 /** Test detail for requirements display */
 export interface TestDetail {
   code: string;
-  fastingRequired?: boolean;
-  containerDescription?: string;
-  collectionNotes?: string;
-  rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string }>;
-  minimumVolume?: number;
+  fastingRequired?: boolean | null;
+  containerDescription?: string | null;
+  collectionNotes?: string | null;
+  rejectionCriteria?:
+    | Array<string | { reason: string; domain?: string; label?: string }>
+    | null;
+  minimumVolume?: number | null;
 }
 
 interface CollectionRequirementsSectionProps {

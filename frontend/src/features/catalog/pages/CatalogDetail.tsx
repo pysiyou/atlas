@@ -13,6 +13,7 @@ import { DetailPageShell, PageHeader } from '@/components/layout';
 import { Panel } from '@/components/surfaces';
 import { RecordId } from '@/features/shared';
 import { formatRejectionCriteriaList } from '@/features/lab/cross';
+import { getReferenceRangeDisplay } from '@/features/lab/entry/resultEntry';
 import { SPACING, TABLE_TYPE } from '@/theme/recipes';
 import { feedbackTitle } from '@/feedback';
 import {
@@ -24,7 +25,7 @@ import {
   formatTurnaroundTime,
 } from '@/utils';
 import type { ReactNode } from 'react';
-import type  { OrderableTest, AnalyteDefinition } from '@/types';
+import type { OrderableTest, AnalyteDefinition } from '@/types';
 import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
 import { useModuleListTitles } from '@/strings';
 
@@ -38,53 +39,24 @@ function catalogDetailColumnCount(breakpoint: string): number {
   return 3;
 }
 
-function formatReferenceRangeLine(
-  range: OrderableTest['referenceRanges'][number],
-  index: number,
-): { label: string; value: string } {
-  const rangeStr =
-    range.text ||
-    (range.min !== undefined && range.max !== undefined
-      ? `${range.min} - ${range.max}`
-      : range.min !== undefined
-        ? `≥ ${range.min}`
-        : range.max !== undefined
-          ? `≤ ${range.max}`
-          : 'N/A');
-
-  const genderStr = range.gender ? ` (${capitalize(range.gender)})` : '';
-  const ageStr =
-    range.ageMin !== undefined || range.ageMax !== undefined
-      ? ` [${range.ageMin ?? 0}-${range.ageMax ?? '∞'} yrs]`
-      : '';
-  const criticalStr =
-    range.criticalLow !== undefined || range.criticalHigh !== undefined
-      ? ` Critical: ${range.criticalLow !== undefined ? `<${range.criticalLow}` : ''}${range.criticalLow !== undefined && range.criticalHigh !== undefined ? ' / ' : ''}${range.criticalHigh !== undefined ? `>${range.criticalHigh}` : ''}`
-      : '';
-
-  return {
-    label: `Range ${index + 1}${genderStr}${ageStr}`,
-    value: `${rangeStr}${criticalStr}`,
-  };
-}
-
 /**
  * Left-column identifier for a result component: analyte code and LOINC when present.
  */
 function formatAnalyteRow(param: AnalyteDefinition): string {
-  const loinc = param.loincCode?.trim();
-  if (loinc) return `${param.code} · ${loinc}`;
-  return param.code;
+  const loinc = param.loinc_code?.trim();
+  if (loinc) return `${param.analyte_code} · ${loinc}`;
+  return param.analyte_code;
 }
 
 /** Secondary line: reference range and critical limits when present. */
 function formatAnalyteDetailsLine(param: AnalyteDefinition): string {
   const parts: string[] = [];
-  const referenceRange = param.referenceRange?.trim();
-  if (referenceRange) parts.push(`Ref: ${referenceRange}`);
-  if (param.criticalLow !== undefined || param.criticalHigh !== undefined) {
-    const low = param.criticalLow !== undefined ? `<${param.criticalLow}` : '';
-    const high = param.criticalHigh !== undefined ? `>${param.criticalHigh}` : '';
+  const referenceRange = getReferenceRangeDisplay(param);
+  if (referenceRange && referenceRange !== 'N/A') parts.push(`Ref: ${referenceRange}`);
+  const crit = param.critical_range;
+  if (crit?.low !== undefined || crit?.high !== undefined) {
+    const low = crit.low !== undefined ? `<${crit.low}` : '';
+    const high = crit.high !== undefined ? `>${crit.high}` : '';
     const sep = low && high ? ' / ' : '';
     parts.push(`Critical: ${low}${sep}${high}`);
   }
@@ -102,7 +74,7 @@ function formatAnalyteValue(param: AnalyteDefinition): ReactNode {
         <span>{param.name}</span>
         <span className="whitespace-nowrap">
           (
-          <RecordId>{param.code}</RecordId>
+          <RecordId>{param.analyte_code}</RecordId>
           )
         </span>
         {unit ? <span>{unit}</span> : null}
@@ -123,7 +95,7 @@ function buildCatalogDetailTables(test: OrderableTest): TableInput[] {
         { label: 'Test Code', value: <RecordId>{test.code}</RecordId> },
         { label: 'Test Name', value: test.name },
         { label: 'Category', value: capitalize(test.category) },
-        { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTime) },
+        { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTimeHours) },
         { label: 'Methodology', value: test.methodology || '-' },
         { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms, '-') },
         { label: 'LOINC Code', value: test.loincCode?.trim() || '-' },
@@ -189,16 +161,6 @@ function buildCatalogDetailTables(test: OrderableTest): TableInput[] {
         label: formatAnalyteRow(analyte),
         value: formatAnalyteValue(analyte),
       })),
-    });
-  }
-
-  if (test.referenceRanges && test.referenceRanges.length > 0) {
-    tables.push({
-      key: 'ranges',
-      preset: 'panel.pageEmbed.visible',
-      title: 'Reference Ranges',
-      meta: String(test.referenceRanges.length),
-      rows: test.referenceRanges.map(formatReferenceRangeLine),
     });
   }
 

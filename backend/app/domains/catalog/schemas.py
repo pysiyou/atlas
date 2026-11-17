@@ -4,32 +4,36 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
-# --- Analytes ---
+# --- Analytes (contracts/catalog/analyte-catalog.json wire shape) ---
 
 
-class AnalyteSummaryResponse(BaseModel):
-    """
-    One analyte on an orderable test.
+class CatalogValidationBlock(BaseModel):
+    rejection_criteria: list[str] = Field(default_factory=list)
 
-    ``contract`` is the authoritative ``analyte-catalog.json`` entry (snake_case keys).
-    """
+    model_config = ConfigDict(extra="allow")
 
-    analyteCode: str
+
+class CatalogAnalyteEntry(BaseModel):
+    """One analyte-catalog.json row — shared with frontend generated types."""
+
+    analyte_code: str
     name: str
-    loincCode: str | None = None
+    validation: CatalogValidationBlock | dict[str, Any]
+    loinc_code: str | None = None
     unit: str | None = None
     specimen: str | None = None
-    contract: dict[str, Any] = Field(
-        ...,
-        description="Full analyte-catalog.json entry (value_type, allowed_values, reference_range, …).",
-    )
+    value_type: str | None = None
+    allowed_values: list[str] | None = None
+    reference_range: dict[str, Any] | None = None
+    critical_range: dict[str, Any] | None = None
+    physiologic_range: dict[str, Any] | None = None
+    decimals_suggested: int | None = None
+    citations: list[str] | None = None
 
-
-class AnalyteResponse(AnalyteSummaryResponse):
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(extra="allow")
 
 
 # --- Orderable tests ---
@@ -94,7 +98,7 @@ class OrderableTestResponse(OrderableTestBase):
     collectionNotes: str | None = None
     rejectionCriteria: list[RejectionCriterionItem] | None = None
     validationRejectionCriteria: list[RejectionCriterionItem] | None = None
-    analytes: list[AnalyteSummaryResponse] = []
+    analytes: list[CatalogAnalyteEntry] = Field(default_factory=list)
     loincCode: str | None = None
     methodology: str | None = None
     confidence: str | None = None

@@ -245,7 +245,7 @@ export function ResultEntryDetailModal({
   const totalAnalytes = resolvedTestDef?.analytes?.length ?? 0;
   const isComplete = filledCount === totalAnalytes;
   const completionPercentage = totalAnalytes > 0 ? Math.round((filledCount / totalAnalytes) * 100) : 0;
-  const turnaroundTime = resolvedTestDef?.turnaroundTime;
+  const turnaroundTime = resolvedTestDef?.turnaroundTimeHours;
   const showTurnaroundTime =
     typeof turnaroundTime === 'number' && Number.isFinite(turnaroundTime) && turnaroundTime > 0;
   const remainingAnalytes = totalAnalytes - filledCount;

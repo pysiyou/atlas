@@ -10,6 +10,7 @@ import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/theme/r
 import { cn } from '@/utils';
 import { IconKeys } from '@/icons';
 import type { AnalyteDefinition } from '@/types';
+import type { PhysiologicLimit } from '../utils/labResult';
 import { validatePhysiologicValue } from '../utils';
 import { titleCaseWords } from '@/utils/string';
 import { RadioCard } from '@/components/overlays';
@@ -78,7 +79,7 @@ function SelectAnalyteValueInput({
     >
       {({ close }) => (
         <div className="flex flex-col gap-space-2 p-space-2 max-h-[250px] overflow-y-auto">
-          {analyte.allowedValues?.map(option => (
+          {analyte.allowed_values?.map((option: string) => (
             <RadioCard
               key={option}
               name={`entry-analyte-${inputId}`}
@@ -116,20 +117,20 @@ export function LabResultInput({
   onValidationChange?: (error: string | undefined) => void;
   disabled?: boolean;
 }) {
-  const valueType =
-    analyte.valueType ||
-    (analyte.type === 'numeric' ? 'NUMERIC' : analyte.type === 'select' ? 'SELECT' : 'TEXT');
+  const valueType = analyte.value_type ?? 'TEXT';
   const normalizedValue = value ?? '';
-  const limit = valueType === 'NUMERIC' ? analyte.physiologicRange : undefined;
+  const phys = analyte.physiologic_range as PhysiologicLimit | null | undefined;
+  const limit =
+    valueType === 'NUMERIC' && phys?.min !== undefined && phys?.max !== undefined ? phys : undefined;
 
   const handleBlur = useCallback(() => {
     if (valueType !== 'NUMERIC' || !normalizedValue) {
       onValidationChange?.(undefined);
       return;
     }
-    const result = validatePhysiologicValue(normalizedValue, analyte.physiologicRange);
+    const result = validatePhysiologicValue(normalizedValue, limit);
     onValidationChange?.(result.error);
-  }, [normalizedValue, valueType, onValidationChange, analyte.physiologicRange]);
+  }, [normalizedValue, valueType, onValidationChange, limit]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -149,12 +150,13 @@ export function LabResultInput({
     disabled,
   };
 
-  const selectOptions = analyte.allowedValues?.filter(Boolean) ?? [];
+  const selectOptions =
+    analyte.allowed_values?.filter((v): v is string => typeof v === 'string' && v.trim() !== '') ?? [];
 
   if (valueType === 'SELECT' && selectOptions.length > 0) {
     return (
       <SelectAnalyteValueInput
-        analyte={{ ...analyte, allowedValues: selectOptions }}
+        analyte={{ ...analyte, allowed_values: selectOptions }}
         value={normalizedValue}
         onChange={onChange}
         inputId={inputId}

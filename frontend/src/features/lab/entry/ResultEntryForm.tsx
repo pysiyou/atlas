@@ -64,27 +64,26 @@ export function ResultEntryForm({
     <div className={cn(!isModal && cn('bg-surface-page p-panel border border-border-subtle', RADIUS.menu))}>
       <div className={METRIC_TILE.grid}>
         {testDef.analytes.map(analyte => {
-          const value = results[analyte.code] ?? '';
+          const code = analyte.analyte_code;
+          const value = results[code] ?? '';
           const hasValue = Boolean(value.trim());
           const refRange = getReferenceRangeDisplay(analyte, patient);
           const isCritical = hasValue && checkCriticalStatus(analyte, value);
-          const valueType =
-            analyte.valueType ||
-            (analyte.type === 'numeric' ? 'NUMERIC' : analyte.type === 'select' ? 'SELECT' : 'TEXT');
+          const valueType = analyte.value_type ?? 'TEXT';
           const status = isCritical ? 'critical' : 'normal';
 
           return (
             <div
-              key={analyte.code}
+              key={code}
               className={cn(
                 METRIC_TILE.tile,
                 resultTileStatusClass(status, hasValue),
-                validationErrors[analyte.code] && 'border-danger-stroke ring-1 ring-danger-stroke/30',
+                validationErrors[code] && 'border-danger-stroke ring-1 ring-danger-stroke/30',
               )}
             >
               <div className="flex items-baseline justify-between gap-space-2 min-w-0">
                 <label
-                  htmlFor={`result-${resultKey}-${analyte.code}`}
+                  htmlFor={`result-${resultKey}-${code}`}
                   className={METRIC_TILE.label}
                 >
                   {analyte.name}
@@ -104,16 +103,16 @@ export function ResultEntryForm({
                 <LabResultInput
                   analyte={analyte}
                   value={value}
-                  onChange={newValue => onResultsChange(resultKey, analyte.code, newValue ?? '')}
+                  onChange={newValue => onResultsChange(resultKey, code, newValue ?? '')}
                   onKeyDown={e => {
                     if (e.key === 'Enter' && canSubmit) {
                       e.preventDefault();
                       onSave();
                     }
                   }}
-                  inputId={`result-${resultKey}-${analyte.code}`}
-                  validationError={validationErrors[analyte.code]}
-                  onValidationChange={error => handleValidationChange(analyte.code, error)}
+                  inputId={`result-${resultKey}-${code}`}
+                  validationError={validationErrors[code]}
+                  onValidationChange={error => handleValidationChange(code, error)}
                   disabled={entryLocked}
                 />
                 {valueType !== 'TEXT' && analyte.unit && (
@@ -123,8 +122,8 @@ export function ResultEntryForm({
                 )}
               </div>
 
-              {validationErrors[analyte.code] && (
-                <p className={`${FIELD_ERROR_CAPTION} truncate`} title={validationErrors[analyte.code]}>
+              {validationErrors[code] && (
+                <p className={`${FIELD_ERROR_CAPTION} truncate`} title={validationErrors[code]}>
                   {feedbackTitle('lab.entry.fieldInvalid')}
                 </p>
               )}

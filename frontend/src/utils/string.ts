@@ -72,7 +72,7 @@ export function capitalize(str: string): string {
 }
 
 /** Format boolean as Yes/No with fallback for undefined. */
-export function formatBoolean(val: boolean | undefined, fallback = '-'): string {
+export function formatBoolean(val: boolean | null | undefined, fallback = '-'): string {
   if (val === undefined) return fallback;
   return val ? 'Yes' : 'No';
 }

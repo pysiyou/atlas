@@ -17,7 +17,6 @@ from app.domains.catalog.models import (
 )
 from app.domains.catalog.schemas import (
     AffiliationPricingResponse,
-    AnalyteSummaryResponse,
     ClinicalWorkupResponse,
     OrderableTestResponse,
     OrderableTestSummaryResponse,
@@ -158,29 +157,20 @@ def _analyte_codes_for_test(test: OrderableTest) -> list[str]:
     ]
 
 
-def _analyte_summaries_for_test(test: OrderableTest) -> list[AnalyteSummaryResponse]:
-    summaries: list[AnalyteSummaryResponse] = []
+def _analyte_entries_for_test(test: OrderableTest) -> list[dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
     for link in sorted(test.analyteLinks or [], key=lambda row: row.sortOrder):
         analyte = link.analyte
         if analyte is None:
             continue
-        summaries.append(
-            AnalyteSummaryResponse(
-                analyteCode=analyte.code,
-                name=analyte.name,
-                loincCode=analyte.loincCode,
-                unit=analyte.unit,
-                specimen=analyte.specimen,
-                contract=analyte_contract_entry(analyte),
-            )
-        )
-    return summaries
+        entries.append(analyte_contract_entry(analyte))
+    return entries
 
 
 def serialize_orderable_test(test: OrderableTest) -> dict:
     analyte_codes = _analyte_codes_for_test(test)
     payload = OrderableTestResponse.model_validate(test).model_dump(mode="json")
-    payload["analytes"] = [a.model_dump(mode="json") for a in _analyte_summaries_for_test(test)]
+    payload["analytes"] = _analyte_entries_for_test(test)
     payload["contract"] = orderable_test_contract_entry(test, analyte_codes=analyte_codes)
     return payload
 

@@ -105,10 +105,10 @@ function useResultEntryCardHeader(
         queueSince={chromeRow.collectedAt ?? undefined}
         filledCount={filledCount}
         analyteCount={analyteCount}
-        turnaroundHours={testDef.turnaroundTime}
+        turnaroundHours={testDef.turnaroundTimeHours}
       />
     ),
-    [chromeRow, patientName, testDef.turnaroundTime, filledCount, analyteCount]
+    [chromeRow, patientName, testDef.turnaroundTimeHours, filledCount, analyteCount]
   );
 
   const badges = <TestHeaderBadges row={chromeRow} variant="entry" showStatus />;
@@ -150,11 +150,11 @@ function ResultEntryCardDesktop({
       content={
         <p className="leading-snug">
           {previewAnalytes.map((analyte, index) => (
-            <span key={analyte.code}>
+            <span key={analyte.analyte_code}>
               {index > 0 ? ' · ' : null}
               <span
                 className={
-                  results[analyte.code]?.trim() ? FG.body : FG.captionMuted
+                  results[analyte.analyte_code]?.trim() ? FG.body : FG.captionMuted
                 }
               >
                 {analyte.name}

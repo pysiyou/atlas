@@ -56,7 +56,7 @@ export function LabResultInlineTable({
             const label = resolveAnalyteLabel(key, analyteLabels);
             const analyteDef = catalogAnalytes[key];
             const tooltipParts = [key];
-            const loinc = analyteDef?.loincCode?.trim();
+            const loinc = analyteDef?.loinc_code?.trim();
             if (loinc) tooltipParts.push(loinc);
             const rowTitle = tooltipParts.join(' · ');
             const intervalLines = getAnalyteReferenceIntervalLines(

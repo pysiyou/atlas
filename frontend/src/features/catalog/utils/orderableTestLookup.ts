@@ -98,8 +98,8 @@ export function buildAnalyteLabelMap(
   const analytes = Array.isArray(source) ? source : source?.analytes;
   const map: Record<string, string> = {};
   for (const analyte of analytes ?? []) {
-    if (analyte.code) {
-      map[analyte.code] = analyte.name;
+    if (analyte.analyte_code) {
+      map[analyte.analyte_code] = analyte.name;
     }
   }
   return map;
@@ -126,8 +126,8 @@ export function resolveAnalyteLabel(code: string, analyteLabels?: Record<string,
 export function getTestAnalytes(test: OrderableTest | undefined): Record<string, AnalyteDefinition> {
   const map: Record<string, AnalyteDefinition> = {};
   for (const analyte of test?.analytes ?? []) {
-    if (analyte.code) {
-      map[analyte.code] = analyte;
+    if (analyte.analyte_code) {
+      map[analyte.analyte_code] = analyte;
     }
   }
   return map;

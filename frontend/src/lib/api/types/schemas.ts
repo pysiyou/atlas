@@ -13,6 +13,7 @@ export type ApiReportableOrderItem = Schemas['ReportableOrderItem'];
 export type ApiSampleResponse = Schemas['SampleResponse'];
 export type ApiOrderableTestResponse = Schemas['OrderableTestResponse'];
 export type ApiOrderableTestSummaryResponse = Schemas['OrderableTestSummaryResponse'];
+export type ApiCatalogAnalyteEntry = Schemas['CatalogAnalyteEntry'];
 export type ApiUserLookupResponse = Schemas['UserLookupResponse'];
 export type ApiLoginTokenResponse = Schemas['Token'];
 export type ApiRefreshTokenResponse = Schemas['RefreshResponse'];

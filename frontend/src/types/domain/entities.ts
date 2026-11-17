@@ -18,7 +18,11 @@ import type {
   ContainerTopColor,
   UserRole,
 } from '../generated/enums';
-import type { CatalogOrderableTestContract } from '../catalogContract';
+import type {
+  ApiOrderableTestResponse,
+  ApiOrderableTestSummaryResponse,
+  ApiCatalogAnalyteEntry,
+} from '@/lib/api/types';
 
 // =============================================================================
 // patient
@@ -472,75 +476,14 @@ export interface SampleRequirements {
   rejection_criteria?: RejectionReasonId[];
 }
 
-/**
- * Slim orderable test row for list, search, and name lookup.
- * Full analyte definitions load separately via `useOrderableTest` / `useOrderableTestsByCodes`.
- */
-export interface OrderableTestSummary {
-  code: string;
-  name: string;
-  synonyms?: string[];
-  category: TestCategory;
-  price: number;
-  turnaroundTime: number;
-  sampleType: SampleType;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  containerTypes: ContainerType[];
-  containerTopColors: ContainerTopColor[];
-  workups?: string[];
-  /** Unique observation LOINC for this test; omitted for multi-parameter batteries. */
-  loincCode?: string;
-  fastingRequired?: boolean;
-}
+/** Slim orderable test row (OpenAPI) with optional workup index enrichment. */
+export type OrderableTestSummary = ApiOrderableTestSummaryResponse & { workups?: string[] };
 
-/**
- * Full orderable test document including analytes and collection metadata.
- */
-export interface OrderableTest extends OrderableTestSummary {
-  sampleVolume: string;
-  minimumVolume?: number;
-  optimalVolume?: number;
-  specialRequirements?: string;
-  referenceRanges: ReferenceRange[];
-  /** Full contracts/catalog/orderable-tests.json row (snake_case). */
-  contract?: CatalogOrderableTestContract;
-  analytes?: AnalyteDefinition[];
-  numberOfContainers?: number;
-  methodology?: string;
-  containerDescription?: string;
-  collectionNotes?: string;
-  rejectionCriteria?: Array<string | { reason: string; domain?: string; label?: string; reasonId?: string }>;
-  validationRejectionCriteria?: Array<
-    string | { reason: string; domain?: string; label?: string; reasonId?: string }
-  >;
-  confidence?: 'HIGH' | 'MEDIUM' | 'LOW';
-  notes?: string;
-}
+/** Full orderable test (OpenAPI) with catalog analyte entries and optional workups. */
+export type OrderableTest = ApiOrderableTestResponse & { workups?: string[] };
 
-/**
- * Catalog analyte view model (measurable result component on an orderable test).
- */
-export interface AnalyteDefinition {
-  name: string;
-  code: string;
-  unit: string;
-  referenceRange: string; // Stored display string when catalog range is unavailable
-  type: 'numeric' | 'text' | 'qualitative' | 'select'; // Extended type
-  criticalLow?: number;
-  criticalHigh?: number;
-  decimalPlaces?: number;
-  /** Observation-level LOINC from catalog analyte definition. */
-  loincCode?: string;
-
-  valueType?: ValueType; // NUMERIC, SELECT, TEXT
-  catalogReferenceRange?: CatalogReferenceRange; // Full demographic ranges
-  allowedValues?: string[]; // For SELECT type
-  decimalsSuggested?: number; // Suggested decimal precision
-  /** From catalog analyte physiologic_range (blocking entry validation). */
-  physiologicRange?: { min: number; max: number };
-}
+/** One analyte-catalog.json row — OpenAPI wire type (matches contract JSON keys). */
+export type AnalyteDefinition = ApiCatalogAnalyteEntry;
 
 /**
  * Standardized interface for a test with its associated order and patient context.

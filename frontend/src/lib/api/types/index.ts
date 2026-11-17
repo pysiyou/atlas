@@ -12,6 +12,7 @@ export type {
   ApiSampleResponse,
   ApiOrderableTestResponse,
   ApiOrderableTestSummaryResponse,
+  ApiCatalogAnalyteEntry,
   ApiUserLookupResponse,
   ApiLoginTokenResponse,
   ApiRefreshTokenResponse,

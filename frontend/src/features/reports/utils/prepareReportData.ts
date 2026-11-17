@@ -81,9 +81,9 @@ function resultRowFromCatalogAnalyte(
   result: TestResult | undefined
 ): ReportResultRow {
   if (!result) {
-    return placeholderResultRow(analyte.name, analyte.code);
+    return placeholderResultRow(analyte.name, analyte.analyte_code);
   }
-  return resultRowFromStored(analyte.name, analyte.code, result);
+  return resultRowFromStored(analyte.name, analyte.analyte_code, result);
 }
 
 /**
@@ -98,13 +98,13 @@ function buildReportResultRows(
   const catalogAnalytes = orderableTest?.analytes ?? [];
 
   if (catalogAnalytes.length > 0) {
-    const catalogCodes = new Set(catalogAnalytes.map(analyte => analyte.code));
+    const catalogCodes = new Set(catalogAnalytes.map(analyte => analyte.analyte_code));
     const rows = catalogAnalytes.map(analyte =>
-      resultRowFromCatalogAnalyte(analyte, results[analyte.code])
+      resultRowFromCatalogAnalyte(analyte, results[analyte.analyte_code])
     );
     for (const [code, result] of Object.entries(results)) {
       if (catalogCodes.has(code) || !result) continue;
-      const catalogMatch = orderableTest?.analytes?.find(analyte => analyte.code === code);
+      const catalogMatch = orderableTest?.analytes?.find(analyte => analyte.analyte_code === code);
       rows.push(resultRowFromStored(catalogMatch?.name || code, code, result));
     }
     return rows;

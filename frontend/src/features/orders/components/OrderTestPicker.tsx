@@ -42,7 +42,7 @@ function OrderTestPickerMetaLine({ code, test }: { code: string; test: Orderable
       label: titleCaseWords(slug.replace(/_/g, ' ')),
     });
   }
-  const hours = test.turnaroundTime;
+  const hours = test.turnaroundTimeHours;
   if (typeof hours === 'number' && Number.isFinite(hours) && hours > 0) {
     segments.push({ id: 'tat', label: formatTurnaroundTime(hours) });
   }
