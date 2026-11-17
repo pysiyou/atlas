@@ -123,6 +123,16 @@ const PAGE_EMBED_AUTO: PanelPresetDefinition = {
   scroll: 'auto',
 };
 
+/** Embedded detail tables with many rows (e.g. catalog result parameters). */
+const PAGE_EMBED_SCROLL_MAX: PanelPresetDefinition = {
+  title: '',
+  variant: 'pageEmbed',
+  scroll: 'auto',
+  shellLayout: 'detailShrink',
+  bodyLayout: 'minH0',
+  maxHeightClass: 'max-h-[min(32rem,65vh)]',
+};
+
 const PAGE_FORM: PanelPresetDefinition = {
   title: '',
   variant: 'page',
@@ -159,6 +169,7 @@ export const layoutPanelPresets = {
     bodyLayout: 'formStack',
   },
   'panel.pageEmbed.visible': PAGE_EMBED_VISIBLE,
+  'panel.pageEmbed.scrollAuto.maxH': PAGE_EMBED_SCROLL_MAX,
   'panel.pageEmbed.visible.shrink': {
     ...PAGE_EMBED_VISIBLE,
     shellLayout: 'detailShrink',

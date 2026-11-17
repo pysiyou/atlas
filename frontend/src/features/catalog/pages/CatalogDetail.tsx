@@ -28,6 +28,9 @@ import type { Test, TestParameter } from '@/types';
 import { resolveOrderablePanelLabel } from '@/types/generated/orderablePanels';
 import { useModuleListTitles } from '@/strings';
 
+/** Visible row budget for scroll-capped catalog panels when balancing columns. */
+const CATALOG_SCROLL_PANEL_BALANCE_ROWS = 12;
+
 /** Column count for the catalog detail grid. */
 function catalogDetailColumnCount(breakpoint: string): number {
   if (breakpoint === 'xs' || breakpoint === 'sm') return 1;
@@ -73,21 +76,37 @@ function parameterRowLabel(param: TestParameter): string {
   return loinc && loinc.length > 0 ? loinc : param.code;
 }
 
+/** Secondary line: reference range and critical limits when present. */
+function formatParameterDetailsLine(param: TestParameter): string {
+  const parts: string[] = [];
+  const referenceRange = param.referenceRange?.trim();
+  if (referenceRange) parts.push(`Ref: ${referenceRange}`);
+  if (param.criticalLow !== undefined || param.criticalHigh !== undefined) {
+    const low = param.criticalLow !== undefined ? `<${param.criticalLow}` : '';
+    const high = param.criticalHigh !== undefined ? `>${param.criticalHigh}` : '';
+    const sep = low && high ? ' / ' : '';
+    parts.push(`Critical: ${low}${sep}${high}`);
+  }
+  return parts.length > 0 ? parts.join(' · ') : '—';
+}
+
 /**
- * Parameter name, unit, range, and internal mnemonic when the row is keyed by LOINC.
+ * Uniform parameter value: name (code) unit on the first line; ref / critical on the second.
  */
 function formatParameterValue(param: TestParameter): ReactNode {
-  const summary = `${param.name}${param.unit ? ` (${param.unit})` : ''}${param.referenceRange ? ` — ${param.referenceRange}` : ''}`;
-  const loinc = param.loincCode?.trim();
-  if (!loinc || loinc === param.code) {
-    return summary;
-  }
+  const unit = param.unit?.trim();
   return (
-    <div className="flex flex-col gap-space-1">
-      <div>{summary}</div>
-      <div className={TABLE_TYPE.meta}>
-        <RecordId>{param.code}</RecordId>
+    <div className={`flex flex-col ${SPACING.gapTight}`}>
+      <div className="inline-flex flex-wrap items-baseline gap-x-space-1">
+        <span>{param.name}</span>
+        <span className="whitespace-nowrap">
+          (
+          <RecordId>{param.code}</RecordId>
+          )
+        </span>
+        {unit ? <span>{unit}</span> : null}
       </div>
+      <div className={TABLE_TYPE.meta}>{formatParameterDetailsLine(param)}</div>
     </div>
   );
 }
@@ -161,9 +180,10 @@ function buildCatalogDetailTables(test: Test): TableInput[] {
   if (test.parameters && test.parameters.length > 0) {
     tables.push({
       key: 'parameters',
-      preset: 'panel.pageEmbed.visible',
+      preset: 'panel.pageEmbed.scrollAuto.maxH',
       title: 'Result Parameters',
       meta: String(test.parameters.length),
+      balanceHeight: CATALOG_SCROLL_PANEL_BALANCE_ROWS,
       rows: test.parameters.map(param => ({
         label: parameterRowLabel(param),
         value: formatParameterValue(param),

@@ -11,7 +11,13 @@
       ],
       "category": "Hematology",
       "panels": [
-        "HEMFULL"
+        "ANEMIA",
+        "HBPATH",
+        "HEMFULL",
+        "HEMOLYS",
+        "IMMCOMP",
+        "INFACUTE",
+        "MDIFF"
       ],
       "method_common": "Automated hematology analyzer (Sysmex, Mindray)",
       "turnaround_time_hours": 2,
@@ -167,6 +173,10 @@
           "physiologic_range": {
             "min": 30,
             "max": 200
+          },
+          "critical_range": {
+            "low": 60,
+            "high": 120
           }
         },
         {
@@ -192,6 +202,356 @@
           "physiologic_range": {
             "min": 1,
             "max": 2000
+          }
+        },
+        {
+          "item_code": "MCH",
+          "loinc_code": "785-6",
+          "item_name": "Mean Corpuscular Hemoglobin",
+          "value_type": "NUMERIC",
+          "unit": "pg",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 26,
+              "high": 34
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 10,
+            "max": 50
+          },
+          "critical_range": {
+            "low": 15,
+            "high": 45
+          }
+        },
+        {
+          "item_code": "MCHC",
+          "loinc_code": "786-4",
+          "item_name": "Mean Corpuscular Hemoglobin Concentration",
+          "value_type": "NUMERIC",
+          "unit": "g/dL",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 32,
+              "high": 36
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 20,
+            "max": 45
+          },
+          "critical_range": {
+            "low": 25,
+            "high": 40
+          }
+        },
+        {
+          "item_code": "RDW",
+          "loinc_code": "788-0",
+          "item_name": "Red Cell Distribution Width",
+          "value_type": "NUMERIC",
+          "unit": "%",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 11.5,
+              "high": 15
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 8,
+            "max": 30
+          },
+          "critical_range": {
+            "low": 8,
+            "high": 30
+          }
+        },
+        {
+          "item_code": "MPV",
+          "loinc_code": "32623-1",
+          "item_name": "Mean Platelet Volume",
+          "value_type": "NUMERIC",
+          "unit": "fL",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 7,
+              "high": 12
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 5,
+            "max": 20
+          },
+          "critical_range": {
+            "low": 5,
+            "high": 20
+          }
+        },
+        {
+          "item_code": "NEUT_PCT",
+          "loinc_code": "770-8",
+          "item_name": "Neutrophils (%)",
+          "value_type": "NUMERIC",
+          "unit": "%",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 40,
+              "high": 70
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 100
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 95
+          }
+        },
+        {
+          "item_code": "LYM_PCT",
+          "loinc_code": "736-9",
+          "item_name": "Lymphocytes (%)",
+          "value_type": "NUMERIC",
+          "unit": "%",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 20,
+              "high": 40
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 100
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 90
+          }
+        },
+        {
+          "item_code": "MONO_PCT",
+          "loinc_code": "5905-5",
+          "item_name": "Monocytes (%)",
+          "value_type": "NUMERIC",
+          "unit": "%",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 2,
+              "high": 10
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 100
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 50
+          }
+        },
+        {
+          "item_code": "EOS_PCT",
+          "loinc_code": "713-8",
+          "item_name": "Eosinophils (%)",
+          "value_type": "NUMERIC",
+          "unit": "%",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 6
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 100
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 50
+          }
+        },
+        {
+          "item_code": "BASO_PCT",
+          "loinc_code": "706-2",
+          "item_name": "Basophils (%)",
+          "value_type": "NUMERIC",
+          "unit": "%",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 2
+            }
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 100
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 20
+          }
+        },
+        {
+          "item_code": "NEUT_ABS",
+          "loinc_code": "751-8",
+          "item_name": "Neutrophils (Absolute)",
+          "value_type": "NUMERIC",
+          "unit": "×10⁹/L",
+          "decimals_suggested": 2,
+          "reference_range": {
+            "adult_general": {
+              "low": 1.7,
+              "high": 7.5
+            }
+          },
+          "critical_range": {
+            "low": 0.5,
+            "high": 30
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
+          }
+        },
+        {
+          "item_code": "LYM_ABS",
+          "loinc_code": "731-0",
+          "item_name": "Lymphocytes (Absolute)",
+          "value_type": "NUMERIC",
+          "unit": "×10⁹/L",
+          "decimals_suggested": 2,
+          "reference_range": {
+            "adult_general": {
+              "low": 1,
+              "high": 3.2
+            }
+          },
+          "critical_range": {
+            "low": 0.2,
+            "high": 20
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
+          }
+        },
+        {
+          "item_code": "MONO_ABS",
+          "loinc_code": "742-7",
+          "item_name": "Monocytes (Absolute)",
+          "value_type": "NUMERIC",
+          "unit": "×10⁹/L",
+          "decimals_suggested": 2,
+          "reference_range": {
+            "adult_general": {
+              "low": 0.1,
+              "high": 1.3
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 5
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
+          }
+        },
+        {
+          "item_code": "EOS_ABS",
+          "loinc_code": "26449-9",
+          "item_name": "Eosinophils (Absolute)",
+          "value_type": "NUMERIC",
+          "unit": "×10⁹/L",
+          "decimals_suggested": 2,
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 0.3
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 5
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
+          }
+        },
+        {
+          "item_code": "BASO_ABS",
+          "loinc_code": "704-7",
+          "item_name": "Basophils (Absolute)",
+          "value_type": "NUMERIC",
+          "unit": "×10⁹/L",
+          "decimals_suggested": 2,
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 0.2
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 2
+          },
+          "citations": [
+            "SRC002"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
           }
         }
       ],
@@ -234,7 +594,10 @@
       ],
       "category": "Hematology",
       "panels": [
-        "ANEMIA"
+        "ANEMIA",
+        "HEMFULL",
+        "HEMOLYS",
+        "MACANEM"
       ],
       "method_common": "Automated flow cytometry or manual supravital staining",
       "turnaround_time_hours": 4,
@@ -272,7 +635,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 20
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 20
+          }
         },
         {
           "item_code": "RETCOUNT_ABS",
@@ -283,13 +654,21 @@
           "decimals_suggested": 1,
           "reference_range": {
             "adult_general": {
-              "low": 25,
-              "high": 100
+              "low": 20,
+              "high": 115
             }
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 500
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 500
+          }
         }
       ],
       "sources": [
@@ -431,6 +810,7 @@
       ],
       "category": "Hematology",
       "panels": [
+        "HEMFULL",
         "INFLAMM"
       ],
       "loinc_code": "4537-7",
@@ -464,7 +844,7 @@
           "reference_range": {
             "adult_male": {
               "low": 0,
-              "high": 10
+              "high": 15
             },
             "adult_female": {
               "low": 0,
@@ -474,7 +854,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 150
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 100
+          }
         }
       ],
       "sources": [
@@ -619,7 +1007,10 @@
       "category": "Clinical Chemistry",
       "panels": [
         "CMP",
-        "DMSCR"
+        "DMGMT",
+        "DMPANEL",
+        "DMSCR",
+        "LACTATE"
       ],
       "loinc_code": "1558-6",
       "order_obs": "both",
@@ -709,7 +1100,8 @@
       ],
       "category": "Clinical Chemistry",
       "panels": [
-        "DMPANEL"
+        "DMPANEL",
+        "DMSCR"
       ],
       "loinc_code": "2345-7",
       "order_obs": "both",
@@ -798,7 +1190,10 @@
       ],
       "category": "Clinical Chemistry",
       "panels": [
-        "DMGMT"
+        "DMGMT",
+        "DMPANEL",
+        "DMSCR",
+        "MACANEM"
       ],
       "loinc_code": "4548-4",
       "order_obs": "both",
@@ -836,7 +1231,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 3,
+            "max": 20
+          },
+          "critical_range": {
+            "low": 3,
+            "high": 15
+          }
         }
       ],
       "sources": [
@@ -878,8 +1281,8 @@
       ],
       "category": "Clinical Chemistry - Renal Function",
       "panels": [
-        "RENAL",
-        "CMP"
+        "CMP",
+        "RENAL"
       ],
       "loinc_code": "2160-0",
       "order_obs": "both",
@@ -971,8 +1374,8 @@
       ],
       "category": "Clinical Chemistry - Renal Function",
       "panels": [
-        "RENAL",
-        "CMP"
+        "CMP",
+        "RENAL"
       ],
       "loinc_code": "3094-0",
       "order_obs": "both",
@@ -1062,9 +1465,9 @@
       "panels": [
         "RENAL"
       ],
-      "loinc_code": "33914-3",
+      "loinc_code": "98979-8",
       "order_obs": "both",
-      "method_common": "Calculated from serum creatinine (CKD-EPI recommended)",
+      "method_common": "Calculated from serum creatinine (CKD-EPI 2021, race-free equation)",
       "turnaround_time_hours": 0,
       "sample": {
         "sample_type": "Derived from serum creatinine",
@@ -1084,7 +1487,7 @@
       "result_items": [
         {
           "item_code": "EGFR_VALUE",
-          "loinc_code": "33914-3",
+          "loinc_code": "98979-8",
           "item_name": "eGFR",
           "value_type": "NUMERIC",
           "unit": "mL/min/1.73m²",
@@ -1102,6 +1505,10 @@
           "physiologic_range": {
             "min": 0,
             "max": 200
+          },
+          "critical_range": {
+            "low": 15,
+            "high": 999
           }
         }
       ],
@@ -1234,6 +1641,7 @@
       ],
       "category": "Clinical Chemistry - Electrolytes",
       "panels": [
+        "CMP",
         "LYTES"
       ],
       "loinc_code": "2823-3",
@@ -1325,6 +1733,7 @@
       ],
       "category": "Clinical Chemistry - Electrolytes",
       "panels": [
+        "CMP",
         "LYTES"
       ],
       "loinc_code": "2075-0",
@@ -1367,6 +1776,10 @@
           "physiologic_range": {
             "min": 60,
             "max": 150
+          },
+          "critical_range": {
+            "low": 80,
+            "high": 120
           }
         }
       ],
@@ -1410,6 +1823,7 @@
       ],
       "category": "Clinical Chemistry - Acid-Base",
       "panels": [
+        "CMP",
         "LYTES"
       ],
       "loinc_code": "1963-8",
@@ -1452,6 +1866,10 @@
           "physiologic_range": {
             "min": 1,
             "max": 60
+          },
+          "critical_range": {
+            "low": 10,
+            "high": 40
           }
         }
       ],
@@ -1494,6 +1912,8 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
+        "BONE",
+        "CMP",
         "MINERAL"
       ],
       "loinc_code": "17861-6",
@@ -1582,6 +2002,7 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
+        "BONE",
         "MINERAL"
       ],
       "loinc_code": "19123-9",
@@ -1613,8 +2034,8 @@
           "decimals_suggested": 1,
           "reference_range": {
             "adult_general": {
-              "low": 1.8,
-              "high": 2.5
+              "low": 1.7,
+              "high": 2.3
             }
           },
           "citations": [
@@ -1624,6 +2045,10 @@
           "physiologic_range": {
             "min": 0.3,
             "max": 10
+          },
+          "critical_range": {
+            "low": 1,
+            "high": 5
           }
         }
       ],
@@ -1666,6 +2091,7 @@
       ],
       "category": "Clinical Chemistry - Minerals",
       "panels": [
+        "BONE",
         "MINERAL"
       ],
       "loinc_code": "2777-1",
@@ -1708,6 +2134,10 @@
           "physiologic_range": {
             "min": 0.5,
             "max": 20
+          },
+          "critical_range": {
+            "low": 1,
+            "high": 8
           }
         }
       ],
@@ -1750,6 +2180,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
+        "CMP",
         "LFT"
       ],
       "loinc_code": "1742-6",
@@ -1842,6 +2273,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
+        "CMP",
         "LFT"
       ],
       "loinc_code": "1920-8",
@@ -1935,6 +2367,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
+        "CMP",
         "LFT"
       ],
       "loinc_code": "6768-6",
@@ -1977,6 +2410,10 @@
           "physiologic_range": {
             "min": 0,
             "max": 5000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 1000
           }
         }
       ],
@@ -2061,7 +2498,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 2000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 500
+          }
         }
       ],
       "sources": [
@@ -2103,6 +2548,7 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
+        "CMP",
         "LFT"
       ],
       "loinc_code": "1975-2",
@@ -2235,6 +2681,10 @@
           "physiologic_range": {
             "min": 0,
             "max": 50
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 5
           }
         }
       ],
@@ -2277,7 +2727,9 @@
       ],
       "category": "Clinical Chemistry - Liver Function",
       "panels": [
-        "LFT"
+        "CMP",
+        "LFT",
+        "NUTRI"
       ],
       "loinc_code": "1751-7",
       "order_obs": "both",
@@ -2319,6 +2771,10 @@
           "physiologic_range": {
             "min": 0.5,
             "max": 10
+          },
+          "critical_range": {
+            "low": 1.5,
+            "high": 6
           }
         }
       ],
@@ -2361,7 +2817,8 @@
       ],
       "category": "Clinical Chemistry - Protein Metabolism",
       "panels": [
-        "CMP"
+        "CMP",
+        "NUTRI"
       ],
       "loinc_code": "2885-2",
       "order_obs": "both",
@@ -2403,6 +2860,10 @@
           "physiologic_range": {
             "min": 1,
             "max": 20
+          },
+          "critical_range": {
+            "low": 4,
+            "high": 12
           }
         }
       ],
@@ -2488,6 +2949,10 @@
           "physiologic_range": {
             "min": 20,
             "max": 1000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 400
           }
         }
       ],
@@ -2576,6 +3041,10 @@
           "physiologic_range": {
             "min": 5,
             "max": 200
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 999
           }
         }
       ],
@@ -2660,6 +3129,10 @@
           "physiologic_range": {
             "min": 5,
             "max": 500
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 300
           }
         }
       ],
@@ -2745,6 +3218,10 @@
           "physiologic_range": {
             "min": 10,
             "max": 10000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 1000
           }
         }
       ],
@@ -2829,7 +3306,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 2000
+          }
         }
       ],
       "sources": [
@@ -2912,7 +3393,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 5000
+          }
         }
       ],
       "sources": [
@@ -2946,6 +3431,96 @@
       ]
     },
     {
+      "test_code": "LDH",
+      "display_name": "Lactate Dehydrogenase (LDH)",
+      "synonyms": [
+        "LDH",
+        "Lactic Dehydrogenase"
+      ],
+      "category": "Clinical Chemistry",
+      "panels": [
+        "ACS",
+        "HEMOLYS",
+        "LFT"
+      ],
+      "loinc_code": "2532-0",
+      "order_obs": "both",
+      "method_common": "Enzymatic (spectrophotometric)",
+      "turnaround_time_hours": 1,
+      "sample": {
+        "sample_type": "Serum",
+        "container": "SST, 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "icteric",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "LDH",
+          "loinc_code": "2532-0",
+          "item_name": "Lactate Dehydrogenase",
+          "value_type": "NUMERIC",
+          "unit": "U/L",
+          "decimals_suggested": 0,
+          "reference_range": {
+            "adult_general": {
+              "low": 140,
+              "high": 280
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 3000
+          },
+          "citations": [
+            "SRC002",
+            "SRC003"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 10000
+          }
+        }
+      ],
+      "sources": [
+        "SRC002",
+        "SRC003"
+      ],
+      "confidence": "HIGH",
+      "notes": "Elevated in hemolysis, liver disease, and tissue injury",
+      "mapped_category": "biochemistry",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "red"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 30,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
       "test_code": "CRP",
       "display_name": "C-Reactive Protein (CRP)",
       "synonyms": [
@@ -2954,7 +3529,11 @@
       ],
       "category": "Clinical Chemistry - Inflammation",
       "panels": [
-        "INFLAMM"
+        "FEVER",
+        "INFACUTE",
+        "INFECT",
+        "INFLAMM",
+        "SEPSIS"
       ],
       "loinc_code": "1988-5",
       "order_obs": "both",
@@ -2992,7 +3571,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 500
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 200
+          }
         }
       ],
       "sources": [
@@ -3062,8 +3649,8 @@
           "loinc_code": "10839-9",
           "item_name": "Troponin I",
           "value_type": "NUMERIC",
-          "unit": "pg/mL",
-          "decimals_suggested": 2,
+          "unit": "ng/mL",
+          "decimals_suggested": 3,
           "reference_range": {
             "adult_general": {
               "low": 0,
@@ -3072,7 +3659,7 @@
           },
           "critical_range": {
             "low": 0,
-            "high": 100
+            "high": 40
           },
           "citations": [
             "SRC002",
@@ -3162,7 +3749,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 500
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 200
+          }
         }
       ],
       "sources": [
@@ -3196,6 +3791,95 @@
       ]
     },
     {
+      "test_code": "BNP",
+      "display_name": "B-Type Natriuretic Peptide (BNP)",
+      "synonyms": [
+        "BNP",
+        "Brain Natriuretic Peptide"
+      ],
+      "category": "Clinical Chemistry - Cardiac",
+      "panels": [
+        "ACS",
+        "SEPSIS"
+      ],
+      "loinc_code": "30934-4",
+      "order_obs": "both",
+      "method_common": "Immunoassay (fluorescence or chemiluminescence)",
+      "turnaround_time_hours": 2,
+      "sample": {
+        "sample_type": "Serum",
+        "container": "SST, 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "icteric",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "BNP",
+          "loinc_code": "30934-4",
+          "item_name": "BNP",
+          "value_type": "NUMERIC",
+          "unit": "pg/mL",
+          "decimals_suggested": 0,
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 100
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 5000
+          },
+          "citations": [
+            "SRC002",
+            "SRC003"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50000
+          }
+        }
+      ],
+      "sources": [
+        "SRC002",
+        "SRC003"
+      ],
+      "confidence": "MEDIUM",
+      "notes": "Heart failure and fluid overload assessment; interpret with clinical context",
+      "mapped_category": "biochemistry",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "red"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 45,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
       "test_code": "FE",
       "display_name": "Serum Iron",
       "synonyms": [
@@ -3204,6 +3888,7 @@
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
+        "ANEMIA",
         "IRON"
       ],
       "loinc_code": "2498-4",
@@ -3247,7 +3932,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 500
+          }
         }
       ],
       "sources": [
@@ -3288,6 +3981,7 @@
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
+        "ANEMIA",
         "IRON"
       ],
       "loinc_code": "2276-4",
@@ -3330,7 +4024,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 10000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 2000
+          }
         }
       ],
       "sources": [
@@ -3372,6 +4074,7 @@
       ],
       "category": "Clinical Chemistry - Iron Metabolism",
       "panels": [
+        "ANEMIA",
         "IRON"
       ],
       "loinc_code": "2500-7",
@@ -3410,7 +4113,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 800
+          }
         }
       ],
       "sources": [
@@ -3452,7 +4163,9 @@
       ],
       "category": "Clinical Chemistry - Nutrition",
       "panels": [
-        "MACANEM"
+        "ANEMIA",
+        "MACANEM",
+        "NUTRI"
       ],
       "loinc_code": "2132-9",
       "order_obs": "both",
@@ -3489,7 +4202,15 @@
           },
           "citations": [
             "SRC020"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 5000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 5000
+          }
         }
       ],
       "sources": [
@@ -3531,7 +4252,9 @@
       ],
       "category": "Clinical Chemistry - Nutrition",
       "panels": [
-        "MACANEM"
+        "ANEMIA",
+        "MACANEM",
+        "NUTRI"
       ],
       "loinc_code": "2284-8",
       "order_obs": "both",
@@ -3569,7 +4292,15 @@
           },
           "citations": [
             "SRC020"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 50
+          }
         }
       ],
       "sources": [
@@ -3649,7 +4380,15 @@
           },
           "citations": [
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 200
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 200
+          }
         }
       ],
       "sources": [
@@ -3690,7 +4429,9 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "COAG"
+        "COAG",
+        "DIC",
+        "VTE"
       ],
       "method_common": "Clot-based method",
       "turnaround_time_hours": 2,
@@ -3730,6 +4471,10 @@
           "physiologic_range": {
             "min": 5,
             "max": 200
+          },
+          "critical_range": {
+            "low": 5,
+            "high": 100
           }
         },
         {
@@ -3800,7 +4545,9 @@
       ],
       "category": "Coagulation",
       "panels": [
-        "COAG"
+        "COAG",
+        "DIC",
+        "VTE"
       ],
       "loinc_code": "14979-9",
       "order_obs": "both",
@@ -3934,7 +4681,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000
+          }
         }
       ],
       "sources": [
@@ -3977,6 +4728,7 @@
       ],
       "category": "Coagulation",
       "panels": [
+        "DIC",
         "VTE"
       ],
       "loinc_code": "48065-7",
@@ -4015,7 +4767,15 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 20
+          }
         }
       ],
       "sources": [
@@ -4060,7 +4820,9 @@
       ],
       "category": "Urinalysis",
       "panels": [
-        "UAPANEL"
+        "RENAL",
+        "UAPANEL",
+        "UTI"
       ],
       "method_common": "Dipstick + microscopy",
       "turnaround_time_hours": 2,
@@ -4144,6 +4906,10 @@
           "physiologic_range": {
             "min": 1,
             "max": 1.06
+          },
+          "critical_range": {
+            "low": 1,
+            "high": 1.05
           }
         },
         {
@@ -4165,6 +4931,10 @@
           "physiologic_range": {
             "min": 6.5,
             "max": 8
+          },
+          "critical_range": {
+            "low": 4.5,
+            "high": 9
           }
         },
         {
@@ -4290,7 +5060,15 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 100
+          }
         },
         {
           "item_code": "UA_RBC",
@@ -4307,7 +5085,15 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 100
+          }
         },
         {
           "item_code": "UA_BACTERIA",
@@ -4495,7 +5281,11 @@
           "citations": [
             "SRC002",
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 500000
+          }
         }
       ],
       "sources": [
@@ -4580,6 +5370,10 @@
           "physiologic_range": {
             "min": 0,
             "max": 500
+          },
+          "critical_range": {
+            "low": 0.01,
+            "high": 50
           }
         }
       ],
@@ -4666,6 +5460,10 @@
           "physiologic_range": {
             "min": 0,
             "max": 20
+          },
+          "critical_range": {
+            "low": 0.2,
+            "high": 5
           }
         }
       ],
@@ -4710,7 +5508,10 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "HIV"
+        "HIV",
+        "PREGSER",
+        "PRENATAL",
+        "STI"
       ],
       "loinc_code": "56888-1",
       "order_obs": "both",
@@ -4793,7 +5594,8 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "HIV"
+        "HIV",
+        "HIVMGMT"
       ],
       "loinc_code": "44873-8",
       "order_obs": "observation",
@@ -4875,7 +5677,8 @@
       ],
       "category": "Serology / Infectious Disease - HIV",
       "panels": [
-        "HIVMGMT"
+        "HIVMGMT",
+        "IMMCOMP"
       ],
       "loinc_code": "20447-9",
       "order_obs": "both",
@@ -4917,7 +5720,11 @@
           },
           "citations": [
             "SRC008"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 10000000
+          }
         }
       ],
       "sources": [
@@ -5035,7 +5842,8 @@
       ],
       "category": "Serology / Infectious Disease - Hepatitis B",
       "panels": [
-        "HEP"
+        "HEP",
+        "PRENATAL"
       ],
       "loinc_code": "13952-7",
       "order_obs": "both",
@@ -5113,7 +5921,8 @@
       ],
       "category": "Serology / Infectious Disease - Hepatitis B",
       "panels": [
-        "HEP"
+        "HEP",
+        "PRENATAL"
       ],
       "loinc_code": "5193-8",
       "order_obs": "both",
@@ -5273,8 +6082,8 @@
       ],
       "category": "Serology / Infectious Disease - Syphilis",
       "panels": [
-        "SYPH",
-        "STI"
+        "STI",
+        "SYPH"
       ],
       "loinc_code": "20507-0",
       "order_obs": "both",
@@ -5354,6 +6163,7 @@
       ],
       "category": "Serology / Infectious Disease - Syphilis",
       "panels": [
+        "STI",
         "SYPH"
       ],
       "loinc_code": "8041-6",
@@ -5513,7 +6323,8 @@
       ],
       "category": "Serology / Infectious Disease - Parasitic",
       "panels": [
-        "PREGSER"
+        "PREGSER",
+        "PRENATAL"
       ],
       "method_common": "ELISA or IFA",
       "turnaround_time_hours": 2,
@@ -5609,7 +6420,8 @@
       ],
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
-        "IMMCOMP"
+        "IMMCOMP",
+        "PREGSER"
       ],
       "method_common": "ELISA or chemiluminescence",
       "turnaround_time_hours": 2,
@@ -5820,6 +6632,7 @@
       ],
       "category": "Serology / Infectious Disease - Viral",
       "panels": [
+        "PREGSER",
         "PRENATAL"
       ],
       "loinc_code": "40667-8",
@@ -5899,7 +6712,8 @@
       ],
       "category": "Parasitology / Infectious Disease - Malaria",
       "panels": [
-        "FEVER"
+        "FEVER",
+        "INFACUTE"
       ],
       "loinc_code": "70569-9",
       "order_obs": "both",
@@ -6248,7 +7062,8 @@
       ],
       "category": "Parasitology / Microbiology",
       "panels": [
-        "DIARRHEA"
+        "DIARRHEA",
+        "ULCER"
       ],
       "loinc_code": "10704-5",
       "order_obs": "both",
@@ -6326,6 +7141,7 @@
       ],
       "category": "Microbiology - Mycobacteriology / TB",
       "panels": [
+        "DRTB",
         "TB"
       ],
       "loinc_code": "647-8",
@@ -6413,8 +7229,8 @@
       ],
       "category": "Microbiology - Molecular / TB",
       "panels": [
-        "TB",
-        "DRTB"
+        "DRTB",
+        "TB"
       ],
       "loinc_code": "85362-2",
       "order_obs": "both",
@@ -6496,7 +7312,8 @@
       ],
       "category": "Microbiology - Culture",
       "panels": [
-        "INFECT"
+        "INFECT",
+        "UTI"
       ],
       "method_common": "Quantitative culture + AST",
       "turnaround_time_hours": 48,
@@ -6531,6 +7348,14 @@
               "low": 0,
               "high": 10000
             }
+          },
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 1000000
           }
         },
         {
@@ -6577,7 +7402,7 @@
         "SRC002"
       ],
       "confidence": "HIGH",
-      "notes": "Essential for UTI management",
+      "notes": "Urine culture with organism identification and AST when indicated. For CFU-only quantitation without full workup, see UQUANT.",
       "mapped_category": "microbiology",
       "mapped_sample_type": "urine",
       "container_types": [
@@ -6709,7 +7534,11 @@
       ],
       "category": "Microbiology - Culture / Sepsis",
       "panels": [
-        "SEPSIS"
+        "FEVER",
+        "INFACUTE",
+        "INFECT",
+        "SEPSIS",
+        "TB"
       ],
       "loinc_code": "600-7",
       "order_obs": "both",
@@ -7271,7 +8100,15 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 500
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 100
+          }
         }
       ],
       "sources": [
@@ -7352,7 +8189,15 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 100
+          }
         }
       ],
       "sources": [
@@ -7430,7 +8275,15 @@
           },
           "citations": [
             "SRC003"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 100
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 100
+          }
         }
       ],
       "sources": [
@@ -7470,7 +8323,12 @@
       ],
       "category": "Clinical Chemistry - Acid-Base",
       "panels": [
-        "LACTATE"
+        "FEVER",
+        "INFACUTE",
+        "INFECT",
+        "LACTATE",
+        "PANC",
+        "SEPSIS"
       ],
       "loinc_code": "2524-7",
       "order_obs": "both",
@@ -7508,7 +8366,15 @@
           },
           "citations": [
             "SRC002"
-          ]
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 30
+          },
+          "critical_range": {
+            "low": 0.5,
+            "high": 10
+          }
         }
       ],
       "sources": [
@@ -7549,6 +8415,7 @@
       ],
       "category": "Hematology - Hemoglobinopathy",
       "panels": [
+        "ANEMIA",
         "HBPATH"
       ],
       "loinc_code": "49322-1",
@@ -7695,7 +8562,7 @@
     },
     {
       "test_code": "UQUANT",
-      "display_name": "Urea Culture / Quantitative Urine Culture",
+      "display_name": "Urine Culture (Quantitative Colony Count)",
       "synonyms": [
         "Quantitative UC",
         "Colony Count"
@@ -7739,6 +8606,14 @@
               "low": 0,
               "high": 10000
             }
+          },
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000000
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 1000000
           }
         }
       ],
@@ -7746,7 +8621,7 @@
         "SRC002"
       ],
       "confidence": "HIGH",
-      "notes": "≥10^5 CFU/mL diagnostic for UTI in symptomatic patients",
+      "notes": "Quantitative colony count only. For culture with identification and antibiotic susceptibility, order UCULT (UTI/INFECT panels).",
       "mapped_category": "microbiology",
       "mapped_sample_type": "urine",
       "container_types": [
@@ -7867,6 +8742,863 @@
         "procedural_error_during_analysis",
         "qc_control_failure"
       ]
+    },
+    {
+      "test_code": "CK",
+      "display_name": "Creatine Kinase (CK, Total)",
+      "synonyms": [
+        "CK",
+        "CPK"
+      ],
+      "category": "Clinical Chemistry - Cardiac",
+      "panels": [
+        "ACS",
+        "HEMOLYS"
+      ],
+      "loinc_code": "2157-6",
+      "order_obs": "both",
+      "method_common": "Enzymatic method",
+      "turnaround_time_hours": 1,
+      "sample": {
+        "sample_type": "Serum",
+        "container": "SST, 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "icteric",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "CK",
+          "loinc_code": "2157-6",
+          "item_name": "Creatine Kinase",
+          "value_type": "NUMERIC",
+          "unit": "U/L",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_male": {
+              "low": 55,
+              "high": 170
+            },
+            "adult_female": {
+              "low": 30,
+              "high": 135
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 5000
+          },
+          "citations": [
+            "SRC002",
+            "SRC003"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50000
+          }
+        }
+      ],
+      "sources": [
+        "SRC002",
+        "SRC003"
+      ],
+      "confidence": "HIGH",
+      "notes": "Muscle/heart injury marker; interpret with clinical context",
+      "mapped_category": "biochemistry",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "red"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 30,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "PROCAL",
+      "display_name": "Procalcitonin (PCT)",
+      "synonyms": [
+        "PCT",
+        "Procalcitonin"
+      ],
+      "category": "Clinical Chemistry - Inflammation",
+      "panels": [
+        "INFACUTE",
+        "INFECT",
+        "SEPSIS"
+      ],
+      "loinc_code": "33959-8",
+      "order_obs": "both",
+      "method_common": "Immunoassay",
+      "turnaround_time_hours": 2,
+      "sample": {
+        "sample_type": "Serum",
+        "container": "SST, 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "icteric",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "PCT",
+          "loinc_code": "33959-8",
+          "item_name": "Procalcitonin",
+          "value_type": "NUMERIC",
+          "unit": "ng/mL",
+          "decimals_suggested": 2,
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 0.5
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 50
+          },
+          "citations": [
+            "SRC002",
+            "SRC003"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 200
+          }
+        }
+      ],
+      "sources": [
+        "SRC002",
+        "SRC003"
+      ],
+      "confidence": "HIGH",
+      "notes": "Bacterial sepsis risk stratification; overlaps with CRP",
+      "mapped_category": "biochemistry",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "red"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 55,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "FT3",
+      "display_name": "Free T3 (Triiodothyronine)",
+      "synonyms": [
+        "FT3",
+        "Free T3"
+      ],
+      "category": "Clinical Chemistry - Thyroid",
+      "panels": [
+        "TFT"
+      ],
+      "loinc_code": "3051-0",
+      "order_obs": "both",
+      "method_common": "Immunoassay",
+      "turnaround_time_hours": 2,
+      "sample": {
+        "sample_type": "Serum",
+        "container": "SST, 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "icteric",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "FT3",
+          "loinc_code": "3051-0",
+          "item_name": "Free T3",
+          "value_type": "NUMERIC",
+          "unit": "pg/mL",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 2.3,
+              "high": 4.2
+            }
+          },
+          "critical_range": {
+            "low": 0.5,
+            "high": 15
+          },
+          "citations": [
+            "SRC002",
+            "SRC003"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 50
+          }
+        }
+      ],
+      "sources": [
+        "SRC002",
+        "SRC003"
+      ],
+      "confidence": "HIGH",
+      "notes": "Completes thyroid panel with TSH and FT4",
+      "mapped_category": "biochemistry",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "red"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 30,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "ATIII",
+      "display_name": "Antithrombin III Activity",
+      "synonyms": [
+        "AT III",
+        "Antithrombin"
+      ],
+      "category": "Coagulation",
+      "panels": [
+        "COAG",
+        "DIC"
+      ],
+      "loinc_code": "27811-9",
+      "order_obs": "both",
+      "method_common": "Chromogenic amidolytic assay",
+      "turnaround_time_hours": 4,
+      "sample": {
+        "sample_type": "Serum",
+        "container": "SST, 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "icteric",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "ATIII",
+          "loinc_code": "27811-9",
+          "item_name": "Antithrombin III",
+          "value_type": "NUMERIC",
+          "unit": "%",
+          "decimals_suggested": 0,
+          "reference_range": {
+            "adult_general": {
+              "low": 80,
+              "high": 120
+            }
+          },
+          "critical_range": {
+            "low": 40,
+            "high": 150
+          },
+          "citations": [
+            "SRC002",
+            "SRC003"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 200
+          }
+        }
+      ],
+      "sources": [
+        "SRC002",
+        "SRC003"
+      ],
+      "confidence": "HIGH",
+      "notes": "Low in DIC and heparin therapy",
+      "mapped_category": "biochemistry",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "red"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 45,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "HBEAG",
+      "display_name": "HBeAg (Hepatitis B e Antigen)",
+      "synonyms": [
+        "HBeAg",
+        "Hepatitis B e Antigen"
+      ],
+      "category": "Serology / Infectious Disease - Hepatitis B",
+      "panels": [
+        "HEP"
+      ],
+      "loinc_code": "5192-0",
+      "order_obs": "both",
+      "method_common": "ELISA",
+      "turnaround_time_hours": 2,
+      "sample": {
+        "sample_type": "Serum",
+        "container": "SST, 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "icteric",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "HBEAG",
+          "loinc_code": "5192-0",
+          "item_name": "HBeAg",
+          "value_type": "SELECT",
+          "unit": "",
+          "allowed_values": [
+            "Negative",
+            "Positive"
+          ],
+          "citations": [
+            "SRC008"
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
+        }
+      ],
+      "sources": [
+        "SRC008"
+      ],
+      "confidence": "HIGH",
+      "notes": "Marker of active HBV replication",
+      "mapped_category": "serology",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "red"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 50,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "HBVDNA",
+      "display_name": "Hepatitis B Viral Load (HBV DNA)",
+      "synonyms": [
+        "HBV DNA",
+        "HBV VL"
+      ],
+      "category": "Molecular / Hepatitis B",
+      "panels": [
+        "HEP",
+        "HIVMGMT"
+      ],
+      "loinc_code": "42595-9",
+      "order_obs": "both",
+      "method_common": "Real-time PCR (NAA)",
+      "turnaround_time_hours": 24,
+      "sample": {
+        "sample_type": "Plasma (EDTA)",
+        "container": "EDTA tube, 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "HBV_DNA",
+          "loinc_code": "42595-9",
+          "item_name": "HBV DNA",
+          "value_type": "NUMERIC",
+          "unit": "IU/mL",
+          "decimals_suggested": 0,
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 10
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 1000000000
+          },
+          "citations": [
+            "SRC008"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 1000000000
+          }
+        }
+      ],
+      "sources": [
+        "SRC008"
+      ],
+      "confidence": "MEDIUM",
+      "notes": "Target not detected reported as <10–20 IU/mL assay dependent",
+      "mapped_category": "molecular",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "purple"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 85,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "CD4",
+      "display_name": "CD4 T-Lymphocyte Count",
+      "synonyms": [
+        "CD4",
+        "CD4 Count"
+      ],
+      "category": "Immunology / HIV Monitoring",
+      "panels": [
+        "HIVMGMT",
+        "IMMCOMP"
+      ],
+      "loinc_code": "24467-3",
+      "order_obs": "both",
+      "method_common": "Flow cytometry",
+      "turnaround_time_hours": 4,
+      "sample": {
+        "sample_type": "Whole Blood",
+        "container": "EDTA tube (purple cap), 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "hemolyzed_severe",
+          "icteric",
+          "wrong_container",
+          "qns",
+          "lipemic",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "CD4_COUNT",
+          "loinc_code": "24467-3",
+          "item_name": "CD4 Count",
+          "value_type": "NUMERIC",
+          "unit": "cells/µL",
+          "decimals_suggested": 0,
+          "reference_range": {
+            "adult_general": {
+              "low": 500,
+              "high": 1500
+            }
+          },
+          "critical_range": {
+            "low": 50,
+            "high": 5000
+          },
+          "citations": [
+            "SRC002",
+            "SRC003"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 5000
+          }
+        }
+      ],
+      "sources": [
+        "SRC002",
+        "SRC003"
+      ],
+      "confidence": "HIGH",
+      "notes": "HIV staging and ART monitoring; WHO threshold often 200–350 cells/µL",
+      "mapped_category": "immunology",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "purple"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 60,
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "DAT",
+      "display_name": "Direct Antiglobulin Test (DAT / Coombs)",
+      "synonyms": [
+        "DAT",
+        "Direct Coombs",
+        "Coombs Test"
+      ],
+      "category": "Hematology - Transfusion Medicine",
+      "panels": [
+        "HEMOLYS",
+        "TXFUSE"
+      ],
+      "loinc_code": "1007-4",
+      "order_obs": "both",
+      "method_common": "Anti-human globulin (polyspecific) on RBCs",
+      "turnaround_time_hours": 2,
+      "sample": {
+        "sample_type": "Whole Blood",
+        "container": "EDTA tube (purple cap), 3 mL",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "collection_notes": "Evaluate hemolysis / alloimmune anemia",
+        "rejection_criteria": [
+          "clotted",
+          "hemolyzed_severe",
+          "wrong_container",
+          "qns",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "DAT_RESULT",
+          "loinc_code": "1007-4",
+          "item_name": "DAT Result",
+          "value_type": "SELECT",
+          "unit": "",
+          "allowed_values": [
+            "Negative",
+            "Positive",
+            "Weak positive"
+          ],
+          "citations": [
+            "SRC018"
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
+        }
+      ],
+      "sources": [
+        "SRC018"
+      ],
+      "confidence": "HIGH",
+      "notes": "Pre-transfusion hemolysis workup",
+      "mapped_category": "hematology",
+      "mapped_sample_type": "blood",
+      "container_types": [
+        "tube"
+      ],
+      "container_top_colors": [
+        "purple"
+      ],
+      "sample_volume_description": "3mL",
+      "price": 35,
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "UALB",
+      "display_name": "Urine Microalbumin",
+      "synonyms": [
+        "Microalbumin",
+        "Urine Albumin"
+      ],
+      "category": "Clinical Chemistry - Renal",
+      "panels": [
+        "DMGMT",
+        "RENAL"
+      ],
+      "loinc_code": "14957-5",
+      "order_obs": "both",
+      "method_common": "Immunoturbidimetry",
+      "turnaround_time_hours": 4,
+      "sample": {
+        "sample_type": "Urine (random)",
+        "container": "Urine cup, 20 mL",
+        "minimum_volume_ml": 10,
+        "fasting_required": false,
+        "rejection_criteria": [
+          "wrong_container",
+          "qns",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "MICROALB",
+          "loinc_code": "14957-5",
+          "item_name": "Microalbumin",
+          "value_type": "NUMERIC",
+          "unit": "mg/L",
+          "decimals_suggested": 1,
+          "reference_range": {
+            "adult_general": {
+              "low": 0,
+              "high": 20
+            }
+          },
+          "critical_range": {
+            "low": 0,
+            "high": 500
+          },
+          "citations": [
+            "SRC002",
+            "SRC003"
+          ],
+          "physiologic_range": {
+            "min": 0,
+            "max": 5000
+          }
+        }
+      ],
+      "sources": [
+        "SRC002",
+        "SRC003"
+      ],
+      "confidence": "HIGH",
+      "notes": "Early diabetic nephropathy screening",
+      "mapped_category": "biochemistry",
+      "mapped_sample_type": "urine",
+      "container_types": [
+        "cup"
+      ],
+      "container_top_colors": [
+        "red"
+      ],
+      "sample_volume_description": "20mL",
+      "price": 35,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "test_code": "FOOB",
+      "display_name": "Fecal Occult Blood (gFOBT)",
+      "synonyms": [
+        "FOBT",
+        "Stool Occult Blood"
+      ],
+      "category": "Gastroenterology - Stool",
+      "panels": [
+        "COLON",
+        "DIARRHEA"
+      ],
+      "loinc_code": "2335-8",
+      "order_obs": "both",
+      "method_common": "Guaiac-based fecal occult blood test",
+      "turnaround_time_hours": 2,
+      "sample": {
+        "sample_type": "Stool",
+        "container": "Stool container with preservative",
+        "minimum_volume_ml": 2,
+        "fasting_required": false,
+        "collection_notes": "Avoid red meat and NSAIDs 48–72 h if possible",
+        "rejection_criteria": [
+          "wrong_container",
+          "qns",
+          "labeling_error_mismatch",
+          "labeling_error_unlabeled"
+        ]
+      },
+      "result_items": [
+        {
+          "item_code": "FOBT_RESULT",
+          "loinc_code": "2335-8",
+          "item_name": "Occult Blood (Stool)",
+          "value_type": "SELECT",
+          "unit": "",
+          "allowed_values": [
+            "Negative",
+            "Positive"
+          ],
+          "citations": [
+            "SRC002"
+          ],
+          "reference_range": {
+            "adult_general": {
+              "text": "Negative"
+            }
+          }
+        }
+      ],
+      "sources": [
+        "SRC002"
+      ],
+      "confidence": "HIGH",
+      "notes": "Colorectal bleed screening; confirm with colonoscopy if positive",
+      "mapped_category": "stool",
+      "mapped_sample_type": "stool",
+      "container_types": [
+        "stool-container"
+      ],
+      "container_top_colors": [
+        "orange"
+      ],
+      "sample_volume_description": "2g",
+      "price": 25,
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
     }
   ],
   "enrichment_metadata": {
@@ -7874,6 +9606,7 @@
     "enriched_version": "2.0-enriched",
     "category_mappings_count": 44,
     "sample_type_mappings_count": 26,
-    "total_tests_enriched": 87
+    "total_tests_enriched": 99,
+    "last_verified_loinc": "2026-11-17"
   }
 }

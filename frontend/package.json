@@ -18,6 +18,7 @@
     "codegen:openapi": "python ../scripts/export-openapi.py && openapi-typescript ../contracts/registries/openapi.json -o src/lib/api/types/generated/api.d.ts",
     "codegen": "npm run codegen:openapi && npm run codegen:feedback && npm run codegen:audit && npm run codegen:client-config && npm run codegen:panels",
     "validate:test-catalog": "node ../scripts/validate-test-catalog.mjs",
+    "verify:test-catalog-loinc": "node ../scripts/verify-test-catalog-loinc.mjs",
     "validate:client-config": "node ../scripts/validate-client-config.mjs",
     "validate:ui-strings": "node ../scripts/validate-ui-strings.mjs"
   },

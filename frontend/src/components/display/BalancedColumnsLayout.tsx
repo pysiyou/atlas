@@ -17,6 +17,8 @@ export interface TableInput {
   title?: string;
   meta?: string;
   rows: DetailTableRow[];
+  /** Override row count used only for column balancing (e.g. scroll-capped panels). */
+  balanceHeight?: number;
 }
 
 export interface BalancedColumnsLayoutProps {
@@ -33,6 +35,7 @@ interface TableSpec {
   meta?: string;
   rows: DetailTableRow[];
   filteredRows: DetailTableRow[];
+  balanceHeight?: number;
   effectiveHeight: number;
   originalIndex: number;
 }
@@ -52,7 +55,8 @@ const preprocessTables = (tables: TableInput[]): TableSpec[] =>
       meta: t.meta,
       rows: t.rows,
       filteredRows,
-      effectiveHeight: Math.max(filteredRows.length, 1),
+      balanceHeight: t.balanceHeight,
+      effectiveHeight: Math.max(t.balanceHeight ?? filteredRows.length, 1),
       originalIndex: i,
     };
   });

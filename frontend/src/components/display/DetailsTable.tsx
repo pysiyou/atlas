@@ -14,6 +14,10 @@ import { filterDetailRows, type DetailTableRow } from './detailsTableUtils';
 /** Re-export for consumers */
 export type { DetailTableRow };
 
+/** Label/value split for catalog-style detail tables (value column gets the remainder). */
+const DETAIL_TABLE_LABEL_COL = 'w-[35%]';
+const DETAIL_TABLE_VALUE_COL = 'w-[65%]';
+
 export interface DetailsTableProps {
   preset: PanelPresetId;
   title?: string;
@@ -40,10 +44,12 @@ export function DetailsTable({
               key={`${row.label}-${idx}`}
               className="border-b border-border-subtle last:border-b-0"
             >
-              <td className={`${TABLE_CELL.default} align-top text-left w-2/5`}>
+              <td
+                className={`${TABLE_CELL.default} align-top text-left border-r border-border-subtle ${DETAIL_TABLE_LABEL_COL}`}
+              >
                 <span className={`block ${text({ role: 'section-title' })}`}>{row.label}</span>
               </td>
-              <td className={`${TABLE_CELL.default} align-top text-left w-3/5`}>
+              <td className={`${TABLE_CELL.default} align-top text-left ${DETAIL_TABLE_VALUE_COL}`}>
                 <div className={`break-words ${text({ role: 'body' })}`}>{row.value}</div>
               </td>
             </tr>
