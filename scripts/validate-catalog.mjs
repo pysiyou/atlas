@@ -32,18 +32,9 @@ const resultRejectionPath = path.join(
   'registries',
   'result-rejection-reasons.json',
 );
-const sampleRejectionSchemaPath = path.join(
-  root,
-  'contracts',
-  'registries',
-  'sample-rejection-reasons.schema.json',
-);
-const resultRejectionSchemaPath = path.join(
-  root,
-  'contracts',
-  'registries',
-  'result-rejection-reasons.schema.json',
-);
+const registriesDir = path.join(root, 'contracts', 'registries');
+const sampleRejectionSchemaPath = path.join(registriesDir, 'sample-rejection-reasons.schema.json');
+const resultRejectionSchemaPath = path.join(registriesDir, 'result-rejection-reasons.schema.json');
 const LOINC_PATTERN = /^[0-9]{1,5}-[0-9]$/;
 
 const paths = {
@@ -362,6 +353,25 @@ function runRejectionReasonChecks(docs) {
       .map(r => r?.id)
       .filter(id => typeof id === 'string'),
   );
+  let errors = 0;
+  for (const id of sampleIds) {
+    if (resultIds.has(id)) {
+      console.error(`rejection registries: duplicate id "${id}" in sample and result (ids must be globally unique)`);
+      errors += 1;
+    }
+  }
+  for (const row of sampleRegistry.reasons ?? []) {
+    if (row?.domain && row.domain !== 'specimen') {
+      console.error(`sample rejection ${row.id}: domain must be "specimen"`);
+      errors += 1;
+    }
+  }
+  for (const row of resultRegistry.reasons ?? []) {
+    if (row?.domain && row.domain !== 'analytical') {
+      console.error(`result rejection ${row.id}: domain must be "analytical"`);
+      errors += 1;
+    }
+  }
 
   /**
    * @param {unknown} list
@@ -381,7 +391,6 @@ function runRejectionReasonChecks(docs) {
     return err;
   }
 
-  let errors = 0;
   for (const test of docs.tests.tests ?? []) {
     const code = typeof test.test_code === 'string' ? test.test_code : '(unknown)';
     const validation = test.validation;
@@ -492,18 +501,16 @@ function main() {
   errors += runRejectionReasonChecks({ analytes, tests });
 
   if (fs.existsSync(sampleRejectionSchemaPath) && fs.existsSync(sampleRejectionPath)) {
-    const sampleSchema = readJson(sampleRejectionSchemaPath);
     errors += validateAgainstSchema(
       'sample-rejection-reasons.json',
-      compileDraft07(sampleSchema),
+      compileDraft07(readJson(sampleRejectionSchemaPath)),
       readJson(sampleRejectionPath),
     );
   }
   if (fs.existsSync(resultRejectionSchemaPath) && fs.existsSync(resultRejectionPath)) {
-    const resultSchema = readJson(resultRejectionSchemaPath);
     errors += validateAgainstSchema(
       'result-rejection-reasons.json',
-      compileDraft07(resultSchema),
+      compileDraft07(readJson(resultRejectionSchemaPath)),
       readJson(resultRejectionPath),
     );
   }

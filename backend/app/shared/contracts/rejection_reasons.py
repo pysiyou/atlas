@@ -1,8 +1,132 @@
 """
 Rejection reason registry — GENERATED from contracts/registries/sample-rejection-reasons.json
 and result-rejection-reasons.json. DO NOT EDIT.
+
+Each reason: id, code, label, domain (specimen | analytical).
 """
 from __future__ import annotations
+
+from typing import Literal, TypedDict
+
+RejectionDomain = Literal["specimen", "analytical"]
+
+
+class RejectionReasonDef(TypedDict, total=False):
+    id: str
+    code: str
+    label: str
+    domain: RejectionDomain
+    description: str
+    category: str
+    stage: str
+    requires_recollection: bool
+    blocks_autoverification: bool
+
+
+REJECTION_REASONS_BY_ID: dict[str, RejectionReasonDef] = {
+    "aberrant_clotting_curve_repeat_run": {"id": "aberrant_clotting_curve_repeat_run", "code": "ABERRANT_CLOTTIN", "label": "Aberrant clotting curve — repeat run", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "ambiguous_identification_repeat_workup": {"id": "ambiguous_identification_repeat_workup", "code": "AMBIGUOUS_IDENTI", "label": "Ambiguous identification — repeat workup", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "clinical_review", "blocks_autoverification": True},
+    "analyzer_flag_repeat_run_on_same_sample": {"id": "analyzer_flag_repeat_run_on_same_sample", "code": "ANALYZER_FLAG_RE", "label": "Analyzer flag — repeat run on same sample", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "clotted": {"id": "clotted", "code": "clotted", "label": "Clotted sample", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "specimen_integrity", "requires_recollection": True},
+    "contaminated": {"id": "contaminated", "code": "contaminated", "label": "Contaminated sample", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "specimen_integrity", "requires_recollection": True},
+    "critical_value_repeat_for_verification": {"id": "critical_value_repeat_for_verification", "code": "CRITICAL_VALUE_R", "label": "Critical value — repeat for verification", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "critical_panic", "blocks_autoverification": True},
+    "delta_check_failure_repeat_run": {"id": "delta_check_failure_repeat_run", "code": "DELTA_CHECK_FAIL", "label": "Delta check failure — repeat run", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "delta_check", "blocks_autoverification": True},
+    "equivocal_result_repeat_run": {"id": "equivocal_result_repeat_run", "code": "EQUIVOCAL_RESULT", "label": "Equivocal result — repeat run", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "clinical_review", "blocks_autoverification": True},
+    "fasting_requirements_not_met": {"id": "fasting_requirements_not_met", "code": "FASTING_REQUIREM", "label": "Fasting requirements not met", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "linearity_interference", "blocks_autoverification": True},
+    "hemolyzed_mild": {"id": "hemolyzed_mild", "code": "HEMOLYZED_MI", "label": "Hemolyzed - Mild", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "serum_index", "requires_recollection": True},
+    "hemolyzed_moderate": {"id": "hemolyzed_moderate", "code": "HEMOLYZED_MO", "label": "Hemolyzed - Moderate", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "serum_index", "requires_recollection": True},
+    "hemolyzed_severe": {"id": "hemolyzed_severe", "code": "hemolyzed", "label": "Hemolyzed - Severe", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "serum_index", "requires_recollection": True},
+    "icteric": {"id": "icteric", "code": "icteric", "label": "Icteric sample", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "serum_index", "requires_recollection": True},
+    "indeterminate_result_repeat_run": {"id": "indeterminate_result_repeat_run", "code": "INDETERMINATE_RE", "label": "Indeterminate result — repeat run", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "clinical_review", "blocks_autoverification": True},
+    "instrument_error_repeat_run": {"id": "instrument_error_repeat_run", "code": "INSTRUMENT_ERROR", "label": "Instrument error — repeat run", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "insufficient_growth_repeat_incubation": {"id": "insufficient_growth_repeat_incubation", "code": "INSUFFICIENT_GRO", "label": "Insufficient growth — repeat incubation", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "invalid_coagulation_control_repeat_run": {"id": "invalid_coagulation_control_repeat_run", "code": "INVALID_COAGULAT", "label": "Invalid coagulation control — repeat run", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "invalid_device_expired_cartridge": {"id": "invalid_device_expired_cartridge", "code": "INVALID_DEVICE_E", "label": "Invalid device / expired cartridge", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "invalid_or_expired_reagent_repeat_run": {"id": "invalid_or_expired_reagent_repeat_run", "code": "INVALID_OR_EXPIR", "label": "Invalid or expired reagent — repeat run", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "la_la10058_8": {"id": "la_la10058_8", "code": "LA10058-8", "label": "Patient refused", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la11883_8": {"id": "la_la11883_8", "code": "LA11883-8", "label": "Not detected", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la11885_3": {"id": "la_la11885_3", "code": "42425007", "label": "Equivocal", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la12432_3": {"id": "la_la12432_3", "code": "LA12432-3", "label": "Acceptable", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la12433_1": {"id": "la_la12433_1", "code": "LA12433-1", "label": "No sample received", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la12435_6": {"id": "la_la12435_6", "code": "LA12435-6", "label": "Specimen appears clotted or layered", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la12441_4": {"id": "la_la12441_4", "code": "LA12441-4", "label": "Sample too old", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la12682_3": {"id": "la_la12682_3", "code": "LA12682-3", "label": "Specimen appears scratched or abraded", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la12683_1": {"id": "la_la12683_1", "code": "LA12683-1", "label": "Specimen not dry before mailing", "domain": "specimen", "category": "stability_transport", "requires_recollection": True},
+    "la_la12684_9": {"id": "la_la12684_9", "code": "LA12684-9", "label": "Specimen appears supersaturated", "domain": "specimen", "category": "container_volume", "requires_recollection": True},
+    "la_la12685_6": {"id": "la_la12685_6", "code": "LA12685-6", "label": "Specimen appears diluted, discolored or contaminated", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la12686_4": {"id": "la_la12686_4", "code": "LA12686-4", "label": "Specimen exhibits serum rings", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la12687_2": {"id": "la_la12687_2", "code": "LA12687-2", "label": "No blood", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la131_5": {"id": "la_la131_5", "code": "0", "label": "No pain", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la135_6": {"id": "la_la135_6", "code": "4-6", "label": "Moderate pain", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la15109_4": {"id": "la_la15109_4", "code": "7-10", "label": "Severe pain", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la15111_0": {"id": "la_la15111_0", "code": "1-3", "label": "Mild pain", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la16389_1": {"id": "la_la16389_1", "code": "LA16389-1", "label": "Accepted", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la16390_9": {"id": "la_la16390_9", "code": "LA16390-9", "label": "Rejected", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la16931_0": {"id": "la_la16931_0", "code": "LA16931-0", "label": "Steroid treatment", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la17976_4": {"id": "la_la17976_4", "code": "LA17976-4", "label": "Supplemental oxygen", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la19732_9": {"id": "la_la19732_9", "code": "LA19732-9", "label": "Clear", "domain": "specimen", "category": "serum_index", "requires_recollection": True},
+    "la_la19877_2": {"id": "la_la19877_2", "code": "LA19877-2", "label": "Consistent with active infectious syphilis", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la19958_0": {"id": "la_la19958_0", "code": "LA19958-0", "label": "No serological evidence of current or past infection", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la19959_8": {"id": "la_la19959_8", "code": "LA19959-8", "label": "Biological false positive", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la19960_6": {"id": "la_la19960_6", "code": "LA19960-6", "label": "Early primary syphilis", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la19961_4": {"id": "la_la19961_4", "code": "LA19961-4", "label": "Treated syphilis", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la19962_2": {"id": "la_la19962_2", "code": "LA19962-2", "label": "Person from a country endemic for yaws, pinta or bejel", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la19963_0": {"id": "la_la19963_0", "code": "LA19963-0", "label": "May represent a biological false positive", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la19964_8": {"id": "la_la19964_8", "code": "LA19964-8", "label": "May be infectious syphilis if no previous history of syphilis", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la20623_7": {"id": "la_la20623_7", "code": "LA20623-7", "label": "Specimen damaged during transport", "domain": "specimen", "category": "stability_transport", "requires_recollection": True},
+    "la_la20624_5": {"id": "la_la20624_5", "code": "LA20624-5", "label": "Specimen received in sealed plastic container", "domain": "specimen", "category": "identification_labeling", "requires_recollection": True},
+    "la_la20625_2": {"id": "la_la20625_2", "code": "281268007", "label": "Specimen quantity insufficient due to incomplete saturation (blood did not soak through paper)", "domain": "specimen", "category": "container_volume", "requires_recollection": True},
+    "la_la20626_0": {"id": "la_la20626_0", "code": "281268007", "label": "Specimen quantity insufficient because blood did not completely fill specimen circles", "domain": "specimen", "category": "container_volume", "requires_recollection": True},
+    "la_la20627_8": {"id": "la_la20627_8", "code": "LA20627-8", "label": "Specimen has uneven saturation", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20628_6": {"id": "la_la20628_6", "code": "LA20628-6", "label": "Specimen not eluting", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20629_4": {"id": "la_la20629_4", "code": "LA20629-4", "label": "Unsuitable for other reasons", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20630_2": {"id": "la_la20630_2", "code": "LA20630-2", "label": "Testing of this specimen indicates more than one source of blood is present on the filter paper card", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20631_0": {"id": "la_la20631_0", "code": "LA20631-0", "label": "Demographic information is incomplete or invalid", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20632_8": {"id": "la_la20632_8", "code": "LA20632-8", "label": "Demographic information on filter paper does not match electronically submitted information", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20633_6": {"id": "la_la20633_6", "code": "LA20633-6", "label": "Serial number on filter paper does not match serial number on patient information form", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20634_4": {"id": "la_la20634_4", "code": "LA20634-4", "label": "Specimen submitted on expired filter paper", "domain": "specimen", "category": "stability_transport", "requires_recollection": True},
+    "la_la20635_1": {"id": "la_la20635_1", "code": "LA20635-1", "label": "Sample collected too early", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20636_9": {"id": "la_la20636_9", "code": "LA20636-9", "label": "Specimen unsatisfactory due to delay in transit", "domain": "specimen", "category": "stability_transport", "requires_recollection": True},
+    "la_la20637_7": {"id": "la_la20637_7", "code": "LA20637-7", "label": "Specimen results inconsistent", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20638_5": {"id": "la_la20638_5", "code": "LA20638-5", "label": "Assay interference", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la20639_3": {"id": "la_la20639_3", "code": "LA20639-3", "label": "Unable to analyze specimen due to laboratory accident", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la28199_0": {"id": "la_la28199_0", "code": "LA28199-0", "label": "Anticoagulant therapy", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la29258_3": {"id": "la_la29258_3", "code": "LA29258-3", "label": "Greater than 99th percentile upper reference limit", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la30466_9": {"id": "la_la30466_9", "code": "LA30466-9", "label": "POSITIVE FOR ONE COPY OF THE FACTOR V LEIDEN (R506Q) MUTATION", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la30467_7": {"id": "la_la30467_7", "code": "LA30467-7", "label": "POSITIVE FOR TWO COPIES OF THE FACTOR V LEIDEN (R506Q) MUTATION", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la30468_5": {"id": "la_la30468_5", "code": "LA30468-5", "label": "POSITIVE FOR TWO COPIES OF THE FACTOR V LEIDEN (R506Q) VARIANT", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la30469_3": {"id": "la_la30469_3", "code": "LA30469-3", "label": "POSITIVE FOR THE HETEROZYGOUS PRESENCE OF THE FACTOR V LEIDEN (R506Q) MUTATION; HETEROZYGOUS FOR THE HR2 POLYMORPHISM.", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la30470_1": {"id": "la_la30470_1", "code": "LA30470-1", "label": "POSITIVE FOR THE HOMOZYGOUS PRESENCE OF THE FACTOR V LEIDEN (R506Q) MUTATION. NEGATIVE FOR THE HR2 POLYMORPHISM.", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la30471_9": {"id": "la_la30471_9", "code": "LA30471-9", "label": "POSITIVE FOR ONE COPY OF THE FACTOR V HR2 VARIANT", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la30878_5": {"id": "la_la30878_5", "code": "LA30878-5", "label": "Physical limitation", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la30879_3": {"id": "la_la30879_3", "code": "LA30879-3", "label": "Participant ill or emergency", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la30880_1": {"id": "la_la30880_1", "code": "LA30880-1", "label": "Collection supplies malfunctioned", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la30881_9": {"id": "la_la30881_9", "code": "LA30881-9", "label": "Language issue", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la30882_7": {"id": "la_la30882_7", "code": "LA30882-7", "label": "No time", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "la_la31020_3": {"id": "la_la31020_3", "code": "LA31020-3", "label": "IVIG therapy in the past month", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la31021_1": {"id": "la_la31021_1", "code": "LA31021-1", "label": "Platelet transfusion in the last 3 days", "domain": "analytical", "stage": "clinical_review", "blocks_autoverification": True},
+    "la_la33979_8": {"id": "la_la33979_8", "code": "LA33979-8", "label": "Hemolyzed", "domain": "specimen", "category": "serum_index", "requires_recollection": True},
+    "la_la33980_6": {"id": "la_la33980_6", "code": "LA33980-6", "label": "Icteric", "domain": "specimen", "category": "serum_index", "requires_recollection": True},
+    "la_la33981_4": {"id": "la_la33981_4", "code": "LA33981-4", "label": "Lactescent", "domain": "specimen", "category": "serum_index", "requires_recollection": True},
+    "la_la33982_2": {"id": "la_la33982_2", "code": "LA33982-2", "label": "Diluted", "domain": "specimen", "category": "container_volume", "requires_recollection": True},
+    "la_la46_8": {"id": "la_la46_8", "code": "LA46-8", "label": "Other", "domain": "specimen", "category": "specimen_integrity", "requires_recollection": True},
+    "labeling_error_mismatch": {"id": "labeling_error_mismatch", "code": "labeling_error", "label": "Mislabeled / Patient ID mismatch", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "identification_labeling", "requires_recollection": True},
+    "labeling_error_unlabeled": {"id": "labeling_error_unlabeled", "code": "labeling_error", "label": "Unlabeled sample", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "identification_labeling", "requires_recollection": True},
+    "leaked_or_broken_container": {"id": "leaked_or_broken_container", "code": "LEAKED_OR_BR", "label": "Leaked or broken container", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "specimen_integrity", "requires_recollection": True},
+    "lipemic": {"id": "lipemic", "code": "lipemic", "label": "Lipemic sample", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "serum_index", "requires_recollection": True},
+    "not_protected_from_light": {"id": "not_protected_from_light", "code": "NOT_PROTECTE", "label": "Not protected from light", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "stability_transport", "requires_recollection": True},
+    "observationinterpretationcodes_hl7_fhir": {"id": "observationinterpretationcodes_hl7_fhir", "code": "HL7 FHIR", "label": "ObservationInterpretationCodes_HL7_FHIR", "domain": "analytical", "description": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation", "stage": "clinical_review", "blocks_autoverification": True},
+    "overfilled_tube": {"id": "overfilled_tube", "code": "OVERFILLED_T", "label": "Overfilled tube", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "container_volume", "requires_recollection": True},
+    "overfilled_tube_analytical": {"id": "overfilled_tube_analytical", "code": "OVERFILLED_TUBE", "label": "Overfilled tube", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "phvs_specimenrejectreason_hl7_2x": {"id": "phvs_specimenrejectreason_hl7_2x", "code": "CDC-PHIN", "label": "PHVS_SpecimenRejectReason_HL7_2x", "domain": "specimen", "description": "LOINC external answer list LL5353-9; values defined at https://phinvads.cdc.gov/vads/ViewValueSet.action?oid=2.16.840.1.114222.4.11.1044", "category": "specimen_integrity", "requires_recollection": True},
+    "platelet_clumps_aggregation_flags_repeat_count": {"id": "platelet_clumps_aggregation_flags_repeat_count", "code": "PLATELET_CLUMPS_", "label": "Platelet clumps / aggregation flags — repeat count", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "procedural_error_during_analysis": {"id": "procedural_error_during_analysis", "code": "PROCEDURAL_ERROR", "label": "Procedural error during analysis", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "qc_control_failure": {"id": "qc_control_failure", "code": "QC_CONTROL_FAILU", "label": "QC / control failure", "domain": "analytical", "description": "Atlas baseline analytical validation rejection", "stage": "analytical_qc", "blocks_autoverification": True},
+    "qns": {"id": "qns", "code": "qns", "label": "Insufficient quantity (QNS)", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "container_volume", "requires_recollection": True},
+    "specimencondition_hl7_2x": {"id": "specimencondition_hl7_2x", "code": "HL7v2", "label": "SpecimenCondition_HL7_2x", "domain": "specimen", "description": "LOINC external answer list LL5347-1; values defined at http://terminology.hl7.org/ValueSet/v2-0493", "category": "specimen_integrity", "requires_recollection": True},
+    "transport_delay": {"id": "transport_delay", "code": "transport_delay", "label": "Transport time exceeded", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "stability_transport", "requires_recollection": True},
+    "wrong_container": {"id": "wrong_container", "code": "wrong_container", "label": "Incorrect container / wrong tube", "domain": "specimen", "description": "Atlas baseline specimen rejection (pre-analytical)", "category": "identification_labeling", "requires_recollection": True},
+}
 
 REJECTION_REASON_BY_ID: dict[str, str] = {
     "aberrant_clotting_curve_repeat_run": "Aberrant clotting curve — repeat run",
@@ -98,6 +222,7 @@ REJECTION_REASON_BY_ID: dict[str, str] = {
     "not_protected_from_light": "Not protected from light",
     "observationinterpretationcodes_hl7_fhir": "ObservationInterpretationCodes_HL7_FHIR",
     "overfilled_tube": "Overfilled tube",
+    "overfilled_tube_analytical": "Overfilled tube",
     "phvs_specimenrejectreason_hl7_2x": "PHVS_SpecimenRejectReason_HL7_2x",
     "platelet_clumps_aggregation_flags_repeat_count": "Platelet clumps / aggregation flags — repeat count",
     "procedural_error_during_analysis": "Procedural error during analysis",
@@ -199,11 +324,12 @@ REJECTION_REASON_DOMAIN_BY_ID: dict[str, str] = {
     "la_la46_8": "specimen",
     "labeling_error_mismatch": "specimen",
     "labeling_error_unlabeled": "specimen",
-    "leaked_or_broken_container": "analytical",
+    "leaked_or_broken_container": "specimen",
     "lipemic": "specimen",
-    "not_protected_from_light": "analytical",
+    "not_protected_from_light": "specimen",
     "observationinterpretationcodes_hl7_fhir": "analytical",
-    "overfilled_tube": "analytical",
+    "overfilled_tube": "specimen",
+    "overfilled_tube_analytical": "analytical",
     "phvs_specimenrejectreason_hl7_2x": "specimen",
     "platelet_clumps_aggregation_flags_repeat_count": "analytical",
     "procedural_error_during_analysis": "analytical",
@@ -215,63 +341,11 @@ REJECTION_REASON_DOMAIN_BY_ID: dict[str, str] = {
 }
 
 SPECIMEN_REASON_IDS: frozenset[str] = frozenset(
-    {
-        "clotted",
-        "contaminated",
-        "hemolyzed_mild",
-        "hemolyzed_moderate",
-        "hemolyzed_severe",
-        "icteric",
-        "la_la10058_8",
-        "la_la12432_3",
-        "la_la12433_1",
-        "la_la12435_6",
-        "la_la12441_4",
-        "la_la12682_3",
-        "la_la12683_1",
-        "la_la12684_9",
-        "la_la12685_6",
-        "la_la12686_4",
-        "la_la12687_2",
-        "la_la16389_1",
-        "la_la16390_9",
-        "la_la19732_9",
-        "la_la20623_7",
-        "la_la20624_5",
-        "la_la20625_2",
-        "la_la20626_0",
-        "la_la20627_8",
-        "la_la20628_6",
-        "la_la20629_4",
-        "la_la20630_2",
-        "la_la20631_0",
-        "la_la20632_8",
-        "la_la20633_6",
-        "la_la20634_4",
-        "la_la20635_1",
-        "la_la20636_9",
-        "la_la20637_7",
-        "la_la20638_5",
-        "la_la20639_3",
-        "la_la30878_5",
-        "la_la30879_3",
-        "la_la30880_1",
-        "la_la30881_9",
-        "la_la30882_7",
-        "la_la33979_8",
-        "la_la33980_6",
-        "la_la33981_4",
-        "la_la33982_2",
-        "la_la46_8",
-        "labeling_error_mismatch",
-        "labeling_error_unlabeled",
-        "lipemic",
-        "phvs_specimenrejectreason_hl7_2x",
-        "qns",
-        "specimencondition_hl7_2x",
-        "transport_delay",
-        "wrong_container",
-    }
+    rid for rid, row in REJECTION_REASONS_BY_ID.items() if row["domain"] == "specimen"
+)
+
+ANALYTICAL_REASON_IDS: frozenset[str] = frozenset(
+    rid for rid, row in REJECTION_REASONS_BY_ID.items() if row["domain"] == "analytical"
 )
 
 _ID_BY_LABEL: dict[str, str] = {label: rid for rid, label in REJECTION_REASON_BY_ID.items()}

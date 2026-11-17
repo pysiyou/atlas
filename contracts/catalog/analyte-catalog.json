@@ -70,7 +70,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "< laboratory positive cutoff (method-dependent)"
         }
       },
       "validation": {
@@ -98,7 +98,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "08:00 plasma: <120 pg/mL"
         }
       },
       "validation": {
@@ -126,7 +126,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -140,7 +140,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },
@@ -157,7 +157,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -223,7 +223,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 10
         }
       },
       "validation": {
@@ -236,7 +236,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "analyte_code": "AHBC",
@@ -251,7 +252,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Negative"
         }
       },
       "validation": {
@@ -279,7 +280,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Negative (non-immune); ≥10 mIU/mL indicates immunity"
         }
       },
       "validation": {
@@ -370,7 +371,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 3.2,
+          "high": 5.6
         }
       },
       "validation": {
@@ -383,7 +385,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "g/dL"
     },
     {
       "analyte_code": "ALBUMING",
@@ -398,7 +401,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Validate locally (typically ~1.0–2.2)"
         }
       },
       "validation": {
@@ -426,7 +429,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 52,
+          "high": 65
         }
       },
       "validation": {
@@ -439,7 +443,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "loinc_code": "6768-6",
@@ -492,7 +497,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 2.5,
+          "high": 5.0
         }
       },
       "validation": {
@@ -505,7 +511,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "ALPHA1GL",
@@ -520,7 +527,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.1,
+          "high": 0.4
         }
       },
       "validation": {
@@ -533,7 +541,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "g/dL"
     },
     {
       "analyte_code": "ALPHA22",
@@ -548,7 +557,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 7.0,
+          "high": 13.0
         }
       },
       "validation": {
@@ -561,7 +571,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "ALPHA2GL",
@@ -576,7 +587,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.4,
+          "high": 1.2
         }
       },
       "validation": {
@@ -589,7 +601,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "g/dL"
     },
     {
       "loinc_code": "1742-6",
@@ -671,7 +684,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 27,
+          "high": 130
         }
       },
       "validation": {
@@ -684,7 +698,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "U/L"
     },
     {
       "analyte_code": "AMYLAS2",
@@ -699,7 +714,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 27,
+          "high": 130
         }
       },
       "validation": {
@@ -712,7 +728,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "U/L"
     },
     {
       "loinc_code": "1798-8",
@@ -790,7 +807,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 8,
+          "high": 16
         }
       },
       "validation": {
@@ -804,7 +822,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "mEq/L"
     },
     {
       "analyte_code": "ANIONGAP",
@@ -819,7 +838,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 8,
+          "high": 16
         }
       },
       "validation": {
@@ -832,7 +852,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mEq/L"
     },
     {
       "loinc_code": "13952-7",
@@ -946,8 +967,13 @@
       ],
       "decimals_suggested": 1,
       "reference_range": {
-        "adult_general": {
-          "text": "See laboratory reference"
+        "adult_male": {
+          "low": 80,
+          "high": 151
+        },
+        "adult_female": {
+          "low": 80,
+          "high": 170
         }
       },
       "validation": {
@@ -960,7 +986,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "APOB",
@@ -974,8 +1001,13 @@
       ],
       "decimals_suggested": 1,
       "reference_range": {
-        "adult_general": {
-          "text": "See laboratory reference"
+        "adult_male": {
+          "low": 50,
+          "high": 123
+        },
+        "adult_female": {
+          "low": 25,
+          "high": 120
         }
       },
       "validation": {
@@ -988,7 +1020,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "APOLIP2",
@@ -1003,7 +1036,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -1031,7 +1064,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -1059,7 +1092,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -1087,7 +1120,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -1115,7 +1148,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 10,
+          "high": 30
         }
       },
       "validation": {
@@ -1128,7 +1162,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "APOLIPOP",
@@ -1143,7 +1178,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -1195,7 +1230,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },
@@ -1212,7 +1247,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1240,7 +1275,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1268,7 +1303,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 23
         }
       },
       "validation": {
@@ -1282,7 +1317,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "μg/L"
     },
     {
       "analyte_code": "ARSENIC",
@@ -1297,7 +1333,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1325,7 +1361,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1353,7 +1389,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1381,7 +1417,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1409,7 +1445,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1437,7 +1473,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1465,7 +1501,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1493,7 +1529,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1521,7 +1557,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -1591,7 +1627,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -1657,7 +1693,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -1685,7 +1721,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 160,
+          "high": 950
         }
       },
       "validation": {
@@ -1698,7 +1735,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "pg/mL"
     },
     {
       "analyte_code": "BACTER10",
@@ -2413,7 +2451,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "0–2 /hpf (none to few)"
         }
       },
       "validation": {
@@ -2441,7 +2479,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.0,
+          "high": 0.2
         }
       },
       "validation": {
@@ -2455,7 +2494,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "×10³/μL"
     },
     {
       "analyte_code": "BASOP",
@@ -2470,7 +2510,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0,
+          "high": 2
         }
       },
       "validation": {
@@ -2484,7 +2525,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "BENZOYLE",
@@ -2524,7 +2566,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 8.0,
+          "high": 14.0
         }
       },
       "validation": {
@@ -2537,7 +2580,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "BETA1GLO",
@@ -2552,7 +2596,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.5,
+          "high": 1.1
         }
       },
       "validation": {
@@ -2565,7 +2610,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "g/dL"
     },
     {
       "analyte_code": "BETA2G2",
@@ -2580,7 +2626,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 8.0,
+          "high": 14.0
         }
       },
       "validation": {
@@ -2593,7 +2640,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "BETA2GLO",
@@ -2608,7 +2656,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.5,
+          "high": 1.1
         }
       },
       "validation": {
@@ -2621,7 +2670,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "g/dL"
     },
     {
       "analyte_code": "BETAGL2",
@@ -2636,7 +2686,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 8.0,
+          "high": 14.0
         }
       },
       "validation": {
@@ -2649,7 +2700,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "BETAGLOB",
@@ -2664,7 +2716,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.5,
+          "high": 1.1
         }
       },
       "validation": {
@@ -2677,7 +2730,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "g/dL"
     },
     {
       "analyte_code": "BHCG",
@@ -2692,7 +2746,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 3
         }
       },
       "validation": {
@@ -2705,7 +2759,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mIU/mL"
     },
     {
       "loinc_code": "21198-7",
@@ -2762,7 +2817,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 21,
+          "high": 28
         }
       },
       "validation": {
@@ -2775,7 +2831,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mEq/L"
     },
     {
       "loinc_code": "1968-7",
@@ -2964,7 +3021,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "0–2 /hpf (none to few)"
         }
       },
       "validation": {
@@ -3030,7 +3087,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 1200,
+          "high": 1500
         }
       },
       "validation": {
@@ -3043,7 +3101,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "C4",
@@ -3058,7 +3117,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 350,
+          "high": 600
         }
       },
       "validation": {
@@ -3071,7 +3131,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "CA",
@@ -3086,7 +3147,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 8.2,
+          "high": 10.2
         }
       },
       "validation": {
@@ -3099,7 +3161,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "CA125",
@@ -3114,7 +3177,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 35
         }
       },
       "validation": {
@@ -3127,7 +3190,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "U/mL"
     },
     {
       "analyte_code": "CA153",
@@ -3142,7 +3206,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 30
         }
       },
       "validation": {
@@ -3155,7 +3219,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "U/mL"
     },
     {
       "analyte_code": "CA199",
@@ -3170,7 +3235,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 37
         }
       },
       "validation": {
@@ -3183,7 +3248,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "U/mL"
     },
     {
       "analyte_code": "CANNABIN",
@@ -3223,7 +3289,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 22,
+          "high": 28
         }
       },
       "validation": {
@@ -3237,7 +3304,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "mEq/L"
     },
     {
       "analyte_code": "CARDIO2",
@@ -3252,7 +3320,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -3280,7 +3348,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -3358,7 +3426,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -3386,7 +3454,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "None seen"
         }
       },
       "validation": {
@@ -3557,7 +3625,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3585,7 +3653,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3613,7 +3681,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3641,7 +3709,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3669,7 +3737,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3697,7 +3765,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3725,7 +3793,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3753,7 +3821,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3781,7 +3849,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3809,7 +3877,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3837,7 +3905,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3865,7 +3933,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3893,7 +3961,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3921,7 +3989,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3950,7 +4018,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -3979,7 +4047,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4007,7 +4075,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4036,7 +4104,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4065,7 +4133,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4094,7 +4162,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4123,7 +4191,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4152,7 +4220,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4180,7 +4248,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4209,7 +4277,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4238,7 +4306,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4267,7 +4335,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4296,7 +4364,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4324,7 +4392,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4352,7 +4420,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4380,7 +4448,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4408,7 +4476,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4436,7 +4504,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4464,7 +4532,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4492,7 +4560,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4520,7 +4588,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4548,7 +4616,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4576,7 +4644,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4604,7 +4672,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4632,7 +4700,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4660,7 +4728,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4688,7 +4756,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4716,7 +4784,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -4802,7 +4870,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 96,
+          "high": 106
         }
       },
       "validation": {
@@ -4816,7 +4885,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "mEq/L"
     },
     {
       "analyte_code": "CHOL",
@@ -4831,7 +4901,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Desirable: <200 mg/dL; borderline 200–239; high >240"
         }
       },
       "validation": {
@@ -5131,7 +5201,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 22,
+          "high": 28
         }
       },
       "validation": {
@@ -5144,7 +5215,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mEq/L"
     },
     {
       "analyte_code": "COAGUL2",
@@ -5159,7 +5231,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 25,
+          "high": 40
         }
       },
       "validation": {
@@ -5173,7 +5246,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "s"
     },
     {
       "analyte_code": "COAGUL3",
@@ -5188,7 +5262,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 25,
+          "high": 40
         }
       },
       "validation": {
@@ -5201,7 +5276,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "s"
     },
     {
       "analyte_code": "COAGUL4",
@@ -5216,7 +5292,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -5230,7 +5306,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },
@@ -5247,7 +5323,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -5261,7 +5337,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },
@@ -5278,7 +5354,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Total cortisol (plasma): 08:00 5–25 µg/dL; 16:00 3–16 µg/dL"
         }
       },
       "validation": {
@@ -5306,7 +5382,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.5,
+          "high": 3.5
         }
       },
       "validation": {
@@ -5319,7 +5396,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "analyte_code": "CREA",
@@ -5334,7 +5412,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.6,
+          "high": 1.2
         }
       },
       "validation": {
@@ -5347,7 +5426,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "loinc_code": "2160-0",
@@ -5531,7 +5611,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 0.2
         }
       },
       "validation": {
@@ -5544,7 +5624,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "DDIM",
@@ -5559,7 +5640,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 500
         }
       },
       "validation": {
@@ -5573,9 +5654,10 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "loinc_code": "29676-4",
@@ -5656,7 +5738,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -5684,7 +5766,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Unconjugated estradiol — female: follicular 20–350; midcycle 150–750; luteal 30–450; postmenopausal <59 pg/mL. Male: <20 pg/mL"
         }
       },
       "validation": {
@@ -5887,7 +5969,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.0,
+          "high": 0.45
         }
       },
       "validation": {
@@ -5901,7 +5984,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "×10³/μL"
     },
     {
       "analyte_code": "EOSP",
@@ -5916,7 +6000,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0,
+          "high": 6
         }
       },
       "validation": {
@@ -5930,7 +6015,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "EPITHE2",
@@ -5970,7 +6056,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "0–2 /hpf (none to few)"
         }
       },
       "validation": {
@@ -5998,7 +6084,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 14,
+          "high": 60
         }
       },
       "validation": {
@@ -6011,7 +6098,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "analyte_code": "ERYTHR2",
@@ -6026,7 +6114,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "None seen"
         }
       },
       "validation": {
@@ -6079,7 +6167,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0,
+          "high": 20
         }
       },
       "validation": {
@@ -6093,7 +6182,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "mm/h"
     },
     {
       "loinc_code": "4537-7",
@@ -6176,7 +6266,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "0–2 /hpf (none to few)"
         }
       },
       "validation": {
@@ -6204,7 +6294,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -6232,7 +6322,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 15,
+          "high": 200
         }
       },
       "validation": {
@@ -6245,7 +6336,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "loinc_code": "2276-4",
@@ -6302,7 +6394,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 150,
+          "high": 400
         }
       },
       "validation": {
@@ -6316,9 +6409,10 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "loinc_code": "3255-7",
@@ -6357,7 +6451,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },
@@ -6407,7 +6501,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 5,
+          "high": 25
         }
       },
       "validation": {
@@ -6420,7 +6515,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "loinc_code": "2284-8",
@@ -6497,7 +6593,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Female: follicular 1.37–9.9; ovulatory 6.17–17.2; luteal 1.09–9.2; postmenopausal 19.3–100.6 mIU/mL. Male: 1.42–15.4 mIU/mL"
         }
       },
       "validation": {
@@ -6635,7 +6731,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 12.0,
+          "high": 22.0
         }
       },
       "validation": {
@@ -6648,7 +6745,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "GAMMAGLO",
@@ -6663,7 +6761,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.5,
+          "high": 1.6
         }
       },
       "validation": {
@@ -6676,7 +6775,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "g/dL"
     },
     {
       "loinc_code": "85362-2",
@@ -6768,7 +6868,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Derived; total protein minus albumin"
         }
       },
       "validation": {
@@ -6796,7 +6896,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 75,
+          "high": 125
         }
       },
       "validation": {
@@ -6809,7 +6910,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mL/min/1.73 m²"
     },
     {
       "analyte_code": "GLOMER3",
@@ -6824,7 +6926,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 75,
+          "high": 125
         }
       },
       "validation": {
@@ -6837,7 +6940,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mL/min/1.73 m²"
     },
     {
       "analyte_code": "GLOMER4",
@@ -6852,7 +6956,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 75,
+          "high": 125
         }
       },
       "validation": {
@@ -6865,7 +6970,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mL/min/1.73 m²"
     },
     {
       "analyte_code": "GLOMER5",
@@ -6880,7 +6986,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 75,
+          "high": 125
         }
       },
       "validation": {
@@ -6893,7 +7000,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mL/min/1.73 m²"
     },
     {
       "analyte_code": "GLOMER6",
@@ -6908,7 +7016,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 75,
+          "high": 125
         }
       },
       "validation": {
@@ -6921,7 +7030,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mL/min/1.73 m²"
     },
     {
       "analyte_code": "GLOMERUL",
@@ -6936,7 +7046,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 75,
+          "high": 125
         }
       },
       "validation": {
@@ -6949,7 +7060,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mL/min/1.73 m²"
     },
     {
       "analyte_code": "GLU",
@@ -6964,7 +7076,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 70,
+          "high": 110
         }
       },
       "validation": {
@@ -6977,7 +7090,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "loinc_code": "1558-6",
@@ -7093,7 +7207,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "None seen"
         }
       },
       "validation": {
@@ -7146,7 +7260,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "None seen"
         }
       },
       "validation": {
@@ -7199,7 +7313,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "None seen"
         }
       },
       "validation": {
@@ -7473,7 +7587,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 4,
+          "high": 12
         }
       },
       "validation": {
@@ -7486,7 +7601,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "μmol/L"
     },
     {
       "loinc_code": "2085-9",
@@ -7775,7 +7891,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Cardiovascular risk: <1.0 mg/L low; 1.0–3.0 average; >3.0 high"
         }
       },
       "validation": {
@@ -7803,7 +7919,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 0.4
         }
       },
       "validation": {
@@ -7816,7 +7932,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "analyte_code": "HYALIN2",
@@ -7856,7 +7973,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "0–2 /hpf (none to few)"
         }
       },
       "validation": {
@@ -7884,7 +8001,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 50,
+          "high": 350
         }
       },
       "validation": {
@@ -7897,7 +8015,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "IGE",
@@ -7912,7 +8031,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 10,
+          "high": 179
         }
       },
       "validation": {
@@ -7925,7 +8045,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "IU/mL"
     },
     {
       "analyte_code": "IGG",
@@ -7940,7 +8061,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 600,
+          "high": 1560
         }
       },
       "validation": {
@@ -7953,7 +8075,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "IGM",
@@ -7968,7 +8091,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -7996,7 +8119,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 54,
+          "high": 222
         }
       },
       "validation": {
@@ -8009,7 +8133,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "IMMUNO2",
@@ -8049,7 +8174,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Free light chains: validate per laboratory reference (mg/24 h)"
         }
       },
       "validation": {
@@ -8077,7 +8202,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Free light chains: validate per laboratory reference (mg/24 h)"
         }
       },
       "validation": {
@@ -8105,7 +8230,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Free light chains: validate per laboratory reference (mg/24 h)"
         }
       },
       "validation": {
@@ -8158,7 +8283,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Free kappa/lambda: validate per laboratory reference"
         }
       },
       "validation": {
@@ -8186,7 +8311,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Free kappa/lambda: validate per laboratory reference"
         }
       },
       "validation": {
@@ -8214,7 +8339,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Free kappa/lambda: validate per laboratory reference"
         }
       },
       "validation": {
@@ -8267,7 +8392,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Free light chains: validate per laboratory reference (mg/24 h)"
         }
       },
       "validation": {
@@ -8319,7 +8444,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },
@@ -8336,7 +8461,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 5,
+          "high": 20
         }
       },
       "validation": {
@@ -8349,7 +8475,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "μU/mL"
     },
     {
       "loinc_code": "2498-4",
@@ -8444,7 +8571,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.3,
+          "high": 1.3
         }
       },
       "validation": {
@@ -8457,7 +8585,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mmol/L"
     },
     {
       "loinc_code": "2524-7",
@@ -8585,7 +8714,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "0–2 /hpf (none to few)"
         }
       },
       "validation": {
@@ -8613,7 +8742,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Female: follicular 2.0–15.0; ovulatory peak 22.0–105.0; luteal 0.6–19.0; postmenopausal 16.0–64.0 mIU/L. Male: 2.0–12.0 mIU/L"
         }
       },
       "validation": {
@@ -8641,7 +8770,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0,
+          "high": 160
         }
       },
       "validation": {
@@ -8654,7 +8784,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "U/L"
     },
     {
       "loinc_code": "3040-3",
@@ -8732,7 +8863,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 10,
+          "high": 30
         }
       },
       "validation": {
@@ -8745,7 +8877,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "LYMPHA",
@@ -8760,7 +8893,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 1.0,
+          "high": 4.8
         }
       },
       "validation": {
@@ -8774,7 +8908,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "×10³/μL"
     },
     {
       "analyte_code": "LYMPHO2",
@@ -8789,7 +8924,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -8817,7 +8952,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -8921,7 +9056,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Population-specific; validate per institutional flow cytometry reference"
         }
       },
       "validation": {
@@ -8974,7 +9109,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 20,
+          "high": 45
         }
       },
       "validation": {
@@ -8988,7 +9124,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "loinc_code": "32206-5",
@@ -9258,7 +9395,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.0,
+          "high": 0.8
         }
       },
       "validation": {
@@ -9272,7 +9410,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "×10³/μL"
     },
     {
       "analyte_code": "MONOCLON",
@@ -9312,7 +9451,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Occupational/environmental; compare to local toxicology reference"
         }
       },
       "validation": {
@@ -9340,7 +9479,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 2,
+          "high": 10
         }
       },
       "validation": {
@@ -9354,7 +9494,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "loinc_code": "32623-1",
@@ -9407,7 +9548,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -9498,7 +9639,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 1.8,
+          "high": 7.8
         }
       },
       "validation": {
@@ -9512,7 +9654,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "×10³/μL"
     },
     {
       "analyte_code": "NEUTP",
@@ -9527,7 +9670,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 40,
+          "high": 75
         }
       },
       "validation": {
@@ -9541,7 +9685,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "NH3",
@@ -9556,7 +9701,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 15,
+          "high": 50
         }
       },
       "validation": {
@@ -9569,7 +9715,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "μg/dL"
     },
     {
       "analyte_code": "OBSERVAT",
@@ -9634,7 +9781,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 275,
+          "high": 295
         }
       },
       "validation": {
@@ -9647,7 +9795,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mOsm/kg"
     },
     {
       "loinc_code": "10704-5",
@@ -9865,7 +10014,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 2.3,
+          "high": 4.7
         }
       },
       "validation": {
@@ -9878,7 +10028,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "POTASSIU",
@@ -9893,7 +10044,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 3.5,
+          "high": 5.0
         }
       },
       "validation": {
@@ -9907,7 +10059,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "mEq/L"
     },
     {
       "loinc_code": "14338-8",
@@ -9959,7 +10112,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 1,
+          "high": 25
         }
       },
       "validation": {
@@ -9972,7 +10126,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "analyte_code": "PROCAL",
@@ -9987,7 +10142,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -10015,7 +10170,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Female: follicular 0.1–0.7 ng/mL; luteal 2.0–25.0 ng/mL. Male: 0.13–0.97 ng/mL"
         }
       },
       "validation": {
@@ -10043,7 +10198,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -10071,7 +10226,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -10136,7 +10291,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0,
+          "high": 4.0
         }
       },
       "validation": {
@@ -10149,7 +10305,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/mL"
     },
     {
       "analyte_code": "PT",
@@ -10164,7 +10321,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 10,
+          "high": 13
         }
       },
       "validation": {
@@ -10178,9 +10336,10 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
-      }
+      },
+      "unit": "s"
     },
     {
       "analyte_code": "PTH",
@@ -10195,7 +10354,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 10,
+          "high": 50
         }
       },
       "validation": {
@@ -10208,7 +10368,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "pg/mL"
     },
     {
       "loinc_code": "789-8",
@@ -10342,7 +10503,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.5,
+          "high": 1.5
         }
       },
       "validation": {
@@ -10356,7 +10518,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "loinc_code": "17849-1",
@@ -10410,7 +10573,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "high": 30
         }
       },
       "validation": {
@@ -10423,7 +10586,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "IU/mL"
     },
     {
       "analyte_code": "RH",
@@ -10709,7 +10873,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 136,
+          "high": 142
         }
       },
       "validation": {
@@ -10723,7 +10888,8 @@
           "fasting_requirements_not_met",
           "platelet_clumps_aggregation_flags_repeat_count"
         ]
-      }
+      },
+      "unit": "mEq/L"
     },
     {
       "analyte_code": "SPECIM2",
@@ -10738,7 +10904,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Method- and population-specific; validate locally"
         }
       },
       "validation": {
@@ -10849,7 +11015,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 0.3,
+          "high": 1.2
         }
       },
       "validation": {
@@ -10862,7 +11029,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "TESTO",
@@ -10876,8 +11044,13 @@
       ],
       "decimals_suggested": 1,
       "reference_range": {
-        "adult_general": {
-          "text": "See laboratory reference"
+        "adult_male": {
+          "low": 300,
+          "high": 1200
+        },
+        "adult_female": {
+          "low": 0,
+          "high": 85
         }
       },
       "validation": {
@@ -10890,7 +11063,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "ng/dL"
     },
     {
       "loinc_code": "2500-7",
@@ -11047,7 +11221,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 6.0,
+          "high": 8.0
         }
       },
       "validation": {
@@ -11060,7 +11235,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "g/dL"
     },
     {
       "loinc_code": "8041-6",
@@ -11108,7 +11284,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 200,
+          "high": 380
         }
       },
       "validation": {
@@ -11121,7 +11298,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "TRIG",
@@ -11136,7 +11314,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 10,
+          "high": 190
         }
       },
       "validation": {
@@ -11149,7 +11328,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "mg/dL"
     },
     {
       "analyte_code": "TROP",
@@ -11239,7 +11419,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "low": 20,
+          "high": 50
         }
       },
       "validation": {
@@ -11252,7 +11433,8 @@
           "analyzer_flag_repeat_run_on_same_sample",
           "fasting_requirements_not_met"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "loinc_code": "3016-3",
@@ -11306,7 +11488,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "Male: <17 mg/g creatinine; female: <25 mg/g creatinine"
         }
       },
       "validation": {
@@ -11456,7 +11638,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "None seen"
         }
       },
       "validation": {
@@ -11521,7 +11703,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "0–2 /hpf (none to few)"
         }
       },
       "validation": {
@@ -11549,7 +11731,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "0–2 /hpf (none to few)"
         }
       },
       "validation": {
@@ -11917,7 +12099,7 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "See laboratory reference"
+          "text": "<150 mg/24 h (adult)"
         }
       },
       "validation": {

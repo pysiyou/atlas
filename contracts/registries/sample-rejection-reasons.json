@@ -14,7 +14,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "contaminated",
@@ -23,7 +24,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "hemolyzed_mild",
@@ -32,7 +34,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "hemolyzed_moderate",
@@ -41,7 +44,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "hemolyzed_severe",
@@ -50,7 +54,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "icteric",
@@ -59,7 +64,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "la_la10058_8",
@@ -69,7 +75,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL5563-3",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12432_3",
@@ -79,7 +86,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12433_1",
@@ -89,7 +97,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12435_6",
@@ -99,7 +108,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12441_4",
@@ -109,7 +119,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12682_3",
@@ -119,7 +130,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12683_1",
@@ -129,7 +141,8 @@
       "category": "stability_transport",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12684_9",
@@ -139,7 +152,8 @@
       "category": "container_volume",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12685_6",
@@ -149,7 +163,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12686_4",
@@ -159,7 +174,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la12687_2",
@@ -169,7 +185,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la16389_1",
@@ -179,7 +196,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL1574-4",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la16390_9",
@@ -189,7 +207,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL1574-4",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la19732_9",
@@ -199,7 +218,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL6542-6",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20623_7",
@@ -209,7 +229,8 @@
       "category": "stability_transport",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20624_5",
@@ -219,7 +240,8 @@
       "category": "identification_labeling",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20625_2",
@@ -229,7 +251,8 @@
       "category": "container_volume",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20626_0",
@@ -239,7 +262,8 @@
       "category": "container_volume",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20627_8",
@@ -249,7 +273,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20628_6",
@@ -259,7 +284,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20629_4",
@@ -269,7 +295,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20630_2",
@@ -279,7 +306,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL832-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20631_0",
@@ -289,7 +317,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20632_8",
@@ -299,7 +328,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20633_6",
@@ -309,7 +339,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20634_4",
@@ -319,7 +350,8 @@
       "category": "stability_transport",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20635_1",
@@ -329,7 +361,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20636_9",
@@ -339,7 +372,8 @@
       "category": "stability_transport",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20637_7",
@@ -349,7 +383,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20638_5",
@@ -359,7 +394,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la20639_3",
@@ -369,7 +405,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL2768-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la30878_5",
@@ -379,7 +416,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL5563-3",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la30879_3",
@@ -389,7 +427,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL5563-3",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la30880_1",
@@ -399,7 +438,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL5563-3",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la30881_9",
@@ -409,7 +449,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL5563-3",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la30882_7",
@@ -419,7 +460,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL5563-3",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la33979_8",
@@ -429,7 +471,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL6542-6",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la33980_6",
@@ -439,7 +482,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL6542-6",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la33981_4",
@@ -449,7 +493,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL6542-6",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la33982_2",
@@ -459,7 +504,8 @@
       "category": "container_volume",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL6542-6",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "la_la46_8",
@@ -469,7 +515,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "loinc_answer_list_id": "LL5563-3",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "specimen"
     },
     {
       "id": "labeling_error_mismatch",
@@ -478,7 +525,8 @@
       "category": "identification_labeling",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "labeling_error_unlabeled",
@@ -487,7 +535,8 @@
       "category": "identification_labeling",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "leaked_or_broken_container",
@@ -496,7 +545,8 @@
       "category": "specimen_integrity",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "lipemic",
@@ -505,7 +555,8 @@
       "category": "serum_index",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "not_protected_from_light",
@@ -514,7 +565,8 @@
       "category": "stability_transport",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "overfilled_tube",
@@ -523,7 +575,8 @@
       "category": "container_volume",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "phvs_specimenrejectreason_hl7_2x",
@@ -533,7 +586,8 @@
       "requires_recollection": true,
       "description": "LOINC external answer list LL5353-9; values defined at https://phinvads.cdc.gov/vads/ViewValueSet.action?oid=2.16.840.1.114222.4.11.1044",
       "loinc_answer_list_id": "LL5353-9",
-      "source": "loinc.external_answer_list"
+      "source": "loinc.external_answer_list",
+      "domain": "specimen"
     },
     {
       "id": "qns",
@@ -542,7 +596,8 @@
       "category": "container_volume",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "specimencondition_hl7_2x",
@@ -552,7 +607,8 @@
       "requires_recollection": true,
       "description": "LOINC external answer list LL5347-1; values defined at http://terminology.hl7.org/ValueSet/v2-0493",
       "loinc_answer_list_id": "LL5347-1",
-      "source": "loinc.external_answer_list"
+      "source": "loinc.external_answer_list",
+      "domain": "specimen"
     },
     {
       "id": "transport_delay",
@@ -561,7 +617,8 @@
       "category": "stability_transport",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     },
     {
       "id": "wrong_container",
@@ -570,7 +627,8 @@
       "category": "identification_labeling",
       "requires_recollection": true,
       "description": "Atlas baseline specimen rejection (pre-analytical)",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "specimen"
     }
   ]
 }

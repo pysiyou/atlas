@@ -5,6 +5,7 @@
 import { Alert } from '@/components/display';
 import { FormNotesField } from '@/components/primitives';
 
+import { resolveRejectionReasonLabel } from '@/types/generated/policies';
 import { cn } from '@/utils';
 import { text, inputBase, FORM_FIELD_LABEL } from '@/theme/recipes';
 import { TONE } from '@/theme/recipes';
@@ -64,7 +65,7 @@ export function CatalogRejectionCriteriaFields({
             <option value="">Select a reason...</option>
             {criteria.map(criterion => (
               <option key={criterion} value={criterion}>
-                {criterion}
+                {resolveRejectionReasonLabel(criterion)}
               </option>
             ))}
           </select>

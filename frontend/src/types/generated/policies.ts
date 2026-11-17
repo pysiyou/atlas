@@ -237,10 +237,15 @@ export const REMEDY_PRESENTATION: Record<
 // rejection-reasons (from sample + result registries — see rejectionReasons.ts)
 // =============================================================================
 export {
+  REJECTION_REASONS_BY_ID,
   REJECTION_REASON_BY_ID,
   REJECTION_REASON_DOMAIN_BY_ID,
+  SPECIMEN_REASON_IDS,
+  ANALYTICAL_REASON_IDS,
   resolveRejectionReasonLabel,
   rejectionReasonDomain,
+  type RejectionReasonDef,
+  type RejectionDomain,
 } from './rejectionReasons';
 
 // =============================================================================

@@ -1422,7 +1422,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },
@@ -6026,7 +6026,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },
@@ -6768,7 +6768,7 @@
           "fasting_requirements_not_met",
           "aberrant_clotting_curve_repeat_run",
           "invalid_coagulation_control_repeat_run",
-          "overfilled_tube"
+          "overfilled_tube_analytical"
         ]
       }
     },

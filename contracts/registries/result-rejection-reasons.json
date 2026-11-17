@@ -13,7 +13,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "ambiguous_identification_repeat_workup",
@@ -22,7 +23,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "analyzer_flag_repeat_run_on_same_sample",
@@ -31,7 +33,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "critical_value_repeat_for_verification",
@@ -40,7 +43,8 @@
       "stage": "critical_panic",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "delta_check_failure_repeat_run",
@@ -49,7 +53,8 @@
       "stage": "delta_check",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "equivocal_result_repeat_run",
@@ -58,7 +63,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "fasting_requirements_not_met",
@@ -67,7 +73,8 @@
       "stage": "linearity_interference",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "indeterminate_result_repeat_run",
@@ -76,7 +83,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "instrument_error_repeat_run",
@@ -85,7 +93,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "insufficient_growth_repeat_incubation",
@@ -94,7 +103,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "invalid_coagulation_control_repeat_run",
@@ -103,7 +113,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "invalid_device_expired_cartridge",
@@ -112,7 +123,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "invalid_or_expired_reagent_repeat_run",
@@ -121,7 +133,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "la_la11883_8",
@@ -131,7 +144,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5066-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la11885_3",
@@ -141,7 +155,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5066-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la131_5",
@@ -151,7 +166,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL6562-4",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la135_6",
@@ -161,7 +177,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL6562-4",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la15109_4",
@@ -171,7 +188,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL6562-4",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la15111_0",
@@ -181,7 +199,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL6562-4",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la16931_0",
@@ -191,7 +210,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5592-2",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la17976_4",
@@ -201,7 +221,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5592-2",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la19877_2",
@@ -211,7 +232,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL2467-0",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la19958_0",
@@ -221,7 +243,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL2467-0",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la19959_8",
@@ -231,7 +254,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL2467-0",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la19960_6",
@@ -241,7 +265,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL2467-0",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la19961_4",
@@ -251,7 +276,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL2467-0",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la19962_2",
@@ -261,7 +287,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL2467-0",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la19963_0",
@@ -271,7 +298,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL2467-0",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la19964_8",
@@ -281,7 +309,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL2467-0",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la28199_0",
@@ -291,7 +320,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5592-2",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la29258_3",
@@ -301,7 +331,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5066-7",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la30466_9",
@@ -311,7 +342,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5465-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la30467_7",
@@ -321,7 +353,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5465-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la30468_5",
@@ -331,7 +364,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5465-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la30469_3",
@@ -341,7 +375,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5465-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la30470_1",
@@ -351,7 +386,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5465-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la30471_9",
@@ -361,7 +397,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5465-1",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la31020_3",
@@ -371,7 +408,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5592-2",
-      "source": "loinc.answer_list"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "la_la31021_1",
@@ -381,25 +419,8 @@
       "stage": "clinical_review",
       "blocks_autoverification": true,
       "loinc_answer_list_id": "LL5592-2",
-      "source": "loinc.answer_list"
-    },
-    {
-      "id": "leaked_or_broken_container",
-      "code": "LEAKED_OR_BROKEN",
-      "label": "Leaked or broken container",
-      "stage": "analytical_qc",
-      "blocks_autoverification": true,
-      "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
-    },
-    {
-      "id": "not_protected_from_light",
-      "code": "NOT_PROTECTED_FR",
-      "label": "Not protected from light",
-      "stage": "analytical_qc",
-      "blocks_autoverification": true,
-      "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "loinc.answer_list",
+      "domain": "analytical"
     },
     {
       "id": "observationinterpretationcodes_hl7_fhir",
@@ -409,10 +430,12 @@
       "blocks_autoverification": true,
       "description": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
       "loinc_answer_list_id": "LL5433-9",
-      "source": "loinc.external_answer_list"
+      "source": "loinc.external_answer_list",
+      "domain": "analytical"
     },
     {
-      "id": "overfilled_tube",
+      "id": "overfilled_tube_analytical",
+      "domain": "analytical",
       "code": "OVERFILLED_TUBE",
       "label": "Overfilled tube",
       "stage": "analytical_qc",
@@ -427,7 +450,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "procedural_error_during_analysis",
@@ -436,7 +460,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     },
     {
       "id": "qc_control_failure",
@@ -445,7 +470,8 @@
       "stage": "analytical_qc",
       "blocks_autoverification": true,
       "description": "Atlas baseline analytical validation rejection",
-      "source": "atlas.seed"
+      "source": "atlas.seed",
+      "domain": "analytical"
     }
   ]
 }

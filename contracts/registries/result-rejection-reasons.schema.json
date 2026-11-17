@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org",
-  "title": "Atlas result validation rejection reasons registry",
-  "$id": "https://atlas.local",
+  "$id": "https://atlas.local/registries/result-rejection-reasons",
+  "title": "Atlas result (analytical) rejection reasons registry",
   "type": "object",
   "required": ["reasons"],
   "properties": {
@@ -20,20 +20,24 @@
     },
     "resultRejectionReason": {
       "type": "object",
-      "required": ["id", "code", "label", "stage"],
+      "required": ["id", "code", "label", "domain", "stage"],
       "properties": {
         "id": { "$ref": "#/definitions/rejectionReasonId" },
+        "domain": { "const": "analytical" },
         "code": {
           "type": "string",
-          "description": "Standardized HL7 ObservationInterpretation (v2-0078/v3) / HL7 v2-0085 / LOINC AnswerList code"
+          "minLength": 1,
+          "description": "Interop code (HL7 ObservationInterpretation / v2-0085 / LOINC AnswerList / Atlas mnemonic)"
         },
         "loinc_answer_id": {
           "type": "string",
           "pattern": "^LA[0-9]+-[0-9]$"
         },
+        "loinc_answer_list_id": { "type": "string" },
         "label": { "type": "string", "minLength": 1 },
         "label_it": { "type": "string" },
         "description": { "type": "string" },
+        "source": { "type": "string" },
         "stage": {
           "type": "string",
           "enum": [

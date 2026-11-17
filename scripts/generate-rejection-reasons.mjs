@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Generate rejection registry contracts for backend (Python) and frontend (TypeScript).
+ * Wire shape: id, code, label, domain (specimen | analytical) + domain-specific fields.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -18,22 +19,48 @@ function readJson(p) {
   return JSON.parse(fs.readFileSync(p, 'utf8'));
 }
 
+/** @typedef {'specimen' | 'analytical'} RejectionDomain */
+
+/**
+ * @typedef {{
+ *   id: string;
+ *   code: string;
+ *   label: string;
+ *   domain: RejectionDomain;
+ *   description?: string;
+ *   category?: string;
+ *   stage?: string;
+ *   requires_recollection?: boolean;
+ *   blocks_autoverification?: boolean;
+ *   loinc_answer_id?: string;
+ *   source?: string;
+ * }} RejectionReasonRow
+ */
+
 const sample = fs.existsSync(samplePath) ? readJson(samplePath) : { reasons: [] };
 const result = fs.existsSync(resultPath) ? readJson(resultPath) : { reasons: [] };
 
-/** @type {Map<string, { label: string; domain: 'specimen' | 'analytical' }>} */
+/** @type {Map<string, RejectionReasonRow>} */
 const byId = new Map();
 
-for (const row of sample.reasons ?? []) {
-  if (row?.id && row?.label) {
-    byId.set(row.id, { label: row.label, domain: 'specimen' });
+function ingest(rows, expectedDomain) {
+  for (const row of rows ?? []) {
+    if (!row?.id || !row?.label || !row?.code) continue;
+    const domain = row.domain ?? expectedDomain;
+    if (domain !== expectedDomain) {
+      console.error(`rejection ${row.id}: domain ${domain} does not match registry ${expectedDomain}`);
+      process.exit(1);
+    }
+    if (byId.has(row.id)) {
+      console.error(`duplicate rejection reason id: ${row.id}`);
+      process.exit(1);
+    }
+    byId.set(row.id, { ...row, domain });
   }
 }
-for (const row of result.reasons ?? []) {
-  if (row?.id && row?.label) {
-    byId.set(row.id, { label: row.label, domain: 'analytical' });
-  }
-}
+
+ingest(sample.reasons, 'specimen');
+ingest(result.reasons, 'analytical');
 
 const ids = [...byId.keys()].sort();
 
@@ -42,11 +69,54 @@ function pyDict(name, fn) {
   return `${name}: dict[str, str] = {\n${lines.join('\n')}\n}`;
 }
 
+function pyReasonEntry(id) {
+  const row = byId.get(id);
+  const parts = [
+    `"id": ${JSON.stringify(row.id)}`,
+    `"code": ${JSON.stringify(row.code)}`,
+    `"label": ${JSON.stringify(row.label)}`,
+    `"domain": ${JSON.stringify(row.domain)}`,
+  ];
+  if (row.description) parts.push(`"description": ${JSON.stringify(row.description)}`);
+  if (row.category) parts.push(`"category": ${JSON.stringify(row.category)}`);
+  if (row.stage) parts.push(`"stage": ${JSON.stringify(row.stage)}`);
+  if (row.requires_recollection !== undefined) {
+    parts.push(`"requires_recollection": ${row.requires_recollection ? 'True' : 'False'}`);
+  }
+  if (row.blocks_autoverification !== undefined) {
+    parts.push(`"blocks_autoverification": ${row.blocks_autoverification ? 'True' : 'False'}`);
+  }
+  return `{${parts.join(', ')}}`;
+}
+
 const py = `"""
 Rejection reason registry — GENERATED from contracts/registries/sample-rejection-reasons.json
 and result-rejection-reasons.json. DO NOT EDIT.
+
+Each reason: id, code, label, domain (specimen | analytical).
 """
 from __future__ import annotations
+
+from typing import Literal, TypedDict
+
+RejectionDomain = Literal["specimen", "analytical"]
+
+
+class RejectionReasonDef(TypedDict, total=False):
+    id: str
+    code: str
+    label: str
+    domain: RejectionDomain
+    description: str
+    category: str
+    stage: str
+    requires_recollection: bool
+    blocks_autoverification: bool
+
+
+REJECTION_REASONS_BY_ID: dict[str, RejectionReasonDef] = {
+${ids.map(id => `    ${JSON.stringify(id)}: ${pyReasonEntry(id)},`).join('\n')}
+}
 
 ${pyDict('REJECTION_REASON_BY_ID', id => JSON.stringify(byId.get(id).label))}
 
@@ -55,12 +125,11 @@ REJECTION_REASON_LABELS: frozenset[str] = frozenset(REJECTION_REASON_BY_ID.value
 ${pyDict('REJECTION_REASON_DOMAIN_BY_ID', id => JSON.stringify(byId.get(id).domain))}
 
 SPECIMEN_REASON_IDS: frozenset[str] = frozenset(
-    {
-${ids
-  .filter(id => byId.get(id).domain === 'specimen')
-  .map(id => `        ${JSON.stringify(id)},`)
-  .join('\n')}
-    }
+    rid for rid, row in REJECTION_REASONS_BY_ID.items() if row["domain"] == "specimen"
+)
+
+ANALYTICAL_REASON_IDS: frozenset[str] = frozenset(
+    rid for rid, row in REJECTION_REASONS_BY_ID.items() if row["domain"] == "analytical"
 )
 
 _ID_BY_LABEL: dict[str, str] = {label: rid for rid, label in REJECTION_REASON_BY_ID.items()}
@@ -96,27 +165,73 @@ def is_specimen_rejection_registry_value(value: str) -> bool:
     return domain == "specimen"
 `;
 
+const tsDefLines = ids
+  .map(id => {
+    const row = byId.get(id);
+    return `  ${JSON.stringify(id)}: ${JSON.stringify({
+      id: row.id,
+      code: row.code,
+      label: row.label,
+      domain: row.domain,
+      ...(row.description ? { description: row.description } : {}),
+      ...(row.category ? { category: row.category } : {}),
+      ...(row.stage ? { stage: row.stage } : {}),
+      ...(row.requires_recollection !== undefined
+        ? { requires_recollection: row.requires_recollection }
+        : {}),
+      ...(row.blocks_autoverification !== undefined
+        ? { blocks_autoverification: row.blocks_autoverification }
+        : {}),
+    })},`;
+  })
+  .join('\n');
+
 const tsReasonLines = ids
   .map(id => `  ${JSON.stringify(id)}: ${JSON.stringify(byId.get(id).label)},`)
   .join('\n');
 const tsDomainLines = ids
-  .map(
-    id =>
-      `  ${JSON.stringify(id)}: ${JSON.stringify(byId.get(id).domain)},`,
-  )
+  .map(id => `  ${JSON.stringify(id)}: ${JSON.stringify(byId.get(id).domain)},`)
   .join('\n');
 
 const ts = `/** GENERATED — DO NOT EDIT. Regenerate: npm run codegen:rejection */
+
+export type RejectionDomain = 'specimen' | 'analytical';
+
+export interface RejectionReasonDef {
+  id: string;
+  code: string;
+  label: string;
+  domain: RejectionDomain;
+  description?: string;
+  category?: string;
+  stage?: string;
+  requires_recollection?: boolean;
+  blocks_autoverification?: boolean;
+}
+
+export const REJECTION_REASONS_BY_ID: Readonly<Record<string, RejectionReasonDef>> = {
+${tsDefLines}
+};
 
 export const REJECTION_REASON_BY_ID: Readonly<Record<string, string>> = {
 ${tsReasonLines}
 };
 
-export const REJECTION_REASON_DOMAIN_BY_ID: Readonly<
-  Record<string, 'specimen' | 'analytical'>
-> = {
+export const REJECTION_REASON_DOMAIN_BY_ID: Readonly<Record<string, RejectionDomain>> = {
 ${tsDomainLines}
 };
+
+export const SPECIMEN_REASON_IDS: ReadonlySet<string> = new Set(
+  Object.entries(REJECTION_REASONS_BY_ID)
+    .filter(([, row]) => row.domain === 'specimen')
+    .map(([id]) => id),
+);
+
+export const ANALYTICAL_REASON_IDS: ReadonlySet<string> = new Set(
+  Object.entries(REJECTION_REASONS_BY_ID)
+    .filter(([, row]) => row.domain === 'analytical')
+    .map(([id]) => id),
+);
 
 const LABEL_TO_ID: Readonly<Record<string, string>> = Object.fromEntries(
   Object.entries(REJECTION_REASON_BY_ID).map(([id, label]) => [label, id]),
@@ -137,7 +252,7 @@ export function resolveRejectionReasonLabel(value: string | null | undefined): s
 
 export function rejectionReasonDomain(
   value: string,
-): 'specimen' | 'analytical' | undefined {
+): RejectionDomain | undefined {
   const stripped = value.trim();
   if (!stripped) return undefined;
   if (REJECTION_REASON_DOMAIN_BY_ID[stripped]) {
