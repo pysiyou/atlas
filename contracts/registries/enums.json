@@ -240,61 +240,6 @@
       }
     }
   },
-  "RejectionReason": {
-    "type": "string",
-    "members": {
-      "HEMOLYZED": {
-        "wire": "hemolyzed",
-        "label": "Hemolyzed",
-        "description": "Red blood cell breakdown detected"
-      },
-      "CLOTTED": {
-        "wire": "clotted",
-        "label": "Clotted",
-        "description": "Sample clotted when anticoagulant was required"
-      },
-      "QNS": {
-        "wire": "qns",
-        "label": "Quantity Not Sufficient (QNS)",
-        "description": "Insufficient volume for testing"
-      },
-      "WRONG_CONTAINER": {
-        "wire": "wrong_container",
-        "label": "Wrong Container",
-        "description": "Collected in incorrect tube type"
-      },
-      "LABELING_ERROR": {
-        "wire": "labeling_error",
-        "label": "Labeling Error",
-        "description": "Missing or incorrect patient identification"
-      },
-      "TRANSPORT_DELAY": {
-        "wire": "transport_delay",
-        "label": "Transport Delay",
-        "description": "Exceeded acceptable transport time"
-      },
-      "CONTAMINATED": {
-        "wire": "contaminated",
-        "label": "Contaminated",
-        "description": "Visible contamination present"
-      },
-      "LIPEMIC": {
-        "wire": "lipemic",
-        "label": "Lipemic",
-        "description": "Lipemia detected (fatty/milky appearance)"
-      },
-      "ICTERIC": {
-        "wire": "icteric",
-        "label": "Icteric",
-        "description": "Icterus detected (yellowish discoloration)"
-      },
-      "OTHER": {
-        "wire": "other",
-        "label": "Other",
-        "description": "Other reason (specify in notes)"
-      }
-    }
-  },
   "TestStatus": {
     "type": "string",
     "members": {

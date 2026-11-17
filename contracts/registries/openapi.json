@@ -10619,22 +10619,6 @@
         ],
         "title": "RejectionCriterionItem"
       },
-      "RejectionReason": {
-        "type": "string",
-        "enum": [
-          "hemolyzed",
-          "clotted",
-          "qns",
-          "wrong_container",
-          "labeling_error",
-          "transport_delay",
-          "contaminated",
-          "lipemic",
-          "icteric",
-          "other"
-        ],
-        "title": "RejectionReason"
-      },
       "Relationship": {
         "type": "string",
         "enum": [
@@ -11113,7 +11097,7 @@
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/RejectionReason"
+                  "type": "string"
                 },
                 "type": "array"
               },

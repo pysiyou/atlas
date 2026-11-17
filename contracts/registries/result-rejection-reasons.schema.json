@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org",
+  "title": "Atlas result validation rejection reasons registry",
+  "$id": "https://atlas.local",
+  "type": "object",
+  "required": ["reasons"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/resultRejectionReason" }
+    }
+  },
+  "definitions": {
+    "rejectionReasonId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 1
+    },
+    "resultRejectionReason": {
+      "type": "object",
+      "required": ["id", "code", "label", "stage"],
+      "properties": {
+        "id": { "$ref": "#/definitions/rejectionReasonId" },
+        "code": {
+          "type": "string",
+          "description": "Standardized HL7 ObservationInterpretation (v2-0078/v3) / HL7 v2-0085 / LOINC AnswerList code"
+        },
+        "loinc_answer_id": {
+          "type": "string",
+          "pattern": "^LA[0-9]+-[0-9]$"
+        },
+        "label": { "type": "string", "minLength": 1 },
+        "label_it": { "type": "string" },
+        "description": { "type": "string" },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "analytical_qc",
+            "linearity_interference",
+            "delta_check",
+            "critical_panic",
+            "clinical_review"
+          ]
+        },
+        "blocks_autoverification": { "type": "boolean", "default": true }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

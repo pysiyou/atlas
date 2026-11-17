@@ -3017,11 +3017,6 @@ export interface components {
             domain: string;
         };
         /**
-         * RejectionReason
-         * @enum {string}
-         */
-        RejectionReason: "hemolyzed" | "clotted" | "qns" | "wrong_container" | "labeling_error" | "transport_delay" | "contaminated" | "lipemic" | "icteric" | "other";
-        /**
          * Relationship
          * @enum {string}
          */
@@ -3154,7 +3149,7 @@ export interface components {
             /** Remainingvolume */
             remainingVolume?: number | null;
             /** Qualityissues */
-            qualityIssues?: components["schemas"]["RejectionReason"][] | null;
+            qualityIssues?: string[] | null;
             /** Qualitynotes */
             qualityNotes?: string | null;
             /** Rejectedat */

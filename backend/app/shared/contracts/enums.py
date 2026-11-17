@@ -64,18 +64,6 @@ class ContainerTopColor(str, enum.Enum):
     ORANGE = "orange"
     CLEAR = "clear"
 
-class RejectionReason(str, enum.Enum):
-    HEMOLYZED = "hemolyzed"
-    CLOTTED = "clotted"
-    QNS = "qns"
-    WRONG_CONTAINER = "wrong_container"
-    LABELING_ERROR = "labeling_error"
-    TRANSPORT_DELAY = "transport_delay"
-    CONTAMINATED = "contaminated"
-    LIPEMIC = "lipemic"
-    ICTERIC = "icteric"
-    OTHER = "other"
-
 class TestStatus(str, enum.Enum):
     PENDING = "pending"
     SAMPLE_COLLECTED = "sample-collected"

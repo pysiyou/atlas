@@ -2,7 +2,8 @@
 Validate rejection reasons against orderable-tests / analyte-catalog rejection criteria.
 
 Runtime checks use persisted ``OrderableTest`` rows (synced from contracts). Contract
-registry ids are validated in CI via ``scripts/validate-catalog.mjs``.
+registry ids are validated in CI via ``scripts/validate-catalog.mjs`` against
+``sample-rejection-reasons.json`` (pre-analytical) and ``result-rejection-reasons.json`` (validation).
 """
 from __future__ import annotations
 

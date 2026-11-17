@@ -54,7 +54,7 @@ class Sample(Base):
     remainingVolume = Column("remaining_volume", Float, nullable=True)
 
     # Quality assessment
-    qualityIssues = Column("quality_issues", JSON, nullable=True)  # Array of RejectionReason
+    qualityIssues = Column("quality_issues", JSON, nullable=True)  # Registry reason ids
     qualityNotes = Column("quality_notes", String, nullable=True)
 
     # Rejection info (only when status = rejected)

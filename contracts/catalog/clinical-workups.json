@@ -2,51 +2,336 @@
   "$schema": "./clinical-workups.schema.json",
   "workups": [
     {
-      "id": "ANEMIA",
-      "name": "Anemia Workup",
-      "description": "Routine anemia evaluation: CBC, iron studies, ferritin, B12, and folate.",
-      "test_codes": [
-        "CBC",
-        "IRONP",
-        "FERR",
-        "B12",
-        "FOL"
-      ]
-    },
-    {
-      "id": "TFT",
-      "name": "Thyroid Function Panel",
-      "description": "TSH with free T4 and free T3.",
-      "test_codes": [
-        "TSH",
-        "FT4",
-        "FT3"
-      ]
-    },
-    {
       "id": "ACS",
       "name": "Acute Coronary Syndrome Panel",
       "description": "Cardiac biomarkers and supporting labs for ACS evaluation.",
       "test_codes": [
-        "TROP",
-        "CK",
+        "BMP",
         "BNP",
         "CBC",
-        "BMP",
+        "CK",
+        "CKMB",
         "COAG",
-        "DDIM"
+        "CTNI",
+        "LDH"
       ]
     },
     {
-      "id": "METAB",
-      "name": "Metabolic Health Panel",
-      "description": "Metabolic screening: CMP, lipids, HbA1c, uric acid, and TSH.",
+      "id": "ANEMIA",
+      "name": "Anemia Workup Panel",
+      "description": "Routine anemia evaluation: CBC, iron studies, ferritin, B12, and folate.",
       "test_codes": [
+        "B12",
+        "CBC",
+        "FE",
+        "FERR",
+        "FOL",
+        "HBELEC",
+        "IRONP",
+        "RETIC",
+        "TIBC"
+      ]
+    },
+    {
+      "id": "AUTOIMM",
+      "name": "Autoimmune Serology Panel",
+      "description": "ANA, RF, anti-CCP, complement, and immunoglobulins.",
+      "test_codes": [
+        "ACCP",
+        "ANA",
+        "C3",
+        "C4",
+        "IGA",
+        "IGG",
+        "IGM",
+        "RF"
+      ]
+    },
+    {
+      "id": "BONE",
+      "name": "Bone Metabolism Panel",
+      "description": "",
+      "test_codes": [
+        "CA",
+        "MG",
+        "PO4",
+        "VITD"
+      ]
+    },
+    {
+      "id": "CMP",
+      "name": "Metabolic Panel",
+      "description": "",
+      "test_codes": [
+        "ALB",
+        "ALP",
+        "ALT",
+        "AST",
+        "BUN",
+        "CA",
+        "CL",
+        "CREA",
+        "GLU",
+        "HCO3",
+        "NA",
+        "POT",
+        "TBIL",
+        "TP"
+      ]
+    },
+    {
+      "id": "COAG",
+      "name": "Coagulation Panel",
+      "description": "",
+      "test_codes": [
+        "APTT",
+        "ATIII",
+        "FIB"
+      ]
+    },
+    {
+      "id": "COAGUL",
+      "name": "Coagulation Workup",
+      "description": "PT/INR, aPTT, fibrinogen, D-dimer, and antithrombin.",
+      "test_codes": [
+        "APTT",
+        "ATIII",
+        "COAG",
+        "FIB"
+      ]
+    },
+    {
+      "id": "COLON",
+      "name": "Colon Cancer Markers",
+      "description": "",
+      "test_codes": [
+        "CEA",
+        "FOOB"
+      ]
+    },
+    {
+      "id": "COVID",
+      "name": "COVID-19 Diagnosis Panel",
+      "description": "",
+      "test_codes": [
+        "COVIDAG",
+        "COVIDPCR"
+      ]
+    },
+    {
+      "id": "DIARRHEA",
+      "name": "Diarrhea Workup Panel",
+      "description": "",
+      "test_codes": [
+        "FOOB",
+        "SCULT",
+        "STOOL"
+      ]
+    },
+    {
+      "id": "DIC",
+      "name": "DIC Panel",
+      "description": "",
+      "test_codes": [
+        "APTT",
+        "ATIII",
+        "DDIMER",
+        "FIB"
+      ]
+    },
+    {
+      "id": "DMGMT",
+      "name": "Diabetes Management Panel",
+      "description": "",
+      "test_codes": [
+        "GLU",
+        "HBA1C",
+        "UALB"
+      ]
+    },
+    {
+      "id": "DMPANEL",
+      "name": "Diabetes Screening Panel",
+      "description": "",
+      "test_codes": [
+        "GLU",
+        "HBA1C",
+        "RBS"
+      ]
+    },
+    {
+      "id": "DMSCR",
+      "name": "Diabetes Screening",
+      "description": "",
+      "test_codes": [
+        "GLU",
+        "HBA1C",
+        "RBS"
+      ]
+    },
+    {
+      "id": "DRTB",
+      "name": "Drug-Resistant TB Panel",
+      "description": "",
+      "test_codes": [
+        "AFB",
+        "XPERT"
+      ]
+    },
+    {
+      "id": "FERTIL",
+      "name": "Fertility Hormone Panel",
+      "description": "FSH, LH, estradiol, progesterone, prolactin, and testosterone.",
+      "test_codes": [
+        "BHCG",
+        "E2",
+        "FSH",
+        "LH",
+        "PRL",
+        "PROG",
+        "TESTO"
+      ]
+    },
+    {
+      "id": "FEVER",
+      "name": "Fever Workup Panel",
+      "description": "",
+      "test_codes": [
+        "BCULT",
+        "CHIKV",
+        "CRP",
+        "DENGUE",
+        "LAC",
+        "MALRDT",
+        "MALSMEAR",
+        "YF"
+      ]
+    },
+    {
+      "id": "GENCHK",
+      "name": "General Health Check",
+      "description": "Broad preventive screening profile.",
+      "test_codes": [
+        "CBC",
         "CMP",
         "LIPID",
-        "HBA1C",
-        "URIC",
-        "TSH"
+        "TSH",
+        "VITD"
+      ]
+    },
+    {
+      "id": "HBPATH",
+      "name": "Hemoglobinopathy Panel",
+      "description": "",
+      "test_codes": [
+        "CBC",
+        "HBELEC",
+        "SICKLE"
+      ]
+    },
+    {
+      "id": "HEMFULL",
+      "name": "Complete Hematology Panel",
+      "description": "",
+      "test_codes": [
+        "CBC",
+        "ESR",
+        "RETIC"
+      ]
+    },
+    {
+      "id": "HEMOLYS",
+      "name": "Hemolysis Workup Panel",
+      "description": "",
+      "test_codes": [
+        "CBC",
+        "CK",
+        "DAT",
+        "G6PD",
+        "LDH",
+        "RETIC"
+      ]
+    },
+    {
+      "id": "HEP",
+      "name": "Hepatitis Panel",
+      "description": "",
+      "test_codes": [
+        "AHBC",
+        "AHBS",
+        "AHCV",
+        "HBEAG",
+        "HBSAG",
+        "HBVDNA"
+      ]
+    },
+    {
+      "id": "HEPATIT",
+      "name": "Hepatitis Serology Panel",
+      "description": "HBV and HCV serologic screening.",
+      "test_codes": [
+        "AHBC",
+        "AHBS",
+        "AHCV",
+        "HBSAG",
+        "LFT"
+      ]
+    },
+    {
+      "id": "HIV",
+      "name": "HIV Testing Panel",
+      "description": "",
+      "test_codes": [
+        "HIVAGAB",
+        "HIVCONF"
+      ]
+    },
+    {
+      "id": "HIVMGMT",
+      "name": "HIV Management Panel",
+      "description": "",
+      "test_codes": [
+        "CD4",
+        "HBVDNA",
+        "HIVCONF",
+        "HIVVL"
+      ]
+    },
+    {
+      "id": "IMMCOMP",
+      "name": "Immunocompromised Patient Workup",
+      "description": "",
+      "test_codes": [
+        "CBC",
+        "CD4",
+        "CMV",
+        "HIVVL"
+      ]
+    },
+    {
+      "id": "INFACUTE",
+      "name": "Acute Infection Workup",
+      "description": "",
+      "test_codes": [
+        "BCULT",
+        "CBC",
+        "CRP",
+        "EBV",
+        "LAC",
+        "MALRDT",
+        "PROCAL"
+      ]
+    },
+    {
+      "id": "INFECT",
+      "name": "Infection Workup Panel",
+      "description": "",
+      "test_codes": [
+        "BCULT",
+        "CRP",
+        "LAC",
+        "PROCAL",
+        "UCULT"
       ]
     },
     {
@@ -60,15 +345,303 @@
       ]
     },
     {
-      "id": "GENCHK",
-      "name": "General Health Check",
-      "description": "Broad preventive screening profile.",
+      "id": "INFLAMM",
+      "name": "Inflammatory Markers Panel",
+      "description": "",
+      "test_codes": [
+        "CRP",
+        "ESR"
+      ]
+    },
+    {
+      "id": "IRON",
+      "name": "Iron Studies Panel",
+      "description": "",
+      "test_codes": [
+        "FE",
+        "FERR",
+        "TIBC"
+      ]
+    },
+    {
+      "id": "LACTATE",
+      "name": "Lactic Acidosis Panel",
+      "description": "",
+      "test_codes": [
+        "GLU",
+        "LAC"
+      ]
+    },
+    {
+      "id": "LFT",
+      "name": "Liver Function Panel",
+      "description": "",
+      "test_codes": [
+        "ALB",
+        "ALP",
+        "ALT",
+        "AST",
+        "DBIL",
+        "GGT",
+        "LDH",
+        "TBIL"
+      ]
+    },
+    {
+      "id": "LIPID",
+      "name": "Lipid Panel",
+      "description": "",
+      "test_codes": [
+        "CHOL",
+        "HDL",
+        "LDL",
+        "TG"
+      ]
+    },
+    {
+      "id": "LYTES",
+      "name": "Electrolyte Panel",
+      "description": "",
+      "test_codes": [
+        "CL",
+        "HCO3",
+        "NA",
+        "POT"
+      ]
+    },
+    {
+      "id": "MACANEM",
+      "name": "Macrocytic Anemia Workup Panel",
+      "description": "",
+      "test_codes": [
+        "B12",
+        "FOL",
+        "HBA1C",
+        "RETIC"
+      ]
+    },
+    {
+      "id": "MDIFF",
+      "name": "Manual Differential Panel",
+      "description": "",
       "test_codes": [
         "CBC",
+        "PBS"
+      ]
+    },
+    {
+      "id": "METAB",
+      "name": "Metabolic Health Panel",
+      "description": "Metabolic screening: CMP, lipids, HbA1c, uric acid, and TSH.",
+      "test_codes": [
         "CMP",
+        "HBA1C",
         "LIPID",
+        "TSH"
+      ]
+    },
+    {
+      "id": "MINERAL",
+      "name": "Mineral Panel",
+      "description": "",
+      "test_codes": [
+        "CA",
+        "MG",
+        "PO4"
+      ]
+    },
+    {
+      "id": "MPROTEIN",
+      "name": "Monoclonal Protein Panel",
+      "description": "",
+      "test_codes": [
+        "SPEP"
+      ]
+    },
+    {
+      "id": "NUTRI",
+      "name": "Nutritional Assessment Panel",
+      "description": "",
+      "test_codes": [
+        "ALB",
+        "B12",
+        "FOL",
+        "PAB",
+        "TP"
+      ]
+    },
+    {
+      "id": "PANC",
+      "name": "Acute Pancreatitis Panel",
+      "description": "",
+      "test_codes": [
+        "AMY",
+        "LAC",
+        "LIP"
+      ]
+    },
+    {
+      "id": "PREG",
+      "name": "Pregnancy Panel",
+      "description": "",
+      "test_codes": [
+        "BHCG",
+        "UHCG"
+      ]
+    },
+    {
+      "id": "PREGSER",
+      "name": "Pregnancy Serology Panel",
+      "description": "",
+      "test_codes": [
+        "CMV",
+        "HIVAGAB",
+        "RUBELLA",
+        "TOXO"
+      ]
+    },
+    {
+      "id": "PRENATAL",
+      "name": "Prenatal Serology Panel",
+      "description": "CBC, rubella, HIV, hepatitis B, TSH, and urine protein screening.",
+      "test_codes": [
+        "AHBC",
+        "AHBS",
+        "BHCG",
+        "CBC",
+        "HBSAG",
+        "HIVAGAB",
+        "RUBELLA",
+        "TOXO",
         "TSH",
-        "VITD"
+        "UA"
+      ]
+    },
+    {
+      "id": "PSASCR",
+      "name": "Prostate Cancer Screening",
+      "description": "",
+      "test_codes": [
+        "PSA"
+      ]
+    },
+    {
+      "id": "RENAL",
+      "name": "Renal Panel",
+      "description": "",
+      "test_codes": [
+        "BUN",
+        "CREA",
+        "EGFR",
+        "UA",
+        "UALB"
+      ]
+    },
+    {
+      "id": "SEPSIS",
+      "name": "Sepsis Workup Panel",
+      "description": "",
+      "test_codes": [
+        "BCULT",
+        "BNP",
+        "CRP",
+        "LAC",
+        "PROCAL"
+      ]
+    },
+    {
+      "id": "STI",
+      "name": "STI Panel",
+      "description": "",
+      "test_codes": [
+        "HIVAGAB",
+        "RPR",
+        "TPHA"
+      ]
+    },
+    {
+      "id": "SYPH",
+      "name": "Syphilis Diagnosis Panel",
+      "description": "",
+      "test_codes": [
+        "RPR",
+        "TPHA"
+      ]
+    },
+    {
+      "id": "TB",
+      "name": "TB Diagnosis Panel",
+      "description": "",
+      "test_codes": [
+        "AFB",
+        "BCULT",
+        "XPERT"
+      ]
+    },
+    {
+      "id": "TFT",
+      "name": "Thyroid Function Panel",
+      "description": "TSH with free T4 and free T3.",
+      "test_codes": [
+        "FT3",
+        "FT4",
+        "TSH"
+      ]
+    },
+    {
+      "id": "TXFUSE",
+      "name": "Transfusion Screening Panel",
+      "description": "",
+      "test_codes": [
+        "ABO",
+        "DAT",
+        "XMATCH"
+      ]
+    },
+    {
+      "id": "UAPANEL",
+      "name": "Routine Urinalysis Panel",
+      "description": "",
+      "test_codes": [
+        "UA"
+      ]
+    },
+    {
+      "id": "ULCER",
+      "name": "Gastric Ulcer Workup",
+      "description": "",
+      "test_codes": [
+        "HPYLORI",
+        "STOOL"
+      ]
+    },
+    {
+      "id": "URINE",
+      "name": "Urinalysis Workup",
+      "description": "Complete urinalysis with microalbumin/creatinine ratio.",
+      "test_codes": [
+        "UA",
+        "UACR",
+        "UALB"
+      ]
+    },
+    {
+      "id": "UTI",
+      "name": "UTI Management Panel",
+      "description": "",
+      "test_codes": [
+        "UA",
+        "UCULT",
+        "UQUANT"
+      ]
+    },
+    {
+      "id": "VTE",
+      "name": "Thromboembolism Panel",
+      "description": "",
+      "test_codes": [
+        "APTT",
+        "DDIMER"
       ]
     }
   ]

@@ -7,7 +7,6 @@ from app.shared.contracts.enums import (
     ContainerTopColor,
     ContainerType,
     PriorityLevel,
-    RejectionReason,
     SampleStatus,
     SampleType,
 )
@@ -49,7 +48,7 @@ class SampleResponse(SampleBase):
     actualContainerColor: ContainerTopColor | None = None
     collectionNotes: str | None = None
     remainingVolume: float | None = None
-    qualityIssues: list[RejectionReason] | None = None
+    qualityIssues: list[str] | None = None
     qualityNotes: str | None = None
     rejectedAt: datetime | None = None
     rejectedBy: str | None = None

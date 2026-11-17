@@ -16,7 +16,6 @@ import type {
   SampleType,
   ContainerType,
   ContainerTopColor,
-  RejectionReason,
   UserRole,
 } from '../generated/enums';
 
@@ -332,7 +331,7 @@ export interface CollectedSample extends BaseSample {
   actualContainerColor: ContainerTopColor;
   collectionNotes?: string;
   remainingVolume?: number;
-  qualityIssues?: RejectionReason[];
+  qualityIssues?: RejectionReasonId[];
   qualityNotes?: string;
 }
 

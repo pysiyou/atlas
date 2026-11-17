@@ -21,13 +21,30 @@ const addFormats = require('ajv-formats');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const catalogDir = path.join(root, 'contracts', 'catalog');
-const rejectionReasonsPath = path.join(
+const sampleRejectionPath = path.join(
   root,
   'contracts',
   'registries',
-  'rejection-reasons.json',
+  'sample-rejection-reasons.json',
 );
-
+const resultRejectionPath = path.join(
+  root,
+  'contracts',
+  'registries',
+  'result-rejection-reasons.json',
+);
+const sampleRejectionSchemaPath = path.join(
+  root,
+  'contracts',
+  'registries',
+  'sample-rejection-reasons.schema.json',
+);
+const resultRejectionSchemaPath = path.join(
+  root,
+  'contracts',
+  'registries',
+  'result-rejection-reasons.schema.json',
+);
 const LOINC_PATTERN = /^[0-9]{1,5}-[0-9]$/;
 
 const paths = {
@@ -306,13 +323,19 @@ function runRequiredFixtureChecks(docs) {
  * @returns {number}
  */
 function runRejectionReasonChecks(docs) {
-  if (!fs.existsSync(rejectionReasonsPath)) {
-    console.warn('rejection-reasons.json not found; skipping rejection FK checks');
+  if (!fs.existsSync(sampleRejectionPath) || !fs.existsSync(resultRejectionPath)) {
+    console.warn('rejection registries not found; skipping rejection FK checks');
     return 0;
   }
-  const registry = readJson(rejectionReasonsPath);
-  const validIds = new Set(
-    (registry.reasons ?? [])
+  const sampleRegistry = readJson(sampleRejectionPath);
+  const resultRegistry = readJson(resultRejectionPath);
+  const sampleIds = new Set(
+    (sampleRegistry.reasons ?? [])
+      .map(r => r?.id)
+      .filter(id => typeof id === 'string'),
+  );
+  const resultIds = new Set(
+    (resultRegistry.reasons ?? [])
       .map(r => r?.id)
       .filter(id => typeof id === 'string'),
   );
@@ -321,13 +344,13 @@ function runRejectionReasonChecks(docs) {
    * @param {unknown} list
    * @param {string} ctx
    */
-  function checkList(list, ctx) {
+  function checkList(list, ctx, allowedIds) {
     let err = 0;
     if (!Array.isArray(list)) {
       return 0;
     }
     for (const id of list) {
-      if (typeof id !== 'string' || !validIds.has(id)) {
+      if (typeof id !== 'string' || !allowedIds.has(id)) {
         console.error(`${ctx}: unknown rejection reason id "${id}"`);
         err += 1;
       }
@@ -338,24 +361,34 @@ function runRejectionReasonChecks(docs) {
   let errors = 0;
   for (const test of docs.tests.tests ?? []) {
     const code = typeof test.test_code === 'string' ? test.test_code : '(unknown)';
-    errors += checkList(test.validation_rejection_criteria, `${code} validation_rejection_criteria`);
+    errors += checkList(
+      test.validation_rejection_criteria,
+      `${code} validation_rejection_criteria`,
+      resultIds,
+    );
     const sample = test.sample;
     if (sample && typeof sample === 'object') {
       errors += checkList(
         /** @type {{ rejection_criteria?: unknown[] }} */ (sample).rejection_criteria,
         `${code} sample.rejection_criteria`,
+        sampleIds,
       );
     }
   }
   for (const analyte of docs.analytes.analytes ?? []) {
     const code =
       typeof analyte.analyte_code === 'string' ? analyte.analyte_code : '(unknown)';
-    errors += checkList(analyte.validation_rejection_criteria, `${code} validation_rejection_criteria`);
+    errors += checkList(
+      analyte.validation_rejection_criteria,
+      `${code} validation_rejection_criteria`,
+      resultIds,
+    );
     const sample = analyte.sample;
     if (sample && typeof sample === 'object') {
       errors += checkList(
         /** @type {{ rejection_criteria?: unknown[] }} */ (sample).rejection_criteria,
         `${code} sample.rejection_criteria`,
+        sampleIds,
       );
     }
   }
@@ -391,6 +424,25 @@ function main() {
   errors += runCatalogIntegrityChecks({ analytes, tests, workups });
   errors += runRequiredFixtureChecks({ analytes, tests });
   errors += runRejectionReasonChecks({ analytes, tests });
+
+  if (fs.existsSync(sampleRejectionSchemaPath) && fs.existsSync(sampleRejectionPath)) {
+    const sampleSchema = readJson(sampleRejectionSchemaPath);
+    errors += validateSchemaMeta(ajv, 'sample-rejection-reasons.schema.json', sampleSchema);
+    errors += validateAgainstSchema(
+      'sample-rejection-reasons.json',
+      compileDraft07(sampleSchema),
+      readJson(sampleRejectionPath),
+    );
+  }
+  if (fs.existsSync(resultRejectionSchemaPath) && fs.existsSync(resultRejectionPath)) {
+    const resultSchema = readJson(resultRejectionSchemaPath);
+    errors += validateSchemaMeta(ajv, 'result-rejection-reasons.schema.json', resultSchema);
+    errors += validateAgainstSchema(
+      'result-rejection-reasons.json',
+      compileDraft07(resultSchema),
+      readJson(resultRejectionPath),
+    );
+  }
 
   if (errors > 0) {
     console.error(`catalog validation failed with ${errors} error(s)`);

@@ -1,0 +1,576 @@
+{
+  "$schema": "./sample-rejection-reasons.schema.json",
+  "loinc_discovery": {
+    "loinc_terms_matched": 1004,
+    "answer_lists": 13,
+    "specimen_lists": 7,
+    "result_lists": 6
+  },
+  "reasons": [
+    {
+      "id": "clotted",
+      "code": "clotted",
+      "label": "Clotted sample",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "contaminated",
+      "code": "contaminated",
+      "label": "Contaminated sample",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "hemolyzed_mild",
+      "code": "HEMOLYZED_MI",
+      "label": "Hemolyzed - Mild",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "hemolyzed_moderate",
+      "code": "HEMOLYZED_MO",
+      "label": "Hemolyzed - Moderate",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "hemolyzed_severe",
+      "code": "hemolyzed",
+      "label": "Hemolyzed - Severe",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "icteric",
+      "code": "icteric",
+      "label": "Icteric sample",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "la_la10058_8",
+      "code": "LA10058-8",
+      "label": "Patient refused",
+      "loinc_answer_id": "LA10058-8",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL5563-3",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12432_3",
+      "code": "LA12432-3",
+      "label": "Acceptable",
+      "loinc_answer_id": "LA12432-3",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12433_1",
+      "code": "LA12433-1",
+      "label": "No sample received",
+      "loinc_answer_id": "LA12433-1",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12435_6",
+      "code": "LA12435-6",
+      "label": "Specimen appears clotted or layered",
+      "loinc_answer_id": "LA12435-6",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12441_4",
+      "code": "LA12441-4",
+      "label": "Sample too old",
+      "loinc_answer_id": "LA12441-4",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12682_3",
+      "code": "LA12682-3",
+      "label": "Specimen appears scratched or abraded",
+      "loinc_answer_id": "LA12682-3",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12683_1",
+      "code": "LA12683-1",
+      "label": "Specimen not dry before mailing",
+      "loinc_answer_id": "LA12683-1",
+      "category": "stability_transport",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12684_9",
+      "code": "LA12684-9",
+      "label": "Specimen appears supersaturated",
+      "loinc_answer_id": "LA12684-9",
+      "category": "container_volume",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12685_6",
+      "code": "LA12685-6",
+      "label": "Specimen appears diluted, discolored or contaminated",
+      "loinc_answer_id": "LA12685-6",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12686_4",
+      "code": "LA12686-4",
+      "label": "Specimen exhibits serum rings",
+      "loinc_answer_id": "LA12686-4",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la12687_2",
+      "code": "LA12687-2",
+      "label": "No blood",
+      "loinc_answer_id": "LA12687-2",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la16389_1",
+      "code": "LA16389-1",
+      "label": "Accepted",
+      "loinc_answer_id": "LA16389-1",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL1574-4",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la16390_9",
+      "code": "LA16390-9",
+      "label": "Rejected",
+      "loinc_answer_id": "LA16390-9",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL1574-4",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19732_9",
+      "code": "LA19732-9",
+      "label": "Clear",
+      "loinc_answer_id": "LA19732-9",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL6542-6",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20623_7",
+      "code": "LA20623-7",
+      "label": "Specimen damaged during transport",
+      "loinc_answer_id": "LA20623-7",
+      "category": "stability_transport",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20624_5",
+      "code": "LA20624-5",
+      "label": "Specimen received in sealed plastic container",
+      "loinc_answer_id": "LA20624-5",
+      "category": "identification_labeling",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20625_2",
+      "code": "281268007",
+      "label": "Specimen quantity insufficient due to incomplete saturation (blood did not soak through paper)",
+      "loinc_answer_id": "LA20625-2",
+      "category": "container_volume",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20626_0",
+      "code": "281268007",
+      "label": "Specimen quantity insufficient because blood did not completely fill specimen circles",
+      "loinc_answer_id": "LA20626-0",
+      "category": "container_volume",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20627_8",
+      "code": "LA20627-8",
+      "label": "Specimen has uneven saturation",
+      "loinc_answer_id": "LA20627-8",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20628_6",
+      "code": "LA20628-6",
+      "label": "Specimen not eluting",
+      "loinc_answer_id": "LA20628-6",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20629_4",
+      "code": "LA20629-4",
+      "label": "Unsuitable for other reasons",
+      "loinc_answer_id": "LA20629-4",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20630_2",
+      "code": "LA20630-2",
+      "label": "Testing of this specimen indicates more than one source of blood is present on the filter paper card",
+      "loinc_answer_id": "LA20630-2",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL832-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20631_0",
+      "code": "LA20631-0",
+      "label": "Demographic information is incomplete or invalid",
+      "loinc_answer_id": "LA20631-0",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20632_8",
+      "code": "LA20632-8",
+      "label": "Demographic information on filter paper does not match electronically submitted information",
+      "loinc_answer_id": "LA20632-8",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20633_6",
+      "code": "LA20633-6",
+      "label": "Serial number on filter paper does not match serial number on patient information form",
+      "loinc_answer_id": "LA20633-6",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20634_4",
+      "code": "LA20634-4",
+      "label": "Specimen submitted on expired filter paper",
+      "loinc_answer_id": "LA20634-4",
+      "category": "stability_transport",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20635_1",
+      "code": "LA20635-1",
+      "label": "Sample collected too early",
+      "loinc_answer_id": "LA20635-1",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20636_9",
+      "code": "LA20636-9",
+      "label": "Specimen unsatisfactory due to delay in transit",
+      "loinc_answer_id": "LA20636-9",
+      "category": "stability_transport",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20637_7",
+      "code": "LA20637-7",
+      "label": "Specimen results inconsistent",
+      "loinc_answer_id": "LA20637-7",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20638_5",
+      "code": "LA20638-5",
+      "label": "Assay interference",
+      "loinc_answer_id": "LA20638-5",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la20639_3",
+      "code": "LA20639-3",
+      "label": "Unable to analyze specimen due to laboratory accident",
+      "loinc_answer_id": "LA20639-3",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL2768-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30878_5",
+      "code": "LA30878-5",
+      "label": "Physical limitation",
+      "loinc_answer_id": "LA30878-5",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL5563-3",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30879_3",
+      "code": "LA30879-3",
+      "label": "Participant ill or emergency",
+      "loinc_answer_id": "LA30879-3",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL5563-3",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30880_1",
+      "code": "LA30880-1",
+      "label": "Collection supplies malfunctioned",
+      "loinc_answer_id": "LA30880-1",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL5563-3",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30881_9",
+      "code": "LA30881-9",
+      "label": "Language issue",
+      "loinc_answer_id": "LA30881-9",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL5563-3",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30882_7",
+      "code": "LA30882-7",
+      "label": "No time",
+      "loinc_answer_id": "LA30882-7",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL5563-3",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la33979_8",
+      "code": "LA33979-8",
+      "label": "Hemolyzed",
+      "loinc_answer_id": "LA33979-8",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL6542-6",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la33980_6",
+      "code": "LA33980-6",
+      "label": "Icteric",
+      "loinc_answer_id": "LA33980-6",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL6542-6",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la33981_4",
+      "code": "LA33981-4",
+      "label": "Lactescent",
+      "loinc_answer_id": "LA33981-4",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL6542-6",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la33982_2",
+      "code": "LA33982-2",
+      "label": "Diluted",
+      "loinc_answer_id": "LA33982-2",
+      "category": "container_volume",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL6542-6",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la46_8",
+      "code": "LA46-8",
+      "label": "Other",
+      "loinc_answer_id": "LA46-8",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "loinc_answer_list_id": "LL5563-3",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "labeling_error_mismatch",
+      "code": "labeling_error",
+      "label": "Mislabeled / Patient ID mismatch",
+      "category": "identification_labeling",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "labeling_error_unlabeled",
+      "code": "labeling_error",
+      "label": "Unlabeled sample",
+      "category": "identification_labeling",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "leaked_or_broken_container",
+      "code": "LEAKED_OR_BR",
+      "label": "Leaked or broken container",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "lipemic",
+      "code": "lipemic",
+      "label": "Lipemic sample",
+      "category": "serum_index",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "not_protected_from_light",
+      "code": "NOT_PROTECTE",
+      "label": "Not protected from light",
+      "category": "stability_transport",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "overfilled_tube",
+      "code": "OVERFILLED_T",
+      "label": "Overfilled tube",
+      "category": "container_volume",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "phvs_specimenrejectreason_hl7_2x",
+      "code": "CDC-PHIN",
+      "label": "PHVS_SpecimenRejectReason_HL7_2x",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "description": "LOINC external answer list LL5353-9; values defined at https://phinvads.cdc.gov/vads/ViewValueSet.action?oid=2.16.840.1.114222.4.11.1044",
+      "loinc_answer_list_id": "LL5353-9",
+      "source": "loinc.external_answer_list"
+    },
+    {
+      "id": "qns",
+      "code": "qns",
+      "label": "Insufficient quantity (QNS)",
+      "category": "container_volume",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "specimencondition_hl7_2x",
+      "code": "HL7v2",
+      "label": "SpecimenCondition_HL7_2x",
+      "category": "specimen_integrity",
+      "requires_recollection": true,
+      "description": "LOINC external answer list LL5347-1; values defined at http://terminology.hl7.org/ValueSet/v2-0493",
+      "loinc_answer_list_id": "LL5347-1",
+      "source": "loinc.external_answer_list"
+    },
+    {
+      "id": "transport_delay",
+      "code": "transport_delay",
+      "label": "Transport time exceeded",
+      "category": "stability_transport",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "wrong_container",
+      "code": "wrong_container",
+      "label": "Incorrect container / wrong tube",
+      "category": "identification_labeling",
+      "requires_recollection": true,
+      "description": "Atlas baseline specimen rejection (pre-analytical)",
+      "source": "atlas.seed"
+    }
+  ]
+}

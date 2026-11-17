@@ -1,0 +1,451 @@
+{
+  "$schema": "./result-rejection-reasons.schema.json",
+  "loinc_discovery": {
+    "loinc_terms_matched": 1004,
+    "answer_lists": 13,
+    "result_lists": 6
+  },
+  "reasons": [
+    {
+      "id": "aberrant_clotting_curve_repeat_run",
+      "code": "ABERRANT_CLOTTIN",
+      "label": "Aberrant clotting curve — repeat run",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "ambiguous_identification_repeat_workup",
+      "code": "AMBIGUOUS_IDENTI",
+      "label": "Ambiguous identification — repeat workup",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "analyzer_flag_repeat_run_on_same_sample",
+      "code": "ANALYZER_FLAG_RE",
+      "label": "Analyzer flag — repeat run on same sample",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "critical_value_repeat_for_verification",
+      "code": "CRITICAL_VALUE_R",
+      "label": "Critical value — repeat for verification",
+      "stage": "critical_panic",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "delta_check_failure_repeat_run",
+      "code": "DELTA_CHECK_FAIL",
+      "label": "Delta check failure — repeat run",
+      "stage": "delta_check",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "equivocal_result_repeat_run",
+      "code": "EQUIVOCAL_RESULT",
+      "label": "Equivocal result — repeat run",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "fasting_requirements_not_met",
+      "code": "FASTING_REQUIREM",
+      "label": "Fasting requirements not met",
+      "stage": "linearity_interference",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "indeterminate_result_repeat_run",
+      "code": "INDETERMINATE_RE",
+      "label": "Indeterminate result — repeat run",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "instrument_error_repeat_run",
+      "code": "INSTRUMENT_ERROR",
+      "label": "Instrument error — repeat run",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "insufficient_growth_repeat_incubation",
+      "code": "INSUFFICIENT_GRO",
+      "label": "Insufficient growth — repeat incubation",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "invalid_coagulation_control_repeat_run",
+      "code": "INVALID_COAGULAT",
+      "label": "Invalid coagulation control — repeat run",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "invalid_device_expired_cartridge",
+      "code": "INVALID_DEVICE_E",
+      "label": "Invalid device / expired cartridge",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "invalid_or_expired_reagent_repeat_run",
+      "code": "INVALID_OR_EXPIR",
+      "label": "Invalid or expired reagent — repeat run",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "la_la11883_8",
+      "code": "LA11883-8",
+      "label": "Not detected",
+      "loinc_answer_id": "LA11883-8",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5066-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la11885_3",
+      "code": "42425007",
+      "label": "Equivocal",
+      "loinc_answer_id": "LA11885-3",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5066-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la131_5",
+      "code": "0",
+      "label": "No pain",
+      "loinc_answer_id": "LA131-5",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL6562-4",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la135_6",
+      "code": "4-6",
+      "label": "Moderate pain",
+      "loinc_answer_id": "LA135-6",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL6562-4",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la15109_4",
+      "code": "7-10",
+      "label": "Severe pain",
+      "loinc_answer_id": "LA15109-4",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL6562-4",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la15111_0",
+      "code": "1-3",
+      "label": "Mild pain",
+      "loinc_answer_id": "LA15111-0",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL6562-4",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la16931_0",
+      "code": "LA16931-0",
+      "label": "Steroid treatment",
+      "loinc_answer_id": "LA16931-0",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5592-2",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la17976_4",
+      "code": "LA17976-4",
+      "label": "Supplemental oxygen",
+      "loinc_answer_id": "LA17976-4",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5592-2",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19877_2",
+      "code": "LA19877-2",
+      "label": "Consistent with active infectious syphilis",
+      "loinc_answer_id": "LA19877-2",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL2467-0",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19958_0",
+      "code": "LA19958-0",
+      "label": "No serological evidence of current or past infection",
+      "loinc_answer_id": "LA19958-0",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL2467-0",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19959_8",
+      "code": "LA19959-8",
+      "label": "Biological false positive",
+      "loinc_answer_id": "LA19959-8",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL2467-0",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19960_6",
+      "code": "LA19960-6",
+      "label": "Early primary syphilis",
+      "loinc_answer_id": "LA19960-6",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL2467-0",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19961_4",
+      "code": "LA19961-4",
+      "label": "Treated syphilis",
+      "loinc_answer_id": "LA19961-4",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL2467-0",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19962_2",
+      "code": "LA19962-2",
+      "label": "Person from a country endemic for yaws, pinta or bejel",
+      "loinc_answer_id": "LA19962-2",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL2467-0",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19963_0",
+      "code": "LA19963-0",
+      "label": "May represent a biological false positive",
+      "loinc_answer_id": "LA19963-0",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL2467-0",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la19964_8",
+      "code": "LA19964-8",
+      "label": "May be infectious syphilis if no previous history of syphilis",
+      "loinc_answer_id": "LA19964-8",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL2467-0",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la28199_0",
+      "code": "LA28199-0",
+      "label": "Anticoagulant therapy",
+      "loinc_answer_id": "LA28199-0",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5592-2",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la29258_3",
+      "code": "LA29258-3",
+      "label": "Greater than 99th percentile upper reference limit",
+      "loinc_answer_id": "LA29258-3",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5066-7",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30466_9",
+      "code": "LA30466-9",
+      "label": "POSITIVE FOR ONE COPY OF THE FACTOR V LEIDEN (R506Q) MUTATION",
+      "loinc_answer_id": "LA30466-9",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5465-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30467_7",
+      "code": "LA30467-7",
+      "label": "POSITIVE FOR TWO COPIES OF THE FACTOR V LEIDEN (R506Q) MUTATION",
+      "loinc_answer_id": "LA30467-7",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5465-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30468_5",
+      "code": "LA30468-5",
+      "label": "POSITIVE FOR TWO COPIES OF THE FACTOR V LEIDEN (R506Q) VARIANT",
+      "loinc_answer_id": "LA30468-5",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5465-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30469_3",
+      "code": "LA30469-3",
+      "label": "POSITIVE FOR THE HETEROZYGOUS PRESENCE OF THE FACTOR V LEIDEN (R506Q) MUTATION; HETEROZYGOUS FOR THE HR2 POLYMORPHISM.",
+      "loinc_answer_id": "LA30469-3",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5465-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30470_1",
+      "code": "LA30470-1",
+      "label": "POSITIVE FOR THE HOMOZYGOUS PRESENCE OF THE FACTOR V LEIDEN (R506Q) MUTATION. NEGATIVE FOR THE HR2 POLYMORPHISM.",
+      "loinc_answer_id": "LA30470-1",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5465-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la30471_9",
+      "code": "LA30471-9",
+      "label": "POSITIVE FOR ONE COPY OF THE FACTOR V HR2 VARIANT",
+      "loinc_answer_id": "LA30471-9",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5465-1",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la31020_3",
+      "code": "LA31020-3",
+      "label": "IVIG therapy in the past month",
+      "loinc_answer_id": "LA31020-3",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5592-2",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "la_la31021_1",
+      "code": "LA31021-1",
+      "label": "Platelet transfusion in the last 3 days",
+      "loinc_answer_id": "LA31021-1",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "loinc_answer_list_id": "LL5592-2",
+      "source": "loinc.answer_list"
+    },
+    {
+      "id": "leaked_or_broken_container",
+      "code": "LEAKED_OR_BROKEN",
+      "label": "Leaked or broken container",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "not_protected_from_light",
+      "code": "NOT_PROTECTED_FR",
+      "label": "Not protected from light",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "observationinterpretationcodes_hl7_fhir",
+      "code": "HL7 FHIR",
+      "label": "ObservationInterpretationCodes_HL7_FHIR",
+      "stage": "clinical_review",
+      "blocks_autoverification": true,
+      "description": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+      "loinc_answer_list_id": "LL5433-9",
+      "source": "loinc.external_answer_list"
+    },
+    {
+      "id": "overfilled_tube",
+      "code": "OVERFILLED_TUBE",
+      "label": "Overfilled tube",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "platelet_clumps_aggregation_flags_repeat_count",
+      "code": "PLATELET_CLUMPS_",
+      "label": "Platelet clumps / aggregation flags — repeat count",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "procedural_error_during_analysis",
+      "code": "PROCEDURAL_ERROR",
+      "label": "Procedural error during analysis",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    },
+    {
+      "id": "qc_control_failure",
+      "code": "QC_CONTROL_FAILU",
+      "label": "QC / control failure",
+      "stage": "analytical_qc",
+      "blocks_autoverification": true,
+      "description": "Atlas baseline analytical validation rejection",
+      "source": "atlas.seed"
+    }
+  ]
+}
