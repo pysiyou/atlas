@@ -10,12 +10,13 @@ from typing import Any
 
 
 @dataclass
-class HL7ResultItem:
-    """Represents a single result item from an OBX segment"""
+class Hl7ObservationRow:
+    """Single OBX observation before catalog ``analyte_code`` resolution."""
 
-    item_code: str
-    item_name: str
+    observation_code: str
+    observation_name: str
     value: str
+    loinc_code: str | None = None
     units: str | None = None
     reference_range: str | None = None
     abnormal_flag: str | None = None  # H, L, A, etc.
@@ -32,7 +33,7 @@ class HL7AnalyzerResult:
     test_code: str | None = None
     analyzer_id: str | None = None
     observation_datetime: datetime | None = None
-    results: list[HL7ResultItem] = field(default_factory=list)
+    results: list[Hl7ObservationRow] = field(default_factory=list)
     raw_message: str = ""
 
 
@@ -141,7 +142,7 @@ class HL7Parser:
 
         return result
 
-    def _parse_obx(self, obx: list[str]) -> HL7ResultItem | None:
+    def _parse_obx(self, obx: list[str]) -> Hl7ObservationRow | None:
         """Parse an OBX (observation) segment"""
         try:
             # OBX-3: Observation Identifier (code^name)
@@ -150,8 +151,14 @@ class HL7Parser:
                 return None
 
             components = obs_id.split(self.COMPONENT_SEP)
-            item_code = components[0] if len(components) > 0 else ""
-            item_name = components[1] if len(components) > 1 else item_code
+            observation_code = components[0] if len(components) > 0 else ""
+            observation_name = components[1] if len(components) > 1 else observation_code
+            coding_system = components[2] if len(components) > 2 else ""
+            loinc_code: str | None = None
+            if coding_system.upper() == "LN":
+                loinc_code = observation_code
+            elif len(components) > 3 and (components[3] or "").strip():
+                loinc_code = components[3].strip()
 
             # OBX-5: Observation Value
             value = self._get_field(obx, 5) or ""
@@ -168,10 +175,11 @@ class HL7Parser:
             # OBX-11: Observation Result Status
             status = self._get_field(obx, 11) or "F"
 
-            return HL7ResultItem(
-                item_code=item_code,
-                item_name=item_name,
+            return Hl7ObservationRow(
+                observation_code=observation_code,
+                observation_name=observation_name,
                 value=value,
+                loinc_code=loinc_code,
                 units=units,
                 reference_range=ref_range,
                 abnormal_flag=abnormal_flag,
@@ -225,70 +233,84 @@ class AnalyzerResultAdapter:
     """
     Adapter to convert HL7 parsed results to internal format.
 
-    Maps analyzer result items to internal test catalog items.
+    Maps analyzer observations to canonical ``analyte_code`` keys via ``CatalogAnalyteService``.
     """
 
+    def __init__(self, catalog_resolver: Any | None = None, *, test_code: str | None = None) -> None:
+        self._resolver = catalog_resolver
+        self._test_code = test_code
+
     def to_internal_format(
-        self, analyzer_result: HL7AnalyzerResult, test_result_items: list[dict[str, Any]]
+        self, analyzer_result: HL7AnalyzerResult, analyte_definitions: list[dict[str, Any]]
     ) -> dict[str, Any]:
         """
         Convert analyzer result to internal result format.
 
-        Args:
-            analyzer_result: Parsed HL7 result
-            test_result_items: Result item definitions from test catalog
-
         Returns:
-            Dict of item_code -> value suitable for storing in OrderTest.results
+            Dict of ``analyte_code`` -> value suitable for storing in ``OrderTest.results``.
         """
-        results = {}
+        results: dict[str, Any] = {}
+        test_code = self._test_code or analyzer_result.test_code
 
-        # Create a mapping of analyzer codes to internal codes
-        item_code_map = {}
-        for item in test_result_items:
-            item_code = item.get("item_code", "")
-            # Map by exact match or common aliases
-            item_code_map[item_code] = item_code
-            item_code_map[item_code.upper()] = item_code
-            item_code_map[item_code.lower()] = item_code
-
-        # Process each result item
         for result_item in analyzer_result.results:
-            # Find matching internal code
-            internal_code = item_code_map.get(result_item.item_code)
-            if not internal_code:
-                internal_code = item_code_map.get(result_item.item_code.upper())
-            if not internal_code:
-                # Use the analyzer code as-is if no mapping found
-                internal_code = result_item.item_code
-
-            results[internal_code] = result_item.value
+            analyte_code: str | None = None
+            if self._resolver is not None and test_code:
+                analyte_code = self._resolver.resolve_to_analyte_code(
+                    test_code,
+                    result_item.observation_code,
+                    loinc_code=result_item.loinc_code,
+                )
+            if not analyte_code:
+                analyte_code = self._resolve_from_definitions(
+                    result_item.observation_code, result_item.loinc_code, analyte_definitions
+                )
+            if analyte_code:
+                results[analyte_code] = result_item.value
 
         return results
 
+    @staticmethod
+    def _resolve_from_definitions(
+        observation_code: str,
+        loinc_code: str | None,
+        analyte_definitions: list[dict[str, Any]],
+    ) -> str | None:
+        index: dict[str, str] = {}
+        for item in analyte_definitions:
+            code = item.get("analyte_code")
+            if not code:
+                continue
+            for key in (code, str(code).upper(), str(code).lower()):
+                index[key] = code
+            loinc = (item.get("loinc_code") or "").strip()
+            if loinc:
+                for key in (loinc, loinc.upper(), loinc.lower()):
+                    index[key] = code
+        if loinc_code and loinc_code.strip() in index:
+            return index[loinc_code.strip()]
+        obs = observation_code.strip()
+        if obs in index:
+            return index[obs]
+        return index.get(obs.upper()) or index.get(obs.lower())
+
     def validate_against_catalog(
-        self, analyzer_result: HL7AnalyzerResult, test_result_items: list[dict[str, Any]]
+        self, analyzer_result: HL7AnalyzerResult, analyte_definitions: list[dict[str, Any]]
     ) -> list[str]:
         """
-        Validate analyzer results against test catalog.
+        Validate analyzer results against test catalog (by resolved ``analyte_code``).
 
         Returns:
             List of validation error messages (empty if valid)
         """
-        errors = []
+        errors: list[str] = []
+        expected_codes = {
+            item.get("analyte_code") for item in analyte_definitions if item.get("analyte_code")
+        }
+        if not expected_codes:
+            return errors
 
-        expected_codes = {item.get("item_code") for item in test_result_items}
-        received_codes = {r.item_code for r in analyzer_result.results}
-
-        # Check for missing expected results
-        missing = expected_codes - received_codes
+        resolved = set(self.to_internal_format(analyzer_result, analyte_definitions).keys())
+        missing = expected_codes - resolved
         if missing:
-            errors.append(f"Missing expected result items: {', '.join(missing)}")
-
-        # Check for unexpected results
-        unexpected = received_codes - expected_codes
-        if unexpected:
-            # This is a warning, not necessarily an error
-            pass  # Could log this
-
+            errors.append(f"Missing expected analytes: {', '.join(sorted(missing))}")
         return errors

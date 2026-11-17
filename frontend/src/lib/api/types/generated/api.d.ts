@@ -263,15 +263,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/tests": {
+    "/api/v1/orderable-tests": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Tests */
-        get: operations["get_tests_api_v1_tests_get"];
+        /** List Orderable Tests */
+        get: operations["list_orderable_tests_api_v1_orderable_tests_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -280,15 +280,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/tests/search": {
+    "/api/v1/orderable-tests/search": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Search Tests */
-        get: operations["search_tests_api_v1_tests_search_get"];
+        /** Search Orderable Tests */
+        get: operations["search_orderable_tests_api_v1_orderable_tests_search_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -297,15 +297,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/tests/by-codes": {
+    "/api/v1/orderable-tests/by-codes": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Tests By Codes */
-        get: operations["get_tests_by_codes_api_v1_tests_by_codes_get"];
+        /** Get Orderable Tests By Codes */
+        get: operations["get_orderable_tests_by_codes_api_v1_orderable_tests_by_codes_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -314,15 +314,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/tests/{testCode}": {
+    "/api/v1/orderable-tests/{testCode}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Test */
-        get: operations["get_test_api_v1_tests__testCode__get"];
+        /** Get Orderable Test */
+        get: operations["get_orderable_test_api_v1_orderable_tests__testCode__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -331,18 +331,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/panels": {
+    "/api/v1/clinical-workups": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * List Panels
-         * @description List orderable panels (taxonomy tags inverted into member bundles).
-         */
-        get: operations["list_panels_api_v1_panels_get"];
+        /** List Clinical Workups */
+        get: operations["list_clinical_workups_api_v1_clinical_workups_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1093,6 +1090,17 @@ export interface components {
             /** Critical */
             critical: number;
         };
+        /** AnalyteSummaryResponse */
+        AnalyteSummaryResponse: {
+            /** Analytecode */
+            analyteCode: string;
+            /** Name */
+            name: string;
+            /** Loinccode */
+            loincCode?: string | null;
+            /** Unit */
+            unit?: string | null;
+        };
         /**
          * AnalyzerResultRequest
          * @description JSON ingest: specimen_id is the accession (SPM-2), not the integer sample PK.
@@ -1276,26 +1284,21 @@ export interface components {
             /** Attentiontype */
             attentionType: string;
         };
-        /**
-         * CatalogPanelResponse
-         * @description Persisted panel row.
-         */
-        CatalogPanelResponse: {
+        /** ClinicalWorkupResponse */
+        ClinicalWorkupResponse: {
+            /** Code */
+            code: string;
             /** Name */
             name: string;
             /** Description */
             description?: string | null;
-            /** Membertestcodes */
-            memberTestCodes: string[];
-            /** Price */
-            price?: number | null;
+            /** Testcodes */
+            testCodes?: string[];
             /**
              * Isactive
              * @default true
              */
             isActive: boolean;
-            /** Code */
-            code: string;
             /** Createdat */
             createdAt?: string | null;
             /** Updatedat */
@@ -1970,10 +1973,10 @@ export interface components {
              */
             tests?: components["schemas"]["OrderTestCreate"][];
             /**
-             * Panelcodes
-             * @description Orderable panel codes expanded server-side
+             * Workupcodes
+             * @description Clinical workup codes expanded server-side
              */
-            panelCodes?: string[];
+            workupCodes?: string[];
             /** @default low */
             priority: components["schemas"]["PriorityLevel"];
             /** Referentdoctorid */
@@ -2279,6 +2282,119 @@ export interface components {
             specialInstructions?: string[] | null;
             /** Tests */
             tests?: components["schemas"]["OrderTestCreate"][] | null;
+        };
+        /** OrderableTestResponse */
+        OrderableTestResponse: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Displayname */
+            displayName: string;
+            /** Category */
+            category: string;
+            /** Price */
+            price: number;
+            /** Turnaroundtimehours */
+            turnaroundTimeHours: number;
+            /** Sampletype */
+            sampleType: string;
+            /** Containertypes */
+            containerTypes: string[];
+            /** Containertopcolors */
+            containerTopColors: string[];
+            /**
+             * Isactive
+             * @default true
+             */
+            isActive: boolean;
+            /** Synonyms */
+            synonyms?: string[] | null;
+            /** Samplevolume */
+            sampleVolume?: string | null;
+            /** Minimumvolume */
+            minimumVolume?: number | null;
+            /** Optimalvolume */
+            optimalVolume?: number | null;
+            /** Numberofcontainers */
+            numberOfContainers?: number | null;
+            /** Containerdescription */
+            containerDescription?: string | null;
+            /** Specialrequirements */
+            specialRequirements?: string | null;
+            /** Fastingrequired */
+            fastingRequired?: boolean | null;
+            /** Collectionnotes */
+            collectionNotes?: string | null;
+            /** Rejectioncriteria */
+            rejectionCriteria?: components["schemas"]["RejectionCriterionItem"][] | null;
+            /** Validationrejectioncriteria */
+            validationRejectionCriteria?: components["schemas"]["RejectionCriterionItem"][] | null;
+            /**
+             * Analytes
+             * @default []
+             */
+            analytes: components["schemas"]["AnalyteSummaryResponse"][];
+            /** Loinccode */
+            loincCode?: string | null;
+            /** Methodology */
+            methodology?: string | null;
+            /** Confidence */
+            confidence?: string | null;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
+        };
+        /** OrderableTestSummaryResponse */
+        OrderableTestSummaryResponse: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Displayname */
+            displayName: string;
+            /** Category */
+            category: string;
+            /** Price */
+            price: number;
+            /** Turnaroundtimehours */
+            turnaroundTimeHours: number;
+            /** Sampletype */
+            sampleType: string;
+            /** Containertypes */
+            containerTypes: string[];
+            /** Containertopcolors */
+            containerTopColors: string[];
+            /**
+             * Isactive
+             * @default true
+             */
+            isActive: boolean;
+            /** Synonyms */
+            synonyms?: string[] | null;
+            /** Loinccode */
+            loincCode?: string | null;
+            /** Fastingrequired */
+            fastingRequired?: boolean | null;
+            /**
+             * Createdat
+             * Format: date-time
+             */
+            createdAt: string;
+            /**
+             * Updatedat
+             * Format: date-time
+             */
+            updatedAt: string;
         };
         /** PaginatedResponse[OrderResponse] */
         PaginatedResponse_OrderResponse_: {
@@ -2890,10 +3006,7 @@ export interface components {
              */
             token_type: string;
         };
-        /**
-         * RejectionCriterionItem
-         * @description Catalog rejection reason with routing domain (specimen vs analytical).
-         */
+        /** RejectionCriterionItem */
         RejectionCriterionItem: {
             /** Reason */
             reason: string;
@@ -3140,78 +3253,6 @@ export interface components {
              */
             variant: string;
         };
-        /** TestResponse */
-        TestResponse: {
-            /** Code */
-            code: string;
-            /** Name */
-            name: string;
-            /** Displayname */
-            displayName: string;
-            /** Category */
-            category: string;
-            /** Price */
-            price: number;
-            /** Turnaroundtimehours */
-            turnaroundTimeHours: number;
-            /** Sampletype */
-            sampleType: string;
-            /** Containertypes */
-            containerTypes: string[];
-            /** Containertopcolors */
-            containerTopColors: string[];
-            /**
-             * Isactive
-             * @default true
-             */
-            isActive: boolean;
-            /** Synonyms */
-            synonyms?: string[] | null;
-            /** Samplevolume */
-            sampleVolume?: string | null;
-            /** Minimumvolume */
-            minimumVolume?: number | null;
-            /** Optimalvolume */
-            optimalVolume?: number | null;
-            /** Numberofcontainers */
-            numberOfContainers?: number | null;
-            /** Containerdescription */
-            containerDescription?: string | null;
-            /** Specialrequirements */
-            specialRequirements?: string | null;
-            /** Fastingrequired */
-            fastingRequired?: boolean | null;
-            /** Collectionnotes */
-            collectionNotes?: string | null;
-            /** Rejectioncriteria */
-            rejectionCriteria?: components["schemas"]["RejectionCriterionItem"][] | null;
-            /** Validationrejectioncriteria */
-            validationRejectionCriteria?: components["schemas"]["RejectionCriterionItem"][] | null;
-            /** Referenceranges */
-            referenceRanges?: unknown[] | null;
-            /** Resultitems */
-            resultItems?: unknown[] | null;
-            /** Panels */
-            panels?: string[] | null;
-            /** Loinccode */
-            loincCode?: string | null;
-            /** Methodology */
-            methodology?: string | null;
-            /** Confidence */
-            confidence?: string | null;
-            /** Notes */
-            notes?: string | null;
-            /**
-             * Createdat
-             * Format: date-time
-             */
-            createdAt: string;
-            /**
-             * Updatedat
-             * Format: date-time
-             */
-            updatedAt: string;
-        };
         /**
          * TestResultValue
          * @description Individual test result parameter value.
@@ -3232,53 +3273,6 @@ export interface components {
          * @enum {string}
          */
         TestStatus: "pending" | "sample-collected" | "resulted" | "validated" | "cancelled" | "escalated" | "superseded" | "removed";
-        /**
-         * TestSummaryResponse
-         * @description List/search index shape — no resultItems, ranges, or collection notes.
-         */
-        TestSummaryResponse: {
-            /** Code */
-            code: string;
-            /** Name */
-            name: string;
-            /** Displayname */
-            displayName: string;
-            /** Category */
-            category: string;
-            /** Price */
-            price: number;
-            /** Turnaroundtimehours */
-            turnaroundTimeHours: number;
-            /** Sampletype */
-            sampleType: string;
-            /** Containertypes */
-            containerTypes: string[];
-            /** Containertopcolors */
-            containerTopColors: string[];
-            /**
-             * Isactive
-             * @default true
-             */
-            isActive: boolean;
-            /** Synonyms */
-            synonyms?: string[] | null;
-            /** Panels */
-            panels?: string[] | null;
-            /** Loinccode */
-            loincCode?: string | null;
-            /** Fastingrequired */
-            fastingRequired?: boolean | null;
-            /**
-             * Createdat
-             * Format: date-time
-             */
-            createdAt: string;
-            /**
-             * Updatedat
-             * Format: date-time
-             */
-            updatedAt: string;
-        };
         /** Token */
         Token: {
             /** Access Token */
@@ -4021,7 +4015,7 @@ export interface operations {
             };
         };
     };
-    get_tests_api_v1_tests_get: {
+    list_orderable_tests_api_v1_orderable_tests_get: {
         parameters: {
             query?: {
                 category?: string | null;
@@ -4041,7 +4035,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TestSummaryResponse"][];
+                    "application/json": components["schemas"]["OrderableTestSummaryResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -4055,7 +4049,7 @@ export interface operations {
             };
         };
     };
-    search_tests_api_v1_tests_search_get: {
+    search_orderable_tests_api_v1_orderable_tests_search_get: {
         parameters: {
             query: {
                 q: string;
@@ -4073,7 +4067,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TestResponse"][];
+                    "application/json": components["schemas"]["OrderableTestSummaryResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -4087,7 +4081,7 @@ export interface operations {
             };
         };
     };
-    get_tests_by_codes_api_v1_tests_by_codes_get: {
+    get_orderable_tests_by_codes_api_v1_orderable_tests_by_codes_get: {
         parameters: {
             query: {
                 /** @description Comma-separated test codes (max 100) */
@@ -4105,7 +4099,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TestResponse"][];
+                    "application/json": components["schemas"]["OrderableTestResponse"][];
                 };
             };
             /** @description Validation Error */
@@ -4119,7 +4113,7 @@ export interface operations {
             };
         };
     };
-    get_test_api_v1_tests__testCode__get: {
+    get_orderable_test_api_v1_orderable_tests__testCode__get: {
         parameters: {
             query?: never;
             header?: never;
@@ -4136,7 +4130,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TestResponse"];
+                    "application/json": components["schemas"]["OrderableTestResponse"];
                 };
             };
             /** @description Validation Error */
@@ -4150,7 +4144,7 @@ export interface operations {
             };
         };
     };
-    list_panels_api_v1_panels_get: {
+    list_clinical_workups_api_v1_clinical_workups_get: {
         parameters: {
             query?: {
                 activeOnly?: boolean;
@@ -4167,7 +4161,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CatalogPanelResponse"][];
+                    "application/json": components["schemas"]["ClinicalWorkupResponse"][];
                 };
             };
             /** @description Validation Error */

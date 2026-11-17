@@ -82,7 +82,6 @@ export type {
   CatalogReferenceRange,
   CriticalRange,
   DemographicRange,
-  ResultItem,
   TestWithContext,
 } from './domain/entities';
 

@@ -24,7 +24,7 @@ export function isCritical(s: ResultStatus): boolean {
   return s === 'critical' || s === 'critical-high' || s === 'critical-low';
 }
 
-/** Build result key -> status from test.flags (`itemCode:status`). */
+/** Build result key -> status from test.flags (`analyteCode:status`). */
 export function statusMapFromFlags(flags: string[] | undefined): Record<string, ResultStatus> {
   const map: Record<string, ResultStatus> = {};
   if (!flags?.length) return map;

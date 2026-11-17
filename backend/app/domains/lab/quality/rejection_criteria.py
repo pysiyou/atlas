@@ -1,14 +1,16 @@
 """
-Validate rejection reasons against test-catalog rejection criteria.
+Validate rejection reasons against orderable-tests / analyte-catalog rejection criteria.
 
-Collection (sample) and validation (result review) use separate criterion lists.
+Runtime checks use persisted ``OrderableTest`` rows (synced from contracts). Contract
+registry ids are validated in CI via ``scripts/validate-catalog.mjs``.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Literal
 
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.platform.utils import LabOperationError
 from app.shared.contracts.rejection_reasons import (
     REJECTION_REASON_BY_ID,
@@ -18,6 +20,10 @@ from app.shared.contracts.rejection_reasons import (
 from sqlalchemy.orm import Session
 
 QualityContext = Literal["sample", "validation"]
+
+CATALOG_CONTRACT_DIR = Path(__file__).resolve().parents[5] / "contracts" / "catalog"
+ORDERABLE_TESTS_CONTRACT = CATALOG_CONTRACT_DIR / "orderable-tests.json"
+ANALYTE_CATALOG_CONTRACT = CATALOG_CONTRACT_DIR / "analyte-catalog.json"
 
 
 @dataclass(frozen=True)
@@ -54,8 +60,8 @@ class RejectionCriteriaService:
             domain=rejection_reason_domain(reason) or "analytical",
         )
 
-    def _get_test(self, test_code: str) -> CatalogTest | None:
-        return self.db.query(CatalogTest).filter(CatalogTest.code == test_code).first()
+    def _get_test(self, test_code: str) -> OrderableTest | None:
+        return self.db.query(OrderableTest).filter(OrderableTest.code == test_code).first()
 
     def get_specimen_criteria_items_for_test(self, test_code: str) -> list[RejectionCriterion]:
         test = self._get_test(test_code)

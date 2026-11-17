@@ -1,10 +1,9 @@
-"""Test Catalog API Routes"""
-
-from app.domains.catalog.schemas.test import (
-    TestResponse,
-    TestSummaryResponse,
+"""Orderable test catalog API."""
+from app.domains.catalog.orderable_test_service import BY_CODES_MAX, OrderableTestService
+from app.domains.catalog.schemas.orderable_test import (
+    OrderableTestResponse,
+    OrderableTestSummaryResponse,
 )
-from app.domains.catalog.test_catalog_service import BY_CODES_MAX, TestCatalogService
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http import get_current_user
@@ -16,7 +15,6 @@ router = APIRouter()
 
 
 def parse_by_codes_param(raw: str | None) -> list[str]:
-    """Parse `codes=` into a de-duplicated list, preserving first-seen order."""
     parsed = parse_csv_values(raw)
     if not parsed:
         raise HTTPException(
@@ -38,8 +36,8 @@ def parse_by_codes_param(raw: str | None) -> list[str]:
     return unique
 
 
-@router.get("/tests", response_model=list[TestSummaryResponse])
-def get_tests(
+@router.get("/orderable-tests", response_model=list[OrderableTestSummaryResponse])
+def list_orderable_tests(
     response: Response,
     category: str | None = None,
     activeOnly: bool = True,
@@ -48,32 +46,32 @@ def get_tests(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return TestCatalogService(db).list_tests(response, category, activeOnly, skip, limit)
+    return OrderableTestService(db).list_tests(response, category, activeOnly, skip, limit)
 
 
-@router.get("/tests/search", response_model=list[TestResponse])
-def search_tests(
+@router.get("/orderable-tests/search", response_model=list[OrderableTestSummaryResponse])
+def search_orderable_tests(
     q: str,
     limit: int = Query(50, ge=1, le=100),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return TestCatalogService(db).search(q, limit=limit)
+    return OrderableTestService(db).search(q, limit=limit)
 
 
-@router.get("/tests/by-codes", response_model=list[TestResponse])
-def get_tests_by_codes(
+@router.get("/orderable-tests/by-codes", response_model=list[OrderableTestResponse])
+def get_orderable_tests_by_codes(
     codes: str = Query(..., description="Comma-separated test codes (max 100)"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return TestCatalogService(db).list_tests_by_codes(parse_by_codes_param(codes))
+    return OrderableTestService(db).list_tests_by_codes(parse_by_codes_param(codes))
 
 
-@router.get("/tests/{testCode}", response_model=TestResponse)
-def get_test(
+@router.get("/orderable-tests/{testCode}", response_model=OrderableTestResponse)
+def get_orderable_test(
     testCode: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return TestCatalogService(db).get_by_code(testCode)
+    return OrderableTestService(db).get_by_code(testCode)

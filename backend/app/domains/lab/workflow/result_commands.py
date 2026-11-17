@@ -4,7 +4,8 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.analyte_definitions import analyte_definitions_for_test
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.lab.results.delta_check import DeltaCheckService
 from app.domains.lab.results.flags import ResultFlag
 from app.domains.lab.results.reflex import ReflexEngine
@@ -49,14 +50,16 @@ class ResultCommandHandler:
     def _shape_stored_results(
         self,
         results: dict[str, Any],
-        result_items: list[dict[str, Any]],
+        analyte_definitions: list[dict[str, Any]],
         flags: list[ResultFlag],
     ) -> dict[str, Any]:
         """Persist value + catalog unit/reference/status so clients do not own flags."""
-        flags_by_code = {flag.item_code: flag for flag in flags}
-        items_by_code = {
-            item.get("item_code"): item for item in result_items if item.get("item_code")
-        }
+        flags_by_code = {flag.analyte_code: flag for flag in flags}
+        items_by_code = {}
+        for item in analyte_definitions:
+            code = item.get("analyte_code")
+            if code:
+                items_by_code[code] = item
         shaped: dict[str, Any] = {}
         for code, raw in results.items():
             item = items_by_code.get(code) or {}
@@ -87,11 +90,10 @@ class ResultCommandHandler:
 
         assert_can_enter_results(order_test)
 
-        test_def = self._svc.db.query(CatalogTest).filter(CatalogTest.code == test_code).first()
-        result_items = test_def.resultItems if test_def else []
+        analyte_defs = analyte_definitions_for_test(self._svc.db, test_code)
 
-        if not skip_validation and result_items:
-            validation_errors = self._svc.result_validator.validate_results(results, result_items)
+        if not skip_validation and analyte_defs:
+            validation_errors = self._svc.result_validator.validate_results(results, analyte_defs)
             if self._svc.result_validator.has_blocking_errors(validation_errors):
                 error_msg = self._svc.result_validator.format_error_message(validation_errors)
                 raise LabOperationError(error_msg, status_code=400, error_code="VALIDATION_ERROR")
@@ -102,17 +104,17 @@ class ResultCommandHandler:
         patient_dob = patient.dateOfBirth if patient else None
 
         flags = []
-        if result_items:
+        if analyte_defs:
             flags = self._svc.flag_calculator.calculate_flags(
                 results=results,
-                result_items=result_items,
+                analyte_definitions=analyte_defs,
                 patient_gender=patient_gender,
                 patient_dob=patient_dob,
             )
 
         results_serializable = (
-            self._shape_stored_results(results, result_items, flags)
-            if result_items
+            self._shape_stored_results(results, analyte_defs, flags)
+            if analyte_defs
             else self._svc._results_to_json_serializable(results)
         )
         order_test.results = results_serializable
@@ -137,7 +139,7 @@ class ResultCommandHandler:
             )
             if delta_warnings:
                 delta_flag_strings = [
-                    f"DELTA:{w.item_code}:{w.percent_change}" for w in delta_warnings
+                    f"DELTA:{w.analyte_code}:{w.percent_change}" for w in delta_warnings
                 ]
                 existing_flags = list(order_test.flags or [])
                 order_test.flags = existing_flags + delta_flag_strings
@@ -156,7 +158,7 @@ class ResultCommandHandler:
         if delta_warnings:
             enter_metadata["delta_checks"] = [
                 {
-                    "item_code": w.item_code,
+                    "analyte_code": w.analyte_code,
                     "percent_change": w.percent_change,
                     "prior_value": w.prior_value,
                     "current_value": w.current_value,

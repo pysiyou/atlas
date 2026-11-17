@@ -1,0 +1,5241 @@
+{
+  "$schema": "./analyte-catalog.schema.json",
+  "analytes": [
+    {
+      "loinc_code": "883-9",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "A",
+        "B",
+        "AB",
+        "O"
+      ],
+      "citations": [
+        "SRC018"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Patient-specific (A, B, AB, or O)"
+        }
+      },
+      "analyte_code": "ABO_GROUP",
+      "name": "ABO Blood Group",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "647-8",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "1+",
+        "2+",
+        "3+",
+        "Not seen"
+      ],
+      "citations": [
+        "SRC010",
+        "SRC005"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (no acid-fast bacilli seen)"
+        }
+      },
+      "analyte_code": "AFB_RESULT",
+      "name": "AFB Smear Result",
+      "specimen": "Sputum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "transport_delay",
+        "ambiguous_identification_repeat_workup",
+        "instrument_error_repeat_run",
+        "insufficient_growth_repeat_incubation",
+        "leaked_or_broken_container",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1751-7",
+      "value_type": "NUMERIC",
+      "unit": "g/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 3.5,
+          "high": 5.5
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0.5,
+        "max": 10
+      },
+      "critical_range": {
+        "low": 1.5,
+        "high": 6
+      },
+      "analyte_code": "ALB",
+      "name": "Albumin",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "6768-6",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 30,
+          "high": 120
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 5000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 1000
+      },
+      "analyte_code": "ALP",
+      "name": "Alkaline Phosphatase",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1742-6",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_male": {
+          "low": 7,
+          "high": 56
+        },
+        "adult_female": {
+          "low": 7,
+          "high": 45
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 5000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 10000
+      },
+      "analyte_code": "ALT",
+      "name": "ALT (SGPT)",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1798-8",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 30,
+          "high": 110
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 1000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 2000
+      },
+      "analyte_code": "AMYLASE",
+      "name": "Amylase",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "13952-7",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC008"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "ANTIHBC",
+      "name": "Anti-HBc",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5193-8",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC008"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (non-immune); ≥10 mIU/mL positive indicates immunity"
+        }
+      },
+      "analyte_code": "ANTIHBS",
+      "name": "Anti-HBs",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "16128-1",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Indeterminate"
+      ],
+      "citations": [
+        "SRC008"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "ANTIHCV",
+      "name": "Anti-HCV",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "14979-9",
+      "value_type": "NUMERIC",
+      "unit": "seconds",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 25,
+          "high": 35
+        }
+      },
+      "critical_range": {
+        "low": 20,
+        "high": 100
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 10,
+        "max": 250
+      },
+      "analyte_code": "APTT",
+      "name": "aPTT",
+      "specimen": "Plasma (citrated)",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_moderate",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "aberrant_clotting_curve_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_coagulation_control_repeat_run",
+        "overfilled_tube",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1920-8",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_male": {
+          "low": 10,
+          "high": 40
+        },
+        "adult_female": {
+          "low": 9,
+          "high": 32
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 5000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 10000
+      },
+      "analyte_code": "AST",
+      "name": "AST (SGOT)",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_mild",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "27811-9",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 80,
+          "high": 120
+        }
+      },
+      "critical_range": {
+        "low": 40,
+        "high": 150
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 200
+      },
+      "analyte_code": "ATIII",
+      "name": "Antithrombin III",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "704-7",
+      "value_type": "NUMERIC",
+      "unit": "×10⁹/L",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 0.2
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 2
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "analyte_code": "BASO_ABS",
+      "name": "Basophils (Absolute)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "706-2",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 2
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 100
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 20
+      },
+      "analyte_code": "BASO_PCT",
+      "name": "Basophils (%)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "21198-7",
+      "value_type": "NUMERIC",
+      "unit": "mIU/mL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_nonpregnant": {
+          "low": 0,
+          "high": 5
+        },
+        "adult_male": {
+          "low": 0,
+          "high": 2
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 300000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 500000
+      },
+      "analyte_code": "BHCG_QUANT",
+      "name": "Beta-hCG (Quantitative)",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1968-7",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 0.3
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 5
+      },
+      "analyte_code": "BILI_DIRECT",
+      "name": "Direct Bilirubin",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "not_protected_from_light",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1975-2",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0.1,
+          "high": 1.2
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 20
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 100
+      },
+      "analyte_code": "BILI_TOTAL",
+      "name": "Total Bilirubin",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "not_protected_from_light",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "600-7",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "NO_GROWTH",
+        "ORGANISM_ISOLATED",
+        "CONTAMINATION",
+        "FUNGAL"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth (NO_GROWTH)"
+        }
+      },
+      "analyte_code": "BLOOD_CULTURE",
+      "name": "Culture Outcome",
+      "specimen": "Whole Blood (venipuncture)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "transport_delay",
+        "ambiguous_identification_repeat_workup",
+        "instrument_error_repeat_run",
+        "insufficient_growth_repeat_incubation",
+        "leaked_or_broken_container",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "30934-4",
+      "value_type": "NUMERIC",
+      "unit": "pg/mL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 100
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 5000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50000
+      },
+      "analyte_code": "BNP",
+      "name": "BNP",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "3094-0",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 7,
+          "high": 20
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 100
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 300
+      },
+      "analyte_code": "BUN",
+      "name": "Blood Urea Nitrogen",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "17861-6",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 8.5,
+          "high": 10.5
+        }
+      },
+      "critical_range": {
+        "low": 6.5,
+        "high": 13
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 2,
+        "max": 20
+      },
+      "analyte_code": "CA_TOTAL",
+      "name": "Total Calcium",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "24467-3",
+      "value_type": "NUMERIC",
+      "unit": "cells/µL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 500,
+          "high": 1500
+        }
+      },
+      "critical_range": {
+        "low": 50,
+        "high": 5000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 5000
+      },
+      "analyte_code": "CD4_COUNT",
+      "name": "CD4 Count",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2039-6",
+      "value_type": "NUMERIC",
+      "unit": "ng/mL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_nonsmoker": {
+          "low": 0,
+          "high": 2.5
+        },
+        "adult_smoker": {
+          "low": 0,
+          "high": 5
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 100
+      },
+      "analyte_code": "CEA",
+      "name": "CEA",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "57934-2",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC019"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "CHIKV_IGM",
+      "name": "Chikungunya IgM",
+      "specimen": "Serum or whole blood",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2093-3",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 200
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 20,
+        "max": 1000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 400
+      },
+      "analyte_code": "CHOL_TOTAL",
+      "name": "Total Cholesterol",
+      "specimen": "Serum (fasting preferred)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2157-6",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_male": {
+          "low": 55,
+          "high": 170
+        },
+        "adult_female": {
+          "low": 30,
+          "high": 135
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 5000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50000
+      },
+      "analyte_code": "CK",
+      "name": "Creatine Kinase",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "32673-6",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 5
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 500
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 200
+      },
+      "analyte_code": "CKMB",
+      "name": "CK-MB",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2075-0",
+      "value_type": "NUMERIC",
+      "unit": "mEq/L (mmol/L)",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 98,
+          "high": 107
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 60,
+        "max": 150
+      },
+      "critical_range": {
+        "low": 80,
+        "high": 120
+      },
+      "analyte_code": "CL",
+      "name": "Chloride",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5124-3",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC023"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (no prior exposure); positive indicates past exposure"
+        }
+      },
+      "analyte_code": "CMV_IGG",
+      "name": "CMV IgG",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5126-8",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC023"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "CMV_IGM",
+      "name": "CMV IgM",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2160-0",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_male": {
+          "low": 0.7,
+          "high": 1.3
+        },
+        "adult_female": {
+          "low": 0.6,
+          "high": 1.2
+        }
+      },
+      "critical_range": {
+        "low": 0.4,
+        "high": 10
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0.1,
+        "max": 50
+      },
+      "analyte_code": "CREAT",
+      "name": "Serum Creatinine",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1250-0",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Compatible",
+        "Incompatible",
+        "Inconclusive"
+      ],
+      "citations": [
+        "SRC018"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Compatible"
+        }
+      },
+      "analyte_code": "CROSS_MATCH",
+      "name": "Cross-Match Compatibility",
+      "specimen": "Patient serum + donor RBCs",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1988-5",
+      "value_type": "NUMERIC",
+      "unit": "mg/L",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 10
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 500
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 200
+      },
+      "analyte_code": "CRP",
+      "name": "C-Reactive Protein",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1007-4",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Weak positive"
+      ],
+      "citations": [
+        "SRC018"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "DAT_RESULT",
+      "name": "DAT Result",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "48065-7",
+      "value_type": "NUMERIC",
+      "unit": "μg/mL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 0.5
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 20
+      },
+      "analyte_code": "DDIMER",
+      "name": "D-dimer",
+      "specimen": "Plasma (citrated or EDTA)",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_moderate",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "aberrant_clotting_curve_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_coagulation_control_repeat_run",
+        "overfilled_tube",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "29676-4",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC019"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (no prior exposure); positive may indicate past infection"
+        }
+      },
+      "analyte_code": "DENGUE_IGG",
+      "name": "Dengue IgG",
+      "specimen": "Serum or whole blood (RDT)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "25338-5",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC019"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "DENGUE_IGM",
+      "name": "Dengue IgM",
+      "specimen": "Serum or whole blood (RDT)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "7883-2",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC023"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Positive indicates remote/past EBV infection"
+        }
+      },
+      "analyte_code": "EBV_EBNA",
+      "name": "EBV EBNA",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "30339-6",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC023"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (no prior exposure); positive indicates past exposure"
+        }
+      },
+      "analyte_code": "EBV_VCA_IGG",
+      "name": "EBV VCA-IgG",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "30340-4",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC023"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "EBV_VCA_IGM",
+      "name": "EBV VCA-IgM",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "98979-8",
+      "value_type": "NUMERIC",
+      "unit": "mL/min/1.73m²",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 60,
+          "high": 999
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 200
+      },
+      "critical_range": {
+        "low": 15,
+        "high": 999
+      },
+      "analyte_code": "EGFR_VALUE",
+      "name": "eGFR",
+      "specimen": "Derived from serum creatinine",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "26449-9",
+      "value_type": "NUMERIC",
+      "unit": "×10⁹/L",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 0.3
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 5
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "analyte_code": "EOS_ABS",
+      "name": "Eosinophils (Absolute)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "713-8",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 6
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 100
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 50
+      },
+      "analyte_code": "EOS_PCT",
+      "name": "Eosinophils (%)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "4537-7",
+      "value_type": "NUMERIC",
+      "unit": "mm/h",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_male": {
+          "low": 0,
+          "high": 15
+        },
+        "adult_female": {
+          "low": 0,
+          "high": 20
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 150
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 100
+      },
+      "analyte_code": "ESR_1HR",
+      "name": "ESR (1 hour)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2276-4",
+      "value_type": "NUMERIC",
+      "unit": "ng/mL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_male": {
+          "low": 24,
+          "high": 336
+        },
+        "adult_female": {
+          "low": 11,
+          "high": 307
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 10000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 2000
+      },
+      "analyte_code": "FERRITIN",
+      "name": "Ferritin",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "3255-7",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 200,
+          "high": 400
+        }
+      },
+      "critical_range": {
+        "low": 100,
+        "high": 1000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000
+      },
+      "analyte_code": "FIBRINOGEN",
+      "name": "Fibrinogen",
+      "specimen": "Plasma (citrated)",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_moderate",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "aberrant_clotting_curve_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_coagulation_control_repeat_run",
+        "overfilled_tube",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2335-8",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "FOBT_RESULT",
+      "name": "Occult Blood (Stool)",
+      "specimen": "Stool",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2284-8",
+      "value_type": "NUMERIC",
+      "unit": "ng/mL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 2.7,
+          "high": 17
+        }
+      },
+      "citations": [
+        "SRC020"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 50
+      },
+      "analyte_code": "FOLATE_LEVEL",
+      "name": "Folate",
+      "specimen": "Serum for serum folate; Whole blood EDTA for RBC",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "3051-0",
+      "value_type": "NUMERIC",
+      "unit": "pg/mL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 2.3,
+          "high": 4.2
+        }
+      },
+      "critical_range": {
+        "low": 0.5,
+        "high": 15
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "analyte_code": "FT3",
+      "name": "Free T3",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "3024-7",
+      "value_type": "NUMERIC",
+      "unit": "ng/dL (pmol/L)",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0.8,
+          "high": 1.8
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003",
+        "SRC009"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 20
+      },
+      "critical_range": {
+        "low": 0.2,
+        "high": 5
+      },
+      "analyte_code": "FT4",
+      "name": "Free Thyroxine",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2356-4",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Normal",
+        "Heterozygous",
+        "Hemizygous deficiency",
+        "Homozygous deficiency"
+      ],
+      "citations": [
+        "SRC014"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Normal G6PD activity"
+        }
+      },
+      "analyte_code": "G6PD_RESULT",
+      "name": "G6PD Status",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "85362-2",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Not Detected",
+        "Detected (susceptible)",
+        "Detected (resistant)",
+        "Error"
+      ],
+      "citations": [
+        "SRC010"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Not Detected"
+        }
+      },
+      "analyte_code": "GENEXPERT_MTB",
+      "name": "MTB Detection & RIF Resistance",
+      "specimen": "Sputum or respiratory fluids",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "transport_delay",
+        "ambiguous_identification_repeat_workup",
+        "instrument_error_repeat_run",
+        "insufficient_growth_repeat_incubation",
+        "leaked_or_broken_container",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2324-2",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_male": {
+          "low": 0,
+          "high": 65
+        },
+        "adult_female": {
+          "low": 0,
+          "high": 35
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 2000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 500
+      },
+      "analyte_code": "GGT",
+      "name": "GGT",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1558-6",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 70,
+          "high": 100
+        }
+      },
+      "critical_range": {
+        "low": 40,
+        "high": 400
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 5,
+        "max": 2000
+      },
+      "analyte_code": "GLU_FAST",
+      "name": "Fasting Glucose",
+      "specimen": "Serum or Plasma (fluoride tube)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2345-7",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 140
+        }
+      },
+      "critical_range": {
+        "low": 40,
+        "high": 400
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 5,
+        "max": 2000
+      },
+      "analyte_code": "GLU_RANDOM",
+      "name": "Random Glucose",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "49322-1",
+      "value_type": "TEXT",
+      "citations": [
+        "SRC014"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Hb A predominant; no pathologic variant peaks"
+        }
+      },
+      "analyte_code": "HB_HPLC",
+      "name": "Hemoglobin HPLC Profile",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "49316-3",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "AA",
+        "AS",
+        "SS",
+        "SC",
+        "S-beta-thalassemia",
+        "Other"
+      ],
+      "citations": [
+        "SRC014"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "AA (normal adult hemoglobin pattern)"
+        }
+      },
+      "analyte_code": "HB_PHENOTYPE",
+      "name": "Hemoglobin Phenotype",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "4548-4",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 4,
+          "high": 5.7
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 3,
+        "max": 20
+      },
+      "critical_range": {
+        "low": 3,
+        "high": 15
+      },
+      "analyte_code": "HBA1C",
+      "name": "HbA1c",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5192-0",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC008"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "HBEAG",
+      "name": "HBeAg",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5195-3",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC008"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "HBSAG",
+      "name": "HBsAg",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "42595-9",
+      "value_type": "NUMERIC",
+      "unit": "IU/mL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 10
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 1000000000
+      },
+      "citations": [
+        "SRC008"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000000000
+      },
+      "analyte_code": "HBV_DNA",
+      "name": "HBV DNA",
+      "specimen": "Plasma (EDTA)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "1963-8",
+      "value_type": "NUMERIC",
+      "unit": "mEq/L (mmol/L)",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 22,
+          "high": 26
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 1,
+        "max": 60
+      },
+      "critical_range": {
+        "low": 10,
+        "high": 40
+      },
+      "analyte_code": "HCO3",
+      "name": "Bicarbonate (HCO3)",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "4544-3",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_male": {
+          "low": 41,
+          "high": 52
+        },
+        "adult_female": {
+          "low": 36,
+          "high": 46
+        }
+      },
+      "critical_range": {
+        "low": 20,
+        "high": 60
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 5,
+        "max": 80
+      },
+      "analyte_code": "HCT",
+      "name": "Hematocrit",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2085-9",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_male": {
+          "low": 40,
+          "high": 999
+        },
+        "adult_female": {
+          "low": 50,
+          "high": 999
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 5,
+        "max": 200
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 999
+      },
+      "analyte_code": "HDL",
+      "name": "HDL Cholesterol",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "718-7",
+      "value_type": "NUMERIC",
+      "unit": "g/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_male": {
+          "low": 13.5,
+          "high": 17.5
+        },
+        "adult_female": {
+          "low": 12,
+          "high": 15.5
+        }
+      },
+      "critical_range": {
+        "low": 7,
+        "high": 20
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 1,
+        "max": 30
+      },
+      "analyte_code": "HGB",
+      "name": "Hemoglobin",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "44873-8",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative (confirmed)",
+        "Positive (confirmed)",
+        "Indeterminate"
+      ],
+      "citations": [
+        "SRC008"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (confirmed)"
+        }
+      },
+      "analyte_code": "HIV_CONFIRM",
+      "name": "HIV Confirmation Result",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "56888-1",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Indeterminate"
+      ],
+      "citations": [
+        "SRC008"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "HIV_SCREEN",
+      "name": "HIV 1/2 Combo (Screen)",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "20447-9",
+      "value_type": "NUMERIC",
+      "unit": "copies/mL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 40
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 10000000
+      },
+      "citations": [
+        "SRC008"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 10000000
+      },
+      "analyte_code": "HIV_VL",
+      "name": "HIV-1 Viral Load",
+      "specimen": "Plasma (EDTA, NOT serum)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "16126-5",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Equivocal"
+      ],
+      "citations": [
+        "SRC021"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "HPYLORI_IGG",
+      "name": "H. pylori IgG",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "6301-6",
+      "value_type": "NUMERIC",
+      "unit": "ratio",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0.8,
+          "high": 1.1
+        }
+      },
+      "critical_range": {
+        "low": 0.5,
+        "high": 5
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0.5,
+        "max": 20
+      },
+      "analyte_code": "INR",
+      "name": "International Normalized Ratio",
+      "specimen": "Plasma (citrated)",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_moderate",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "aberrant_clotting_curve_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_coagulation_control_repeat_run",
+        "overfilled_tube",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2498-4",
+      "value_type": "NUMERIC",
+      "unit": "μg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_male": {
+          "low": 60,
+          "high": 170
+        },
+        "adult_female": {
+          "low": 50,
+          "high": 170
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 500
+      },
+      "analyte_code": "IRON",
+      "name": "Serum Iron",
+      "specimen": "Serum (fasting)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2823-3",
+      "value_type": "NUMERIC",
+      "unit": "mEq/L (mmol/L)",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 3.5,
+          "high": 5
+        }
+      },
+      "critical_range": {
+        "low": 2.5,
+        "high": 6.5
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 1,
+        "max": 12
+      },
+      "analyte_code": "K",
+      "name": "Potassium",
+      "specimen": "Serum or Plasma (NOT EDTA)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_mild",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2524-7",
+      "value_type": "NUMERIC",
+      "unit": "mmol/L",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0.5,
+          "high": 2
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 30
+      },
+      "critical_range": {
+        "low": 0.5,
+        "high": 10
+      },
+      "analyte_code": "LACTATE",
+      "name": "Lactate",
+      "specimen": "Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2532-0",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 140,
+          "high": 280
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 3000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 10000
+      },
+      "analyte_code": "LDH",
+      "name": "Lactate Dehydrogenase",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2089-1",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 100
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 5,
+        "max": 500
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 300
+      },
+      "analyte_code": "LDL",
+      "name": "LDL Cholesterol",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "3040-3",
+      "value_type": "NUMERIC",
+      "unit": "U/L",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 10,
+          "high": 60
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 2000
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 5000
+      },
+      "analyte_code": "LIPASE",
+      "name": "Lipase",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "731-0",
+      "value_type": "NUMERIC",
+      "unit": "×10⁹/L",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 1,
+          "high": 3.2
+        }
+      },
+      "critical_range": {
+        "low": 0.2,
+        "high": 20
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "analyte_code": "LYM_ABS",
+      "name": "Lymphocytes (Absolute)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "736-9",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 20,
+          "high": 40
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 100
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 90
+      },
+      "analyte_code": "LYM_PCT",
+      "name": "Lymphocytes (%)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "32206-5",
+      "value_type": "TEXT",
+      "citations": [
+        "SRC007",
+        "SRC015"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "No malaria parasites seen"
+        }
+      },
+      "analyte_code": "MALARIA_MICRO",
+      "name": "Malaria Species & Density",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "70569-9",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Plasmodium falciparum",
+        "Non-falciparum",
+        "Mixed",
+        "Invalid"
+      ],
+      "citations": [
+        "SRC007",
+        "SRC015"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "MALARIA_RDT",
+      "name": "Malaria RDT Result",
+      "specimen": "Whole Blood (capillary or venous)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "785-6",
+      "value_type": "NUMERIC",
+      "unit": "pg",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 26,
+          "high": 34
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 10,
+        "max": 50
+      },
+      "critical_range": {
+        "low": 15,
+        "high": 45
+      },
+      "analyte_code": "MCH",
+      "name": "Mean Corpuscular Hemoglobin",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "786-4",
+      "value_type": "NUMERIC",
+      "unit": "g/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 32,
+          "high": 36
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 20,
+        "max": 45
+      },
+      "critical_range": {
+        "low": 25,
+        "high": 40
+      },
+      "analyte_code": "MCHC",
+      "name": "Mean Corpuscular Hemoglobin Concentration",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "787-2",
+      "value_type": "NUMERIC",
+      "unit": "fL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 80,
+          "high": 100
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 30,
+        "max": 200
+      },
+      "critical_range": {
+        "low": 60,
+        "high": 120
+      },
+      "analyte_code": "MCV",
+      "name": "Mean Corpuscular Volume",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "19123-9",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 1.7,
+          "high": 2.3
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0.3,
+        "max": 10
+      },
+      "critical_range": {
+        "low": 1,
+        "high": 5
+      },
+      "analyte_code": "MG",
+      "name": "Magnesium",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "14957-5",
+      "value_type": "NUMERIC",
+      "unit": "mg/L",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 20
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 500
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 5000
+      },
+      "analyte_code": "MICROALB",
+      "name": "Microalbumin",
+      "specimen": "Urine (random)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "742-7",
+      "value_type": "NUMERIC",
+      "unit": "×10⁹/L",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0.1,
+          "high": 1.3
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 5
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "analyte_code": "MONO_ABS",
+      "name": "Monocytes (Absolute)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5905-5",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 2,
+          "high": 10
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 100
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 50
+      },
+      "analyte_code": "MONO_PCT",
+      "name": "Monocytes (%)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "32623-1",
+      "value_type": "NUMERIC",
+      "unit": "fL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 7,
+          "high": 12
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 5,
+        "max": 20
+      },
+      "critical_range": {
+        "low": 5,
+        "high": 20
+      },
+      "analyte_code": "MPV",
+      "name": "Mean Platelet Volume",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2951-2",
+      "value_type": "NUMERIC",
+      "unit": "mEq/L (mmol/L)",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 136,
+          "high": 145
+        }
+      },
+      "critical_range": {
+        "low": 125,
+        "high": 155
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 90,
+        "max": 200
+      },
+      "analyte_code": "NA",
+      "name": "Sodium",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "751-8",
+      "value_type": "NUMERIC",
+      "unit": "×10⁹/L",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 1.7,
+          "high": 7.5
+        }
+      },
+      "critical_range": {
+        "low": 0.5,
+        "high": 30
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 50
+      },
+      "analyte_code": "NEUT_ABS",
+      "name": "Neutrophils (Absolute)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "770-8",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 40,
+          "high": 70
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 100
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 95
+      },
+      "analyte_code": "NEUT_PCT",
+      "name": "Neutrophils (%)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "10704-5",
+      "value_type": "TEXT",
+      "citations": [
+        "SRC025"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "No ova or parasites seen"
+        }
+      },
+      "analyte_code": "PARASITES_FOUND",
+      "name": "Parasites Identified",
+      "specimen": "Stool",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "transport_delay",
+        "ambiguous_identification_repeat_workup",
+        "instrument_error_repeat_run",
+        "insufficient_growth_repeat_incubation",
+        "leaked_or_broken_container",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "17784-0",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "None seen",
+        "Plasmodium",
+        "Trypanosoma",
+        "Microfilaria",
+        "Other"
+      ],
+      "citations": [
+        "SRC007",
+        "SRC015"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "None seen"
+        }
+      },
+      "analyte_code": "PARASITES_SEEN",
+      "name": "Parasites Detected",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "33959-8",
+      "value_type": "NUMERIC",
+      "unit": "ng/mL",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 0.5
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 50
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 200
+      },
+      "analyte_code": "PCT",
+      "name": "Procalcitonin",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2777-1",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 2.5,
+          "high": 4.5
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0.5,
+        "max": 20
+      },
+      "critical_range": {
+        "low": 1,
+        "high": 8
+      },
+      "analyte_code": "PHOS",
+      "name": "Inorganic Phosphate",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "777-3",
+      "value_type": "NUMERIC",
+      "unit": "×10⁹/L",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 150,
+          "high": 400
+        }
+      },
+      "critical_range": {
+        "low": 50,
+        "high": 1000
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 1,
+        "max": 2000
+      },
+      "analyte_code": "PLAT",
+      "name": "Platelet Count",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "14338-8",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 20,
+          "high": 40
+        }
+      },
+      "citations": [
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 100
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 100
+      },
+      "analyte_code": "PREALBUM",
+      "name": "Prealbumin",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2857-1",
+      "value_type": "NUMERIC",
+      "unit": "ng/mL",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 4
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 500
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 100
+      },
+      "analyte_code": "PSA",
+      "name": "PSA",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5902-2",
+      "value_type": "NUMERIC",
+      "unit": "seconds",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 11,
+          "high": 13.5
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 5,
+        "max": 200
+      },
+      "critical_range": {
+        "low": 5,
+        "high": 100
+      },
+      "analyte_code": "PT_SEC",
+      "name": "Prothrombin Time (seconds)",
+      "specimen": "Plasma (citrated)",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_moderate",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "aberrant_clotting_curve_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_coagulation_control_repeat_run",
+        "overfilled_tube",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "789-8",
+      "value_type": "NUMERIC",
+      "unit": "×10¹²/L",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_male": {
+          "low": 4.5,
+          "high": 6
+        },
+        "adult_female": {
+          "low": 4.2,
+          "high": 5.4
+        }
+      },
+      "critical_range": {
+        "low": 2,
+        "high": 8
+      },
+      "citations": [
+        "SRC002",
+        "SRC013"
+      ],
+      "physiologic_range": {
+        "min": 0.5,
+        "max": 12
+      },
+      "analyte_code": "RBC",
+      "name": "Red Blood Cell Count",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "788-0",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 11.5,
+          "high": 15
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 8,
+        "max": 30
+      },
+      "critical_range": {
+        "low": 8,
+        "high": 30
+      },
+      "analyte_code": "RDW",
+      "name": "Red Cell Distribution Width",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "60474-4",
+      "value_type": "NUMERIC",
+      "unit": "×10⁹/L",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 20,
+          "high": 115
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 500
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 500
+      },
+      "analyte_code": "RETCOUNT_ABS",
+      "name": "Reticulocytes (Absolute Count)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "17849-1",
+      "value_type": "NUMERIC",
+      "unit": "%",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0.5,
+          "high": 2.5
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 20
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 20
+      },
+      "analyte_code": "RETPLAT_PCT",
+      "name": "Reticulocytes (% of RBC)",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "10331-7",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Positive",
+        "Negative"
+      ],
+      "citations": [
+        "SRC018"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Patient-specific (RhD positive or negative)"
+        }
+      },
+      "analyte_code": "RH_STATUS",
+      "name": "Rh (RhD) Status",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "20507-0",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Nonreactive",
+        "Reactive"
+      ],
+      "citations": [
+        "SRC017"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Nonreactive"
+        }
+      },
+      "analyte_code": "RPR_VDRL_RESULT",
+      "name": "RPR/VDRL Result",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "40667-8",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative/Nonimmune",
+        "Positive/Immune"
+      ],
+      "citations": [
+        "SRC024"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Positive/Immune (≥10 IU/mL or per assay cut-off)"
+        }
+      },
+      "analyte_code": "RUBELLA_IGG",
+      "name": "Rubella IgG",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "95209-3",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Invalid"
+      ],
+      "citations": [
+        "SRC016"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "SARSCOV2_AG",
+      "name": "SARS-CoV-2 Antigen (RDT)",
+      "specimen": "Nasopharyngeal or oropharyngeal swab",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "94500-6",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Invalid"
+      ],
+      "citations": [
+        "SRC016"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "SARSCOV2_PCR",
+      "name": "SARS-CoV-2 RNA (RT-PCR)",
+      "specimen": "Nasopharyngeal swab or sputum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "6864-3",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC014"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "SICKLE_SCREEN",
+      "name": "Sickle Cell Screening",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "18314-5",
+      "value_type": "TEXT",
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Normal mature morphology; no blasts, atypical lymphocytes, or parasites"
+        }
+      },
+      "analyte_code": "SMEAR_FINDINGS",
+      "name": "Morphological Findings",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "12851-2",
+      "value_type": "TEXT",
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Albumin predominant; no monoclonal spike"
+        }
+      },
+      "analyte_code": "SPEP_RESULT",
+      "name": "Protein Fraction Profile",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "625-4",
+      "value_type": "TEXT",
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "No enteric pathogen isolated"
+        }
+      },
+      "analyte_code": "STOOL_ORGANISM",
+      "name": "Organism",
+      "specimen": "Stool",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "transport_delay",
+        "ambiguous_identification_repeat_workup",
+        "instrument_error_repeat_run",
+        "insufficient_growth_repeat_incubation",
+        "leaked_or_broken_container",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2571-8",
+      "value_type": "NUMERIC",
+      "unit": "mg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 150
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 10,
+        "max": 10000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 1000
+      },
+      "analyte_code": "TG",
+      "name": "Triglycerides",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2500-7",
+      "value_type": "NUMERIC",
+      "unit": "μg/dL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 250,
+          "high": 450
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 800
+      },
+      "analyte_code": "TIBC",
+      "name": "TIBC",
+      "specimen": "Serum (fasting)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2885-2",
+      "value_type": "NUMERIC",
+      "unit": "g/dL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 6,
+          "high": 8.3
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 1,
+        "max": 20
+      },
+      "critical_range": {
+        "low": 4,
+        "high": 12
+      },
+      "analyte_code": "TOTAL_PROTEIN",
+      "name": "Total Protein",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "22580-5",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC022"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (no prior exposure); positive indicates past exposure"
+        }
+      },
+      "analyte_code": "TOXO_IGG",
+      "name": "Toxoplasma IgG",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "25542-2",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC022"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "TOXO_IGM",
+      "name": "Toxoplasma IgM",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "8041-6",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC017"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "TPHA_TPPA_RESULT",
+      "name": "TPHA/TPPA Result",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "10839-9",
+      "value_type": "NUMERIC",
+      "unit": "ng/mL",
+      "decimals_suggested": 3,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 0.04
+        }
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 40
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000
+      },
+      "analyte_code": "TROPONIN_I",
+      "name": "Troponin I",
+      "specimen": "Serum or Plasma",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "3016-3",
+      "value_type": "NUMERIC",
+      "unit": "mIU/L",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 0.4,
+          "high": 4
+        }
+      },
+      "citations": [
+        "SRC002",
+        "SRC003",
+        "SRC009"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 500
+      },
+      "critical_range": {
+        "low": 0.01,
+        "high": 50
+      },
+      "analyte_code": "TSH",
+      "name": "TSH",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5769-5",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "None",
+        "Rare",
+        "Few",
+        "Moderate",
+        "Many"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "None or rare"
+        }
+      },
+      "analyte_code": "UA_BACTERIA",
+      "name": "Bacteria (Microscopy)",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5794-3",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Trace",
+        "1+",
+        "2+",
+        "3+"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "UA_BLOOD",
+      "name": "Blood/Hemoglobin",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5767-9",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Clear",
+        "Slightly turbid",
+        "Turbid",
+        "Milky"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Clear"
+        }
+      },
+      "analyte_code": "UA_CLARITY",
+      "name": "Clarity",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5778-6",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Colorless",
+        "Pale yellow",
+        "Yellow",
+        "Amber",
+        "Dark brown",
+        "Red/Pink"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Pale yellow to yellow"
+        }
+      },
+      "analyte_code": "UA_COLOR",
+      "name": "Color",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5792-7",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "1+",
+        "2+",
+        "3+",
+        "4+"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "UA_GLUCOSE",
+      "name": "Glucose",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5811-5",
+      "value_type": "NUMERIC",
+      "unit": "density",
+      "decimals_suggested": 3,
+      "reference_range": {
+        "adult_general": {
+          "low": 1.005,
+          "high": 1.03
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 1,
+        "max": 1.06
+      },
+      "critical_range": {
+        "low": 1,
+        "high": 1.05
+      },
+      "analyte_code": "UA_GRAVITY",
+      "name": "Specific Gravity",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5799-2",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Trace",
+        "1+",
+        "2+",
+        "3+"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "UA_LEUK",
+      "name": "Leukocyte Esterase",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5802-4",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "UA_NITRITE",
+      "name": "Nitrite",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5803-2",
+      "value_type": "NUMERIC",
+      "unit": "pH units",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 5.5,
+          "high": 8
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 6.5,
+        "max": 8
+      },
+      "critical_range": {
+        "low": 4.5,
+        "high": 9
+      },
+      "analyte_code": "UA_PH",
+      "name": "pH",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5804-0",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Trace",
+        "1+",
+        "2+",
+        "3+",
+        "4+"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "UA_PROTEIN",
+      "name": "Protein",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "13945-1",
+      "value_type": "NUMERIC",
+      "unit": "/lpf",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 3
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 100
+      },
+      "analyte_code": "UA_RBC",
+      "name": "RBC (Microscopy)",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "5821-4",
+      "value_type": "NUMERIC",
+      "unit": "/lpf",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 5
+        }
+      },
+      "citations": [
+        "SRC002"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 100
+      },
+      "analyte_code": "UA_WBC",
+      "name": "WBC (Microscopy)",
+      "specimen": "Urine (random or mid-stream clean-catch)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "19090-0",
+      "value_type": "NUMERIC",
+      "unit": "CFU/mL",
+      "decimals_suggested": 0,
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 10000
+        }
+      },
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 1000000
+      },
+      "analyte_code": "URINE_CFU",
+      "name": "Colony-Forming Units",
+      "specimen": "Urine (clean-catch mid-stream)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "transport_delay",
+        "ambiguous_identification_repeat_workup",
+        "instrument_error_repeat_run",
+        "insufficient_growth_repeat_incubation",
+        "leaked_or_broken_container",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "19090-0",
+      "value_type": "NUMERIC",
+      "unit": "CFU/mL",
+      "decimals_suggested": 0,
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "low": 0,
+          "high": 10000
+        }
+      },
+      "physiologic_range": {
+        "min": 0,
+        "max": 1000000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 1000000
+      },
+      "analyte_code": "URINE_COUNT",
+      "name": "Colony Count",
+      "specimen": "Urine (clean-catch mid-stream)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "transport_delay",
+        "ambiguous_identification_repeat_workup",
+        "instrument_error_repeat_run",
+        "insufficient_growth_repeat_incubation",
+        "leaked_or_broken_container",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2106-3",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (non-pregnant)"
+        }
+      },
+      "analyte_code": "URINE_HCG",
+      "name": "hCG (Urine)",
+      "specimen": "Urine (first morning preferred)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "equivocal_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_device_expired_cartridge",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "630-4",
+      "value_type": "TEXT",
+      "citations": [
+        "SRC002"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "No uropathogen isolated (or consistent with contamination)"
+        }
+      },
+      "analyte_code": "URINE_ORGANISM",
+      "name": "Organism",
+      "specimen": "Urine (clean-catch mid-stream)",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "transport_delay",
+        "ambiguous_identification_repeat_workup",
+        "instrument_error_repeat_run",
+        "insufficient_growth_repeat_incubation",
+        "leaked_or_broken_container",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "2132-9",
+      "value_type": "NUMERIC",
+      "unit": "pg/mL",
+      "decimals_suggested": 0,
+      "reference_range": {
+        "adult_general": {
+          "low": 200,
+          "high": 900
+        }
+      },
+      "citations": [
+        "SRC020"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 5000
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 5000
+      },
+      "analyte_code": "VIT_B12",
+      "name": "Vitamin B12",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "not_protected_from_light",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "62292-8",
+      "value_type": "NUMERIC",
+      "unit": "ng/mL",
+      "decimals_suggested": 1,
+      "reference_range": {
+        "adult_general": {
+          "low": 30,
+          "high": 100
+        }
+      },
+      "citations": [
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0,
+        "max": 200
+      },
+      "critical_range": {
+        "low": 0,
+        "high": 200
+      },
+      "analyte_code": "VIT_D_25OH",
+      "name": "25-Hydroxy Vitamin D",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "critical_value_repeat_for_verification",
+        "delta_check_failure_repeat_run",
+        "fasting_requirements_not_met",
+        "instrument_error_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "6690-2",
+      "value_type": "NUMERIC",
+      "unit": "×10⁹/L",
+      "decimals_suggested": 2,
+      "reference_range": {
+        "adult_general": {
+          "low": 3.5,
+          "high": 11
+        }
+      },
+      "critical_range": {
+        "low": 2,
+        "high": 30
+      },
+      "citations": [
+        "SRC002",
+        "SRC003"
+      ],
+      "physiologic_range": {
+        "min": 0.1,
+        "max": 500
+      },
+      "analyte_code": "WBC",
+      "name": "White Blood Cell Count",
+      "specimen": "Whole Blood",
+      "validation_rejection_criteria": [
+        "clotted",
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "analyzer_flag_repeat_run_on_same_sample",
+        "instrument_error_repeat_run",
+        "platelet_clumps_aggregation_flags_repeat_count",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "41217-1",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC019"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative (no prior exposure/vaccination); positive after vaccination or infection"
+        }
+      },
+      "analyte_code": "YF_IGG",
+      "name": "Yellow Fever IgG",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    },
+    {
+      "loinc_code": "41216-3",
+      "value_type": "SELECT",
+      "allowed_values": [
+        "Negative",
+        "Positive"
+      ],
+      "citations": [
+        "SRC019"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
+      },
+      "analyte_code": "YF_IGM",
+      "name": "Yellow Fever IgM",
+      "specimen": "Serum",
+      "validation_rejection_criteria": [
+        "contaminated",
+        "hemolyzed_severe",
+        "icteric",
+        "qns",
+        "lipemic",
+        "indeterminate_result_repeat_run",
+        "instrument_error_repeat_run",
+        "invalid_or_expired_reagent_repeat_run",
+        "procedural_error_during_analysis",
+        "qc_control_failure"
+      ]
+    }
+  ]
+}

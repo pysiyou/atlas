@@ -1084,13 +1084,13 @@
         }
       }
     },
-    "/api/v1/tests": {
+    "/api/v1/orderable-tests": {
       "get": {
         "tags": [
-          "tests"
+          "orderable-tests"
         ],
-        "summary": "Get Tests",
-        "operationId": "get_tests_api_v1_tests_get",
+        "summary": "List Orderable Tests",
+        "operationId": "list_orderable_tests_api_v1_orderable_tests_get",
         "security": [
           {
             "HTTPBearer": []
@@ -1155,9 +1155,9 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TestSummaryResponse"
+                    "$ref": "#/components/schemas/OrderableTestSummaryResponse"
                   },
-                  "title": "Response Get Tests Api V1 Tests Get"
+                  "title": "Response List Orderable Tests Api V1 Orderable Tests Get"
                 }
               }
             }
@@ -1175,13 +1175,13 @@
         }
       }
     },
-    "/api/v1/tests/search": {
+    "/api/v1/orderable-tests/search": {
       "get": {
         "tags": [
-          "tests"
+          "orderable-tests"
         ],
-        "summary": "Search Tests",
-        "operationId": "search_tests_api_v1_tests_search_get",
+        "summary": "Search Orderable Tests",
+        "operationId": "search_orderable_tests_api_v1_orderable_tests_search_get",
         "security": [
           {
             "HTTPBearer": []
@@ -1218,9 +1218,9 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TestResponse"
+                    "$ref": "#/components/schemas/OrderableTestSummaryResponse"
                   },
-                  "title": "Response Search Tests Api V1 Tests Search Get"
+                  "title": "Response Search Orderable Tests Api V1 Orderable Tests Search Get"
                 }
               }
             }
@@ -1238,13 +1238,13 @@
         }
       }
     },
-    "/api/v1/tests/by-codes": {
+    "/api/v1/orderable-tests/by-codes": {
       "get": {
         "tags": [
-          "tests"
+          "orderable-tests"
         ],
-        "summary": "Get Tests By Codes",
-        "operationId": "get_tests_by_codes_api_v1_tests_by_codes_get",
+        "summary": "Get Orderable Tests By Codes",
+        "operationId": "get_orderable_tests_by_codes_api_v1_orderable_tests_by_codes_get",
         "security": [
           {
             "HTTPBearer": []
@@ -1271,9 +1271,9 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TestResponse"
+                    "$ref": "#/components/schemas/OrderableTestResponse"
                   },
-                  "title": "Response Get Tests By Codes Api V1 Tests By Codes Get"
+                  "title": "Response Get Orderable Tests By Codes Api V1 Orderable Tests By Codes Get"
                 }
               }
             }
@@ -1291,13 +1291,13 @@
         }
       }
     },
-    "/api/v1/tests/{testCode}": {
+    "/api/v1/orderable-tests/{testCode}": {
       "get": {
         "tags": [
-          "tests"
+          "orderable-tests"
         ],
-        "summary": "Get Test",
-        "operationId": "get_test_api_v1_tests__testCode__get",
+        "summary": "Get Orderable Test",
+        "operationId": "get_orderable_test_api_v1_orderable_tests__testCode__get",
         "security": [
           {
             "HTTPBearer": []
@@ -1320,7 +1320,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TestResponse"
+                  "$ref": "#/components/schemas/OrderableTestResponse"
                 }
               }
             }
@@ -1338,14 +1338,13 @@
         }
       }
     },
-    "/api/v1/panels": {
+    "/api/v1/clinical-workups": {
       "get": {
         "tags": [
-          "panels"
+          "clinical-workups"
         ],
-        "summary": "List Panels",
-        "description": "List orderable panels (taxonomy tags inverted into member bundles).",
-        "operationId": "list_panels_api_v1_panels_get",
+        "summary": "List Clinical Workups",
+        "operationId": "list_clinical_workups_api_v1_clinical_workups_get",
         "security": [
           {
             "HTTPBearer": []
@@ -1371,9 +1370,9 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/CatalogPanelResponse"
+                    "$ref": "#/components/schemas/ClinicalWorkupResponse"
                   },
-                  "title": "Response List Panels Api V1 Panels Get"
+                  "title": "Response List Clinical Workups Api V1 Clinical Workups Get"
                 }
               }
             }
@@ -4621,6 +4620,46 @@
         ],
         "title": "AgeBuckets"
       },
+      "AnalyteSummaryResponse": {
+        "properties": {
+          "analyteCode": {
+            "type": "string",
+            "title": "Analytecode"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "loincCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loinccode"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "analyteCode",
+          "name"
+        ],
+        "title": "AnalyteSummaryResponse"
+      },
       "AnalyzerResultRequest": {
         "properties": {
           "specimen_id": {
@@ -5204,19 +5243,20 @@
         ],
         "title": "BoardAttentionItem"
       },
-      "CatalogPanelResponse": {
+      "ClinicalWorkupResponse": {
         "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
           "name": {
             "type": "string",
-            "maxLength": 200,
-            "minLength": 1,
             "title": "Name"
           },
           "description": {
             "anyOf": [
               {
-                "type": "string",
-                "maxLength": 2000
+                "type": "string"
               },
               {
                 "type": "null"
@@ -5224,34 +5264,17 @@
             ],
             "title": "Description"
           },
-          "memberTestCodes": {
+          "testCodes": {
             "items": {
               "type": "string"
             },
             "type": "array",
-            "minItems": 1,
-            "title": "Membertestcodes"
-          },
-          "price": {
-            "anyOf": [
-              {
-                "type": "number",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Price"
+            "title": "Testcodes"
           },
           "isActive": {
             "type": "boolean",
             "title": "Isactive",
             "default": true
-          },
-          "code": {
-            "type": "string",
-            "title": "Code"
           },
           "createdAt": {
             "anyOf": [
@@ -5280,12 +5303,10 @@
         },
         "type": "object",
         "required": [
-          "name",
-          "memberTestCodes",
-          "code"
+          "code",
+          "name"
         ],
-        "title": "CatalogPanelResponse",
-        "description": "Persisted panel row."
+        "title": "ClinicalWorkupResponse"
       },
       "CollectionWorklistItem": {
         "properties": {
@@ -7322,13 +7343,13 @@
             "title": "Tests",
             "description": "Explicit catalog tests"
           },
-          "panelCodes": {
+          "workupCodes": {
             "items": {
               "type": "string"
             },
             "type": "array",
-            "title": "Panelcodes",
-            "description": "Orderable panel codes expanded server-side"
+            "title": "Workupcodes",
+            "description": "Clinical workup codes expanded server-side"
           },
           "priority": {
             "$ref": "#/components/schemas/PriorityLevel",
@@ -8469,6 +8490,376 @@
         },
         "type": "object",
         "title": "OrderUpdate"
+      },
+      "OrderableTestResponse": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "displayName": {
+            "type": "string",
+            "title": "Displayname"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          },
+          "turnaroundTimeHours": {
+            "type": "integer",
+            "title": "Turnaroundtimehours"
+          },
+          "sampleType": {
+            "type": "string",
+            "title": "Sampletype"
+          },
+          "containerTypes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Containertypes"
+          },
+          "containerTopColors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Containertopcolors"
+          },
+          "isActive": {
+            "type": "boolean",
+            "title": "Isactive",
+            "default": true
+          },
+          "synonyms": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Synonyms"
+          },
+          "sampleVolume": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Samplevolume"
+          },
+          "minimumVolume": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimumvolume"
+          },
+          "optimalVolume": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Optimalvolume"
+          },
+          "numberOfContainers": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Numberofcontainers"
+          },
+          "containerDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Containerdescription"
+          },
+          "specialRequirements": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Specialrequirements"
+          },
+          "fastingRequired": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fastingrequired"
+          },
+          "collectionNotes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collectionnotes"
+          },
+          "rejectionCriteria": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RejectionCriterionItem"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejectioncriteria"
+          },
+          "validationRejectionCriteria": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RejectionCriterionItem"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validationrejectioncriteria"
+          },
+          "analytes": {
+            "items": {
+              "$ref": "#/components/schemas/AnalyteSummaryResponse"
+            },
+            "type": "array",
+            "title": "Analytes",
+            "default": []
+          },
+          "loincCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loinccode"
+          },
+          "methodology": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Methodology"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "displayName",
+          "category",
+          "price",
+          "turnaroundTimeHours",
+          "sampleType",
+          "containerTypes",
+          "containerTopColors",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "OrderableTestResponse"
+      },
+      "OrderableTestSummaryResponse": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "displayName": {
+            "type": "string",
+            "title": "Displayname"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          },
+          "turnaroundTimeHours": {
+            "type": "integer",
+            "title": "Turnaroundtimehours"
+          },
+          "sampleType": {
+            "type": "string",
+            "title": "Sampletype"
+          },
+          "containerTypes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Containertypes"
+          },
+          "containerTopColors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Containertopcolors"
+          },
+          "isActive": {
+            "type": "boolean",
+            "title": "Isactive",
+            "default": true
+          },
+          "synonyms": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Synonyms"
+          },
+          "loincCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loinccode"
+          },
+          "fastingRequired": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fastingrequired"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "displayName",
+          "category",
+          "price",
+          "turnaroundTimeHours",
+          "sampleType",
+          "containerTypes",
+          "containerTopColors",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "OrderableTestSummaryResponse"
       },
       "PaginatedResponse_OrderResponse_": {
         "properties": {
@@ -10226,8 +10617,7 @@
         "required": [
           "reason"
         ],
-        "title": "RejectionCriterionItem",
-        "description": "Catalog rejection reason with routing domain (specimen vs analytical)."
+        "title": "RejectionCriterionItem"
       },
       "RejectionReason": {
         "type": "string",
@@ -10998,294 +11388,6 @@
         "title": "StatusPresentation",
         "description": "UI-facing primary status and optional secondary reason label."
       },
-      "TestResponse": {
-        "properties": {
-          "code": {
-            "type": "string",
-            "title": "Code"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "displayName": {
-            "type": "string",
-            "title": "Displayname"
-          },
-          "category": {
-            "type": "string",
-            "title": "Category"
-          },
-          "price": {
-            "type": "number",
-            "title": "Price"
-          },
-          "turnaroundTimeHours": {
-            "type": "integer",
-            "title": "Turnaroundtimehours"
-          },
-          "sampleType": {
-            "type": "string",
-            "title": "Sampletype"
-          },
-          "containerTypes": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Containertypes"
-          },
-          "containerTopColors": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Containertopcolors"
-          },
-          "isActive": {
-            "type": "boolean",
-            "title": "Isactive",
-            "default": true
-          },
-          "synonyms": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Synonyms"
-          },
-          "sampleVolume": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Samplevolume"
-          },
-          "minimumVolume": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Minimumvolume"
-          },
-          "optimalVolume": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Optimalvolume"
-          },
-          "numberOfContainers": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Numberofcontainers"
-          },
-          "containerDescription": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Containerdescription"
-          },
-          "specialRequirements": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Specialrequirements"
-          },
-          "fastingRequired": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Fastingrequired"
-          },
-          "collectionNotes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Collectionnotes"
-          },
-          "rejectionCriteria": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/RejectionCriterionItem"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rejectioncriteria"
-          },
-          "validationRejectionCriteria": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/RejectionCriterionItem"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Validationrejectioncriteria"
-          },
-          "referenceRanges": {
-            "anyOf": [
-              {
-                "items": {},
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Referenceranges"
-          },
-          "resultItems": {
-            "anyOf": [
-              {
-                "items": {},
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Resultitems"
-          },
-          "panels": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Panels"
-          },
-          "loincCode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Loinccode"
-          },
-          "methodology": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Methodology"
-          },
-          "confidence": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Confidence"
-          },
-          "notes": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Notes"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Createdat"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Updatedat"
-          }
-        },
-        "type": "object",
-        "required": [
-          "code",
-          "name",
-          "displayName",
-          "category",
-          "price",
-          "turnaroundTimeHours",
-          "sampleType",
-          "containerTypes",
-          "containerTopColors",
-          "createdAt",
-          "updatedAt"
-        ],
-        "title": "TestResponse"
-      },
       "TestResultValue": {
         "properties": {
           "value": {
@@ -11364,133 +11466,6 @@
           "removed"
         ],
         "title": "TestStatus"
-      },
-      "TestSummaryResponse": {
-        "properties": {
-          "code": {
-            "type": "string",
-            "title": "Code"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "displayName": {
-            "type": "string",
-            "title": "Displayname"
-          },
-          "category": {
-            "type": "string",
-            "title": "Category"
-          },
-          "price": {
-            "type": "number",
-            "title": "Price"
-          },
-          "turnaroundTimeHours": {
-            "type": "integer",
-            "title": "Turnaroundtimehours"
-          },
-          "sampleType": {
-            "type": "string",
-            "title": "Sampletype"
-          },
-          "containerTypes": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Containertypes"
-          },
-          "containerTopColors": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Containertopcolors"
-          },
-          "isActive": {
-            "type": "boolean",
-            "title": "Isactive",
-            "default": true
-          },
-          "synonyms": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Synonyms"
-          },
-          "panels": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Panels"
-          },
-          "loincCode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Loinccode"
-          },
-          "fastingRequired": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Fastingrequired"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Createdat"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Updatedat"
-          }
-        },
-        "type": "object",
-        "required": [
-          "code",
-          "name",
-          "displayName",
-          "category",
-          "price",
-          "turnaroundTimeHours",
-          "sampleType",
-          "containerTypes",
-          "containerTopColors",
-          "createdAt",
-          "updatedAt"
-        ],
-        "title": "TestSummaryResponse",
-        "description": "List/search index shape \u2014 no resultItems, ranges, or collection notes."
       },
       "Token": {
         "properties": {

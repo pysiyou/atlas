@@ -1,5 +1,5 @@
 """Shared SQL search predicates for orders and reportable-order lists."""
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.platform.utils import compact_identifier, looks_like_filler, looks_like_mrn
@@ -29,10 +29,10 @@ def reportable_order_search_filter(search_term: str):
     term = search_term.strip()
     catalog_name_match = exists().where(
         and_(
-            CatalogTest.code == OrderTest.testCode,
+            OrderableTest.code == OrderTest.testCode,
             or_(
-                CatalogTest.displayName.ilike(f"%{term}%"),
-                CatalogTest.name.ilike(f"%{term}%"),
+                OrderableTest.displayName.ilike(f"%{term}%"),
+                OrderableTest.name.ilike(f"%{term}%"),
             ),
         )
     )

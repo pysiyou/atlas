@@ -3,7 +3,7 @@
  */
 import type { WorklistPagination } from '../api/worklists';
 import { Button } from '@/components/primitives';
-import { TABLE_TYPE } from '@/theme/recipes';
+import { TABLE_TYPE, text } from '@/theme/recipes';
 
 interface LabWorklistPaginationNoticeProps {
   /** Worklist page metadata from the current server response. */
@@ -63,7 +63,7 @@ export function LabWorklistPaginationNotice({
         </div>
       ) : null}
       <span
-        className={`${TABLE_TYPE.caption} tabular-nums text-text-secondary`}
+        className={`${TABLE_TYPE.caption} tabular-nums ${text({ role: 'caption', intent: 'muted' })}`}
         aria-live="polite"
         aria-atomic="true"
       >

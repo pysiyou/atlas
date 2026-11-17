@@ -7,8 +7,9 @@ from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Payment
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.billing.service import BillingService
-from app.domains.catalog.models.catalog_panel import CatalogPanel
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.models.clinical_workup import ClinicalWorkup
+from app.domains.catalog.models.clinical_workup_test import ClinicalWorkupTest
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.public import (
     generate_samples_for_order,
@@ -171,7 +172,7 @@ def _catalog_test_names_by_code(db, codes: list[str]) -> dict[str, str]:
     if not codes:
         return {}
     unique = list(dict.fromkeys(codes))
-    rows = db.query(CatalogTest.code, CatalogTest.name).filter(CatalogTest.code.in_(unique)).all()
+    rows = db.query(OrderableTest.code, OrderableTest.name).filter(OrderableTest.code.in_(unique)).all()
     return {code: name for code, name in rows}
 
 
@@ -296,50 +297,49 @@ class OrderService:
     def _expand_order_line_items(
         self, order_data: OrderCreate
     ) -> tuple[list[tuple[str, float]], float]:
-        """Expand panel codes, dedupe with explicit tests, and price from panel or members."""
+        """Expand clinical workup codes and dedupe with explicitly ordered tests."""
         codes: list[str] = [item.testCode for item in order_data.tests]
-        panel_price_by_member: dict[str, float] = {}
-        for panel_code in order_data.panelCodes or []:
-            panel = (
-                self.db.query(CatalogPanel)
-                .filter(CatalogPanel.code == panel_code, CatalogPanel.isActive.is_(True))
+        for workup_code in order_data.workupCodes or []:
+            workup = (
+                self.db.query(ClinicalWorkup)
+                .filter(ClinicalWorkup.code == workup_code, ClinicalWorkup.isActive.is_(True))
                 .first()
             )
-            if not panel:
+            if not workup:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"CatalogPanel {panel_code} not found",
+                    detail=f"ClinicalWorkup {workup_code} not found",
                 )
-            members = [str(code) for code in (panel.memberTestCodes or []) if code]
-            if panel.price is not None and members:
-                share = float(panel.price) / len(members)
-                for member in members:
-                    panel_price_by_member[member] = share
-            for member in members:
-                if member not in codes:
+            member_rows = (
+                self.db.query(ClinicalWorkupTest.testCode)
+                .filter(ClinicalWorkupTest.workupCode == workup_code)
+                .all()
+            )
+            for (member,) in member_rows:
+                if member and member not in codes:
                     codes.append(member)
         catalog_by_code = self._catalog_tests_by_code(codes)
         test_entries: list[tuple[str, float]] = []
         total_price = 0.0
         for code in codes:
             test = catalog_by_code[code]
-            price = panel_price_by_member.get(code, float(test.price))
+            price = float(test.price)
             total_price += price
             test_entries.append((code, price))
         return test_entries, total_price
 
-    def _catalog_tests_by_code(self, codes: list[str]) -> dict[str, CatalogTest]:
+    def _catalog_tests_by_code(self, codes: list[str]) -> dict[str, OrderableTest]:
         """Load catalog rows for the given codes once; 404 if any code is missing."""
         unique_codes = list(dict.fromkeys(codes))
         if not unique_codes:
             return {}
-        found = self.db.query(CatalogTest).filter(CatalogTest.code.in_(unique_codes)).all()
+        found = self.db.query(OrderableTest).filter(OrderableTest.code.in_(unique_codes)).all()
         by_code = {test.code: test for test in found}
         missing = [code for code in unique_codes if code not in by_code]
         if missing:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"CatalogTest {', '.join(missing)} not found",
+                detail=f"OrderableTest {', '.join(missing)} not found",
             )
         return by_code
 

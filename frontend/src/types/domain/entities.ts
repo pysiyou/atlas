@@ -456,7 +456,7 @@ export interface ReferenceRange {
   criticalHigh?: number; // Above this is critical
 }
 
-/** Registry reason id (contracts/catalog/test-catalog.json rejection_criteria entries). */
+/** Registry reason id (contracts/catalog/orderable-tests.json / analyte-catalog.json rejection criteria). */
 export type RejectionReasonId = string;
 
 /** Wire shape (catalog JSON) — snake_case field names. */
@@ -470,52 +470,6 @@ export interface SampleRequirements {
   fasting_required: boolean;
   collection_notes?: string;
   rejection_criteria?: RejectionReasonId[];
-}
-
-/**
- * Result item from catalog - individual test parameter/component
- */
-export interface ResultItem {
-  item_code: string;
-  item_name: string;
-  /** Observation-level LOINC for this reportable parameter. */
-  loinc_code?: string;
-  value_type: ValueType;
-  unit: string;
-  decimals_suggested?: number;
-  reference_range?: CatalogReferenceRange; // Optional - some tests (qualitative, text) don't have ranges
-  critical_range?: CriticalRange;
-  /** Absolute min/max for impossible values (blocking validation). */
-  physiologic_range?: { min: number; max: number };
-  allowed_values?: string[]; // For SELECT type
-  citations?: string[];
-}
-
-/** Wire shape (catalog JSON) — full catalog document. */
-export interface TestCatalogEntry {
-  test_code: string;
-  display_name: string;
-  synonyms: string[];
-  category: string;
-  panels?: string[];
-  /** Unique observation LOINC for this test when it is one analyte. */
-  loinc_code?: string;
-  /** LOINC ORDER_OBS for a single-parameter orderable test. */
-  order_obs?: 'observation' | 'both';
-  method_common?: string;
-  turnaround_time_hours: number;
-  sample: SampleRequirements;
-  validation_rejection_criteria?: RejectionReasonId[];
-  result_items: ResultItem[];
-  sources?: string[];
-  confidence?: 'HIGH' | 'MEDIUM' | 'LOW';
-  notes?: string;
-  mapped_category: string;
-  mapped_sample_type: string;
-  container_types: ContainerType[];
-  container_top_colors: ContainerTopColor[];
-  sample_volume_description?: string;
-  price: number;
 }
 
 /**
@@ -535,7 +489,7 @@ export interface TestSummary {
   updatedAt: string;
   containerTypes: ContainerType[];
   containerTopColors: ContainerTopColor[];
-  panels?: string[];
+  workups?: string[];
   /** Unique observation LOINC for this test; omitted for multi-parameter batteries. */
   loincCode?: string;
   fastingRequired?: boolean;
@@ -575,15 +529,14 @@ export interface TestParameter {
   criticalLow?: number;
   criticalHigh?: number;
   decimalPlaces?: number;
-  /** Observation-level LOINC for this parameter (from result_items.loinc_code). */
+  /** Observation-level LOINC from catalog analyte definition. */
   loincCode?: string;
 
-  // New fields from catalog result_items
   valueType?: ValueType; // NUMERIC, SELECT, TEXT
   catalogReferenceRange?: CatalogReferenceRange; // Full demographic ranges
   allowedValues?: string[]; // For SELECT type
   decimalsSuggested?: number; // Suggested decimal precision
-  /** From catalog result_items.physiologic_range (blocking entry validation). */
+  /** From catalog analyte physiologic_range (blocking entry validation). */
   physiologicRange?: { min: number; max: number };
 }
 

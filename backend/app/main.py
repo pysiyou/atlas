@@ -26,26 +26,19 @@ async def lifespan(app: FastAPI):
     """Application lifespan events."""
     Base.metadata.create_all(bind=engine)
     try:
-        from app.domains.catalog.panel_service import CatalogPanelService
+        from app.domains.catalog.seed_service import CatalogSeedService
         from app.platform.database import SessionLocal
 
         db = SessionLocal()
         try:
-            from app.domains.catalog.test_catalog_service import (
-                TestCatalogService,
-                ensure_loinc_code_column,
-            )
+            from app.domains.catalog.schema_finalize import finalize_catalog_schema
 
-            # Existing DBs still have tests.loinc_codes JSON; add loinc_code first.
-            ensure_loinc_code_column(db)
-            panel_svc = CatalogPanelService(db)
-            panel_svc.sync_test_panel_ids_from_contract()
-            TestCatalogService(db).sync_parameter_loinc_from_contract()
-            panel_svc.seed_from_catalog_tests()
+            CatalogSeedService(db).seed_from_contracts()
+            finalize_catalog_schema(db)
         finally:
             db.close()
     except Exception:
-        logger.exception("Catalog panel seed skipped")
+        logger.exception("Catalog seed skipped")
     redis_client = get_redis()
     if redis_client:
         logger.info("Redis cache connected")

@@ -1,4 +1,4 @@
-/** GENERATED — DO NOT EDIT. Source: contracts/registries/lab.json, rejection-reasons.json, contracts/catalog/test-catalog.json */
+/** GENERATED — DO NOT EDIT. Source: contracts/registries/lab.json, rejection-reasons.json, contracts/catalog/orderable-tests.json, analyte-catalog.json */
 
 // =============================================================================
 // lab-policy

@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import UTC, date, datetime, time
 from typing import Any
 
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.monitor.board_service import LabBoardService
 from app.domains.lab.monitor.predicates import (
@@ -116,7 +116,7 @@ def _order_test_worklist_search_filter(search_term: str):
     term = search_term.strip()
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
-        CatalogTest.name.ilike(f"%{term}%"),
+        OrderableTest.name.ilike(f"%{term}%"),
         OrderTest.testCode.ilike(f"%{term}%"),
         Sample.sampleId.ilike(f"%{term}%"),
         Order.orderId.ilike(f"%{term}%"),
@@ -177,8 +177,8 @@ class LabWorklistService:
         if code in self._catalog_cache:
             return self._catalog_cache[code]
         row = (
-            self.db.query(CatalogTest.name, CatalogTest.category)
-            .filter(CatalogTest.code == code)
+            self.db.query(OrderableTest.name, OrderableTest.category)
+            .filter(OrderableTest.code == code)
             .first()
         )
         meta = (row[0], row[1]) if row else (None, None)
@@ -357,7 +357,7 @@ class LabWorklistService:
         order_test: OrderTest,
         order: Order,
         patient: Patient,
-        test: CatalogTest,
+        test: OrderableTest,
         sample: Sample | None,
         escalation_code: str | None,
     ) -> dict[str, Any]:
@@ -406,11 +406,11 @@ class LabWorklistService:
         if priorities:
             query = query.filter(Order.priority.in_(priorities))
         if category:
-            query = query.filter(CatalogTest.category == category)
+            query = query.filter(OrderableTest.category == category)
         query = _apply_worklist_window_filters(
             query,
             order_date_col=Order.orderDate,
-            sample_type_col=CatalogTest.sampleType,
+            sample_type_col=OrderableTest.sampleType,
             date_from=date_from,
             date_to=date_to,
             sample_types=sample_types,
@@ -447,8 +447,8 @@ class LabWorklistService:
                 exists().where(
                     and_(
                         OrderTest.sampleId == Sample.sampleId,
-                        OrderTest.testCode == CatalogTest.code,
-                        CatalogTest.category == category,
+                        OrderTest.testCode == OrderableTest.code,
+                        OrderableTest.category == category,
                     )
                 )
             )
@@ -853,7 +853,7 @@ class LabWorklistService:
             end = datetime.combine(date_to, time.max, tzinfo=UTC)
             query = query.filter(OrderTest.updatedAt <= end)
         if sample_types:
-            query = query.filter(CatalogTest.sampleType.in_(sample_types))
+            query = query.filter(OrderableTest.sampleType.in_(sample_types))
         search_term = search.strip() if search else ""
         if search_term:
             query = query.filter(_order_test_worklist_search_filter(search_term))

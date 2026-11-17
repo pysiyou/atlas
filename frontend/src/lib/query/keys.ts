@@ -41,9 +41,9 @@ export const queryKeys = {
     search: (query: string) => [...queryKeys.tests.all, 'search', query] as const,
   },
 
-  panels: {
-    all: ['panels'] as const,
-    list: () => [...queryKeys.panels.all, 'list'] as const,
+  clinicalWorkups: {
+    all: ['clinical-workups'] as const,
+    list: () => [...queryKeys.clinicalWorkups.all, 'list'] as const,
   },
 
   /**

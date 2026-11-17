@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from datetime import UTC, datetime
 from typing import Any, Literal
 
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.lab.rules.blockers import (
     ATTENTION_TYPE_SORT,
     PRIORITY_ATTENTION_TYPES,
@@ -480,8 +480,8 @@ class CatalogTatResolver:
         if not missing:
             return
         rows = (
-            self.db.query(CatalogTest.code, CatalogTest.turnaroundTimeHours)
-            .filter(CatalogTest.code.in_(missing))
+            self.db.query(OrderableTest.code, OrderableTest.turnaroundTimeHours)
+            .filter(OrderableTest.code.in_(missing))
             .all()
         )
         found = {code: hours for code, hours in rows}
@@ -492,8 +492,8 @@ class CatalogTatResolver:
         if test_code in self._cache:
             return self._cache[test_code]
         row = (
-            self.db.query(CatalogTest.turnaroundTimeHours)
-            .filter(CatalogTest.code == test_code)
+            self.db.query(OrderableTest.turnaroundTimeHours)
+            .filter(OrderableTest.code == test_code)
             .first()
         )
         hours = row[0] if row else self.DEFAULT_HOURS

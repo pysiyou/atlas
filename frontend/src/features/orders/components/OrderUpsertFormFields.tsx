@@ -7,7 +7,7 @@ import { TestSelect } from './TestSelect';
 import { Textarea } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
-import { useCatalogPanels } from '@/features/catalog';
+import { useClinicalWorkups } from '@/features/catalog';
 import { ReferentDoctorSelect } from '@/features/referent-doctors';
 import { IconKeys } from '@/icons';
 import { FIELD_ERROR } from '@/theme/recipes';
@@ -68,7 +68,7 @@ export function OrderUpsertFormFields({
     onClearReferentDoctor,
     onCreatePatient,
   } = modalState;
-  const { panels } = useCatalogPanels();
+  const { workups } = useClinicalWorkups();
 
   return (
     <Panel preset="panel.page.formHiddenHeader">
@@ -117,8 +117,8 @@ export function OrderUpsertFormFields({
             }}
             error={fieldState.error?.message}
             tests={tests}
-            panels={panels}
-            onAddPanel={memberCodes => {
+            workups={workups}
+            onAddWorkup={memberCodes => {
               const current = field.value || [];
               const merged = [...current];
               for (const code of memberCodes) {

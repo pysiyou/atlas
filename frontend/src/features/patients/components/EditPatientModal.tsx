@@ -7,6 +7,8 @@ import { FormProvider } from 'react-hook-form';
 import type { Patient } from '@/types';
 import { FormDialogFooter, Modal, ModalPageShell } from '@/components/overlays';
 import { FooterInfo } from '@/components/display';
+import { Text } from '@/components/layout/Text';
+import { RADIUS, text } from '@/theme/recipes';
 
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { ErrorBoundary } from '@/feedback';
@@ -85,18 +87,20 @@ export function EditPatientModal({
             <form id="patient-form" onSubmit={handleSubmit} className="max-w-full space-y-space-6">
               <TabNavigation tabs={[...tabs]} activeTab={activeTab} onTabChange={setActiveTab} />
               {duplicateMatches.length > 0 ? (
-                <div className="rounded-md border border-border-default p-space-4 space-y-space-3">
-                  <p className="text-sm">Possible existing patients match this identity.</p>
+                <div
+                  className={`${RADIUS.surface} border border-border-default p-space-4 space-y-space-3`}
+                >
+                  <Text role="body">Possible existing patients match this identity.</Text>
                   <ul className="space-y-space-2">
                     {duplicateMatches.map(match => (
                       <li key={match.id}>
                         <button
                           type="button"
-                          className="w-full text-left px-space-3 py-space-2 hover:bg-surface-page rounded-md"
+                          className={`w-full text-left px-space-3 py-space-2 hover:bg-surface-page ${RADIUS.surface}`}
                           onClick={() => onSelectExisting(match as Patient)}
                         >
-                          <span className="font-medium">{match.fullName}</span>
-                          <span className="ml-space-2 text-sm opacity-70">
+                          <span className={text({ role: 'label' })}>{match.fullName}</span>
+                          <span className={`ml-space-2 ${text({ role: 'caption', intent: 'muted' })}`}>
                             {match.id} · {match.phone}
                           </span>
                         </button>
@@ -104,10 +108,18 @@ export function EditPatientModal({
                     ))}
                   </ul>
                   <div className="flex gap-space-2">
-                    <button type="button" className="text-sm underline" onClick={onDismissDuplicates}>
+                    <button
+                      type="button"
+                      className={`${text({ role: 'caption' })} underline`}
+                      onClick={onDismissDuplicates}
+                    >
                       Edit details
                     </button>
-                    <button type="button" className="text-sm underline" onClick={onForceCreate}>
+                    <button
+                      type="button"
+                      className={`${text({ role: 'caption' })} underline`}
+                      onClick={onForceCreate}
+                    >
                       Create anyway
                     </button>
                   </div>

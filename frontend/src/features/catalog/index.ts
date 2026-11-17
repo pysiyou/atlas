@@ -15,7 +15,11 @@ export {
   useInvalidateTestCatalog,
 } from './api/tests';
 
-export { panelAPI, useCatalogPanels, type CatalogPanel } from './api/panels';
+export {
+  clinicalWorkupAPI,
+  useClinicalWorkups,
+  type ClinicalWorkup,
+} from './api/clinicalWorkups';
 
 export {
   affiliationAPI,

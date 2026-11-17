@@ -43,15 +43,16 @@ export async function printBenchWorksheet(params?: {
     })
     .join('');
 
+  // Print-only HTML (not app UI): hex colors are intentional for paper output.
   const html = `<!DOCTYPE html>
     <html><head><title>Bench worksheet</title>
     <style>
-      body { font-family: Helvetica, Arial, sans-serif; padding: 16px; color: #111; }
+      body { font-family: Helvetica, Arial, sans-serif; padding: 16px; color: rgb(17 17 17); }
       h1 { font-size: 18px; }
       h2 { font-size: 14px; margin-top: 20px; }
       table { width: 100%; border-collapse: collapse; font-size: 12px; }
-      th, td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; }
-      th { background: #0f172a; color: #fff; }
+      th, td { border: 1px solid rgb(203 213 225); padding: 6px 8px; text-align: left; }
+      th { background: rgb(15 23 42); color: rgb(255 255 255); }
     </style></head>
     <body>
       <h1>Bench worksheet</h1>

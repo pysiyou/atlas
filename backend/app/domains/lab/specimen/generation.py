@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.rules.test_status_sets import INACTIVE_LINEAGE_STATUSES
 from app.domains.lab.specimen.collection_service import (
@@ -51,11 +51,11 @@ def generate_samples_for_order(
     test_codes = list({order_test.testCode for order_test in order_tests})
     tests_by_code = {
         test.code: test
-        for test in db.query(CatalogTest).filter(CatalogTest.code.in_(test_codes)).all()
+        for test in db.query(OrderableTest).filter(OrderableTest.code.in_(test_codes)).all()
     }
 
-    # Group active tests by sample type (key: string from CatalogTest.sampleType for consistency)
-    sample_groups: dict[str, list[tuple[OrderTest, CatalogTest]]] = {}
+    # Group active tests by sample type (key: string from OrderableTest.sampleType for consistency)
+    sample_groups: dict[str, list[tuple[OrderTest, OrderableTest]]] = {}
     for order_test in order_tests:
         test = tests_by_code.get(order_test.testCode)
         if not test:

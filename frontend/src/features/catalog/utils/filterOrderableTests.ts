@@ -1,6 +1,6 @@
 import type { FilterValues } from '@/components/filters/types';
 import type { TestCategory, TestSummary } from '@/types';
-import { resolveOrderablePanelLabel } from '@/types/generated/orderablePanels';
+import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
 import { PRICE_RANGE } from '@/utils/constants';
 
 export const catalogListInitialFilters: FilterValues = {
@@ -11,7 +11,7 @@ export const catalogListInitialFilters: FilterValues = {
 };
 
 /** Client-side catalog list filtering (search, category, sample type, price, name sort). */
-export function filterCatalogTests(tests: TestSummary[], filters: FilterValues): TestSummary[] {
+export function filterOrderableTests(tests: TestSummary[], filters: FilterValues): TestSummary[] {
   const searchQuery = (filters.search as string) ?? '';
   const categoryFilters = (filters.category as TestCategory[]) ?? [];
   const sampleTypeFilters = (filters.sampleType as string[]) ?? [];
@@ -28,10 +28,10 @@ export function filterCatalogTests(tests: TestSummary[], filters: FilterValues):
         test.code.toLowerCase().includes(query) ||
         test.synonyms?.some(syn => syn.toLowerCase().includes(query)) ||
         (test.loincCode?.toLowerCase().includes(query) ?? false) ||
-        test.panels?.some(
-          panel =>
-            panel.toLowerCase().includes(query) ||
-            resolveOrderablePanelLabel(panel).toLowerCase().includes(query)
+        test.workups?.some(
+          workupId =>
+            workupId.toLowerCase().includes(query) ||
+            resolveClinicalWorkupLabel(workupId).toLowerCase().includes(query)
         )
       );
     });

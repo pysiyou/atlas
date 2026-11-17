@@ -25,7 +25,7 @@ import {
 } from '@/utils';
 import type { ReactNode } from 'react';
 import type { Test, TestParameter } from '@/types';
-import { resolveOrderablePanelLabel } from '@/types/generated/orderablePanels';
+import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
 import { useModuleListTitles } from '@/strings';
 
 /** Visible row budget for scroll-capped catalog panels when balancing columns. */
@@ -127,9 +127,9 @@ function buildCatalogDetailTables(test: Test): TableInput[] {
         { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms, '-') },
         { label: 'LOINC Code', value: test.loincCode?.trim() || '-' },
         {
-          label: 'Panels',
+          label: 'Clinical Workups',
           value: formatArrayWithFallback(
-            test.panels?.map(resolveOrderablePanelLabel),
+            test.workups?.map(resolveClinicalWorkupLabel),
             '-'
           ),
         },

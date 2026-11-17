@@ -113,7 +113,7 @@ class OrderTest(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     orderId = Column("order_id", String(13), ForeignKey("orders.order_id"), nullable=False, index=True)
-    testCode = Column("test_code", String, ForeignKey("tests.code"), nullable=False, index=True)
+    testCode = Column("test_code", String, ForeignKey("orderable_tests.code"), nullable=False, index=True)
 
     # Order-specific state
     status = Column(
@@ -184,7 +184,7 @@ class OrderTest(Base):
 
     # Relationships
     order = relationship("Order", back_populates="tests")
-    test = relationship("CatalogTest", foreign_keys=[testCode])
+    test = relationship("OrderableTest", foreign_keys=[testCode])
     sample = relationship("Sample", foreign_keys=[sampleId])
 
     @property

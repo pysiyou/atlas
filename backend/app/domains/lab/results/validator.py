@@ -13,7 +13,7 @@ from app.platform.utils import parse_numeric_result_value
 class ResultValidationError:
     """Represents a validation error for a result value"""
 
-    item_code: str
+    analyte_code: str
     value: Any
     error_type: str  # 'physiologic_limit', 'type_error', 'range_warning'
     message: str
@@ -21,26 +21,31 @@ class ResultValidationError:
 
 
 class ResultValidatorService:
-    """Validates numeric results using test catalog result_item definitions."""
+    """Validates numeric results using catalog analyte definitions."""
 
     def validate_results(
-        self, results: dict[str, Any], result_items: list[dict[str, Any]] | None = None
+        self, results: dict[str, Any], analyte_definitions: list[dict[str, Any]] | None = None
     ) -> list[ResultValidationError]:
         errors = []
-        for item_code, value in results.items():
-            item_errors = self._validate_single_result(item_code, value, result_items)
+        for analyte_code, value in results.items():
+            item_errors = self._validate_single_result(analyte_code, value, analyte_definitions)
             errors.extend(item_errors)
         return errors
 
     def _validate_single_result(
-        self, item_code: str, value: Any, result_items: list[dict[str, Any]] | None = None
+        self, analyte_code: str, value: Any, analyte_definitions: list[dict[str, Any]] | None = None
     ) -> list[ResultValidationError]:
         errors = []
 
         item_def = None
-        if result_items:
+        if analyte_definitions:
             item_def = next(
-                (item for item in result_items if item.get("item_code") == item_code), None
+                (
+                    item
+                    for item in analyte_definitions
+                    if item.get("analyte_code") == analyte_code
+                ),
+                None,
             )
 
         value_type = "NUMERIC"
@@ -65,11 +70,11 @@ class ResultValidatorService:
             if numeric_value < pmin:
                 errors.append(
                     ResultValidationError(
-                        item_code=item_code,
+                        analyte_code=analyte_code,
                         value=value,
                         error_type="physiologic_limit",
                         message=(
-                            f"{item_code} value {value} is below physiologic minimum ({pmin}). "
+                            f"{analyte_code} value {value} is below physiologic minimum ({pmin}). "
                             "This value is not compatible with life."
                         ),
                         is_blocking=True,
@@ -78,11 +83,11 @@ class ResultValidatorService:
             elif numeric_value > pmax:
                 errors.append(
                     ResultValidationError(
-                        item_code=item_code,
+                        analyte_code=analyte_code,
                         value=value,
                         error_type="physiologic_limit",
                         message=(
-                            f"{item_code} value {value} exceeds physiologic maximum ({pmax}). "
+                            f"{analyte_code} value {value} exceeds physiologic maximum ({pmax}). "
                             "This value is not compatible with life."
                         ),
                         is_blocking=True,
@@ -97,20 +102,20 @@ class ResultValidatorService:
             if critical_low is not None and numeric_value < critical_low:
                 errors.append(
                     ResultValidationError(
-                        item_code=item_code,
+                        analyte_code=analyte_code,
                         value=value,
                         error_type="critical_low",
-                        message=f"{item_code} value {value} is critically low (< {critical_low})",
+                        message=f"{analyte_code} value {value} is critically low (< {critical_low})",
                         is_blocking=False,
                     )
                 )
             elif critical_high is not None and numeric_value > critical_high:
                 errors.append(
                     ResultValidationError(
-                        item_code=item_code,
+                        analyte_code=analyte_code,
                         value=value,
                         error_type="critical_high",
-                        message=f"{item_code} value {value} is critically high (> {critical_high})",
+                        message=f"{analyte_code} value {value} is critically high (> {critical_high})",
                         is_blocking=False,
                     )
                 )

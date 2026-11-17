@@ -8,8 +8,11 @@ on:
       - 'config/ui-strings.schema.json'
       - 'config/client-config.json'
       - 'config/client-config.schema.json'
+      - 'contracts/catalog/**'
+      - 'contracts/registries/rejection-reasons.json'
       - 'scripts/validate-*.mjs'
       - 'scripts/generate-audit-catalog.mjs'
+      - 'scripts/generate-clinical-workups.mjs'
       - '.github/workflows/frontend.yml'
   pull_request:
     paths:
@@ -18,8 +21,11 @@ on:
       - 'config/ui-strings.schema.json'
       - 'config/client-config.json'
       - 'config/client-config.schema.json'
+      - 'contracts/catalog/**'
+      - 'contracts/registries/rejection-reasons.json'
       - 'scripts/validate-*.mjs'
       - 'scripts/generate-audit-catalog.mjs'
+      - 'scripts/generate-clinical-workups.mjs'
       - '.github/workflows/frontend.yml'
 
 defaults:
@@ -39,6 +45,7 @@ jobs:
       - run: npm ci
       - run: npm run validate:client-config
       - run: npm run validate:ui-strings
+      - run: npm run validate:catalog
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build

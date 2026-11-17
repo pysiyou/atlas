@@ -33,8 +33,10 @@ export function useTestDetailModalActions({
   const clearValidationComments = useLabDraftStore(s => s.clearValidationComments);
   const [criticalSeen, setCriticalSeen] = useState(false);
 
+  // Reset critical acknowledgement when switching order tests (async to satisfy react-hooks/set-state-in-effect).
   useEffect(() => {
-    setCriticalSeen(false);
+    const id = requestAnimationFrame(() => setCriticalSeen(false));
+    return () => cancelAnimationFrame(id);
   }, [orderTestId]);
 
   const approveHandler = useCallback(

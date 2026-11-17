@@ -8,7 +8,7 @@ import { REFERENCE_DATA_LIMIT } from '@/lib/api';
 import type {
   ContainerTopColor,
   ContainerType,
-  ResultItem,
+  CatalogReferenceRange,
   SampleType,
   Test,
   TestCategory,
@@ -25,7 +25,16 @@ import {
 } from '../testLookup';
 import { cacheConfig, getQueryClient, queryKeys, useAuthQueryEnabled } from '@/lib/query';
 import { useInvalidateQueryKey } from '@/lib/query';
-import { resolveOrderablePanelLabel } from '@/types/generated/orderablePanels';
+import {
+  CLINICAL_WORKUP_BY_ID,
+  resolveClinicalWorkupLabel,
+} from '@/types/generated/clinicalWorkups';
+
+function workupIdsForTest(testCode: string): string[] {
+  return Object.values(CLINICAL_WORKUP_BY_ID)
+    .filter(workup => workup.test_codes?.includes(testCode))
+    .map(workup => workup.id);
+}
 
 interface GetTestsParams {
   category?: TestCategory;
@@ -34,9 +43,17 @@ interface GetTestsParams {
   limit?: number;
 }
 
-/** Backend full test DTO with resultItems before domain transform. */
+type ApiAnalyteSummary = {
+  analyteCode: string;
+  name: string;
+  loincCode?: string | null;
+  unit?: string | null;
+  definition?: Record<string, unknown> | null;
+};
+
+/** Backend full orderable test DTO with analytes before domain transform. */
 type APITestResponse = ApiTestResponse & {
-  resultItems?: ResultItem[];
+  analytes?: ApiAnalyteSummary[];
 };
 
 const EMPTY_SUMMARIES: TestSummary[] = [];
@@ -44,62 +61,59 @@ const EMPTY_SUMMARY_BY_CODE = new Map<string, TestSummary>();
 const EMPTY_FULL_TESTS: Test[] = [];
 const EMPTY_FULL_BY_CODE = new Map<string, Test>();
 
-/**
- * Observation LOINC from a catalog result item (`loinc_code` or camelCase `loincCode`).
- */
-function resultItemLoincCode(item: ResultItem): string | undefined {
-  const record = item as ResultItem & { loincCode?: unknown };
-  const raw = record.loinc_code ?? record.loincCode;
-  if (typeof raw !== 'string') {
-    return undefined;
-  }
-  const trimmed = raw.trim();
-  return trimmed.length > 0 ? trimmed : undefined;
-}
+function mapAnalytesToParameters(analytes?: ApiAnalyteSummary[]): TestParameter[] | undefined {
+  if (!analytes || analytes.length === 0) return undefined;
 
-function mapResultItemsToParameters(resultItems?: ResultItem[]): TestParameter[] | undefined {
-  if (!resultItems || resultItems.length === 0) return undefined;
-
-  return resultItems.map((item): TestParameter => {
+  return analytes.map((item): TestParameter => {
+    const def = item.definition && typeof item.definition === 'object' ? item.definition : {};
+    const merged = { ...def, ...item };
+    const valueType = (merged as { value_type?: string }).value_type;
     let type: 'numeric' | 'text' | 'qualitative' | 'select' = 'text';
-    if (item.value_type === 'NUMERIC') type = 'numeric';
-    else if (item.value_type === 'SELECT') type = 'select';
-    else if (item.value_type === 'TEXT') type = 'text';
+    if (valueType === 'NUMERIC') type = 'numeric';
+    else if (valueType === 'SELECT') type = 'select';
+    else if (valueType === 'TEXT') type = 'text';
 
-    let referenceRange = '';
-    if (item.reference_range) {
+    let referenceRangeText = '';
+    const catalogRefRange = (merged as { reference_range?: CatalogReferenceRange }).reference_range;
+    if (catalogRefRange) {
       const range =
-        item.reference_range.adult_general ||
-        item.reference_range.adult_male ||
-        item.reference_range.adult_female;
+        catalogRefRange.adult_general ||
+        catalogRefRange.adult_male ||
+        catalogRefRange.adult_female;
       if (range) {
         if (range.text?.trim()) {
-          referenceRange = range.text.trim();
+          referenceRangeText = range.text.trim();
         } else if (range.low !== undefined && range.high !== undefined) {
-          referenceRange = `${range.low} - ${range.high}`;
+          referenceRangeText = `${range.low} - ${range.high}`;
         } else if (range.low !== undefined) {
-          referenceRange = `> ${range.low}`;
+          referenceRangeText = `> ${range.low}`;
         } else if (range.high !== undefined) {
-          referenceRange = `< ${range.high}`;
+          referenceRangeText = `< ${range.high}`;
         }
       }
     }
 
+    const crit = (merged as { critical_range?: { low?: number; high?: number } }).critical_range;
+    const phys = (merged as { physiologic_range?: { min?: number; max?: number } }).physiologic_range;
+    const physRange =
+      phys?.min !== undefined && phys?.max !== undefined
+        ? { min: phys.min, max: phys.max }
+        : undefined;
     return {
-      code: item.item_code,
-      name: item.item_name,
+      code: item.analyteCode,
+      name: item.name,
       unit: item.unit || '',
       type,
-      loincCode: resultItemLoincCode(item),
-      referenceRange,
-      valueType: item.value_type,
-      catalogReferenceRange: item.reference_range,
-      criticalLow: item.critical_range?.low,
-      criticalHigh: item.critical_range?.high,
-      allowedValues: item.allowed_values,
-      decimalsSuggested: item.decimals_suggested,
-      decimalPlaces: item.decimals_suggested,
-      physiologicRange: item.physiologic_range,
+      loincCode: item.loincCode ?? undefined,
+      referenceRange: referenceRangeText,
+      valueType: valueType as TestParameter['valueType'],
+      catalogReferenceRange: catalogRefRange,
+      criticalLow: crit?.low,
+      criticalHigh: crit?.high,
+      allowedValues: (merged as { allowed_values?: string[] }).allowed_values,
+      decimalsSuggested: (merged as { decimals_suggested?: number }).decimals_suggested,
+      decimalPlaces: (merged as { decimals_suggested?: number }).decimals_suggested,
+      physiologicRange: physRange,
     };
   });
 }
@@ -118,18 +132,19 @@ function transformAPITestSummary(apiTest: ApiTestSummaryResponse): TestSummary {
     updatedAt: apiTest.updatedAt,
     containerTypes: (apiTest.containerTypes ?? []) as ContainerType[],
     containerTopColors: (apiTest.containerTopColors ?? []) as ContainerTopColor[],
-    panels: apiTest.panels ?? undefined,
+    workups: workupIdsForTest(apiTest.code),
     loincCode: apiTest.loincCode ?? undefined,
     fastingRequired: apiTest.fastingRequired ?? undefined,
   };
 }
 
 function transformAPITest(apiTest: APITestResponse): Test {
-  const { resultItems, turnaroundTimeHours, ...rest } = apiTest;
+  const { analytes, turnaroundTimeHours, ...rest } = apiTest;
   return {
     ...(rest as unknown as Test),
     turnaroundTime: turnaroundTimeHours ?? 0,
-    parameters: mapResultItemsToParameters(resultItems),
+    workups: workupIdsForTest(apiTest.code),
+    parameters: mapAnalytesToParameters(analytes),
   };
 }
 
@@ -144,7 +159,7 @@ export const testAPI = {
     if (params?.limit) queryParams.limit = String(params.limit);
 
     const apiTests = expectArray<ApiTestSummaryResponse>(
-      await apiClient.get<ApiTestSummaryResponse[]>('/tests', queryParams),
+      await apiClient.get<ApiTestSummaryResponse[]>('/orderable-tests', queryParams),
       'catalog'
     );
     return apiTests.map(transformAPITestSummary);
@@ -152,7 +167,7 @@ export const testAPI = {
 
   async getByCode(testCode: string): Promise<Test | null> {
     try {
-      const apiTest = await apiClient.get<APITestResponse>(`/tests/${testCode}`);
+      const apiTest = await apiClient.get<APITestResponse>(`/orderable-tests/${testCode}`);
       return transformAPITest(apiTest);
     } catch {
       return null;
@@ -162,7 +177,7 @@ export const testAPI = {
   async getByCodes(codes: string[]): Promise<Test[]> {
     if (codes.length === 0) return [];
     const apiTests = expectArray<APITestResponse>(
-      await apiClient.get<APITestResponse[]>('/tests/by-codes', { codes: codes.join(',') }),
+      await apiClient.get<APITestResponse[]>('/orderable-tests/by-codes', { codes: codes.join(',') }),
       'catalog by-codes'
     );
     return apiTests.map(transformAPITest);
@@ -170,19 +185,12 @@ export const testAPI = {
 
   async search(query: string): Promise<Test[]> {
     const apiTests = expectArray<APITestResponse>(
-      await apiClient.get<APITestResponse[]>('/tests/search', { q: query }),
+      await apiClient.get<APITestResponse[]>('/orderable-tests/search', { q: query }),
       'catalog search'
     );
     return apiTests.map(transformAPITest);
   },
 
-  async create(test: Omit<Test, 'createdAt' | 'updatedAt'>): Promise<Test> {
-    return apiClient.post<Test>('/tests', test);
-  },
-
-  async update(testCode: string, updates: Partial<Test>): Promise<Test> {
-    return apiClient.put<Test>(`/tests/${testCode}`, updates);
-  },
 };
 
 /**
@@ -231,7 +239,7 @@ export function useParameterLabelMap(testCode?: string): Record<string, string> 
 }
 
 /**
- * Fetch one full catalog document by code (`GET /tests/{code}`).
+ * Fetch one full orderable test by code (`GET /orderable-tests/{code}`).
  * Does not treat a slim list row as a full Test.
  */
 export function useTest(testCode: string | undefined) {
@@ -294,7 +302,7 @@ export function useTestsByCodes(codes: readonly string[]) {
 }
 
 /**
- * Client-side search over the slim catalog (name, code, synonyms, LOINC, panels).
+ * Client-side search over the slim catalog (name, code, synonyms, LOINC, workups).
  */
 export function useTestSearch(searchQuery: string) {
   const { tests, isLoading } = useTestCatalog();
@@ -307,10 +315,10 @@ export function useTestSearch(searchQuery: string) {
           test.code.toLowerCase().includes(query) ||
           test.synonyms?.some(syn => syn.toLowerCase().includes(query)) ||
           (test.loincCode?.toLowerCase().includes(query) ?? false) ||
-          test.panels?.some(
-            panel =>
-              panel.toLowerCase().includes(query) ||
-              resolveOrderablePanelLabel(panel).toLowerCase().includes(query)
+          test.workups?.some(
+            workupId =>
+              workupId.toLowerCase().includes(query) ||
+              resolveClinicalWorkupLabel(workupId).toLowerCase().includes(query)
           )
         );
       })

@@ -100,8 +100,8 @@ class OrderCreate(BaseModel):
     tests: list[OrderTestCreate] = Field(
         default_factory=list, description="Explicit catalog tests"
     )
-    panelCodes: list[str] = Field(
-        default_factory=list, description="Orderable panel codes expanded server-side"
+    workupCodes: list[str] = Field(
+        default_factory=list, description="Clinical workup codes expanded server-side"
     )
     priority: PriorityLevel = PriorityLevel.LOW
     referentDoctorId: str | None = Field(None, pattern=NPI_PATTERN)
@@ -119,10 +119,10 @@ class OrderCreate(BaseModel):
         return v
 
     @model_validator(mode="after")
-    def require_tests_or_panels(self) -> OrderCreate:
-        """Accept explicit tests, panel codes, or both."""
-        if not self.tests and not self.panelCodes:
-            raise ValueError("At least one test or panel is required")
+    def require_tests_or_workups(self) -> OrderCreate:
+        """Accept explicit tests, clinical workup codes, or both."""
+        if not self.tests and not self.workupCodes:
+            raise ValueError("At least one test or clinical workup is required")
         return self
 
 

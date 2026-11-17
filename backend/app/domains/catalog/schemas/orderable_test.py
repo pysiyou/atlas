@@ -1,14 +1,11 @@
-"""
-Pydantic schemas for Test Catalog
-"""
+"""Pydantic schemas for orderable tests."""
 from datetime import datetime
 
+from app.domains.catalog.schemas.analyte import AnalyteSummaryResponse
 from pydantic import BaseModel, field_validator
 
 
 class RejectionCriterionItem(BaseModel):
-    """Catalog rejection reason with routing domain (specimen vs analytical)."""
-
     reason: str
     domain: str = "specimen"
 
@@ -32,7 +29,7 @@ def _normalize_rejection_criteria(
     return normalized
 
 
-class TestBase(BaseModel):
+class OrderableTestBase(BaseModel):
     code: str
     name: str
     displayName: str
@@ -45,21 +42,17 @@ class TestBase(BaseModel):
     isActive: bool = True
 
 
-class TestSummaryResponse(TestBase):
-    """List/search index shape — no resultItems, ranges, or collection notes."""
-
+class OrderableTestSummaryResponse(OrderableTestBase):
     synonyms: list[str] | None = None
-    panels: list[str] | None = None
-    loincCode: str | None = None  # Unique observation LOINC; None for multi-parameter tests
+    loincCode: str | None = None
     fastingRequired: bool | None = None
     createdAt: datetime
     updatedAt: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
-class TestResponse(TestBase):
+class OrderableTestResponse(OrderableTestBase):
     synonyms: list[str] | None = None
     sampleVolume: str | None = None
     minimumVolume: float | None = None
@@ -71,10 +64,8 @@ class TestResponse(TestBase):
     collectionNotes: str | None = None
     rejectionCriteria: list[RejectionCriterionItem] | None = None
     validationRejectionCriteria: list[RejectionCriterionItem] | None = None
-    referenceRanges: list | None = None
-    resultItems: list | None = None
-    panels: list[str] | None = None
-    loincCode: str | None = None  # Unique observation LOINC; None for multi-parameter tests
+    analytes: list[AnalyteSummaryResponse] = []
+    loincCode: str | None = None
     methodology: str | None = None
     confidence: str | None = None
     notes: str | None = None
@@ -95,5 +86,4 @@ class TestResponse(TestBase):
     ) -> list[RejectionCriterionItem] | None:
         return _normalize_rejection_criteria(value)
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}

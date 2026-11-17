@@ -11,8 +11,8 @@ import { CatalogFilters } from '../components/CatalogFilters';
 import { createCatalogTableConfig } from '../config/CatalogTable.config';
 import {
   catalogListInitialFilters,
-  filterCatalogTests,
-} from '../utils/filterCatalogTests';
+  filterOrderableTests,
+} from '../utils/filterOrderableTests';
 import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
 import type { TestSummary } from '@/types';
 import { useModuleListTitles } from '@/hooks';
@@ -28,7 +28,7 @@ export function CatalogList() {
   });
 
   const filteredTests = useMemo(
-    () => applyPageFilters(tests, filters, filterCatalogTests),
+    () => applyPageFilters(tests, filters, filterOrderableTests),
     [tests, filters],
   );
 

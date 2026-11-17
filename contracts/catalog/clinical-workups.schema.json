@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org",
+  "$id": "https://atlas.local",
+  "title": "Atlas clinical workup registry",
+  "description": "Registry of clinical diagnostic workups / order sets that group orderable laboratory tests",
+  "type": "object",
+  "required": ["workups"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "workups": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/workupEntry" },
+      "minItems": 1
+    }
+  },
+  "definitions": {
+    "workupId": {
+      "type": "string",
+      "description": "Clinical workup mnemonic (ACS, ANEMIA, TFT, HEMFULL), 2-8 uppercase characters",
+      "pattern": "^[A-Z][A-Z0-9]{1,7}$",
+      "minLength": 2,
+      "maxLength": 8
+    },
+    "testCode": {
+      "type": "string",
+      "description": "Reference to test_code in orderable-tests.json",
+      "pattern": "^[A-Z][A-Z0-9]{1,7}$",
+      "minLength": 2,
+      "maxLength": 8
+    },
+    "workupEntry": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/definitions/workupId" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "test_codes": {
+          "type": "array",
+          "description": "Orderable test codes included in this workup (source of truth for membership)",
+          "items": { "$ref": "#/definitions/testCode" },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

@@ -84,8 +84,8 @@ class CriticalNotificationService:
         # Format critical values for notification
         critical_values = [
             {
-                "item_code": f.item_code,
-                "item_name": f.item_name,
+                "analyte_code": f.analyte_code,
+                "analyte_name": f.analyte_name,
                 "value": f.value,
                 "unit": f.unit,
                 "status": f.status.value,
@@ -188,8 +188,8 @@ class CriticalNotificationService:
             if len(parts) >= 2:
                 critical_flags.append(
                     ResultFlag(
-                        item_code=parts[0],
-                        item_name=parts[0],
+                        analyte_code=parts[0],
+                        analyte_name=parts[0],
                         value=float(parts[2]) if len(parts) > 2 else 0,
                         status=(
                             ResultStatus(parts[1])

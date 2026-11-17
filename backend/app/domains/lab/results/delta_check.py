@@ -14,7 +14,7 @@ DEFAULT_DELTA_PERCENT = 20.0
 
 @dataclass
 class DeltaCheckWarning:
-    item_code: str
+    analyte_code: str
     current_value: float
     prior_value: float
     percent_change: float
@@ -67,17 +67,17 @@ class DeltaCheckService:
                         ot.resultValidatedAt.isoformat() if ot.resultValidatedAt else "",
                     )
 
-        for item_code, value in results.items():
+        for analyte_code, value in results.items():
             current = parse_numeric_result_value(value)
-            prior = prior_results.get(item_code)
+            prior = prior_results.get(analyte_code)
             if current is None or prior is None or prior == 0:
                 continue
             pct = abs((current - prior) / prior) * 100.0
             if pct >= delta_percent:
-                meta = prior_meta[item_code]
+                meta = prior_meta[analyte_code]
                 warnings.append(
                     DeltaCheckWarning(
-                        item_code=item_code,
+                        analyte_code=analyte_code,
                         current_value=current,
                         prior_value=prior,
                         percent_change=round(pct, 1),

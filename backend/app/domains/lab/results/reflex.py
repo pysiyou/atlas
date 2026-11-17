@@ -5,7 +5,7 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.lab.specimen.generation import generate_samples_for_order
 from app.domains.orders.models import Order, OrderTest
 from app.platform.utils import parse_numeric_result_value
@@ -27,26 +27,14 @@ class ReflexEngine:
     def __init__(self, db: Session):
         self.db = db
 
-    def _load_rules(self, test_code: str, test_def: CatalogTest | None) -> list[dict[str, Any]]:
-        rules = list(REFLEX_RULES.get(test_code, []))
-        if test_def and test_def.panels:
-            panels = test_def.panels
-            if isinstance(panels, str):
-                try:
-                    panels = json.loads(panels)
-                except json.JSONDecodeError:
-                    panels = []
-            if isinstance(panels, list):
-                for entry in panels:
-                    if isinstance(entry, dict) and entry.get("type") == "reflex":
-                        rules.append(entry)
-        return rules
+    def _load_rules(self, test_code: str, test_def: OrderableTest | None) -> list[dict[str, Any]]:
+        return list(REFLEX_RULES.get(test_code, []))
 
     def _evaluate_rule(self, rule: dict[str, Any], results: dict[str, Any]) -> bool:
-        item = rule.get("item")
-        if not item or item not in results:
+        analyte_code = rule.get("analyte_code") or rule.get("analyte") or rule.get("item")
+        if not analyte_code or analyte_code not in results:
             return False
-        value = parse_numeric_result_value(results[item])
+        value = parse_numeric_result_value(results[analyte_code])
         if value is None:
             return False
         threshold = rule.get("value")
@@ -78,7 +66,7 @@ class ReflexEngine:
             return []
 
         test_def = (
-            self.db.query(CatalogTest).filter(CatalogTest.code == order_test.testCode).first()
+            self.db.query(OrderableTest).filter(OrderableTest.code == order_test.testCode).first()
         )
         rules = self._load_rules(order_test.testCode, test_def)
         if not rules:
@@ -99,8 +87,8 @@ class ReflexEngine:
                 continue
 
             reflex_test_def = (
-                self.db.query(CatalogTest)
-                .filter(CatalogTest.code == add_code, CatalogTest.isActive.is_(True))
+                self.db.query(OrderableTest)
+                .filter(OrderableTest.code == add_code, OrderableTest.isActive.is_(True))
                 .first()
             )
             if not reflex_test_def:

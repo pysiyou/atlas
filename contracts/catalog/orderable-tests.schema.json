@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org",
+  "$id": "https://atlas.local",
+  "title": "Atlas orderable test registry",
+  "description": "Registry of orderable laboratory tests, each defined as a collection of 1 or more analytes",
+  "type": "object",
+  "required": ["tests"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/testEntry" }
+    }
+  },
+  "definitions": {
+    "testCode": {
+      "type": "string",
+      "description": "Clinical orderable test mnemonic (e.g., CBC, TSH, LIPID, CMP), 2-8 uppercase characters",
+      "pattern": "^[A-Z][A-Z0-9]{1,7}$",
+      "minLength": 2,
+      "maxLength": 8
+    },
+    "analyteCode": {
+      "type": "string",
+      "description": "Reference to an analyte_code in analyte-catalog.json",
+      "pattern": "^[A-Z][A-Z0-9_]{0,31}$",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "loincCode": {
+      "type": "string",
+      "description": "Standard LOINC order/panel code (e.g., 57021-8 for CBC, 3016-3 for TSH)",
+      "pattern": "^[0-9]{1,5}-[0-9]$"
+    },
+    "rejectionReasonId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 1
+    },
+    "testEntry": {
+      "type": "object",
+      "required": ["test_code", "name", "analytes"],
+      "properties": {
+        "test_code": { "$ref": "#/definitions/testCode" },
+        "loinc_code": { "$ref": "#/definitions/loincCode" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "analytes": {
+          "type": "array",
+          "description": "Ordered list of 1 or more analyte_code identifiers included in this test",
+          "items": { "$ref": "#/definitions/analyteCode" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "sample": {
+          "type": "object",
+          "properties": {
+            "rejection_criteria": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/rejectionReasonId" },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

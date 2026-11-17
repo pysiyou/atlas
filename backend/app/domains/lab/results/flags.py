@@ -9,10 +9,10 @@ from app.shared.contracts.enums import ResultStatus
 
 @dataclass
 class ResultFlag:
-    """Represents a calculated flag for a result item"""
+    """Calculated flag for one ``analyte_code`` on an orderable test."""
 
-    item_code: str
-    item_name: str
+    analyte_code: str
+    analyte_name: str
     value: float
     status: ResultStatus
     reference_low: float | None
@@ -33,7 +33,7 @@ class FlagCalculatorService:
     def calculate_flags(
         self,
         results: dict[str, Any],
-        result_items: list[dict[str, Any]],
+        analyte_definitions: list[dict[str, Any]],
         patient_gender: str | None = None,
         patient_dob: str | None = None,
     ) -> list[ResultFlag]:
@@ -41,8 +41,8 @@ class FlagCalculatorService:
         Calculate flags for all result values.
 
         Args:
-            results: Dict of item_code -> value
-            result_items: List of result item definitions from test catalog
+            results: Dict of analyte_code -> value
+            analyte_definitions: Analyte defs from catalog for this orderable test
             patient_gender: Patient gender ('male' or 'female')
             patient_dob: Patient date of birth (ISO format string)
 
@@ -52,12 +52,11 @@ class FlagCalculatorService:
         flags = []
         patient_age = self._calculate_age(patient_dob) if patient_dob else None
 
-        for item in result_items:
-            item_code = item.get("item_code")
-            if item_code not in results:
+        for item in analyte_definitions:
+            analyte_code = item.get("analyte_code")
+            if not analyte_code or analyte_code not in results:
                 continue
-
-            value = results[item_code]
+            value = results[analyte_code]
             value_type = item.get("value_type", "NUMERIC")
 
             # Skip non-numeric values
@@ -88,8 +87,8 @@ class FlagCalculatorService:
 
             flags.append(
                 ResultFlag(
-                    item_code=item_code,
-                    item_name=item.get("item_name", item_code),
+                    analyte_code=analyte_code,
+                    analyte_name=item.get("name") or analyte_code,
                     value=numeric_value,
                     status=status,
                     reference_low=ref_range.get("low"),
@@ -201,8 +200,8 @@ class FlagCalculatorService:
         """Convert flags to JSON-serializable format"""
         return [
             {
-                "item_code": f.item_code,
-                "item_name": f.item_name,
+                "analyte_code": f.analyte_code,
+                "analyte_name": f.analyte_name,
                 "value": f.value,
                 "status": f.status.value,
                 "reference_low": f.reference_low,
@@ -219,5 +218,5 @@ class FlagCalculatorService:
         result = []
         for f in flags:
             if f.status != ResultStatus.NORMAL:
-                result.append(f"{f.item_code}:{f.status.value}")
+                result.append(f"{f.analyte_code}:{f.status.value}")
         return result

@@ -5,13 +5,13 @@ from datetime import UTC, datetime
 from typing import Any
 
 from app.domains.audit.service import AuditEmitter
-from app.domains.catalog.models.catalog_test import CatalogTest
+from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.lab.integration.hl7_parser import (
     AnalyzerResultAdapter,
     HL7AnalyzerResult,
     HL7ParseError,
     HL7Parser,
-    HL7ResultItem,
+    Hl7ObservationRow,
 )
 from app.domains.lab.models.analyzer_ingest_dedup import AnalyzerIngestDedup
 from app.domains.lab.models.sample import Sample
@@ -143,7 +143,7 @@ class AnalyzerIngestService:
         if existing and existing.status in [TestStatus.RESULTED, TestStatus.VALIDATED]:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"CatalogTest {test_code} already has results",
+                detail=f"OrderableTest {test_code} already has results",
             )
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -257,14 +257,17 @@ class AnalyzerIngestService:
                 extra_metadata={"specimen_id": specimen_id},
             )
         order_test = self._find_pending_test(sample, test_code)
-        test_def = self.db.query(CatalogTest).filter(CatalogTest.code == test_code).first()
-        result_items = test_def.resultItems if test_def else []
-        adapter = AnalyzerResultAdapter()
-        validation_errors = adapter.validate_against_catalog(analyzer_result, result_items)
+        from app.domains.catalog.analyte_definitions import analyte_definitions_for_test
+        from app.domains.catalog.catalog_analyte_service import CatalogAnalyteService
+
+        analyte_defs = analyte_definitions_for_test(self.db, test_code)
+        catalog = CatalogAnalyteService(self.db)
+        adapter = AnalyzerResultAdapter(catalog, test_code=test_code)
+        validation_errors = adapter.validate_against_catalog(analyzer_result, analyte_defs)
         self._validation_blocks_ingest(validation_errors)
         if validation_errors:
             warnings.extend(validation_errors)
-        internal_results = adapter.to_internal_format(analyzer_result, result_items)
+        internal_results = adapter.to_internal_format(analyzer_result, analyte_defs)
         notes = (
             f"Auto-entered from analyzer "
             f"{request.analyzer_id or analyzer_result.analyzer_id or 'unknown'}"
@@ -295,24 +298,29 @@ class AnalyzerIngestService:
                 f"json:{request.specimen_id}:{request.test_code}:"
                 f"{request.analyzer_id or 'unknown'}"
             )
-        test_def = self.db.query(CatalogTest).filter(CatalogTest.code == request.test_code).first()
-        result_items = test_def.resultItems if test_def else []
-        if result_items:
-            adapter = AnalyzerResultAdapter()
+        from app.domains.catalog.analyte_definitions import analyte_definitions_for_test
+        from app.domains.catalog.catalog_analyte_service import CatalogAnalyteService
+
+        analyte_defs = analyte_definitions_for_test(self.db, request.test_code)
+        catalog = CatalogAnalyteService(self.db)
+        adapter = AnalyzerResultAdapter(catalog, test_code=request.test_code)
+        internal_results = request.results
+        if analyte_defs:
             pseudo = HL7AnalyzerResult(
                 message_id=idempotency_key,
                 test_code=request.test_code,
                 results=[
-                    HL7ResultItem(item_code=k, item_name=k, value=str(v))
+                    Hl7ObservationRow(observation_code=k, observation_name=k, value=str(v))
                     for k, v in request.results.items()
                 ],
             )
-            validation_errors = adapter.validate_against_catalog(pseudo, result_items)
+            validation_errors = adapter.validate_against_catalog(pseudo, analyte_defs)
             self._validation_blocks_ingest(validation_errors)
+            internal_results = adapter.to_internal_format(pseudo, analyte_defs)
         notes = f"Auto-entered from analyzer {request.analyzer_id or 'unknown'}"
         return self._enter_results(
             order_test,
-            request.results,
+            internal_results,
             notes,
             sample,
             request.test_code,

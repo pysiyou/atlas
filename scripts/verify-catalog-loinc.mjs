@@ -9,34 +9,38 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
-const catalogPath = path.join(root, 'contracts', 'catalog', 'test-catalog.json');
+const catalogDir = path.join(root, 'contracts', 'catalog');
+const analytePath = path.join(catalogDir, 'analyte-catalog.json');
+const testsPath = path.join(catalogDir, 'orderable-tests.json');
 
 /** LOINC.org-valid codes that NLM exact-code search does not return (e.g. 600-7). */
 const NLM_INDEX_GAPS = new Map([['600-7', 'Bacteria identified in Blood by Culture']]);
 
-const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+const analytes = JSON.parse(fs.readFileSync(analytePath, 'utf8'));
+const tests = JSON.parse(fs.readFileSync(testsPath, 'utf8'));
 
 /** @type {Map<string, {ctx: string, name: string}>} */
 const loincs = new Map();
 
-for (const test of catalog.tests ?? []) {
+for (const test of tests.tests ?? []) {
   const code = test.test_code ?? '(unknown)';
   if (test.loinc_code) {
     loincs.set(test.loinc_code, {
       ctx: code,
-      name: test.display_name ?? code,
+      name: test.name ?? code,
     });
   }
-  for (const item of test.result_items ?? []) {
-    if (!item?.loinc_code) {
-      continue;
-    }
-    const itemCode = item.item_code ?? '(item)';
-    loincs.set(item.loinc_code, {
-      ctx: `${code}/${itemCode}`,
-      name: item.item_name ?? itemCode,
-    });
+}
+
+for (const analyte of analytes.analytes ?? []) {
+  if (!analyte?.loinc_code) {
+    continue;
   }
+  const ac = analyte.analyte_code ?? '(analyte)';
+  loincs.set(analyte.loinc_code, {
+    ctx: ac,
+    name: analyte.name ?? ac,
+  });
 }
 
 /**

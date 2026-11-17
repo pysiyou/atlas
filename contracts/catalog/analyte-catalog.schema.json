@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org",
+  "$id": "https://atlas.local",
+  "title": "Atlas analyte catalog",
+  "description": "Registry of individual measurable laboratory parameters (analytes/observations)",
+  "type": "object",
+  "required": ["analytes"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "analytes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/analyteEntry" }
+    }
+  },
+  "definitions": {
+    "analyteCode": {
+      "type": "string",
+      "description": "Clinical analyte mnemonic (e.g., HGB, WBC, UA_pH), uppercase with optional underscores",
+      "pattern": "^[A-Z][A-Z0-9_]{0,31}$",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "loincCode": {
+      "type": "string",
+      "description": "Standard LOINC observation code (e.g., 718-7, 3016-3)",
+      "pattern": "^[0-9]{1,5}-[0-9]$"
+    },
+    "rejectionReasonId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 1
+    },
+    "analyteEntry": {
+      "type": "object",
+      "required": ["analyte_code"],
+      "properties": {
+        "analyte_code": { "$ref": "#/definitions/analyteCode" },
+        "loinc_code": { "$ref": "#/definitions/loincCode" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "unit": { "type": "string", "maxLength": 50 },
+        "specimen": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "sample": {
+          "type": "object",
+          "properties": {
+            "rejection_criteria": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/rejectionReasonId" },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "validation_rejection_criteria": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/rejectionReasonId" },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -8,7 +8,7 @@ import type { Test, TestParameter, TestSummary, SampleType } from '@/types';
 /** Indexed catalog keyed by test code. */
 export type CatalogIndex<T extends { code: string } = TestSummary> = ReadonlyMap<string, T>;
 
-/** Max unique codes accepted by GET /tests/by-codes. */
+/** Max unique codes accepted by GET /orderable-tests/by-codes. */
 export const CATALOG_BY_CODES_MAX = 100;
 
 /** Split codes into batches the by-codes endpoint will accept. */
