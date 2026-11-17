@@ -33,7 +33,7 @@
     },
     "analyteEntry": {
       "type": "object",
-      "required": ["analyte_code"],
+      "required": ["analyte_code", "validation"],
       "properties": {
         "analyte_code": { "$ref": "#/definitions/analyteCode" },
         "loinc_code": { "$ref": "#/definitions/loincCode" },
@@ -51,10 +51,18 @@
           },
           "additionalProperties": true
         },
-        "validation_rejection_criteria": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/rejectionReasonId" },
-          "uniqueItems": true
+        "validation": {
+          "type": "object",
+          "required": ["rejection_criteria"],
+          "properties": {
+            "rejection_criteria": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/rejectionReasonId" },
+              "uniqueItems": true,
+              "minItems": 1
+            }
+          },
+          "additionalProperties": true
         }
       },
       "additionalProperties": true

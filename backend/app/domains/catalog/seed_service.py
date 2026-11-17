@@ -30,6 +30,15 @@ def _load_json(name: str) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _validation_rejection_criteria(entry: dict[str, Any]) -> list[Any] | None:
+    validation = entry.get("validation")
+    if isinstance(validation, dict):
+        raw = validation.get("rejection_criteria")
+        if raw is not None:
+            return raw
+    return None
+
+
 def _copy_test_fields(entry: dict[str, Any]) -> dict[str, Any]:
     sample = entry.get("sample") if isinstance(entry.get("sample"), dict) else {}
     return {
@@ -37,10 +46,10 @@ def _copy_test_fields(entry: dict[str, Any]) -> dict[str, Any]:
         "name": entry.get("name") or entry["test_code"],
         "displayName": entry.get("name") or entry["test_code"],
         "synonyms": entry.get("synonyms"),
-        "category": entry.get("category") or "General",
+        "category": entry.get("test_category") or entry.get("category") or "General",
         "price": float(entry.get("price") or 0),
         "turnaroundTimeHours": int(entry.get("turnaround_time_hours") or 0),
-        "sampleType": sample.get("sample_type") or "Unknown",
+        "sampleType": entry.get("sample_type") or sample.get("sample_type") or "other",
         "sampleVolume": entry.get("sample_volume_description") or sample.get("container"),
         "minimumVolume": sample.get("minimum_volume_ml"),
         "optimalVolume": None,
@@ -52,7 +61,7 @@ def _copy_test_fields(entry: dict[str, Any]) -> dict[str, Any]:
         "fastingRequired": bool(sample.get("fasting_required")),
         "collectionNotes": sample.get("collection_notes"),
         "rejectionCriteria": sample.get("rejection_criteria") if sample else None,
-        "validationRejectionCriteria": entry.get("validation_rejection_criteria"),
+        "validationRejectionCriteria": _validation_rejection_criteria(entry),
         "loincCode": entry.get("loinc_code"),
         "methodology": entry.get("method_common"),
         "confidence": entry.get("confidence"),
@@ -92,7 +101,7 @@ class CatalogSeedService:
                 "unit": raw.get("unit"),
                 "specimen": raw.get("specimen"),
                 "definition": definition,
-                "validationRejectionCriteria": raw.get("validation_rejection_criteria"),
+                "validationRejectionCriteria": _validation_rejection_criteria(raw),
             }
             row = self.db.get(CatalogAnalyte, code)
             if row is None:

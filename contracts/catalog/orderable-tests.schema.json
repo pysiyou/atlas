@@ -38,14 +38,50 @@
       "pattern": "^[a-z][a-z0-9_]*$",
       "minLength": 1
     },
+    "testCategory": {
+      "type": "string",
+      "enum": [
+        "hematology",
+        "biochemistry",
+        "microbiology",
+        "serology",
+        "urinalysis",
+        "coagulation",
+        "immunology",
+        "molecular",
+        "toxicology",
+        "imaging",
+        "stool",
+        "general"
+      ]
+    },
+    "specimenType": {
+      "type": "string",
+      "enum": [
+        "blood",
+        "urine",
+        "stool",
+        "saliva",
+        "swab",
+        "tissue",
+        "sputum",
+        "csf",
+        "pleural_fluid",
+        "serum",
+        "plasma",
+        "other"
+      ]
+    },
     "testEntry": {
       "type": "object",
-      "required": ["test_code", "name", "analytes"],
+      "required": ["test_code", "name", "analytes", "test_category", "sample_type", "validation"],
       "properties": {
         "test_code": { "$ref": "#/definitions/testCode" },
         "loinc_code": { "$ref": "#/definitions/loincCode" },
         "name": { "type": "string", "minLength": 1, "maxLength": 200 },
         "description": { "type": "string", "maxLength": 2000 },
+        "test_category": { "$ref": "#/definitions/testCategory" },
+        "sample_type": { "$ref": "#/definitions/specimenType" },
         "analytes": {
           "type": "array",
           "description": "Ordered list of 1 or more analyte_code identifiers included in this test",
@@ -55,11 +91,26 @@
         },
         "sample": {
           "type": "object",
+          "required": ["sample_type"],
           "properties": {
+            "sample_type": { "$ref": "#/definitions/specimenType" },
             "rejection_criteria": {
               "type": "array",
               "items": { "$ref": "#/definitions/rejectionReasonId" },
               "uniqueItems": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "validation": {
+          "type": "object",
+          "required": ["rejection_criteria"],
+          "properties": {
+            "rejection_criteria": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/rejectionReasonId" },
+              "uniqueItems": true,
+              "minItems": 1
             }
           },
           "additionalProperties": true

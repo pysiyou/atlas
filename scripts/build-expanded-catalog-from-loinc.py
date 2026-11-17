@@ -395,7 +395,9 @@ def minimal_numeric_analyte(code: str, loinc: str, core: dict[str, dict]) -> dic
         "specimen": specimen,
         "value_type": value_type,
         "citations": ["SRC002", "SRC003"],
-        "validation_rejection_criteria": HEMATOLOGY_REJECTION if specimen == "Whole Blood" else SERUM_REJECTION,
+        "validation": {
+            "rejection_criteria": HEMATOLOGY_REJECTION if specimen == "Whole Blood" else SERUM_REJECTION,
+        },
     }
     if value_type == "NUMERIC":
         entry.setdefault("decimals_suggested", 1)
@@ -447,10 +449,10 @@ def clone_legacy_test_profile(template: dict | None) -> dict:
     if not template:
         return {
             "category": "General",
-            "mapped_category": "general",
-            "mapped_sample_type": "serum",
+            "test_category": "biochemistry",
+            "sample_type": "serum",
             "sample": {
-                "sample_type": "Serum",
+                "sample_type": "serum",
                 "container": "Serum separator tube, 3 mL",
                 "minimum_volume_ml": 2,
                 "fasting_required": False,
@@ -465,7 +467,7 @@ def clone_legacy_test_profile(template: dict | None) -> dict:
             "price": 25,
             "confidence": "HIGH",
             "sources": ["SRC002", "SRC003"],
-            "validation_rejection_criteria": SERUM_REJECTION,
+            "validation": {"rejection_criteria": SERUM_REJECTION},
         }
     skip = {"test_code", "name", "analytes", "loinc_code"}
     return {k: deepcopy(v) for k, v in template.items() if k not in skip}

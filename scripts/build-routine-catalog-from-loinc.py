@@ -390,13 +390,13 @@ def build_analyte_entry(
     entry["loinc_code"] = loinc
     entry["name"] = humanize_loinc_name(row["long_name"])
     entry["specimen"] = specimen_for_system(row["system"], mnemonic)
-    if "validation_rejection_criteria" not in entry:
+    if not isinstance(entry.get("validation"), dict):
         if entry.get("specimen") == "Whole Blood":
-            entry["validation_rejection_criteria"] = HEMATOLOGY_REJECTION
+            entry["validation"] = {"rejection_criteria": HEMATOLOGY_REJECTION}
         elif mnemonic in {"PT", "INR", "APTT", "DDIM"}:
-            entry["validation_rejection_criteria"] = COAG_REJECTION
+            entry["validation"] = {"rejection_criteria": COAG_REJECTION}
         else:
-            entry["validation_rejection_criteria"] = SERUM_REJECTION
+            entry["validation"] = {"rejection_criteria": SERUM_REJECTION}
     # TSAT from legacy may be missing
     if mnemonic == "TSAT" and "value_type" not in entry:
         entry.update(
@@ -423,10 +423,10 @@ def specimen_sample_profile(test_code: str, analyte_codes: list[str]) -> dict:
     if test_code == "CBC":
         return {
             "category": "Hematology",
-            "mapped_category": "hematology",
-            "mapped_sample_type": "blood",
+            "test_category": "hematology",
+            "sample_type": "blood",
             "sample": {
-                "sample_type": "Whole Blood",
+                "sample_type": "blood",
                 "container": "EDTA tube (lavender cap), 3 mL",
                 "minimum_volume_ml": 2,
                 "fasting_required": False,
@@ -446,15 +446,15 @@ def specimen_sample_profile(test_code: str, analyte_codes: list[str]) -> dict:
             "method_common": "Automated hematology analyzer",
             "turnaround_time_hours": 2,
             "price": 25,
-            "validation_rejection_criteria": HEMATOLOGY_REJECTION,
+            "validation": {"rejection_criteria": HEMATOLOGY_REJECTION},
         }
     if test_code == "COAG":
         return {
             "category": "Coagulation",
-            "mapped_category": "coagulation",
-            "mapped_sample_type": "blood",
+            "test_category": "coagulation",
+            "sample_type": "blood",
             "sample": {
-                "sample_type": "Plasma (citrated)",
+                "sample_type": "blood",
                 "container": "Citrate tube (light-blue cap), 2.7 mL",
                 "minimum_volume_ml": 2,
                 "fasting_required": False,
@@ -467,16 +467,16 @@ def specimen_sample_profile(test_code: str, analyte_codes: list[str]) -> dict:
             "method_common": "Optical clot detection",
             "turnaround_time_hours": 2,
             "price": 35,
-            "validation_rejection_criteria": COAG_REJECTION,
+            "validation": {"rejection_criteria": COAG_REJECTION},
         }
     if test_code in {"LIPID", "BMP", "CMP", "LFT", "IRONP"} or test_code in SINGLE_TESTS:
         fasting = test_code in {"LIPID", "GLU", "IRONP", "AMYL", "LIPA"}
         return {
             "category": "Clinical Chemistry",
-            "mapped_category": "chemistry",
-            "mapped_sample_type": "serum",
+            "test_category": "biochemistry",
+            "sample_type": "serum",
             "sample": {
-                "sample_type": "Serum",
+                "sample_type": "serum",
                 "container": "Serum separator tube (gold or red cap), 3-5 mL",
                 "minimum_volume_ml": 2,
                 "fasting_required": fasting,
@@ -497,14 +497,14 @@ def specimen_sample_profile(test_code: str, analyte_codes: list[str]) -> dict:
             "method_common": "Clinical chemistry analyzer",
             "turnaround_time_hours": 4,
             "price": 30,
-            "validation_rejection_criteria": SERUM_REJECTION,
+            "validation": {"rejection_criteria": SERUM_REJECTION},
         }
     return {
         "category": "General",
-        "mapped_category": "general",
-        "mapped_sample_type": "serum",
+        "test_category": "biochemistry",
+        "sample_type": "serum",
         "sample": {
-            "sample_type": "Serum",
+            "sample_type": "serum",
             "container": "Serum separator tube, 3 mL",
             "minimum_volume_ml": 2,
             "fasting_required": False,
@@ -517,7 +517,7 @@ def specimen_sample_profile(test_code: str, analyte_codes: list[str]) -> dict:
         "method_common": "Clinical laboratory analyzer",
         "turnaround_time_hours": 4,
         "price": 20,
-        "validation_rejection_criteria": SERUM_REJECTION,
+        "validation": {"rejection_criteria": SERUM_REJECTION},
     }
 
 

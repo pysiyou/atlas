@@ -463,7 +463,7 @@ export type RejectionReasonId = string;
  * Sample requirements from catalog
  */
 export interface SampleRequirements {
-  sample_type: string;
+  sample_type: SampleType;
   container: string;
   minimum_volume_ml: number;
   fasting_required: boolean;

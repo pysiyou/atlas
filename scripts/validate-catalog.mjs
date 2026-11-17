@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /**
  * Validate catalog contracts:
- * 1. Draft-07 meta-schema check on each contract schema
- * 2. Ajv instance validation (analyte-catalog, orderable-tests, clinical-workups)
- * 3. FK: tests[*].analytes[] → analyte catalog
- * 4. FK: tests[*].workups[] → clinical workups; workup test_codes consistency
- * 5. LOINC hygiene on analytes and orderable tests
+ * 1. Draft-07 meta-schema on all contracts/registries/*.schema.json (definitions only; no $defs)
+ * 2. Ajv instance validation (analyte-catalog, orderable-tests, clinical-workups, rejection registries)
+ * 3. FK graph: workups → tests → analytes; sample/result rejection registries
+ * 4. LOINC hygiene on analytes and orderable tests
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -189,6 +188,25 @@ export function runCatalogIntegrityChecks(docs) {
       errors += 1;
     }
 
+    for (const legacyField of ['mapped_category', 'mapped_sample_type', 'validation_rejection_criteria']) {
+      if (Object.prototype.hasOwnProperty.call(test, legacyField)) {
+        console.error(`${code}: obsolete field ${legacyField}`);
+        errors += 1;
+      }
+    }
+
+    const rootSampleType = test.sample_type;
+    const nestedSample = test.sample;
+    if (typeof rootSampleType === 'string' && nestedSample && typeof nestedSample === 'object') {
+      const nestedType = /** @type {{ sample_type?: unknown }} */ (nestedSample).sample_type;
+      if (nestedType !== rootSampleType) {
+        console.error(
+          `${code}: sample.sample_type (${JSON.stringify(nestedType)}) must match sample_type (${JSON.stringify(rootSampleType)})`,
+        );
+        errors += 1;
+      }
+    }
+
     if (Object.prototype.hasOwnProperty.call(test, 'loinc_codes')) {
       console.error(`${code}: leftover loinc_codes on test; use loinc_code`);
       errors += 1;
@@ -211,6 +229,11 @@ export function runCatalogIntegrityChecks(docs) {
           loincByTest.set(loinc, code);
         }
       }
+    }
+
+    if (analyteList.length < 1) {
+      console.error(`${code}: analytes[] must contain at least one analyte_code`);
+      errors += 1;
     }
 
     if (analyteList.length > 1 && !test.loinc_code) {
@@ -314,7 +337,7 @@ function runRequiredFixtureChecks(docs) {
 }
 
 /**
- * Ensure rejection_criteria / validation_rejection_criteria ids exist in registry.
+ * Ensure sample.validation / validation.rejection_criteria ids exist in registries.
  *
  * @param {{
  *   analytes: { analytes?: Record<string, unknown>[] };
@@ -361,11 +384,12 @@ function runRejectionReasonChecks(docs) {
   let errors = 0;
   for (const test of docs.tests.tests ?? []) {
     const code = typeof test.test_code === 'string' ? test.test_code : '(unknown)';
-    errors += checkList(
-      test.validation_rejection_criteria,
-      `${code} validation_rejection_criteria`,
-      resultIds,
-    );
+    const validation = test.validation;
+    const validationList =
+      validation && typeof validation === 'object'
+        ? /** @type {{ rejection_criteria?: unknown[] }} */ (validation).rejection_criteria
+        : undefined;
+    errors += checkList(validationList, `${code} validation.rejection_criteria`, resultIds);
     const sample = test.sample;
     if (sample && typeof sample === 'object') {
       errors += checkList(
@@ -378,11 +402,16 @@ function runRejectionReasonChecks(docs) {
   for (const analyte of docs.analytes.analytes ?? []) {
     const code =
       typeof analyte.analyte_code === 'string' ? analyte.analyte_code : '(unknown)';
-    errors += checkList(
-      analyte.validation_rejection_criteria,
-      `${code} validation_rejection_criteria`,
-      resultIds,
-    );
+    if (Object.prototype.hasOwnProperty.call(analyte, 'validation_rejection_criteria')) {
+      console.error(`${code}: obsolete field validation_rejection_criteria; use validation.rejection_criteria`);
+      errors += 1;
+    }
+    const analyteValidation = analyte.validation;
+    const analyteValidationList =
+      analyteValidation && typeof analyteValidation === 'object'
+        ? /** @type {{ rejection_criteria?: unknown[] }} */ (analyteValidation).rejection_criteria
+        : undefined;
+    errors += checkList(analyteValidationList, `${code} validation.rejection_criteria`, resultIds);
     const sample = analyte.sample;
     if (sample && typeof sample === 'object') {
       errors += checkList(
@@ -398,6 +427,45 @@ function runRejectionReasonChecks(docs) {
   return errors;
 }
 
+const REGISTRIES_DIR = path.join(root, 'contracts', 'registries');
+
+/**
+ * @param {import('ajv').default} ajv
+ * @returns {number}
+ */
+function validateAllContractSchemas(ajv) {
+  let errors = 0;
+  const catalogSchemas = fs
+    .readdirSync(catalogDir)
+    .filter(name => name.endsWith('.schema.json'))
+    .sort();
+  const registrySchemas = fs
+    .readdirSync(REGISTRIES_DIR)
+    .filter(name => name.endsWith('.schema.json'))
+    .sort();
+
+  function checkSchema(filePath, name) {
+    const schemaDoc = readJson(filePath);
+    if (Object.prototype.hasOwnProperty.call(schemaDoc, '$defs')) {
+      console.error(`${name}: must use "definitions", not "$defs" (Draft-07 convention)`);
+      errors += 1;
+    }
+    const before = errors;
+    errors += validateSchemaMeta(ajv, name, schemaDoc);
+    if (errors === before) {
+      console.log(`ok schema ${name}`);
+    }
+  }
+
+  for (const name of catalogSchemas) {
+    checkSchema(path.join(catalogDir, name), name);
+  }
+  for (const name of registrySchemas) {
+    checkSchema(path.join(REGISTRIES_DIR, name), name);
+  }
+  return errors;
+}
+
 function main() {
   const ajv = createAjv();
   const analyteSchema = readJson(paths.analyteSchema);
@@ -405,9 +473,7 @@ function main() {
   const workupsSchema = readJson(paths.workupsSchema);
 
   let errors = 0;
-  errors += validateSchemaMeta(ajv, 'analyte-catalog.schema.json', analyteSchema);
-  errors += validateSchemaMeta(ajv, 'orderable-tests.schema.json', testsSchema);
-  errors += validateSchemaMeta(ajv, 'clinical-workups.schema.json', workupsSchema);
+  errors += validateAllContractSchemas(ajv);
 
   const validateAnalyte = compileDraft07(analyteSchema);
   const validateTests = compileDraft07(testsSchema);
@@ -427,7 +493,6 @@ function main() {
 
   if (fs.existsSync(sampleRejectionSchemaPath) && fs.existsSync(sampleRejectionPath)) {
     const sampleSchema = readJson(sampleRejectionSchemaPath);
-    errors += validateSchemaMeta(ajv, 'sample-rejection-reasons.schema.json', sampleSchema);
     errors += validateAgainstSchema(
       'sample-rejection-reasons.json',
       compileDraft07(sampleSchema),
@@ -436,7 +501,6 @@ function main() {
   }
   if (fs.existsSync(resultRejectionSchemaPath) && fs.existsSync(resultRejectionPath)) {
     const resultSchema = readJson(resultRejectionSchemaPath);
-    errors += validateSchemaMeta(ajv, 'result-rejection-reasons.schema.json', resultSchema);
     errors += validateAgainstSchema(
       'result-rejection-reasons.json',
       compileDraft07(resultSchema),

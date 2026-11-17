@@ -150,8 +150,14 @@ def main() -> int:
         for t in tests
         if not (isinstance(t.get("sample"), dict) and t["sample"].get("rejection_criteria"))
     ]
-    empty_test_val = [t.get("test_code") for t in tests if not t.get("validation_rejection_criteria")]
-    empty_analyte_val = [a.get("analyte_code") for a in analytes if not a.get("validation_rejection_criteria")]
+    def _validation_ids(row: dict) -> list:
+        validation = row.get("validation")
+        if isinstance(validation, dict):
+            return validation.get("rejection_criteria") or []
+        return []
+
+    empty_test_val = [t.get("test_code") for t in tests if not _validation_ids(t)]
+    empty_analyte_val = [a.get("analyte_code") for a in analytes if not _validation_ids(a)]
 
     sample_n = len(json.loads(SAMPLE_REG.read_text())["reasons"])
     result_n = len(json.loads(RESULT_REG.read_text())["reasons"])
@@ -169,8 +175,8 @@ def main() -> int:
     print(f"Missing ExtCodeId values: {len(missing_ext)}")
     print(f"Missing external list metadata: {len(missing_external_lists)}")
     print(f"Catalog empty sample.rejection_criteria: {len(empty_sample)}")
-    print(f"Catalog empty test validation_rejection_criteria: {len(empty_test_val)}")
-    print(f"Catalog empty analyte validation_rejection_criteria: {len(empty_analyte_val)}")
+    print(f"Catalog empty test validation.rejection_criteria: {len(empty_test_val)}")
+    print(f"Catalog empty analyte validation.rejection_criteria: {len(empty_analyte_val)}")
 
     if missing_la:
         print("\nMissing AnswerStringId (first 20):")
