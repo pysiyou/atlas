@@ -18,6 +18,7 @@ import type {
   ContainerTopColor,
   UserRole,
 } from '../generated/enums';
+import type { CatalogOrderableTestContract } from '../catalogContract';
 
 // =============================================================================
 // patient
@@ -503,6 +504,8 @@ export interface OrderableTest extends OrderableTestSummary {
   optimalVolume?: number;
   specialRequirements?: string;
   referenceRanges: ReferenceRange[];
+  /** Full contracts/catalog/orderable-tests.json row (snake_case). */
+  contract?: CatalogOrderableTestContract;
   analytes?: AnalyteDefinition[];
   numberOfContainers?: number;
   methodology?: string;

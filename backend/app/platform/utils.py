@@ -58,6 +58,8 @@ ANALYZER_ID_PATTERN = r"^[A-Z0-9][A-Z0-9._-]{2,31}$"
 SAMPLE_ID_PATTERN = r"^\d{2}-\d{5}(\.\d{1,2})?$"
 # Login employee id or analyzer sentinel used on result entry/validation
 LAB_ACTOR_USER_ID_PATTERN = r"^(?:100000|1\d{7})$"
+# Analyzer / HL7 ingest lookup: accession (± aliquot) or 13-digit filler on OBR-3
+SPECIMEN_INGEST_PATTERN = r"^(?:\d{13}|\d{2}-\d{5}(?:\.\d{1,2})?)$"
 
 MRN_RE = re.compile(MRN_PATTERN)
 FILLER_RE = re.compile(FILLER_PATTERN)
@@ -234,11 +236,6 @@ def allocate_employee_number(db: Session) -> str:
     return format_employee_number(assign_next(db, KIND_EMPLOYEE))
 
 
-def allocate_member_id(db: Session) -> str:
-    """Assign the next sequential payer member ID."""
-    return format_member_id(assign_next(db, KIND_MEMBER))
-
-
 def allocate_referent_doctor_id(db: Session) -> str:
     """Assign the next sequential referent-doctor id."""
     return format_referent_doctor_id(assign_next(db, KIND_REFERENT_DOCTOR))
@@ -275,11 +272,6 @@ def looks_like_accession(term: str) -> bool:
 def looks_like_mnemonic(term: str) -> bool:
     """True when ``term`` is a 2–8 character catalog mnemonic."""
     return bool(TEST_MNEMONIC_RE.fullmatch(term.strip().upper()))
-
-
-def looks_like_referent_doctor_id(term: str) -> bool:
-    """True when ``term`` is an 8-digit referent-doctor id (leading digit 2)."""
-    return bool(REFERENT_DOCTOR_ID_RE.fullmatch(compact_identifier(term)))
 
 
 def format_order_test_display(accession: str | None, test_code: str | None) -> str:

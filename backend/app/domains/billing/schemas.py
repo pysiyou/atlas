@@ -1,7 +1,7 @@
 """Billing schemas — invoices embedded on order detail."""
 from datetime import datetime
 
-from app.platform.utils import INVOICE_NUMBER_PATTERN
+from app.platform.utils import FILLER_PATTERN, INVOICE_NUMBER_PATTERN, MRN_PATTERN
 from app.shared.contracts.enums import PaymentStatus
 from pydantic import BaseModel, Field
 
@@ -16,8 +16,8 @@ class InvoiceItem(BaseModel):
 
 class InvoiceResponse(BaseModel):
     invoiceId: str = Field(..., pattern=INVOICE_NUMBER_PATTERN)
-    orderId: str
-    patientId: str
+    orderId: str = Field(..., pattern=FILLER_PATTERN)
+    patientId: str = Field(..., pattern=MRN_PATTERN)
     patientName: str
     items: list[InvoiceItem]
     subtotal: float

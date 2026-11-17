@@ -1,8 +1,38 @@
-"""Pydantic schemas for orderable tests."""
-from datetime import datetime
+"""Catalog API schemas — analytes, orderable tests, workups, affiliation pricing."""
+from __future__ import annotations
 
-from app.domains.catalog.schemas.analyte import AnalyteSummaryResponse
-from pydantic import BaseModel, field_validator
+from datetime import datetime
+from typing import Any
+
+from pydantic import BaseModel, Field, field_validator
+
+
+# --- Analytes ---
+
+
+class AnalyteSummaryResponse(BaseModel):
+    """
+    One analyte on an orderable test.
+
+    ``contract`` is the authoritative ``analyte-catalog.json`` entry (snake_case keys).
+    """
+
+    analyteCode: str
+    name: str
+    loincCode: str | None = None
+    unit: str | None = None
+    specimen: str | None = None
+    contract: dict[str, Any] = Field(
+        ...,
+        description="Full analyte-catalog.json entry (value_type, allowed_values, reference_range, …).",
+    )
+
+
+class AnalyteResponse(AnalyteSummaryResponse):
+    model_config = {"from_attributes": True}
+
+
+# --- Orderable tests ---
 
 
 class RejectionCriterionItem(BaseModel):
@@ -69,6 +99,10 @@ class OrderableTestResponse(OrderableTestBase):
     methodology: str | None = None
     confidence: str | None = None
     notes: str | None = None
+    contract: dict[str, Any] | None = Field(
+        default=None,
+        description="Full orderable-tests.json entry (snake_case keys) for this test_code.",
+    )
     createdAt: datetime
     updatedAt: datetime
 
@@ -85,5 +119,31 @@ class OrderableTestResponse(OrderableTestBase):
         cls, value: list[RejectionCriterionValue] | None
     ) -> list[RejectionCriterionItem] | None:
         return _normalize_rejection_criteria(value)
+
+    model_config = {"from_attributes": True}
+
+
+# --- Clinical workups ---
+
+
+class ClinicalWorkupResponse(BaseModel):
+    code: str
+    name: str
+    description: str | None = None
+    testCodes: list[str] = Field(default_factory=list)
+    isActive: bool = True
+    createdAt: datetime | None = None
+    updatedAt: datetime | None = None
+
+    model_config = {"from_attributes": True}
+
+
+# --- Affiliation pricing ---
+
+
+class AffiliationPricingResponse(BaseModel):
+    duration: int
+    price: float
+    isActive: bool
 
     model_config = {"from_attributes": True}

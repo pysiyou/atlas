@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
     """Application lifespan events."""
     Base.metadata.create_all(bind=engine)
     try:
-        from app.domains.catalog.seed_service import CatalogSeedService
+        from app.domains.catalog.service import CatalogSeedService
         from app.platform.database import SessionLocal
 
         db = SessionLocal()

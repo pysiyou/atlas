@@ -70,15 +70,24 @@ class Sample(Base):
 
     # New fields for recollection tracking
     isRecollection = Column("is_recollection", Boolean, default=False)
-    originalSampleId = Column(
-        "original_sample_id", String(20), nullable=True
-    )  # Pointer to the sample this replaced
     recollectionReason = Column("recollection_reason", String, nullable=True)
     recollectionAttempt = Column(
         "recollection_attempt", Integer, default=1
     )  # 1 = original/first collection, 2 = 1st recollection, etc.
 
-    parentSampleId = Column("parent_sample_id", String(20), nullable=True, index=True)
+    parentSampleId = Column(
+        "parent_sample_id",
+        String(20),
+        ForeignKey("samples.sample_id"),
+        nullable=True,
+        index=True,
+    )
+    originalSampleId = Column(
+        "original_sample_id",
+        String(20),
+        ForeignKey("samples.sample_id"),
+        nullable=True,
+    )
     isAliquot = Column("is_aliquot", Boolean, default=False)
     aliquotIndex = Column("aliquot_index", Integer, nullable=True)
     aliquotVolume = Column("aliquot_volume", Float, nullable=True)

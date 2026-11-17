@@ -12,6 +12,7 @@ from app.domains.orders.schemas import (
 )
 from app.domains.orders.service import OrderService
 from app.domains.users.models import User
+from app.platform.clinical_ids import MrnQuery, OrderIdPath, OrderIdQuery
 from app.platform.database import get_db
 from app.platform.http import PaginationParams, get_current_user
 from app.platform.utils import parse_csv_values
@@ -37,8 +38,8 @@ def _parse_enums(raw: str | None, enum_cls: type):
 @router.get("/orders", response_model=OrderListUnion)
 def get_orders(
     pagination: PaginationParams,
-    patientId: str | None = None,
-    orderId: str | None = None,
+    patientId: MrnQuery = None,
+    orderId: OrderIdQuery = None,
     order_status: str | None = Query(None, alias="status"),
     paymentStatus: str | None = Query(None, alias="paymentStatus"),
     paymentMethod: str | None = Query(None, alias="paymentMethod"),
@@ -74,7 +75,7 @@ def get_orders(
 
 @router.get("/orders/{orderId}", response_model=OrderResponse | OrderDetailResponse)
 def get_order(
-    orderId: str,
+    orderId: OrderIdPath,
     include: str | None = Query(
         None, description="Comma-separated related data: payments, invoices, patient"
     ),
@@ -95,7 +96,7 @@ def create_order(
 
 @router.put("/orders/{orderId}", response_model=OrderResponse)
 def update_order(
-    orderId: str,
+    orderId: OrderIdPath,
     order_data: OrderUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -105,7 +106,7 @@ def update_order(
 
 @router.post("/orders/{orderId}/approve", status_code=status.HTTP_200_OK)
 def approve_order(
-    orderId: str,
+    orderId: OrderIdPath,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

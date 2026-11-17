@@ -66,6 +66,11 @@ export const referentDoctorIdSchema = z
   .regex(ID_PATTERNS.referentDoctorId, 'Invalid referent doctor id');
 export const invoiceIdSchema = z.string().regex(ID_PATTERNS.invoiceNumber, 'Invalid invoice id');
 export const receiptIdSchema = z.string().regex(ID_PATTERNS.receiptNumber, 'Invalid payment id');
+export const testMnemonicSchema = z
+  .string()
+  .regex(ID_PATTERNS.testMnemonic, 'Invalid test code');
+export const memberIdSchema = z.string().regex(ID_PATTERNS.memberId, 'Invalid member id');
+export const analyzerIdSchema = z.string().regex(ID_PATTERNS.analyzerId, 'Invalid analyzer id');
 export const percentageSchema = z.number().min(0).max(100);
 export const nonEmptyString = z.string().min(1, 'This field is required');
 export const nameSchema = z.string().min(2).max(100);

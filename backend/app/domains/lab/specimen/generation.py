@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
-from app.domains.catalog.models.orderable_test import OrderableTest
+from app.domains.catalog.models import OrderableTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.rules.test_status_sets import INACTIVE_LINEAGE_STATUSES
 from app.domains.lab.specimen.collection_service import (

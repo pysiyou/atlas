@@ -84,6 +84,11 @@ export type {
   DemographicRange,
   TestWithContext,
 } from './domain/entities';
+export type {
+  CatalogAnalyteContract,
+  CatalogOrderableTestContract,
+  CatalogValueType,
+} from './catalogContract';
 
 // =============================================================================
 // payments

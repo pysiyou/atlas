@@ -18,6 +18,7 @@ from app.domains.lab.specimen import SpecimenQueryService
 from app.domains.lab.specimen.aliquots import create_aliquots
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
+from app.platform.clinical_ids import OrderIdQuery, SampleIdPath
 from app.platform.database import get_db
 from app.platform.http import (
     PaginationParams,
@@ -48,7 +49,7 @@ def _sample_response(db: Session, sample: Sample) -> SampleResponse:
 )
 def get_samples(
     pagination: PaginationParams,
-    orderId: str | None = None,
+    orderId: OrderIdQuery = None,
     sampleStatus: SampleStatus | None = None,
     paginated: bool = Query(False),
     specimen: SpecimenQueryService = Depends(get_specimen_query_service),
@@ -61,7 +62,7 @@ def get_samples(
 
 @router.get("/samples/{sampleId}/work-context", response_model=CollectionWorklistItem)
 def get_sample_work_context(
-    sampleId: str,
+    sampleId: SampleIdPath,
     worklist: LabWorklistService = Depends(get_lab_worklist_service),
     current_user: User = Depends(get_current_user),
 ):
@@ -71,7 +72,7 @@ def get_sample_work_context(
 
 @router.get("/samples/{sampleId}", response_model=SampleResponse)
 def get_sample(
-    sampleId: str,
+    sampleId: SampleIdPath,
     db: Session = Depends(get_db),
     specimen: SpecimenQueryService = Depends(get_specimen_query_service),
     current_user: User = Depends(get_current_user),
@@ -82,7 +83,7 @@ def get_sample(
 
 @router.patch("/samples/{sampleId}/collect", response_model=SampleResponse)
 def collect_sample(
-    sampleId: str,
+    sampleId: SampleIdPath,
     collect_data: SampleCollectRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_sample_collector),
@@ -99,7 +100,7 @@ def collect_sample(
 
 @router.post("/samples/{sampleId}/aliquots", response_model=list[SampleResponse])
 def create_sample_aliquots(
-    sampleId: str,
+    sampleId: SampleIdPath,
     payload: SampleAliquotCreateRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_sample_collector),

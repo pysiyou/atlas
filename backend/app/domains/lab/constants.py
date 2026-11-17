@@ -1,6 +1,6 @@
 """Lab domain constants not generated from contracts."""
 
-# System actor for analyzer ingest; not a login account (8-digit legacy sentinel).
+# System actor for analyzer ingest; not a login account.
 ANALYZER_USER_ID = "100000"
 
 

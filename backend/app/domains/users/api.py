@@ -3,6 +3,7 @@
 from app.domains.users.models import User
 from app.domains.users.schemas import UserCreate, UserLookupResponse, UserResponse, UserUpdate
 from app.domains.users.service import UserService
+from app.platform.clinical_ids import EmployeeIdPath
 from app.platform.database import get_db
 from app.platform.http import get_current_user, require_admin
 from fastapi import APIRouter, Depends, status
@@ -38,7 +39,7 @@ def create_user(
 
 @router.put("/users/{user_id}", response_model=UserResponse)
 def update_user(
-    user_id: str,
+    user_id: EmployeeIdPath,
     user_data: UserUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),

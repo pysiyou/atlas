@@ -8,6 +8,7 @@ import {
   nullableApiDatetimeSchema,
   employeeNumberSchema,
   labActorUserIdSchema,
+  testMnemonicSchema,
 } from '@/types/zod';
 import { GENDER_VALUES, PAYMENT_STATUS_VALUES } from '@/types/generated/enums';
 import {
@@ -82,13 +83,24 @@ export const orderSchema = z.object({
 export type Order = z.infer<typeof orderSchema>;
 export type OrderTest = z.infer<typeof orderTestSchema>;
 
+/** List/summary rows from GET /orders?summary=true — validate clinical ids only. */
+export const orderSummaryBoundarySchema = z
+  .object({
+    orderId: orderIdSchema,
+    patientId: mrnSchema,
+    createdBy: employeeNumberSchema.optional(),
+  })
+  .passthrough();
+
+export const orderSummaryListSchema = z.array(orderSummaryBoundarySchema);
+
 // Form schema for CREATE (all required fields enforced)
 export const orderCreateSchema = z.object({
   patientId: mrnSchema,
   referentDoctorId: referentDoctorIdSchema.nullable().optional(),
   priority: zEnumFromValues(PRIORITY_LEVEL_VALUES),
   clinicalNotes: z.string().optional(),
-  testCodes: z.array(z.string()).min(1, 'At least one test is required'),
+  testCodes: z.array(testMnemonicSchema).min(1, 'At least one test is required'),
   paymentMethod: zEnumFromValues(PAYMENT_METHOD_VALUES).optional(),
 });
 

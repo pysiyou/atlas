@@ -330,7 +330,10 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 13,
+                  "maxLength": 13,
+                  "pattern": "^\\d{13}$"
                 },
                 {
                   "type": "null"
@@ -346,7 +349,10 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 8,
+                  "maxLength": 8,
+                  "pattern": "^3\\d{7}$"
                 },
                 {
                   "type": "null"
@@ -362,7 +368,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "integer",
+                  "exclusiveMinimum": 0
                 },
                 {
                   "type": "null"
@@ -378,7 +385,10 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 8,
+                  "maxLength": 20,
+                  "pattern": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$"
                 },
                 {
                   "type": "null"
@@ -541,16 +551,16 @@
               "anyOf": [
                 {
                   "type": "string",
-                  "ge": 1
+                  "minLength": 6,
+                  "maxLength": 8,
+                  "pattern": "^(?:100000|1\\d{7})$"
                 },
                 {
                   "type": "null"
                 }
               ],
-              "description": "When set, only events performed by this user id",
               "title": "Actorid"
-            },
-            "description": "When set, only events performed by this user id"
+            }
           },
           {
             "name": "actorRoles",
@@ -755,7 +765,10 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 8,
+                  "maxLength": 8,
+                  "pattern": "^3\\d{7}$"
                 },
                 {
                   "type": "null"
@@ -1002,6 +1015,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 8,
+              "maxLength": 8,
+              "pattern": "^3\\d{7}$",
               "title": "Patientid"
             }
           }
@@ -1048,6 +1064,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 8,
+              "maxLength": 8,
+              "pattern": "^3\\d{7}$",
               "title": "Patientid"
             }
           }
@@ -1410,7 +1429,10 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 8,
+                  "maxLength": 8,
+                  "pattern": "^3\\d{7}$"
                 },
                 {
                   "type": "null"
@@ -1426,7 +1448,10 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 13,
+                  "maxLength": 13,
+                  "pattern": "^\\d{13}$"
                 },
                 {
                   "type": "null"
@@ -1725,6 +1750,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 13,
+              "maxLength": 13,
+              "pattern": "^\\d{13}$",
               "title": "Orderid"
             }
           },
@@ -1796,6 +1824,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 13,
+              "maxLength": 13,
+              "pattern": "^\\d{13}$",
               "title": "Orderid"
             }
           }
@@ -1854,6 +1885,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 13,
+              "maxLength": 13,
+              "pattern": "^\\d{13}$",
               "title": "Orderid"
             }
           }
@@ -2118,6 +2152,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 8,
+              "maxLength": 8,
+              "pattern": "^1\\d{7}$",
               "title": "User Id"
             }
           }
@@ -2175,6 +2212,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 13,
+              "maxLength": 13,
+              "pattern": "^\\d{13}$",
               "title": "Orderid"
             }
           }
@@ -2297,7 +2337,10 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 13,
+                  "maxLength": 13,
+                  "pattern": "^\\d{13}$"
                 },
                 {
                   "type": "null"
@@ -2415,6 +2458,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 8,
+              "maxLength": 20,
+              "pattern": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$",
               "title": "Sampleid"
             }
           }
@@ -2462,6 +2508,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 8,
+              "maxLength": 20,
+              "pattern": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$",
               "title": "Sampleid"
             }
           }
@@ -2509,6 +2558,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 8,
+              "maxLength": 20,
+              "pattern": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$",
               "title": "Sampleid"
             }
           }
@@ -2567,6 +2619,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 8,
+              "maxLength": 20,
+              "pattern": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$",
               "title": "Sampleid"
             }
           }
@@ -2628,6 +2683,7 @@
             "required": true,
             "schema": {
               "type": "integer",
+              "exclusiveMinimum": 0,
               "title": "Ordertestid"
             }
           }
@@ -2673,6 +2729,7 @@
             "required": true,
             "schema": {
               "type": "integer",
+              "exclusiveMinimum": 0,
               "title": "Ordertestid"
             }
           }
@@ -2728,6 +2785,7 @@
             "required": true,
             "schema": {
               "type": "integer",
+              "exclusiveMinimum": 0,
               "title": "Ordertestid"
             }
           }
@@ -4291,6 +4349,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 13,
+              "maxLength": 13,
+              "pattern": "^\\d{13}$",
               "title": "Orderid"
             }
           }
@@ -4338,6 +4399,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 13,
+              "maxLength": 13,
+              "pattern": "^\\d{13}$",
               "title": "Orderid"
             }
           }
@@ -4385,6 +4449,9 @@
             "required": true,
             "schema": {
               "type": "string",
+              "minLength": 13,
+              "maxLength": 13,
+              "pattern": "^\\d{13}$",
               "title": "Orderid"
             }
           }
@@ -4651,12 +4718,30 @@
               }
             ],
             "title": "Unit"
+          },
+          "specimen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Specimen"
+          },
+          "contract": {
+            "type": "object",
+            "additionalProperties": true,
+            "title": "Contract",
+            "description": "Full analyte-catalog.json entry (snake_case: value_type, allowed_values, reference_range, …)."
           }
         },
         "type": "object",
         "required": [
           "analyteCode",
-          "name"
+          "name",
+          "contract"
         ],
         "title": "AnalyteSummaryResponse"
       },
@@ -4664,10 +4749,14 @@
         "properties": {
           "specimen_id": {
             "type": "string",
+            "pattern": "^(?:\\d{13}|\\d{2}-\\d{5}(?:\\.\\d{1,2})?)$",
             "title": "Specimen Id"
           },
           "test_code": {
             "type": "string",
+            "maxLength": 8,
+            "minLength": 2,
+            "pattern": "^[A-Z][A-Z0-9]{1,7}$",
             "title": "Test Code"
           },
           "results": {
@@ -4702,7 +4791,8 @@
           "correlation_id": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 255
               },
               {
                 "type": "null"
@@ -4956,7 +5046,8 @@
           "orderId": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "pattern": "^\\d{13}$"
               },
               {
                 "type": "null"
@@ -4967,7 +5058,8 @@
           "testId": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "null"
@@ -4978,7 +5070,8 @@
           "sampleId": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "pattern": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$"
               },
               {
                 "type": "null"
@@ -4989,7 +5082,8 @@
           "patientId": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "pattern": "^3\\d{7}$"
               },
               {
                 "type": "null"
@@ -6709,10 +6803,12 @@
           },
           "orderId": {
             "type": "string",
+            "pattern": "^\\d{13}$",
             "title": "Orderid"
           },
           "patientId": {
             "type": "string",
+            "pattern": "^3\\d{7}$",
             "title": "Patientid"
           },
           "patientName": {
@@ -8737,6 +8833,19 @@
             ],
             "title": "Notes"
           },
+          "contract": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contract",
+            "description": "Full orderable-tests.json entry (snake_case keys)."
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -10522,6 +10631,7 @@
         "properties": {
           "referentDoctorId": {
             "type": "string",
+            "pattern": "^2\\d{7}$",
             "title": "Referentdoctorid"
           },
           "fullName": {
@@ -10959,7 +11069,8 @@
                 "type": "null"
               }
             ],
-            "title": "Testcodes"
+            "title": "Testcodes",
+            "description": "Optional subset of tests for aliquots"
           }
         },
         "type": "object",

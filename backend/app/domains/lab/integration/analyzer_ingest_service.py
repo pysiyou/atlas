@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from app.domains.audit.service import AuditEmitter
-from app.domains.catalog.models.orderable_test import OrderableTest
+from app.domains.catalog.models import OrderableTest
 from app.domains.lab.integration.hl7_parser import (
     AnalyzerResultAdapter,
     HL7AnalyzerResult,
@@ -254,8 +254,7 @@ class AnalyzerIngestService:
                 extra_metadata={"specimen_id": specimen_id},
             )
         order_test = self._find_pending_test(sample, test_code)
-        from app.domains.catalog.analyte_definitions import analyte_definitions_for_test
-        from app.domains.catalog.catalog_analyte_service import CatalogAnalyteService
+        from app.domains.catalog.service import CatalogAnalyteService, analyte_definitions_for_test
 
         analyte_defs = analyte_definitions_for_test(self.db, test_code)
         catalog = CatalogAnalyteService(self.db)
@@ -295,8 +294,7 @@ class AnalyzerIngestService:
                 f"json:{request.specimen_id}:{request.test_code}:"
                 f"{request.analyzer_id or 'unknown'}"
             )
-        from app.domains.catalog.analyte_definitions import analyte_definitions_for_test
-        from app.domains.catalog.catalog_analyte_service import CatalogAnalyteService
+        from app.domains.catalog.service import CatalogAnalyteService, analyte_definitions_for_test
 
         analyte_defs = analyte_definitions_for_test(self.db, request.test_code)
         catalog = CatalogAnalyteService(self.db)

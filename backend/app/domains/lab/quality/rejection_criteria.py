@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from app.domains.catalog.models.orderable_test import OrderableTest
+from app.domains.catalog.models import OrderableTest
 from app.platform.utils import LabOperationError
 from app.shared.contracts.rejection_reasons import (
     REJECTION_REASON_BY_ID,

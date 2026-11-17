@@ -4,6 +4,7 @@ Patient API Routes. All fields use camelCase. Delegates to PatientService.
 from app.domains.patients.schemas import PatientCreate, PatientResponse, PatientUpdate
 from app.domains.patients.service import PatientService
 from app.domains.users.models import User
+from app.platform.clinical_ids import MrnPath, MrnQuery
 from app.platform.database import get_db
 from app.platform.http import PaginationParams, get_current_user
 from app.platform.utils import parse_csv_values
@@ -33,7 +34,7 @@ def search_patients(
 def get_patients(
     pagination: PaginationParams,
     search: str | None = Query(None, max_length=100),
-    patientId: str | None = None,
+    patientId: MrnQuery = None,
     gender: str | None = Query(None),
     affiliationStatus: str | None = Query(None),
     ageMin: int | None = Query(None, ge=0, le=150),
@@ -68,7 +69,9 @@ def get_patients(
 
 @router.get("/patients/{patientId}", response_model=PatientResponse)
 def get_patient(
-    patientId: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+    patientId: MrnPath,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """Get patient by ID."""
     return PatientService(db).get_by_id(patientId, viewer_user_id=current_user.id)
@@ -89,7 +92,7 @@ def create_patient(
 
 @router.put("/patients/{patientId}")
 def update_patient(
-    patientId: str,
+    patientId: MrnPath,
     patient_data: PatientUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

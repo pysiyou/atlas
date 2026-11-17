@@ -21,8 +21,8 @@
     "validate:catalog": "node ../scripts/validate-catalog.mjs",
     "validate:client-config": "node ../scripts/validate-client-config.mjs",
     "validate:ui-strings": "node ../scripts/validate-ui-strings.mjs",
-    "validate:entity-ids": "node ../scripts/validate-entity-id-sync.mjs",
-    "validate": "npm run validate:catalog && npm run validate:client-config && npm run validate:ui-strings && npm run validate:entity-ids"
+    "validate": "npm run validate:catalog && npm run validate:client-config && npm run validate:ui-strings",
+    "check:openapi": "python ../scripts/export-openapi.py && git diff --exit-code ../contracts/registries/openapi.json src/lib/api/types/generated/api.d.ts"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.16",

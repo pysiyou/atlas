@@ -1,6 +1,14 @@
 /**
  * Event log search intent classification and match-group builders (pure).
  */
+import {
+  classifyClinicalSearch,
+  compactIdentifier,
+  looksLikeAccession,
+  looksLikeFiller,
+  looksLikeMnemonic,
+  looksLikeMrn,
+} from '@/utils/id';
 import type { IconKey } from '@/icons';
 import { IconKeys } from '@/icons';
 import type { AuditSearchPreviewResponse } from './api';
@@ -49,13 +57,29 @@ export function classifyEventLogSearchIntent(term: string): EventLogSearchIntent
   const parsed = parseRecordFilterDisplayId(trimmed);
   if (parsed.kind === 'clinical') {
     const token = parsed.token;
-    const classified = token.includes('/') || /^[A-Z][A-Z0-9]{1,7}$/.test(token.toUpperCase())
-      ? 'record_test'
-      : /^\d{13}$/.test(token.replace(/[\s-]/g, ''))
-        ? 'record_order'
-        : /^\d{2}-\d{5}/.test(token)
-          ? 'record_sample'
-          : 'record_patient';
+    let classified: EventLogSearchIntentMode = 'record_patient';
+    const slashIdx = token.indexOf('/');
+    if (slashIdx > 0) {
+      const accPart = token.slice(0, slashIdx).trim();
+      const codePart = token.slice(slashIdx + 1).trim();
+      if (looksLikeAccession(accPart) && looksLikeMnemonic(codePart)) {
+        classified = 'record_test';
+      }
+    } else if (looksLikeMnemonic(token)) {
+      classified = 'record_test';
+    } else if (looksLikeFiller(token)) {
+      classified = 'record_order';
+    } else if (looksLikeAccession(token)) {
+      classified = 'record_sample';
+    } else if (looksLikeMrn(token)) {
+      classified = 'record_patient';
+    } else {
+      const kind = classifyClinicalSearch(compactIdentifier(token));
+      if (kind === 'filler') classified = 'record_order';
+      else if (kind === 'accession') classified = 'record_sample';
+      else if (kind === 'mrn') classified = 'record_patient';
+      else if (kind === 'mnemonic') classified = 'record_test';
+    }
     return {
       mode: classified,
       textTerm: null,

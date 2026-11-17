@@ -4,6 +4,8 @@
  * Convention: `*API` objects are pure fetch; `use*` hooks wrap TanStack Query (same file).
  */
 import { apiClient } from '@/lib/api';
+import { clinicalPath } from '@/lib/api/clinicalPath';
+import { orderIdSchema } from '@/types/zod';
 import { withPaginatedParams } from '@/lib/api';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import type { ApiOrderSummaryResponse } from '@/lib/api/types';
@@ -17,7 +19,14 @@ import { usePaginatedPageSize } from '@/hooks';
 import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidateOrderQueries } from '@/lib/query';
 import { notify } from '@/feedback';
-import { orderCreateSchema, orderUpdateSchema, orderSchema } from '@/features/orders/schemas/order.schema';
+import {
+  orderCreateSchema,
+  orderSchema,
+  orderSummaryListSchema,
+  orderUpdateSchema,
+} from '@/features/orders/schemas/order.schema';
+import { patientSchema } from '@/features/patients/schemas/patientFormSchemas';
+import { parseApiResponse } from '@/lib/api/schemas/responses.schema';
 import { formInputToPayload } from '../utils/formTransformers';
 
 export type { PaginatedResponse, PaginationMeta };
@@ -94,19 +103,33 @@ export const orderAPI = {
     options?: { signal?: AbortSignal; include?: string }
   ): Promise<OrderDetailApiResponse | null> {
     const params = options?.include ? { include: options.include } : undefined;
-    return apiClient.get<OrderDetailApiResponse>(`/orders/${orderId}`, params, {
-      signal: options?.signal,
-    });
+    const raw = await apiClient.get<OrderDetailApiResponse>(
+      clinicalPath('/orders', orderId, orderIdSchema),
+      params,
+      { signal: options?.signal },
+    );
+    const order = parseApiResponse(orderSchema, raw, 'order detail');
+    const patient =
+      raw.patient != null
+        ? parseApiResponse(patientSchema, raw.patient, 'order embed patient')
+        : undefined;
+    return {
+      ...raw,
+      ...order,
+      patient: patient as Patient | undefined,
+    } as OrderDetailApiResponse;
   },
 
   async getByPatientId(patientId: string): Promise<Order[]> {
-    return apiClient.get<Order[]>('/orders', {
+    const data = await apiClient.get<Order[]>('/orders', {
       patientId,
       sort: 'updatedAt',
       paginated: 'false',
       summary: 'true',
       limit: String(WORKFLOW_QUERY_LIMIT),
     });
+    parseApiResponse(orderSummaryListSchema, data, 'orders by patient');
+    return data as Order[];
   },
 
   async create(order: Partial<Order>): Promise<Order> {
@@ -114,11 +137,11 @@ export const orderAPI = {
   },
 
   async update(orderId: string, updates: Partial<Order>): Promise<Order> {
-    return apiClient.put<Order>(`/orders/${orderId}`, updates);
+    return apiClient.put<Order>(clinicalPath('/orders', orderId, orderIdSchema), updates);
   },
 
   async delete(orderId: string): Promise<void> {
-    return apiClient.delete<void>(`/orders/${orderId}`);
+    return apiClient.delete<void>(clinicalPath('/orders', orderId, orderIdSchema));
   },
 
   async updatePaymentStatus(
@@ -126,7 +149,7 @@ export const orderAPI = {
     paymentStatus: string,
     amountPaid?: number
   ): Promise<Order> {
-    return apiClient.patch<Order>(`/orders/${orderId}/payment`, {
+    return apiClient.patch<Order>(clinicalPath('/orders', orderId, orderIdSchema) + '/payment', {
       paymentStatus,
       amountPaid,
     });
@@ -138,7 +161,7 @@ export const orderAPI = {
     doctorApprovedAt: string;
     message: string;
   }> {
-    return apiClient.post(`/orders/${orderId}/approve`);
+    return apiClient.post(`${clinicalPath('/orders', orderId, orderIdSchema)}/approve`);
   },
 };
 

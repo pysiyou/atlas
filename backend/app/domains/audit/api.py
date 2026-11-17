@@ -12,6 +12,12 @@ from app.domains.audit.kinds import (
 from app.domains.audit.schemas import AuditEventResponse, AuditSearchPreviewResponse
 from app.domains.audit.service import AuditEventQueryService
 from app.domains.users.models import User
+from app.platform.clinical_ids import (
+    LabActorIdQuery,
+    MrnQuery,
+    OrderIdQuery,
+    SampleIdQuery,
+)
 from app.platform.database import get_db
 from app.platform.http import get_current_user
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -45,10 +51,10 @@ def list_audit_events(
         "stream",
         description="Containment lens: order, lab, patient, system, or stream",
     ),
-    order_id: str | None = Query(None, alias="orderId"),
-    patient_id: str | None = Query(None, alias="patientId"),
-    test_id: int | None = Query(None, alias="testId"),
-    sample_id: str | None = Query(None, alias="sampleId"),
+    orderId: OrderIdQuery = None,
+    patientId: MrnQuery = None,
+    testId: int | None = Query(None, alias="testId", gt=0),
+    sampleId: SampleIdQuery = None,
     hours: float | None = Query(
         None,
         gt=0,
@@ -84,12 +90,7 @@ def list_audit_events(
         alias="cursorEventId",
         description="Newest-first cursor: eventId of the last row from the previous page",
     ),
-    actor_id: str | None = Query(
-        None,
-        alias="actorId",
-        ge=1,
-        description="When set, only events performed by this user id",
-    ),
+    actorId: LabActorIdQuery = None,
     actor_roles: str | None = Query(
         None,
         alias="actorRoles",
@@ -142,10 +143,10 @@ def list_audit_events(
         unified_search = None
     return service.list_filtered(
         scope=scope,
-        order_id=order_id,
-        patient_id=patient_id,
-        test_id=test_id,
-        sample_id=sample_id,
+        order_id=orderId,
+        patient_id=patientId,
+        test_id=testId,
+        sample_id=sampleId,
         hours=hours,
         created_from=created_from,
         created_to=created_to,
@@ -154,7 +155,7 @@ def list_audit_events(
         event_scope=event_scope,
         cursor_created_at=cursor_created_at,
         cursor_event_id=cursor_event_id,
-        actor_id=actor_id,
+        actor_id=actorId,
         actor_roles=role_keys or None,
         actor_search=actor_search_term,
         search=unified_search,

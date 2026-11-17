@@ -13,6 +13,10 @@ on:
       - 'contracts/registries/result-rejection-reasons.json'
       - 'contracts/registries/entity-ids.json'
       - 'backend/app/platform/utils.py'
+      - 'backend/app/domains/**/schemas.py'
+      - 'backend/app/domains/**/api.py'
+      - 'contracts/registries/openapi.json'
+      - 'scripts/export-openapi.py'
       - 'scripts/validate-*.mjs'
       - 'scripts/generate-audit-catalog.mjs'
       - 'scripts/generate-clinical-workups.mjs'
@@ -29,6 +33,10 @@ on:
       - 'contracts/registries/result-rejection-reasons.json'
       - 'contracts/registries/entity-ids.json'
       - 'backend/app/platform/utils.py'
+      - 'backend/app/domains/**/schemas.py'
+      - 'backend/app/domains/**/api.py'
+      - 'contracts/registries/openapi.json'
+      - 'scripts/export-openapi.py'
       - 'scripts/validate-*.mjs'
       - 'scripts/generate-audit-catalog.mjs'
       - 'scripts/generate-clinical-workups.mjs'
@@ -49,10 +57,17 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install poetry
+        working-directory: backend
+      - run: poetry install
+        working-directory: backend
       - run: npm run validate:client-config
       - run: npm run validate:ui-strings
       - run: npm run validate:catalog
-      - run: npm run validate:entity-ids
+      - run: npm run check:openapi
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build

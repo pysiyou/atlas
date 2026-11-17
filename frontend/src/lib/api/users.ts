@@ -3,6 +3,7 @@
  * Admin directory CRUD lives in `@/features/users/api/usersAdmin`.
  */
 import { apiClient } from './client';
+import { parseApiResponse, userLookupListSchema } from './schemas/responses.schema';
 import type { ApiUserLookupResponse } from './types';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
@@ -18,8 +19,9 @@ export interface UserDisplayInfo {
 }
 
 export const usersAPI = {
-  lookup(): Promise<UserLookupResponse[]> {
-    return apiClient.get<UserLookupResponse[]>('/users/lookup');
+  async lookup(): Promise<UserLookupResponse[]> {
+    const data = await apiClient.get<UserLookupResponse[]>('/users/lookup');
+    return parseApiResponse(userLookupListSchema, data, 'users lookup');
   },
 };
 

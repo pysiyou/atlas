@@ -186,7 +186,7 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
 
     return QualityIssueOptions(
         targetType=QualityIssueTargetType.TEST,
-        targetId=order_test_id,
+        targetId=str(order_test_id),
         orderId=order_test.orderId,
         testCode=order_test.testCode,
         sampleId=order_test.sampleId,

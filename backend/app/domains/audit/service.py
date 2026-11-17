@@ -55,22 +55,36 @@ _SYSTEM_SNAPSHOT: dict[str, Any] = {
 def build_actor_snapshot(
     user: User | None,
     ip_address: str | None = None,
-) -> tuple[int | None, dict[str, Any]]:
+    *,
+    acting_user_id: str | None = None,
+) -> tuple[str | None, dict[str, Any]]:
     """Return (actor_id, actor_snapshot) for DB insert. Snapshot uses snake_case keys in JSONB."""
-    if user is None:
-        snapshot = dict(_SYSTEM_SNAPSHOT)
+    from app.domains.lab.constants import ANALYZER_USER_ID, is_analyzer_user_id
+
+    if user is not None:
+        snapshot: dict[str, Any] = {
+            "user_id": user.id,
+            "name": user.name,
+            "role": user.role.value,
+        }
         if ip_address:
             snapshot["ip_address"] = ip_address
-        return None, snapshot
+        return user.id, snapshot
 
-    snapshot: dict[str, Any] = {
-        "user_id": user.id,
-        "name": user.name,
-        "role": user.role.value,
-    }
+    if acting_user_id and is_analyzer_user_id(acting_user_id):
+        snapshot = {
+            "user_id": ANALYZER_USER_ID,
+            "name": "Analyzer",
+            "role": "analyzer",
+        }
+        if ip_address:
+            snapshot["ip_address"] = ip_address
+        return ANALYZER_USER_ID, snapshot
+
+    snapshot = dict(_SYSTEM_SNAPSHOT)
     if ip_address:
         snapshot["ip_address"] = ip_address
-    return user.id, snapshot
+    return None, snapshot
 
 
 def _changes_to_jsonb(changes: EventChanges | None) -> dict[str, Any] | None:
@@ -88,8 +102,12 @@ def _build_row_dict(
     create: AuditEventCreate,
     user: User | None,
     ip_address: str | None,
+    *,
+    acting_user_id: str | None = None,
 ) -> dict[str, Any]:
-    actor_id, actor_snapshot = build_actor_snapshot(user, ip_address)
+    actor_id, actor_snapshot = build_actor_snapshot(
+        user, ip_address, acting_user_id=acting_user_id
+    )
     event_id = uuid4()
     created_at = datetime.now(UTC)
     context = create.context
@@ -122,9 +140,11 @@ class AuditWriter:
         create: AuditEventCreate,
         user: User | None,
         ip_address: str | None = None,
+        *,
+        acting_user_id: str | None = None,
     ) -> AuditEvent:
         validated = AuditEventCreate.model_validate(create)
-        row = _build_row_dict(validated, user, ip_address)
+        row = _build_row_dict(validated, user, ip_address, acting_user_id=acting_user_id)
         entry = AuditEvent(**row)
         self.db.add(entry)
         return entry
@@ -408,7 +428,18 @@ class AuditEventQueryService:
             query = query.filter(AuditEvent.eventScope == event_scope)
 
         if actor_id is not None:
-            query = query.filter(AuditEvent.actorId == actor_id)
+            from app.domains.lab.constants import is_analyzer_user_id
+            from sqlalchemy import or_
+
+            if is_analyzer_user_id(actor_id):
+                query = query.filter(
+                    or_(
+                        AuditEvent.actorId == actor_id,
+                        AuditEvent.actorSnapshot["user_id"].astext == actor_id,
+                    )
+                )
+            else:
+                query = query.filter(AuditEvent.actorId == actor_id)
 
         if actor_roles:
             query = query.filter(AuditEvent.actorSnapshot["role"].astext.in_(actor_roles))
@@ -601,7 +632,8 @@ class AuditEmitter:
         )
 
     def emit(self, create: AuditEventCreate, user_id: str | None) -> None:
-        self._writer.log_event_sync(create, self._actor(user_id))
+        user = self._actor(user_id)
+        self._writer.log_event_sync(create, user, acting_user_id=user_id)
 
     def _emit(
         self,

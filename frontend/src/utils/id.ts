@@ -5,7 +5,10 @@
  * sample id = accession, user id = employee number, invoice id, payment id.
  */
 
-/** Regex contracts — keep in sync with `backend/app/platform/utils.py`. */
+/**
+ * Regex contracts — canonical list in `contracts/registries/entity-ids.json`;
+ * keep in sync with `backend/app/platform/utils.py`.
+ */
 export const ID_PATTERNS = {
   mrn: /^3\d{7}$/,
   filler: /^\d{13}$/,

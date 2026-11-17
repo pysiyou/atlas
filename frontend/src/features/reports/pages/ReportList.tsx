@@ -27,18 +27,15 @@ import { dateSearchServerParams, formatDate } from '@/utils';
 import { notify } from '@/feedback';
 import { LIST_PAGE_SIZE_OPTIONS } from '@/lib/api';
 import { useModuleListTitles } from '@/hooks';
-
-/** Parse `/reports/:id` so a deep link can open preview without unmounting the list. */
-function parseReportOrderId(id: string | undefined): string | null {
-  if (!id?.trim()) return null;
-  return id.trim();
-}
+import { useClinicalRouteParam } from '@/hooks/useClinicalRouteParam';
+import { orderIdSchema } from '@/types/zod';
 
 export function ReportList() {
   const listTitles = useModuleListTitles();
   const navigate = useNavigate();
   const { id: routeOrderId } = useParams<{ id?: string }>();
-  const deepLinkOrderId = parseReportOrderId(routeOrderId);
+  const validatedOrderId = useClinicalRouteParam(routeOrderId, orderIdSchema, '/reports');
+  const deepLinkOrderId = validatedOrderId ?? null;
   const openedDeepLinkIdRef = useRef<string | null>(null);
 
   const { filters, setFilter } = usePageFilters({

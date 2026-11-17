@@ -4,9 +4,9 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from app.domains.catalog.analyte_definitions import analyte_definitions_for_test
+from app.domains.catalog.service import analyte_definitions_for_test
 from app.domains.lab.constants import ANALYZER_USER_ID, is_analyzer_user_id
-from app.domains.catalog.models.orderable_test import OrderableTest
+from app.domains.catalog.models import OrderableTest
 from app.domains.lab.results.delta_check import DeltaCheckService
 from app.domains.lab.results.flags import ResultFlag
 from app.domains.lab.results.reflex import ReflexEngine

@@ -18,11 +18,14 @@ import {
   LargeScreenLayout,
 } from '../components/OrderDetailLayouts';
 import { useModuleListTitles } from '@/hooks';
+import { useClinicalRouteParam } from '@/hooks/useClinicalRouteParam';
+import { orderIdSchema } from '@/types/zod';
 
 export function OrderDetail() {
   const orderLabel = useModuleListTitles().orderDetail;
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { id: rawId } = useParams<{ id: string }>();
+  const id = useClinicalRouteParam(rawId, orderIdSchema, '/orders');
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
   const { openModal } = useModal();
 

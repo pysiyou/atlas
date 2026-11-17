@@ -2,6 +2,8 @@
  * Report listing API — reportable orders from server projection.
  */
 import { apiClient } from '@/lib/api';
+import { clinicalPath } from '@/lib/api/clinicalPath';
+import { orderIdSchema } from '@/types/zod';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import { withPaginatedParams } from '@/lib/api';
 import type { ApiReportableOrderItem } from '@/lib/api/types';
@@ -89,13 +91,17 @@ export const reportsAPI = {
     return apiClient.get<PaginatedResponse<ReportableOrderItem>>('/reports/orders', params);
   },
   getReportableOrder(orderId: string): Promise<ReportableOrderItem> {
-    return apiClient.get<ReportableOrderItem>(`/reports/orders/${orderId}`);
+    return apiClient.get<ReportableOrderItem>(
+      clinicalPath('/reports/orders', orderId, orderIdSchema),
+    );
   },
   recordOrderReportDownload(orderId: string): Promise<ReportableOrderItem> {
-    return apiClient.get<ReportableOrderItem>(`/reports/orders/${orderId}/download`);
+    return apiClient.get<ReportableOrderItem>(
+      `${clinicalPath('/reports/orders', orderId, orderIdSchema)}/download`,
+    );
   },
   downloadPdf(orderId: string): Promise<Blob> {
-    return apiClient.getBlob(`/reports/orders/${orderId}/pdf`);
+    return apiClient.getBlob(`${clinicalPath('/reports/orders', orderId, orderIdSchema)}/pdf`);
   },
 };
 

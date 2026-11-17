@@ -53,7 +53,7 @@ class ReferentDoctorCreate(BaseModel):
 
 
 class ReferentDoctorResponse(BaseModel):
-    referentDoctorId: str
+    referentDoctorId: str = Field(..., pattern=REFERENT_DOCTOR_ID_PATTERN)
     fullName: str
     username: str | None = None
     email: str | None = None

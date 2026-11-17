@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import UTC, date, datetime, time
 from typing import Any
 
-from app.domains.catalog.models.orderable_test import OrderableTest
+from app.domains.catalog.models import OrderableTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.monitor.board_service import LabBoardService
 from app.domains.lab.monitor.predicates import (

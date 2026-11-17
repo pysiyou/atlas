@@ -9,6 +9,7 @@ from app.domains.lab.schemas.lab import (
 )
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
+from app.platform.clinical_ids import OrderTestIdPath
 from app.platform.database import get_db
 from app.platform.http import get_current_user, require_lab_tech
 from app.shared.contracts.enums import ValidationDecision
@@ -20,7 +21,7 @@ router = APIRouter()
 
 @router.get("/results/order-tests/{orderTestId}", response_model=PendingEscalationItemResponse)
 def get_order_test_context(
-    orderTestId: int,
+    orderTestId: OrderTestIdPath,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -29,7 +30,7 @@ def get_order_test_context(
 
 @router.post("/results/order-tests/{orderTestId}")
 def enter_results(
-    orderTestId: int,
+    orderTestId: OrderTestIdPath,
     result_data: ResultEntryRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),
@@ -44,7 +45,7 @@ def enter_results(
 
 @router.post("/results/order-tests/{orderTestId}/validate")
 def validate_results(
-    orderTestId: int,
+    orderTestId: OrderTestIdPath,
     validation_data: ResultValidationRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),

@@ -149,10 +149,12 @@ export function LabResultInput({
     disabled,
   };
 
-  if (valueType === 'SELECT' && analyte.allowedValues) {
+  const selectOptions = analyte.allowedValues?.filter(Boolean) ?? [];
+
+  if (valueType === 'SELECT' && selectOptions.length > 0) {
     return (
       <SelectAnalyteValueInput
-        analyte={analyte}
+        analyte={{ ...analyte, allowedValues: selectOptions }}
         value={normalizedValue}
         onChange={onChange}
         inputId={inputId}
@@ -161,13 +163,15 @@ export function LabResultInput({
     );
   }
 
-  if (valueType === 'TEXT') {
+  if (valueType === 'SELECT' || valueType === 'TEXT') {
+    const placeholder =
+      valueType === 'SELECT' ? 'Catalog options missing — enter coded value' : 'Enter text result...';
     return (
       <input
         {...commonProps}
         type="text"
         className={cn(inputBase, `block ${CONTROL.height}`)}
-        placeholder="Enter text result..."
+        placeholder={placeholder}
       />
     );
   }

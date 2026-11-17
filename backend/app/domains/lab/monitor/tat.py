@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from datetime import UTC, datetime
 from typing import Any, Literal
 
-from app.domains.catalog.models.orderable_test import OrderableTest
+from app.domains.catalog.models import OrderableTest
 from app.domains.lab.rules.blockers import (
     ATTENTION_TYPE_SORT,
     PRIORITY_ATTENTION_TYPES,

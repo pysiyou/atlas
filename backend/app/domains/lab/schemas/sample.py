@@ -15,8 +15,12 @@ from app.platform.utils import (
     FILLER_PATTERN,
     LAB_ACTOR_USER_ID_PATTERN,
     SAMPLE_ID_PATTERN,
+    TEST_MNEMONIC_PATTERN,
 )
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+import re
+
+_TEST_MNEMONIC_RE = re.compile(TEST_MNEMONIC_PATTERN)
 
 
 class SampleBase(BaseModel):
@@ -41,7 +45,23 @@ class SampleAliquotCreateRequest(BaseModel):
 
     count: int = Field(..., ge=1, le=20)
     aliquotVolume: float = Field(..., gt=0)
-    testCodes: list[str] | None = None
+    testCodes: list[str] | None = Field(
+        None,
+        description="Optional subset of tests for aliquots",
+    )
+
+    @field_validator("testCodes")
+    @classmethod
+    def validate_test_codes(cls, v: list[str] | None) -> list[str] | None:
+        if v is None:
+            return v
+        out: list[str] = []
+        for code in v:
+            upper = code.strip().upper()
+            if not _TEST_MNEMONIC_RE.fullmatch(upper):
+                raise ValueError(f"Invalid test code: {code}")
+            out.append(upper)
+        return out
 
 
 class SampleResponse(SampleBase):

@@ -2,6 +2,9 @@
  * Samples API service — pure HTTP, no React.
  */
 import { apiClient } from '@/lib/api';
+import { clinicalPath } from '@/lib/api/clinicalPath';
+import { parseSampleList, parseSampleResponse } from '../schemas/sample.schema';
+import { sampleIdSchema } from '@/types/zod';
 import { WORKFLOW_QUERY_LIMIT } from '@/lib/api';
 import type { Sample, SampleStatus, ContainerType, ContainerTopColor } from '@/types';
 import {
@@ -54,12 +57,16 @@ export const sampleAPI = {
     if (params?.status) queryParams.sampleStatus = params.status;
     if (params?.skip) queryParams.skip = String(params.skip);
     if (params?.limit) queryParams.limit = String(params.limit);
-    return apiClient.get<Sample[]>(LAB_PATHS.samples.list, queryParams);
+    const data = await apiClient.get<Sample[]>(LAB_PATHS.samples.list, queryParams);
+    return parseSampleList(data) as Sample[];
   },
 
   async getById(sampleId: string): Promise<Sample | null> {
     try {
-      return await apiClient.get<Sample>(LAB_PATHS.samples.byId(sampleId));
+      const data = await apiClient.get<Sample>(
+        clinicalPath('/lab/samples', sampleId, sampleIdSchema),
+      );
+      return parseSampleResponse(data) as Sample;
     } catch {
       return null;
     }
@@ -69,7 +76,9 @@ export const sampleAPI = {
    * Server eligibility and queue display for a sample (deep-link / modal).
    */
   async getWorkContext(sampleId: string): Promise<CollectionWorklistItem> {
-    return apiClient.get<CollectionWorklistItem>(LAB_PATHS.samples.workContext(sampleId));
+    return apiClient.get<CollectionWorklistItem>(
+      `${clinicalPath('/lab/samples', sampleId, sampleIdSchema)}/work-context`,
+    );
   },
 
   async collect(sampleId: string, data: CollectSampleRequest): Promise<Sample> {
@@ -81,14 +90,18 @@ export const sampleAPI = {
         ? { collectionNotes: data.collectionNotes }
         : {}),
     };
-    return apiClient.patch<Sample>(LAB_PATHS.samples.collect(sampleId), body);
+    const path = `${clinicalPath('/lab/samples', sampleId, sampleIdSchema)}/collect`;
+    const raw = await apiClient.patch<Sample>(path, body);
+    return parseSampleResponse(raw) as Sample;
   },
 
   async createAliquots(
     sampleId: string,
     data: { count: number; aliquotVolume: number; testCodes?: string[] }
   ): Promise<Sample[]> {
-    return apiClient.post<Sample[]>(LAB_PATHS.samples.aliquots(sampleId), data);
+    const path = `${clinicalPath('/lab/samples', sampleId, sampleIdSchema)}/aliquots`;
+    const raw = await apiClient.post<Sample[]>(path, data);
+    return parseSampleList(raw) as Sample[];
   },
 };
 

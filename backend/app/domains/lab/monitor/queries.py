@@ -1,6 +1,6 @@
 """Shared SQL join skeletons for lab board snapshots and worklists."""
 
-from app.domains.catalog.models.orderable_test import OrderableTest
+from app.domains.catalog.models import OrderableTest
 from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient

@@ -1100,6 +1100,15 @@ export interface components {
             loincCode?: string | null;
             /** Unit */
             unit?: string | null;
+            /** Specimen */
+            specimen?: string | null;
+            /**
+             * Contract
+             * @description Full analyte-catalog.json entry (snake_case: value_type, allowed_values, reference_range, …).
+             */
+            contract: {
+                [key: string]: unknown;
+            };
         };
         /**
          * AnalyzerResultRequest
@@ -2344,6 +2353,13 @@ export interface components {
             /** Notes */
             notes?: string | null;
             /**
+             * Contract
+             * @description Full orderable-tests.json entry (snake_case keys).
+             */
+            contract?: {
+                [key: string]: unknown;
+            } | null;
+            /**
              * Createdat
              * Format: date-time
              */
@@ -3107,7 +3123,10 @@ export interface components {
             count: number;
             /** Aliquotvolume */
             aliquotVolume: number;
-            /** Testcodes */
+            /**
+             * Testcodes
+             * @description Optional subset of tests for aliquots
+             */
             testCodes?: string[] | null;
         };
         /** SampleCollectRequest */
@@ -3795,7 +3814,6 @@ export interface operations {
                 cursorCreatedAt?: string | null;
                 /** @description Newest-first cursor: eventId of the last row from the previous page */
                 cursorEventId?: string | null;
-                /** @description When set, only events performed by this user id */
                 actorId?: string | null;
                 /** @description Comma-separated UserRole values; matches actor_snapshot.role at event time */
                 actorRoles?: string | null;

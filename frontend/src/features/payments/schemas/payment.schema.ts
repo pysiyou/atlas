@@ -4,6 +4,7 @@ import {
   orderIdSchema,
   invoiceIdSchema,
   receiptIdSchema,
+  employeeNumberSchema,
   zEnumFromValues,
 } from '@/types/zod';
 import { z } from 'zod';
@@ -19,7 +20,7 @@ export const paymentSchema = z.object({
   amount: z.number().min(0),
   paymentMethod: paymentMethodSchema,
   paidAt: dateStringSchema,
-  createdBy: z.string(),
+  createdBy: employeeNumberSchema,
   receiptGenerated: z.boolean(),
   notes: z.string().nullable().optional(),
   orderTotalPrice: z.number().min(0).optional(),

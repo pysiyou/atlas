@@ -7,9 +7,7 @@ from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Payment
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.billing.service import BillingService
-from app.domains.catalog.models.clinical_workup import ClinicalWorkup
-from app.domains.catalog.models.clinical_workup_test import ClinicalWorkupTest
-from app.domains.catalog.models.orderable_test import OrderableTest
+from app.domains.catalog.models import ClinicalWorkup, ClinicalWorkupTest, OrderableTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.public import (
     generate_samples_for_order,

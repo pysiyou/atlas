@@ -15,11 +15,14 @@ import { PatientHeader } from '../components/PatientHeader';
 import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../components/PatientDetailLayouts';
 import { feedbackTitle } from '@/feedback';
 import { useModuleListTitles } from '@/hooks';
+import { useClinicalRouteParam } from '@/hooks/useClinicalRouteParam';
+import { mrnSchema } from '@/types/zod';
 
 export function PatientDetail() {
   const patientLabel = useModuleListTitles().patientDetail;
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { id: rawId } = useParams<{ id: string }>();
+  const id = useClinicalRouteParam(rawId, mrnSchema, '/patients');
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
   const { openModal } = useModal();

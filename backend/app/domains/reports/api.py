@@ -4,6 +4,7 @@ from datetime import date
 from app.domains.reports.schemas import ReportableOrderItem
 from app.domains.reports.service import ReportService
 from app.domains.users.models import User
+from app.platform.clinical_ids import OrderIdPath
 from app.platform.database import get_db
 from app.platform.http import get_current_user
 from app.shared.schemas.pagination import PaginatedResponse
@@ -43,7 +44,7 @@ def list_reportable_orders(
     status_code=status.HTTP_200_OK,
 )
 def get_reportable_order(
-    orderId: str,
+    orderId: OrderIdPath,
     db: Session = Depends(get_db),
     _current_user: User = Depends(get_current_user),
 ):
@@ -56,7 +57,7 @@ def get_reportable_order(
     status_code=status.HTTP_200_OK,
 )
 def download_order_report(
-    orderId: str,
+    orderId: OrderIdPath,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -65,7 +66,7 @@ def download_order_report(
 
 @router.get("/reports/orders/{orderId}/pdf")
 def download_order_report_pdf(
-    orderId: str,
+    orderId: OrderIdPath,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

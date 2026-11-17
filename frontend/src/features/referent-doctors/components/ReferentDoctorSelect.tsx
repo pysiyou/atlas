@@ -1,7 +1,9 @@
 import { Input } from '@/components/inputs';
 import { Icon, RemovableTag, TagChip } from '@/components/primitives';
 import { getEmptyCopy, usePanelCopy } from '@/strings';
-import { cn, formatPhoneNumber, ID_PATTERNS } from '@/utils';
+import { cn, formatPhoneNumber } from '@/utils';
+import { showToast } from '@/feedback/toast';
+import { referentDoctorCreateSchema } from '../schemas/referentDoctor.schema';
 import { useRef, useState } from 'react';
 import { Controller, type Control } from 'react-hook-form';
 import {
@@ -81,16 +83,20 @@ export function ReferentDoctorSelect({
 
   const handleCreate = async () => {
     if (!canCreate || createDoctor.isPending) return;
-    const referentDoctorId = newReferentDoctorId.trim();
-    if (referentDoctorId && !ID_PATTERNS.referentDoctorId.test(referentDoctorId)) return;
-    const created = await createDoctor.mutateAsync({
+    const parsed = referentDoctorCreateSchema.safeParse({
       fullName: trimmedSearch,
-      referentDoctorId: referentDoctorId || null,
+      referentDoctorId: newReferentDoctorId.trim() || null,
       username: newUsername.trim() || null,
       email: newEmail.trim() || null,
       phone: newPhone.trim() || null,
       hospitalName: newHospital.trim() || null,
     });
+    if (!parsed.success) {
+      const message = parsed.error.issues[0]?.message ?? 'Invalid referent doctor details';
+      showToast(message, 'error');
+      return;
+    }
+    const created = await createDoctor.mutateAsync(parsed.data);
     onSelectDoctor(created);
     setSearch('');
     resetNewDoctorFields();

@@ -8,7 +8,7 @@ import logging
 from collections.abc import Callable
 
 from app.platform.config import settings
-from app.platform.utils import LabOperationError
+from app.platform.utils import IdentifierError, LabOperationError
 from app.shared.schemas.error import ErrorDetail, ErrorResponse
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
@@ -155,6 +155,18 @@ async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONR
     )
 
 
+async def identifier_error_handler(_request: Request, exc: IdentifierError) -> JSONResponse:
+    """Sequence cap or invalid generated identifier — client should retry later or contact ops."""
+    logger.warning("Identifier allocation failed: %s", exc)
+    return JSONResponse(
+        status_code=503,
+        content=ErrorResponse(
+            error_code="IDENTIFIER_EXHAUSTED",
+            message=str(exc),
+        ).model_dump(),
+    )
+
+
 async def generic_exception_handler(request: Request, _exc: Exception) -> JSONResponse:
     """Catch-all: log internally, return a generic 500."""
     logger.exception("Unhandled exception on %s %s", request.method, request.url.path)
@@ -169,6 +181,7 @@ async def generic_exception_handler(request: Request, _exc: Exception) -> JSONRe
 
 def register_exception_handlers(app: FastAPI) -> None:
     """Attach all exception handlers to the FastAPI app."""
+    app.add_exception_handler(IdentifierError, identifier_error_handler)
     app.add_exception_handler(LabOperationError, lab_operation_error_handler)
     app.add_exception_handler(RequestValidationError, request_validation_error_handler)
     app.add_exception_handler(SQLAlchemyError, sqlalchemy_error_handler)

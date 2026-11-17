@@ -7,7 +7,6 @@ import type { ApiOrderableTestResponse, ApiOrderableTestSummaryResponse } from '
 import { REFERENCE_DATA_LIMIT } from '@/lib/api';
 import type {
   AnalyteDefinition,
-  CatalogReferenceRange,
   ContainerTopColor,
   ContainerType,
   OrderableTest,
@@ -15,6 +14,8 @@ import type {
   SampleType,
   TestCategory,
 } from '@/types';
+import type { CatalogAnalyteContract, CatalogOrderableTestContract } from '@/types/catalogContract';
+import { analyteDefinitionFromContract } from './mapCatalogAnalyte';
 import { useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -44,11 +45,15 @@ type ApiAnalyteSummary = {
   name: string;
   loincCode?: string | null;
   unit?: string | null;
-  definition?: Record<string, unknown> | null;
+  specimen?: string | null;
+  /** Full contracts/catalog/analyte-catalog.json entry (snake_case). */
+  contract: CatalogAnalyteContract;
 };
 
 type APIOrderableTestResponse = ApiOrderableTestResponse & {
   analytes?: ApiAnalyteSummary[];
+  /** Full contracts/catalog/orderable-tests.json entry (snake_case). */
+  contract?: CatalogOrderableTestContract | null;
 };
 
 const EMPTY_SUMMARIES: OrderableTestSummary[] = [];
@@ -60,56 +65,21 @@ function mapApiAnalytes(analytes?: ApiAnalyteSummary[]): AnalyteDefinition[] | u
   if (!analytes || analytes.length === 0) return undefined;
 
   return analytes.map((item): AnalyteDefinition => {
-    const def = item.definition && typeof item.definition === 'object' ? item.definition : {};
-    const merged = { ...def, ...item };
-    const valueType = (merged as { value_type?: string }).value_type;
-    let type: 'numeric' | 'text' | 'qualitative' | 'select' = 'text';
-    if (valueType === 'NUMERIC') type = 'numeric';
-    else if (valueType === 'SELECT') type = 'select';
-    else if (valueType === 'TEXT') type = 'text';
-
-    let referenceRangeText = '';
-    const catalogRefRange = (merged as { reference_range?: CatalogReferenceRange }).reference_range;
-    if (catalogRefRange) {
-      const range =
-        catalogRefRange.adult_general ||
-        catalogRefRange.adult_male ||
-        catalogRefRange.adult_female;
-      if (range) {
-        if (range.text?.trim()) {
-          referenceRangeText = range.text.trim();
-        } else if (range.low !== undefined && range.high !== undefined) {
-          referenceRangeText = `${range.low} - ${range.high}`;
-        } else if (range.low !== undefined) {
-          referenceRangeText = `> ${range.low}`;
-        } else if (range.high !== undefined) {
-          referenceRangeText = `< ${range.high}`;
-        }
-      }
-    }
-
-    const crit = (merged as { critical_range?: { low?: number; high?: number } }).critical_range;
-    const phys = (merged as { physiologic_range?: { min?: number; max?: number } }).physiologic_range;
-    const physRange =
-      phys?.min !== undefined && phys?.max !== undefined
-        ? { min: phys.min, max: phys.max }
-        : undefined;
-    return {
-      code: item.analyteCode,
+    const contract =
+      item.contract ??
+      ({
+        analyte_code: item.analyteCode,
+        name: item.name,
+        loinc_code: item.loincCode ?? undefined,
+        unit: item.unit ?? undefined,
+        validation: { rejection_criteria: [] },
+      } satisfies CatalogAnalyteContract);
+    return analyteDefinitionFromContract(contract, {
+      analyteCode: item.analyteCode,
       name: item.name,
-      unit: item.unit || '',
-      type,
-      loincCode: item.loincCode ?? undefined,
-      referenceRange: referenceRangeText,
-      valueType: valueType as AnalyteDefinition['valueType'],
-      catalogReferenceRange: catalogRefRange,
-      criticalLow: crit?.low,
-      criticalHigh: crit?.high,
-      allowedValues: (merged as { allowed_values?: string[] }).allowed_values,
-      decimalsSuggested: (merged as { decimals_suggested?: number }).decimals_suggested,
-      decimalPlaces: (merged as { decimals_suggested?: number }).decimals_suggested,
-      physiologicRange: physRange,
-    };
+      loincCode: item.loincCode,
+      unit: item.unit,
+    });
   });
 }
 
@@ -134,12 +104,13 @@ function transformSummary(apiTest: ApiOrderableTestSummaryResponse): OrderableTe
 }
 
 function transformOrderableTest(apiTest: APIOrderableTestResponse): OrderableTest {
-  const { analytes, turnaroundTimeHours, ...rest } = apiTest;
+  const { analytes, turnaroundTimeHours, contract, ...rest } = apiTest;
   return {
     ...(rest as unknown as OrderableTest),
     turnaroundTime: turnaroundTimeHours ?? 0,
     workups: workupIdsForTest(apiTest.code),
     analytes: mapApiAnalytes(analytes),
+    contract: contract ?? undefined,
   };
 }
 

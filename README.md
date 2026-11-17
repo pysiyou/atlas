@@ -21,3 +21,13 @@ npm run dev:web    # terminal 2 — http://localhost:5173
 ```
 
 `curl -s http://127.0.0.1:8000/health` should return `{"status":"healthy"}` before you rely on the UI.
+
+## Clinical identifiers
+
+MRN, order filler, accession, employee, and related IDs are defined in [`contracts/registries/entity-ids.json`](contracts/registries/entity-ids.json). See [`docs/clinical-identifiers.md`](docs/clinical-identifiers.md) for architecture decisions and the change runbook.
+
+From `frontend/` after backend schema changes:
+
+```bash
+npm run codegen:openapi
+```

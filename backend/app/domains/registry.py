@@ -3,12 +3,14 @@ Import all ORM models so SQLAlchemy metadata is complete for create_all / bootst
 """
 from app.domains.audit.models import AuditEvent
 from app.domains.billing.models import Invoice, Payment
-from app.domains.catalog.models.affiliation_pricing import AffiliationPricing
-from app.domains.catalog.models.catalog_analyte import CatalogAnalyte
-from app.domains.catalog.models.clinical_workup import ClinicalWorkup
-from app.domains.catalog.models.clinical_workup_test import ClinicalWorkupTest
-from app.domains.catalog.models.orderable_test import OrderableTest
-from app.domains.catalog.models.orderable_test_analyte import OrderableTestAnalyte
+from app.domains.catalog.models import (
+    AffiliationPricing,
+    CatalogAnalyte,
+    ClinicalWorkup,
+    ClinicalWorkupTest,
+    OrderableTest,
+    OrderableTestAnalyte,
+)
 from app.platform.utils import IdSequence
 from app.domains.lab.models.analyzer_ingest_dedup import AnalyzerIngestDedup
 from app.domains.lab.models.escalation import EscalationTicket

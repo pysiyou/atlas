@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
+from app.platform.utils import FILLER_PATTERN, MRN_PATTERN, SAMPLE_ID_PATTERN
 from app.shared.contracts.audit_events import EventType
 from pydantic import BaseModel, Field
 
@@ -25,13 +26,13 @@ __all__ = [
 
 class EventTarget(BaseModel):
     entityType: str = Field(..., min_length=1, max_length=50)
-    entityId: str
+    entityId: str = Field(..., max_length=32)
 
 
 class EventContext(BaseModel):
-    patientId: str | None = None
-    orderId: str | None = None
-    testId: int | None = None
+    patientId: str | None = Field(None, pattern=MRN_PATTERN)
+    orderId: str | None = Field(None, pattern=FILLER_PATTERN)
+    testId: int | None = Field(None, gt=0)
 
 
 class EventChanges(BaseModel):
@@ -48,10 +49,10 @@ class AuditEventCreate(BaseModel):
 
 
 class AuditSearchParsedIds(BaseModel):
-    orderId: str | None = None
-    testId: int | None = None
-    sampleId: str | None = None
-    patientId: str | None = None
+    orderId: str | None = Field(None, pattern=FILLER_PATTERN)
+    testId: int | None = Field(None, gt=0)
+    sampleId: str | None = Field(None, pattern=SAMPLE_ID_PATTERN)
+    patientId: str | None = Field(None, pattern=MRN_PATTERN)
 
 
 class AuditSearchIntent(BaseModel):

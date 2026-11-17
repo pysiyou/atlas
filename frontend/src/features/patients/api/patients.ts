@@ -3,6 +3,8 @@
  * Convention: `*API` objects are pure fetch; `use*` hooks wrap TanStack Query (same file).
  */
 import { apiClient, isApiError } from '@/lib/api';
+import { clinicalPath } from '@/lib/api/clinicalPath';
+import { mrnSchema } from '@/types/zod';
 import { withPaginatedParams } from '@/lib/api';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import type { Gender, Patient, PatientContext } from '@/types';
@@ -18,6 +20,7 @@ import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { invalidatePatientQueries } from '@/lib/query';
 import { notify } from '@/feedback';
 import { patientSchema, patientCreateSchema, patientUpdateSchema } from '../schemas/patientFormSchemas';
+import { parseApiResponse } from '@/lib/api/schemas/responses.schema';
 import { formInputToPayload } from '../utils/formTransformers';
 
 export type { PaginatedResponse, PaginationMeta };
@@ -69,7 +72,8 @@ export const patientAPI = {
   },
 
   async getById(id: string): Promise<Patient | null> {
-    return apiClient.get<Patient>(`/patients/${id}`);
+    const data = await apiClient.get<Patient>(clinicalPath('/patients', id, mrnSchema));
+    return parseApiResponse(patientSchema, data, 'patient detail') as Patient;
   },
 
   async create(patient: Patient, options?: { forceCreate?: boolean }): Promise<Patient> {
@@ -78,11 +82,11 @@ export const patientAPI = {
   },
 
   async update(id: string, updates: Partial<Patient>): Promise<Patient> {
-    return apiClient.put<Patient>(`/patients/${id}`, updates);
+    return apiClient.put<Patient>(clinicalPath('/patients', id, mrnSchema), updates);
   },
 
   async delete(id: string): Promise<void> {
-    return apiClient.delete<void>(`/patients/${id}`);
+    return apiClient.delete<void>(clinicalPath('/patients', id, mrnSchema));
   },
 
   async search(query: string): Promise<Patient[]> {

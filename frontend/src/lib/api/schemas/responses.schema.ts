@@ -2,11 +2,16 @@
  * Zod schemas for API response validation at service boundaries.
  */
 import { z } from 'zod';
-import {
-  employeeNumberSchema,
-  orderIdSchema,
-  receiptIdSchema,
-} from '@/types/zod';
+import { paymentSchema } from '@/features/payments/schemas/payment.schema';
+import { employeeNumberSchema } from '@/types/zod';
+
+export const userLookupResponseSchema = z.object({
+  id: employeeNumberSchema,
+  name: z.string(),
+  username: z.string(),
+});
+
+export const userLookupListSchema = z.array(userLookupResponseSchema);
 
 export const loginTokenResponseSchema = z.object({
   access_token: z.string(),
@@ -31,21 +36,8 @@ export const authUserResponseSchema = z.object({
   email: z.string().nullable().optional(),
 });
 
-export const paymentResponseSchema = z.object({
-  paymentId: receiptIdSchema,
-  orderId: orderIdSchema,
-  invoiceId: z.string().nullable().optional(),
-  amount: z.number(),
-  paymentMethod: z.string(),
-  paidAt: z.string(),
-  createdBy: employeeNumberSchema,
-  receiptGenerated: z.boolean().optional(),
-  notes: z.string().optional().nullable(),
-  orderTotalPrice: z.number().optional(),
-  numberOfTests: z.number().optional(),
-  patientName: z.string().optional(),
-  orderPaymentStatus: z.string().optional().nullable(),
-});
+/** API payment payloads — aligned with `features/payments/schemas/payment.schema.ts`. */
+export const paymentResponseSchema = paymentSchema;
 
 export const operationResponseSchema = z.object({
   success: z.boolean(),
