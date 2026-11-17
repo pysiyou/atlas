@@ -42,25 +42,29 @@ class IdSequence(Base):
     lastSeq = Column("last_seq", Integer, nullable=False, default=0)
 
 
-MRN_PATTERN = r"^[0-9A-Z]{6,12}$"
+MRN_PATTERN = r"^3\d{7}$"
 FILLER_PATTERN = r"^\d{13}$"
 PLACER_PATTERN = FILLER_PATTERN
 ACCESSION_PATTERN = r"^\d{2}-\d{5}$"
 ALIQUOT_ACCESSION_PATTERN = r"^\d{2}-\d{5}\.\d{1,2}$"
 TEST_MNEMONIC_PATTERN = r"^[A-Z][A-Z0-9]{1,7}$"
-NPI_PATTERN = r"^\d{10}$"
-EMPLOYEE_NUMBER_PATTERN = r"^\d{6}$"
+REFERENT_DOCTOR_ID_PATTERN = r"^2\d{7}$"
+EMPLOYEE_NUMBER_PATTERN = r"^1\d{7}$"
 INVOICE_NUMBER_PATTERN = r"^\d{12}$"
 RECEIPT_NUMBER_PATTERN = r"^\d{8}$"
 MEMBER_ID_PATTERN = r"^[0-9A-Z]{6,20}$"
 ANALYZER_ID_PATTERN = r"^[A-Z0-9][A-Z0-9._-]{2,31}$"
+# Accession with optional aliquot suffix (e.g. 26-00001 or 26-00001.1)
+SAMPLE_ID_PATTERN = r"^\d{2}-\d{5}(\.\d{1,2})?$"
+# Login employee id or analyzer sentinel used on result entry/validation
+LAB_ACTOR_USER_ID_PATTERN = r"^(?:100000|1\d{7})$"
 
 MRN_RE = re.compile(MRN_PATTERN)
 FILLER_RE = re.compile(FILLER_PATTERN)
 ACCESSION_RE = re.compile(ACCESSION_PATTERN)
 ALIQUOT_ACCESSION_RE = re.compile(ALIQUOT_ACCESSION_PATTERN)
 TEST_MNEMONIC_RE = re.compile(TEST_MNEMONIC_PATTERN)
-NPI_RE = re.compile(NPI_PATTERN)
+REFERENT_DOCTOR_ID_RE = re.compile(REFERENT_DOCTOR_ID_PATTERN)
 EMPLOYEE_NUMBER_RE = re.compile(EMPLOYEE_NUMBER_PATTERN)
 INVOICE_NUMBER_RE = re.compile(INVOICE_NUMBER_PATTERN)
 RECEIPT_NUMBER_RE = re.compile(RECEIPT_NUMBER_PATTERN)
@@ -74,13 +78,13 @@ KIND_INVOICE = "invoice"
 KIND_RECEIPT = "receipt"
 KIND_EMPLOYEE = "employee"
 KIND_MEMBER = "member"
-KIND_NPI = "npi"
+KIND_REFERENT_DOCTOR = "referent_doctor"
 
-MRN_BASE = 10_000_000
-EMPLOYEE_BASE = 100_000
+PATIENT_ID_BASE = 30_000_000
+USER_ID_BASE = 10_000_000
+REFERENT_DOCTOR_ID_BASE = 20_000_000
 MEMBER_BASE = 100_000_000_000
 RECEIPT_BASE = 10_000_000
-NPI_BASE = 1_000_000_000
 
 
 class IdentifierError(ValueError):
@@ -121,10 +125,10 @@ def _require_match(value: str, pattern: re.Pattern[str], label: str) -> str:
 
 
 def format_mrn(seq: int) -> str:
-    """8-digit MRN starting at 10000001."""
+    """8-digit patient id starting at 30000001 (leading digit 3)."""
     if seq < 1:
         raise IdentifierError("MRN sequence must be positive")
-    return _require_match(f"{MRN_BASE + seq:08d}", MRN_RE, "MRN")
+    return _require_match(f"{PATIENT_ID_BASE + seq:08d}", MRN_RE, "MRN")
 
 
 def format_filler_number(day: datetime, seq: int) -> str:
@@ -172,10 +176,10 @@ def format_receipt_number(seq: int) -> str:
 
 
 def format_employee_number(seq: int) -> str:
-    """6-digit staff number starting at 100001."""
+    """8-digit user id starting at 10000001 (leading digit 1)."""
     if seq < 1:
         raise IdentifierError("Employee sequence must be positive")
-    return _require_match(f"{EMPLOYEE_BASE + seq:06d}", EMPLOYEE_NUMBER_RE, "employee number")
+    return _require_match(f"{USER_ID_BASE + seq:08d}", EMPLOYEE_NUMBER_RE, "employee number")
 
 
 def format_member_id(seq: int) -> str:
@@ -185,11 +189,13 @@ def format_member_id(seq: int) -> str:
     return _require_match(f"{MEMBER_BASE + seq:012d}", MEMBER_ID_RE, "member ID")
 
 
-def format_npi(seq: int) -> str:
-    """10-digit NPI used as the referent-doctor row id."""
+def format_referent_doctor_id(seq: int) -> str:
+    """8-digit referent-doctor id starting at 20000001 (leading digit 2)."""
     if seq < 1:
-        raise IdentifierError("NPI sequence must be positive")
-    return _require_match(f"{NPI_BASE + seq:010d}", NPI_RE, "NPI")
+        raise IdentifierError("Referent-doctor sequence must be positive")
+    return _require_match(
+        f"{REFERENT_DOCTOR_ID_BASE + seq:08d}", REFERENT_DOCTOR_ID_RE, "referent doctor id"
+    )
 
 
 def allocate_mrn(db: Session) -> str:
@@ -233,9 +239,9 @@ def allocate_member_id(db: Session) -> str:
     return format_member_id(assign_next(db, KIND_MEMBER))
 
 
-def allocate_npi(db: Session) -> str:
-    """Assign the next sequential NPI (referent-doctor primary key)."""
-    return format_npi(assign_next(db, KIND_NPI))
+def allocate_referent_doctor_id(db: Session) -> str:
+    """Assign the next sequential referent-doctor id."""
+    return format_referent_doctor_id(assign_next(db, KIND_REFERENT_DOCTOR))
 
 
 def normalize_identifier(term: str) -> str:
@@ -271,9 +277,9 @@ def looks_like_mnemonic(term: str) -> bool:
     return bool(TEST_MNEMONIC_RE.fullmatch(term.strip().upper()))
 
 
-def looks_like_npi(term: str) -> bool:
-    """True when ``term`` is a 10-digit NPI."""
-    return bool(NPI_RE.fullmatch(compact_identifier(term)))
+def looks_like_referent_doctor_id(term: str) -> bool:
+    """True when ``term`` is an 8-digit referent-doctor id (leading digit 2)."""
+    return bool(REFERENT_DOCTOR_ID_RE.fullmatch(compact_identifier(term)))
 
 
 def format_order_test_display(accession: str | None, test_code: str | None) -> str:

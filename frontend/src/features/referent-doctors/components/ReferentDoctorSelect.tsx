@@ -52,7 +52,7 @@ export function ReferentDoctorSelect({
 }: ReferentDoctorSelectProps) {
   const [search, setSearch] = useState('');
   const [newUsername, setNewUsername] = useState('');
-  const [newNpi, setNewNpi] = useState('');
+  const [newReferentDoctorId, setNewReferentDoctorId] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [newHospital, setNewHospital] = useState('');
@@ -73,7 +73,7 @@ export function ReferentDoctorSelect({
 
   const resetNewDoctorFields = () => {
     setNewUsername('');
-    setNewNpi('');
+    setNewReferentDoctorId('');
     setNewEmail('');
     setNewPhone('');
     setNewHospital('');
@@ -81,11 +81,11 @@ export function ReferentDoctorSelect({
 
   const handleCreate = async () => {
     if (!canCreate || createDoctor.isPending) return;
-    const npi = newNpi.trim();
-    if (npi && !ID_PATTERNS.npi.test(npi)) return;
+    const referentDoctorId = newReferentDoctorId.trim();
+    if (referentDoctorId && !ID_PATTERNS.referentDoctorId.test(referentDoctorId)) return;
     const created = await createDoctor.mutateAsync({
       fullName: trimmedSearch,
-      npi: npi || null,
+      referentDoctorId: referentDoctorId || null,
       username: newUsername.trim() || null,
       email: newEmail.trim() || null,
       phone: newPhone.trim() || null,
@@ -185,12 +185,14 @@ export function ReferentDoctorSelect({
           {canCreate && !disabled ? (
             <div className="grid gap-space-2 sm:grid-cols-2 lg:grid-cols-5">
               <Input
-                label="NPI"
-                name="referentDoctorNpi"
+                label="Doctor ID"
+                name="referentDoctorId"
                 icon={IconKeys.dataFields.document}
-                value={newNpi}
-                onChange={e => setNewNpi(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                placeholder="10-digit NPI"
+                value={newReferentDoctorId}
+                onChange={e =>
+                  setNewReferentDoctorId(e.target.value.replace(/\D/g, '').slice(0, 8))
+                }
+                placeholder="8-digit ID (optional)"
                 inputMode="numeric"
               />
               <Input

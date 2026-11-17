@@ -61,7 +61,7 @@ class SampleCollectionService:
         priority: PriorityLevel,
         required_container_types: list[Any],
         required_container_colors: list[Any],
-        created_by: int,
+        created_by: str,
     ) -> Sample:
         """Create the first pending tube for a sample type (attempt 1)."""
         sample = Sample(
@@ -75,12 +75,12 @@ class SampleCollectionService:
             requiredContainerColors=list(required_container_colors),
             isRecollection=False,
             recollectionAttempt=1,
-            createdBy=str(created_by),
-            updatedBy=str(created_by),
+            createdBy=created_by,
+            updatedBy=created_by,
         )
+        assign_accession_number(self.db, sample)
         self.db.add(sample)
         self.db.flush()
-        assign_accession_number(self.db, sample)
         return sample
 
     def request_recollection(
@@ -139,9 +139,9 @@ class SampleCollectionService:
             createdBy=str(user_id),
             updatedBy=str(user_id),
         )
+        assign_accession_number(self.db, new_sample)
         self.db.add(new_sample)
         self.db.flush()
-        assign_accession_number(self.db, new_sample)
 
         source_sample.recollectionSampleId = new_sample.sampleId
         source_sample.updatedBy = str(user_id)

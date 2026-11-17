@@ -13,7 +13,7 @@ class Invoice(Base):
 
     invoiceId = Column("invoice_id", String(12), primary_key=True, index=True)
     orderId = Column("order_id", String(13), ForeignKey("orders.order_id"), nullable=False, index=True)
-    patientId = Column("patient_id", String(12), ForeignKey("patients.id"), nullable=False, index=True)
+    patientId = Column("patient_id", String(8), ForeignKey("patients.id"), nullable=False, index=True)
     patientName = Column("patient_name", String, nullable=False)
 
     # Items (JSON array)

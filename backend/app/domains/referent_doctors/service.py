@@ -1,7 +1,7 @@
 """Referent doctor directory service."""
 from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.referent_doctors.schemas import ReferentDoctorCreate, ReferentDoctorResponse
-from app.platform.utils import allocate_npi
+from app.platform.utils import allocate_referent_doctor_id
 from fastapi import HTTPException, status
 from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError
@@ -58,7 +58,7 @@ class ReferentDoctorService:
         if existing:
             return ReferentDoctorResponse.model_validate(existing)
         row = ReferentDoctor(
-            referentDoctorId=payload.npi or allocate_npi(self.db),
+            referentDoctorId=payload.referentDoctorId or allocate_referent_doctor_id(self.db),
             fullName=full_name,
             username=payload.username,
             email=payload.email,

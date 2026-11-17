@@ -121,6 +121,7 @@ export function useUserLookup() {
         system: 'System Admin',
         admin: 'System Admin',
         unknown: 'Unknown User',
+        '100000': 'Analyzer',
       };
 
       const lowerUserId = normalizedId.toLowerCase();

@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "analyzerUserId": "100000",
+  "bases": {
+    "patientMrn": 30000000,
+    "userEmployee": 10000000,
+    "referentDoctor": 20000000
+  },
+  "patterns": {
+    "MRN_PATTERN": {
+      "regex": "^3\\d{7}$",
+      "idTs": "mrn"
+    },
+    "FILLER_PATTERN": {
+      "regex": "^\\d{13}$",
+      "idTs": "filler"
+    },
+    "ACCESSION_PATTERN": {
+      "regex": "^\\d{2}-\\d{5}$",
+      "idTs": "accession"
+    },
+    "ALIQUOT_ACCESSION_PATTERN": {
+      "regex": "^\\d{2}-\\d{5}\\.\\d{1,2}$",
+      "idTs": "aliquotAccession"
+    },
+    "SAMPLE_ID_PATTERN": {
+      "regex": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$",
+      "idTs": "sampleId"
+    },
+    "TEST_MNEMONIC_PATTERN": {
+      "regex": "^[A-Z][A-Z0-9]{1,7}$",
+      "idTs": "testMnemonic"
+    },
+    "REFERENT_DOCTOR_ID_PATTERN": {
+      "regex": "^2\\d{7}$",
+      "idTs": "referentDoctorId"
+    },
+    "EMPLOYEE_NUMBER_PATTERN": {
+      "regex": "^1\\d{7}$",
+      "idTs": "employeeNumber"
+    },
+    "LAB_ACTOR_USER_ID_PATTERN": {
+      "regex": "^(?:100000|1\\d{7})$",
+      "idTs": "labActorUserId"
+    },
+    "INVOICE_NUMBER_PATTERN": {
+      "regex": "^\\d{12}$",
+      "idTs": "invoiceNumber"
+    },
+    "RECEIPT_NUMBER_PATTERN": {
+      "regex": "^\\d{8}$",
+      "idTs": "receiptNumber"
+    },
+    "MEMBER_ID_PATTERN": {
+      "regex": "^[0-9A-Z]{6,20}$",
+      "idTs": "memberId"
+    },
+    "ANALYZER_ID_PATTERN": {
+      "regex": "^[A-Z0-9][A-Z0-9._-]{2,31}$",
+      "idTs": "analyzerId"
+    }
+  }
+}

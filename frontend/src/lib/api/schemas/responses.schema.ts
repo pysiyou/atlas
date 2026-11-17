@@ -2,6 +2,11 @@
  * Zod schemas for API response validation at service boundaries.
  */
 import { z } from 'zod';
+import {
+  employeeNumberSchema,
+  orderIdSchema,
+  receiptIdSchema,
+} from '@/types/zod';
 
 export const loginTokenResponseSchema = z.object({
   access_token: z.string(),
@@ -18,7 +23,7 @@ export const refreshTokenResponseSchema = z.object({
 });
 
 export const authUserResponseSchema = z.object({
-  id: z.string(),
+  id: employeeNumberSchema,
   username: z.string(),
   name: z.string(),
   role: z.string(),
@@ -27,13 +32,13 @@ export const authUserResponseSchema = z.object({
 });
 
 export const paymentResponseSchema = z.object({
-  paymentId: z.string(),
-  orderId: z.string(),
+  paymentId: receiptIdSchema,
+  orderId: orderIdSchema,
   invoiceId: z.string().nullable().optional(),
   amount: z.number(),
   paymentMethod: z.string(),
   paidAt: z.string(),
-  createdBy: z.string(),
+  createdBy: employeeNumberSchema,
   receiptGenerated: z.boolean().optional(),
   notes: z.string().optional().nullable(),
   orderTotalPrice: z.number().optional(),

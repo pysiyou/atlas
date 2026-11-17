@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from app.domains.catalog.analyte_definitions import analyte_definitions_for_test
+from app.domains.lab.constants import ANALYZER_USER_ID, is_analyzer_user_id
 from app.domains.catalog.models.orderable_test import OrderableTest
 from app.domains.lab.results.delta_check import DeltaCheckService
 from app.domains.lab.results.flags import ResultFlag
@@ -146,7 +147,7 @@ class ResultCommandHandler:
                 flag_modified(order_test, "flags")
 
         enter_metadata: dict[str, Any] = {
-            "source": "manual" if user_id > 0 else "analyzer",
+            "source": "analyzer" if is_analyzer_user_id(user_id) else "manual",
             "results": results_serializable,
         }
         if extra_metadata:
@@ -213,7 +214,7 @@ class ResultCommandHandler:
         if not client_config.workflows.get("enableAutoVerification", False):
             return
         source = (extra_metadata or {}).get("source")
-        is_analyzer = user_id == 0 or source == "analyzer"
+        is_analyzer = is_analyzer_user_id(user_id) or source == "analyzer"
         if not is_analyzer:
             return
         if order_test.status != TestStatus.RESULTED:
@@ -226,14 +227,14 @@ class ResultCommandHandler:
             return
         validated = self.validate_results(
             order_test.id,
-            user_id=0,
+            user_id=ANALYZER_USER_ID,
             validation_notes="Auto-verified",
         )
         self._svc.emitter.validation_auto(
             validated.orderId,
             validated.id,
             validated.testCode,
-            0,
+            ANALYZER_USER_ID,
             metadata={"source": "analyzer"},
         )
 

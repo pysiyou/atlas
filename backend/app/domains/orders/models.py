@@ -12,7 +12,7 @@ class Order(Base):
     __tablename__ = "orders"
 
     orderId = Column("order_id", String(13), primary_key=True, index=True)
-    patientId = Column("patient_id", String(12), ForeignKey("patients.id"), nullable=False, index=True)
+    patientId = Column("patient_id", String(8), ForeignKey("patients.id"), nullable=False, index=True)
     placerNumber = Column("placer_number", String(13), nullable=True, unique=True, index=True)
     orderDate = Column("order_date", DateTime(timezone=True), nullable=False)
 
@@ -37,7 +37,7 @@ class Order(Base):
     clinicalNotes = Column("clinical_notes", String, nullable=True)
     referentDoctorId = Column(
         "referent_doctor_id",
-        String(10),
+        String(8),
         ForeignKey("referent_doctors.referent_doctor_id"),
         nullable=True,
         index=True,

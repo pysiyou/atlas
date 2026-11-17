@@ -6,6 +6,8 @@ import {
   emailSchema,
   dateStringSchema,
   postalCodeSchema,
+  mrnSchema,
+  employeeNumberSchema,
 } from '@/types/zod';
 import { AFFILIATION_DURATION_VALUES, GENDER_VALUES, RELATIONSHIP_VALUES } from '@/types/generated/enums';
 import { zEnumFromValues } from '@/types/zod';
@@ -135,7 +137,7 @@ export const medicalHistorySchema = z.object({
 });
 
 export const patientSchema = z.object({
-  id: z.string().min(6).max(12),
+  id: mrnSchema,
   fullName: nameSchema,
   dateOfBirth: dateStringSchema,
   gender: zEnumFromValues(GENDER_VALUES),
@@ -148,10 +150,10 @@ export const patientSchema = z.object({
   emergencyContact: emergencyContactReadSchema,
   medicalHistory: medicalHistorySchema.nullable().optional(), // Backend can return null
   registrationDate: dateStringSchema,
-  createdBy: z.string(), // Backend returns string user ID
+  createdBy: employeeNumberSchema,
   createdAt: dateStringSchema,
   updatedAt: dateStringSchema,
-  updatedBy: z.string(), // Backend returns string user ID
+  updatedBy: employeeNumberSchema,
 });
 
 export type Patient = z.infer<typeof patientSchema>;

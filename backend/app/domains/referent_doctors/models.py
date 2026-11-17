@@ -8,7 +8,7 @@ from sqlalchemy.sql import func
 class ReferentDoctor(Base):
     __tablename__ = "referent_doctors"
 
-    referentDoctorId = Column("referent_doctor_id", String(10), primary_key=True, index=True)
+    referentDoctorId = Column("referent_doctor_id", String(8), primary_key=True, index=True)
     fullName = Column("full_name", String(200), nullable=False)
     username = Column(String(100), nullable=True, unique=True, index=True)
     email = Column(String(255), nullable=True)

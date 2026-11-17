@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 def generate_samples_for_order(
     orderId: str,
     db: Session,
-    createdBy: int,
+    createdBy: str,
     emitter: AuditEmitter | None = None,
 ) -> list[Sample]:
     """
@@ -152,14 +152,14 @@ def _update_sample(
     container_types: list[Any],
     container_colors: list[Any],
     priority: PriorityLevel,
-    updated_by: int,
+    updated_by: str,
 ) -> None:
     sample.testCodes = test_codes
     sample.requiredVolume = required_volume
     sample.requiredContainerTypes = container_types
     sample.requiredContainerColors = container_colors
     sample.priority = priority
-    sample.updatedBy = str(updated_by)
+    sample.updatedBy = updated_by
     sample.updatedAt = datetime.now(UTC)
 
 

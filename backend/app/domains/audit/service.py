@@ -262,7 +262,7 @@ class AuditEventQueryService:
         *,
         test_id: int | None,
         sample_id: str | None,
-    ) -> tuple[list[int], list[int]]:
+    ) -> tuple[list[int], list[str]]:
         """
         Expand a lab lens into order_test ids and sample ids.
 
@@ -276,7 +276,7 @@ class AuditEventQueryService:
             order_test_ids.append(test_id)
             row = self.db.query(OrderTest.sampleId).filter(OrderTest.id == test_id).first()
             if row is not None and row.sampleId is not None:
-                sample_ids.append(int(row.sampleId))
+                sample_ids.append(str(row.sampleId).strip())
             return list(dict.fromkeys(order_test_ids)), list(dict.fromkeys(sample_ids))
 
         if sample_id is not None:
@@ -311,10 +311,11 @@ class AuditEventQueryService:
             order_test_ids, sample_ids = self._lab_scope_ids(test_id=test_id, sample_id=sample_id)
             clauses = []
             if order_test_ids:
+                order_test_id_strs = [str(order_test_id) for order_test_id in order_test_ids]
                 clauses.append(
                     and_(
                         AuditEvent.targetType == "order_test",
-                        AuditEvent.targetId.in_(order_test_ids),
+                        AuditEvent.targetId.in_(order_test_id_strs),
                     )
                 )
                 clauses.append(AuditEvent.testId.in_(order_test_ids))

@@ -45,7 +45,7 @@ class UserLookupResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: str
+    id: str = Field(..., pattern=EMPLOYEE_NUMBER_PATTERN)
     name: str
     username: str
 

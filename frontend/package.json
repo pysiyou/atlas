@@ -19,10 +19,10 @@
     "codegen:openapi": "python ../scripts/export-openapi.py && openapi-typescript ../contracts/registries/openapi.json -o src/lib/api/types/generated/api.d.ts",
     "codegen": "npm run codegen:rejection && npm run codegen:openapi && npm run codegen:feedback && npm run codegen:audit && npm run codegen:client-config && npm run codegen:workups",
     "validate:catalog": "node ../scripts/validate-catalog.mjs",
-    "audit:rejection": "python3 ../scripts/audit-rejection-registry-completeness.py",
-    "verify:catalog-loinc": "node ../scripts/verify-catalog-loinc.mjs",
     "validate:client-config": "node ../scripts/validate-client-config.mjs",
-    "validate:ui-strings": "node ../scripts/validate-ui-strings.mjs"
+    "validate:ui-strings": "node ../scripts/validate-ui-strings.mjs",
+    "validate:entity-ids": "node ../scripts/validate-entity-id-sync.mjs",
+    "validate": "npm run validate:catalog && npm run validate:client-config && npm run validate:ui-strings && npm run validate:entity-ids"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.16",

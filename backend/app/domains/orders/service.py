@@ -577,14 +577,14 @@ class OrderService:
             self.db.flush()
             self.emitter.order_created(order.orderId, order_data.patientId, user_id)
             generate_samples_for_order(order.orderId, self.db, user_id, emitter=self.emitter)
-
             BillingService(self.db).create_invoice_for_order(order.orderId, user_id)
             self.db.commit()
-            invalidate_lab_board_summary_cache()
-            self.db.refresh(order)
         except SQLAlchemyError:
             self.db.rollback()
+            logger.exception("Failed to create order for patient %s", order_data.patientId)
             raise HTTPException(status_code=500, detail="Failed to create order")
+        invalidate_lab_board_summary_cache()
+        self.db.refresh(order)
         order = self._order_with_relations(order.orderId)
         return self._order_response_with_lab(order)
 

@@ -13,6 +13,13 @@ from app.shared.contracts.enums import (
     RemedyType,
     ValidationDecision,
 )
+from app.platform.utils import (
+    FILLER_PATTERN,
+    LAB_ACTOR_USER_ID_PATTERN,
+    MRN_PATTERN,
+    REFERENT_DOCTOR_ID_PATTERN,
+    SAMPLE_ID_PATTERN,
+)
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -51,21 +58,21 @@ class ResultValidationRequest(BaseModel):
 
 class PendingEscalationItemResponse(BaseModel):
     id: int
-    orderId: str
+    orderId: str = Field(..., pattern=FILLER_PATTERN)
     orderDate: datetime
-    patientId: str
+    patientId: str = Field(..., pattern=MRN_PATTERN)
     patientName: str
     patientDob: str | None = None
     testCode: str
     testName: str
     sampleType: str
     status: str
-    sampleId: str | None = None
+    sampleId: str | None = Field(None, pattern=SAMPLE_ID_PATTERN)
     results: TestResultsDict | None = None
     resultEnteredAt: datetime | None = None
-    enteredBy: str | None = None
+    enteredBy: str | None = Field(None, pattern=LAB_ACTOR_USER_ID_PATTERN)
     resultValidatedAt: datetime | None = None
-    validatedBy: str | None = None
+    validatedBy: str | None = Field(None, pattern=LAB_ACTOR_USER_ID_PATTERN)
     validationNotes: str | None = None
     flags: list[str] | None = None
     technicianNotes: str | None = None
@@ -75,16 +82,16 @@ class PendingEscalationItemResponse(BaseModel):
     retestNumber: int = 0
     priorTestDisplay: str | None = None
     priority: str
-    referentDoctorId: str | None = None
+    referentDoctorId: str | None = Field(None, pattern=REFERENT_DOCTOR_ID_PATTERN)
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None
     referentDoctorPhone: str | None = None
     referentDoctorHospital: str | None = None
     referentDoctorUsername: str | None = None
     collectedAt: datetime | None = None
-    collectedBy: str | None = None
+    collectedBy: str | None = Field(None, pattern=LAB_ACTOR_USER_ID_PATTERN)
     sampleIsRecollection: bool = False
-    sampleOriginalSampleId: str | None = None
+    sampleOriginalSampleId: str | None = Field(None, pattern=SAMPLE_ID_PATTERN)
     sampleRecollectionReason: str | None = None
     sampleRecollectionAttempt: int | None = None
     ticketId: int | None = None

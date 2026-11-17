@@ -10,7 +10,7 @@ from sqlalchemy.sql import func
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(String(6), primary_key=True, index=True)
+    id = Column(String(8), primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
     hashedPassword = Column("hashed_password", String, nullable=False)
     name = Column(String, nullable=False)

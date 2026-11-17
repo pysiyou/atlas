@@ -17,7 +17,7 @@ export interface ReferentDoctor {
 
 export interface ReferentDoctorCreateInput {
   fullName: string;
-  npi?: string | null;
+  referentDoctorId?: string | null;
   username?: string | null;
   email?: string | null;
   phone?: string | null;

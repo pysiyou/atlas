@@ -4,8 +4,10 @@ import {
   dateStringSchema,
   orderIdSchema,
   mrnSchema,
-  npiSchema,
+  referentDoctorIdSchema,
   nullableApiDatetimeSchema,
+  employeeNumberSchema,
+  labActorUserIdSchema,
 } from '@/types/zod';
 import { GENDER_VALUES, PAYMENT_STATUS_VALUES } from '@/types/generated/enums';
 import {
@@ -33,9 +35,9 @@ export const orderTestSchema = z.object({
     .transform(v => (v === null ? undefined : v)),
   results: z.record(z.string(), z.unknown()).nullable().optional(),
   resultEnteredAt: nullableApiDatetimeSchema,
-  enteredBy: z.string().nullable().optional(), // Backend returns null
+  enteredBy: labActorUserIdSchema.nullable().optional(),
   resultValidatedAt: nullableApiDatetimeSchema,
-  validatedBy: z.string().nullable().optional(), // Backend returns null
+  validatedBy: labActorUserIdSchema.nullable().optional(),
   validationNotes: z.string().nullable().optional(), // Backend returns null
   flags: z.array(z.string()).nullable().optional(), // Backend returns null
   technicianNotes: z.string().nullable().optional(), // Backend returns null
@@ -63,7 +65,7 @@ export const orderSchema = z.object({
   paymentStatus: zEnumFromValues(PAYMENT_STATUS_VALUES),
   overallStatus: zEnumFromValues(ORDER_STATUS_VALUES),
   priority: zEnumFromValues(PRIORITY_LEVEL_VALUES),
-  referentDoctorId: npiSchema.nullable().optional(),
+  referentDoctorId: referentDoctorIdSchema.nullable().optional(),
   referentDoctorName: z.string().nullable().optional(),
   referentDoctorEmail: z.string().nullable().optional(),
   referentDoctorPhone: z.string().nullable().optional(),
@@ -72,7 +74,7 @@ export const orderSchema = z.object({
   clinicalNotes: z.string().nullable().optional(), // Backend allows null
   specialInstructions: z.array(z.string()).nullable().optional(), // Backend optional
   patientPrepInstructions: z.string().nullable().optional(), // Backend optional
-  createdBy: z.string(), // Backend returns string user ID
+  createdBy: employeeNumberSchema,
   createdAt: dateStringSchema,
   updatedAt: dateStringSchema,
 });
@@ -83,7 +85,7 @@ export type OrderTest = z.infer<typeof orderTestSchema>;
 // Form schema for CREATE (all required fields enforced)
 export const orderCreateSchema = z.object({
   patientId: mrnSchema,
-  referentDoctorId: npiSchema.nullable().optional(),
+  referentDoctorId: referentDoctorIdSchema.nullable().optional(),
   priority: zEnumFromValues(PRIORITY_LEVEL_VALUES),
   clinicalNotes: z.string().optional(),
   testCodes: z.array(z.string()).min(1, 'At least one test is required'),

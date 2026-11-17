@@ -21,6 +21,7 @@ from app.domains.lab.schemas.analyzer import (
     AnalyzerResultResponse,
     HL7MessageRequest,
 )
+from app.domains.lab.constants import ANALYZER_USER_ID
 from app.domains.lab.workflow.service import LabOperationsService
 from app.platform.config import settings
 from app.platform.utils import looks_like_accession, looks_like_filler
@@ -29,10 +30,6 @@ from app.shared.contracts.enums import TestStatus
 from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-
-# System actor for analyzer ingest; not a login account.
-ANALYZER_USER_ID = "100000"
-
 
 class AnalyzerIngestService:
     def __init__(self, db: Session):

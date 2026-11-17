@@ -2947,8 +2947,8 @@ export interface components {
         ReferentDoctorCreate: {
             /** Fullname */
             fullName: string;
-            /** Npi */
-            npi?: string | null;
+            /** Referentdoctorid */
+            referentDoctorId?: string | null;
             /** Username */
             username?: string | null;
             /** Email */

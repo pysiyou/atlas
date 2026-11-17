@@ -10,7 +10,7 @@ from sqlalchemy.sql import func
 class Patient(Base):
     __tablename__ = "patients"
 
-    id = Column(String(12), primary_key=True, index=True)
+    id = Column(String(8), primary_key=True, index=True)
     fullName = Column("full_name", String, nullable=False, index=True)
     dateOfBirth = Column("date_of_birth", String, nullable=False)
     gender = Column(contract_enum(Gender), nullable=False)

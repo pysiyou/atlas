@@ -87,9 +87,9 @@ def create_aliquots(
             createdBy=str(user_id),
             updatedBy=str(user_id),
         )
+        assign_accession_number(db, child, parent=parent)
         db.add(child)
         db.flush()
-        assign_accession_number(db, child, parent=parent)
         if emitter is not None:
             emitter.sample_aliquot_created(
                 child.sampleId,
