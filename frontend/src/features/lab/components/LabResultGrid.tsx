@@ -1,43 +1,42 @@
 /**
- * Read-only parameter display — inline (validation card) or tile (entry) layouts.
+ * Read-only analyte result display — inline (validation card) or tile (entry) layouts.
  */
 import { useMemo } from 'react';
 import {
-  getParameterReferenceIntervalLines,
+  getAnalyteReferenceIntervalLines,
   parseResultEntry,
   statusMapFromFlags,
 } from '../utils/labResult';
-import { ReferenceIntervalCell } from './ReferenceIntervalCell';
+import { LabResultInlineTable } from './LabResultInlineTable';
 import { LAB_CONFIG } from '../constants';
-import { text, DATA_GRID, METRIC_TILE } from '@/theme/recipes';
+import { text, METRIC_TILE } from '@/theme/recipes';
 import { resultTileStatusClass } from '../utils/labResult';
 import { Text } from '@/components/layout';
 import {
-  buildParameterLabelMap,
-  catalogParametersFromTest,
-  resolveParameterLabel,
-  useTest,
+  buildAnalyteLabelMap,
+  getTestAnalytes,
+  resolveAnalyteLabel,
+  useOrderableTest,
 } from '@/features/catalog';
 import { ResultValueAnnotations } from './ResultValueAnnotations';
 import type { Gender, Patient } from '@/types';
-import { useLabCopy } from '@/strings';
 
 export type ResultsGridVariant = 'inline' | 'tiles';
 export type ResultsGridLayout = 'grid' | 'table';
 
-interface ResultsParameterGridProps {
+interface LabResultGridProps {
   results: Record<string, unknown>;
   flags?: string[];
   testCode?: string;
   patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string };
   variant?: ResultsGridVariant;
-  /** `table`: parameter / result / reference interval; `grid`: wrapped label/value list. */
+  /** `table`: result / value / reference interval; `grid`: wrapped label/value list. */
   layout?: ResultsGridLayout;
-  /** Truncate grid after N parameters (validation queue mobile cards). */
+  /** Truncate grid after N analytes (validation queue mobile cards). */
   dense?: boolean;
 }
 
-export function ResultsParameterGrid({
+export function LabResultGrid({
   results,
   flags,
   testCode,
@@ -45,16 +44,15 @@ export function ResultsParameterGrid({
   variant = 'inline',
   layout = 'table',
   dense = false,
-}: ResultsParameterGridProps) {
-  const labCopy = useLabCopy();
+}: LabResultGridProps) {
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
-  const { test: catalogTest } = useTest(testCode);
-  const parameterLabels = useMemo(
-    () => buildParameterLabelMap(catalogTest),
+  const { test: catalogTest } = useOrderableTest(testCode);
+  const analyteLabels = useMemo(
+    () => buildAnalyteLabelMap(catalogTest),
     [catalogTest]
   );
-  const catalogParameters = useMemo(
-    () => (layout === 'table' ? catalogParametersFromTest(catalogTest) : {}),
+  const catalogAnalytes = useMemo(
+    () => (layout === 'table' ? getTestAnalytes(catalogTest) : {}),
     [layout, catalogTest]
   );
   const entries = Object.entries(results ?? {});
@@ -67,8 +65,8 @@ export function ResultsParameterGrid({
     let maxLen = 0;
     for (const [key, rawValue] of entries) {
       const { referenceRange } = parseResultEntry(key, rawValue, flagStatusMap);
-      const lines = getParameterReferenceIntervalLines(
-        catalogParameters[key],
+      const lines = getAnalyteReferenceIntervalLines(
+        catalogAnalytes[key],
         referenceRange,
         patient
       );
@@ -77,7 +75,7 @@ export function ResultsParameterGrid({
       }
     }
     return Math.max(maxLen, 4);
-  }, [layout, variant, entries, catalogParameters, patient, flagStatusMap]);
+  }, [layout, variant, entries, catalogAnalytes, patient, flagStatusMap]);
 
   if (entries.length === 0) {
     return <Text role="body" intent="muted">No result values recorded.</Text>;
@@ -85,59 +83,15 @@ export function ResultsParameterGrid({
 
   if (layout === 'table' && variant === 'inline') {
     return (
-      <div className={DATA_GRID.scrollWrap}>
-        <table className={DATA_GRID.table}>
-          <colgroup>
-            {DATA_GRID.colGroup.table.map(col => (
-              <col key={col} className={col} />
-            ))}
-          </colgroup>
-          <thead>
-            <tr>
-              <th scope="col" className={DATA_GRID.headerCell}>Parameter</th>
-              <th scope="col" className={DATA_GRID.headerCell}>Result</th>
-              <th scope="col" className={DATA_GRID.headerCell}>Reference interval</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map(([key, rawValue]) => {
-              const { resultValue, unit, referenceRange, status } = parseResultEntry(
-                key,
-                rawValue,
-                flagStatusMap
-              );
-              const label = resolveParameterLabel(key, parameterLabels);
-              const intervalLines = getParameterReferenceIntervalLines(
-                catalogParameters[key],
-                referenceRange,
-                patient
-              );
-
-              return (
-                <tr key={key}>
-                  <td className={DATA_GRID.labelCell} title={label}>
-                    <Text role="label" density="table" truncate title={label}>{label}</Text>
-                  </td>
-                  <td className={DATA_GRID.bodyCell}>
-                    <ResultValueAnnotations
-                      resultValue={resultValue}
-                      unit={unit}
-                      status={status}
-                      showStatus={showStatus}
-                    />
-                  </td>
-                  <td className={DATA_GRID.bodyCell} title={labCopy.actions.referenceInterval}>
-                    <ReferenceIntervalCell
-                      lines={intervalLines}
-                      valueColumnCh={referenceValueColumnCh}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <LabResultInlineTable
+        entries={entries}
+        analyteLabels={analyteLabels}
+        catalogAnalytes={catalogAnalytes}
+        flagStatusMap={flagStatusMap}
+        patient={patient}
+        referenceValueColumnCh={referenceValueColumnCh}
+        showStatus={showStatus}
+      />
     );
   }
 
@@ -146,7 +100,7 @@ export function ResultsParameterGrid({
       <div className={METRIC_TILE.grid}>
         {entries.map(([key, rawValue]) => {
           const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
-          const label = resolveParameterLabel(key, parameterLabels);
+          const label = resolveAnalyteLabel(key, analyteLabels);
 
           return (
             <div
@@ -170,7 +124,7 @@ export function ResultsParameterGrid({
     <div className={dense ? METRIC_TILE.inlineResultListDense : METRIC_TILE.inlineResultList}>
       {visibleEntries.map(([key, rawValue]) => {
         const { resultValue, unit, status } = parseResultEntry(key, rawValue, flagStatusMap);
-        const label = resolveParameterLabel(key, parameterLabels);
+        const label = resolveAnalyteLabel(key, analyteLabels);
         const labelWithColon = `${label}:`;
 
         return (

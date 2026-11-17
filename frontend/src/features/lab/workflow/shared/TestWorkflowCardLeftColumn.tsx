@@ -29,7 +29,7 @@ export interface TestWorkflowCardLeftColumnProps {
   flagCount?: number;
   reasonCode?: string;
   filledCount?: number;
-  parameterCount?: number;
+  analyteCount?: number;
   turnaroundHours?: number;
   includeResultEntered?: boolean;
   tone?: 'card' | 'modal';
@@ -127,7 +127,7 @@ function TestWorkflowIdentityLines({
 }
 
 /**
- * Stage-specific ops chips (queue age, parameters, flags, attempt).
+ * Stage-specific ops chips (queue age, result progress, flags, attempt).
  */
 function TestWorkflowOperationsRow({
   variant,
@@ -136,7 +136,7 @@ function TestWorkflowOperationsRow({
   flagCount,
   reasonCode,
   filledCount,
-  parameterCount,
+  analyteCount,
   turnaroundHours,
   attemptNumber,
   attemptMax,
@@ -148,7 +148,7 @@ function TestWorkflowOperationsRow({
   flagCount?: number;
   reasonCode?: string;
   filledCount?: number;
-  parameterCount?: number;
+  analyteCount?: number;
   turnaroundHours?: number;
   attemptNumber: number;
   attemptMax: number;
@@ -160,9 +160,9 @@ function TestWorkflowOperationsRow({
   return (
     <LabCardMetaRow>
       {queueSince ? <QueueAgeMeta since={queueSince} /> : null}
-      {variant === 'entry' && parameterCount != null && filledCount != null ? (
+      {variant === 'entry' && analyteCount != null && filledCount != null ? (
         <span>
-          {filledCount}/{parameterCount} parameters
+          {filledCount}/{analyteCount} results
         </span>
       ) : null}
       {variant === 'entry' && showTurnaround ? <span>{turnaroundHours}h turnaround</span> : null}
@@ -194,7 +194,7 @@ export function TestWorkflowCardLeftColumn({
   flagCount,
   reasonCode,
   filledCount,
-  parameterCount,
+  analyteCount,
   turnaroundHours,
   includeResultEntered = false,
   tone = 'card',
@@ -236,7 +236,7 @@ export function TestWorkflowCardLeftColumn({
           flagCount={flagCount}
           reasonCode={reasonCode}
           filledCount={filledCount}
-          parameterCount={parameterCount}
+          analyteCount={analyteCount}
           turnaroundHours={turnaroundHours}
           attemptNumber={rejection.attemptNumber}
           attemptMax={rejection.attemptMax}

@@ -13,7 +13,7 @@ import { useLabWorkflowCardClickGuard, useLabQueueRowState } from '../../hooks';
 import { isLabActionAllowed, labDisabledActionTooltip } from '../../utils/queueDisplay';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
 import { FG, MOBILE_LIST_CARD } from '@/theme/recipes';
-import type { Test } from '@/types';
+import type  { OrderableTest } from '@/types';
 import { type EntryQueueRow } from '../../types/queues';
 import {
   labModalWorkItemFromDto,
@@ -25,12 +25,12 @@ import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 
 export interface ResultEntryCardProps {
   row: EntryQueueRow;
-  testDef: Test | undefined;
+  testDef: OrderableTest | undefined;
   resultKey: string;
   results: Record<string, string>;
   technicianNotes: string;
   isComplete: boolean;
-  onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
+  onResultsChange: (resultKey: string, analyteCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
   onSave: () => void;
   onClick: () => void;
@@ -40,11 +40,11 @@ export interface ResultEntryCardProps {
 export interface ResultEntryCardSharedData {
   row: EntryQueueRow;
   chromeRow: LabOrderTestQueueRow;
-  testDef: Test;
+  testDef: OrderableTest;
   results: Record<string, string>;
   isComplete: boolean;
   patientName: string;
-  parameterCount: number;
+  analyteCount: number;
   filledCount: number;
   handleCardClick: (e?: React.MouseEvent) => void;
   workItem: ReturnType<typeof useLabQueueRowState>;
@@ -66,10 +66,10 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
     if (canEnter) onClick();
   });
 
-  if (!testDef?.parameters) return null;
+  if (!testDef?.analytes) return null;
 
   const patientName = row.patientName || '—';
-  const parameterCount = testDef.parameters.length;
+  const analyteCount = testDef.analytes.length;
   const filledCount = Object.values(results).filter(v => v?.trim()).length;
 
   return {
@@ -79,7 +79,7 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
     results,
     isComplete,
     patientName,
-    parameterCount,
+    analyteCount,
     filledCount,
     handleCardClick,
     workItem,
@@ -92,9 +92,9 @@ export function useResultEntryCardData(props: ResultEntryCardProps): ResultEntry
 function useResultEntryCardHeader(
   chromeRow: LabOrderTestQueueRow,
   patientName: string,
-  testDef: Test,
+  testDef: OrderableTest,
   filledCount: number,
-  parameterCount: number
+  analyteCount: number
 ) {
   const leftColumn = useMemo(
     () => (
@@ -104,11 +104,11 @@ function useResultEntryCardHeader(
         variant="entry"
         queueSince={chromeRow.collectedAt ?? undefined}
         filledCount={filledCount}
-        parameterCount={parameterCount}
+        analyteCount={analyteCount}
         turnaroundHours={testDef.turnaroundTime}
       />
     ),
-    [chromeRow, patientName, testDef.turnaroundTime, filledCount, parameterCount]
+    [chromeRow, patientName, testDef.turnaroundTime, filledCount, analyteCount]
   );
 
   const badges = <TestHeaderBadges row={chromeRow} variant="entry" showStatus />;
@@ -120,7 +120,7 @@ function ResultEntryCardDesktop({
   chromeRow,
   testDef,
   results,
-  parameterCount,
+  analyteCount,
   filledCount,
   handleCardClick,
   rejection,
@@ -133,10 +133,10 @@ function ResultEntryCardDesktop({
     patientName,
     testDef,
     filledCount,
-    parameterCount
+    analyteCount
   );
-  const previewParams = (testDef.parameters ?? []).slice(0, LAB_CONFIG.PARAMETER_PREVIEW_LIMIT);
-  const remainingParams = parameterCount - previewParams.length;
+  const previewAnalytes = (testDef.analytes ?? []).slice(0, LAB_CONFIG.ANALYTE_PREVIEW_LIMIT);
+  const remainingAnalytes = analyteCount - previewAnalytes.length;
 
   return (
     <QueueCard
@@ -149,24 +149,24 @@ function ResultEntryCardDesktop({
       badges={badges}
       content={
         <p className="leading-snug">
-          {previewParams.map((param, index) => (
-            <span key={param.code}>
+          {previewAnalytes.map((analyte, index) => (
+            <span key={analyte.code}>
               {index > 0 ? ' · ' : null}
               <span
                 className={
-                  results[param.code]?.trim() ? FG.body : FG.captionMuted
+                  results[analyte.code]?.trim() ? FG.body : FG.captionMuted
                 }
               >
-                {param.name}
+                {analyte.name}
               </span>
             </span>
           ))}
-          {remainingParams > 0 ? (
-            <span className={FG.captionMuted}> · +{remainingParams} more</span>
+          {remainingAnalytes > 0 ? (
+            <span className={FG.captionMuted}> · +{remainingAnalytes} more</span>
           ) : null}
         </p>
       }
-      contentTitle="Parameters"
+      contentTitle="Results"
     />
   );
 }
@@ -176,7 +176,7 @@ function ResultEntryCardMobile({
   testDef,
   patientName,
   filledCount,
-  parameterCount,
+  analyteCount,
   handleCardClick,
   rejection,
   canEnter,
@@ -188,7 +188,7 @@ function ResultEntryCardMobile({
     patientName,
     testDef,
     filledCount,
-    parameterCount
+    analyteCount
   );
 
   return (

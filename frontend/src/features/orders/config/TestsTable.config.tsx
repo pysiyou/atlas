@@ -9,7 +9,7 @@ import {
   TABLE_COLUMN_WIDTH,
 } from '@/components/data-table';
 import { cn, formatCurrency } from '@/utils';
-import { getTestName, getTestProperty } from '@/features/catalog/testLookup';
+import { getTestName, getTestProperty } from '@/features/catalog';
 import {
   renderNavigableSampleId,
   renderOrderTestIdentity,
@@ -17,7 +17,7 @@ import {
 } from '@/features/shared';
 import { OrderTestStatusBadge } from '../components/OrderDomainBadges';
 import { getOrderTestLineageRowClass } from '../utils/orderTestLineage';
-import type { OrderTest, TestSummary } from '@/types';
+import type { OrderTest, OrderableTestSummary } from '@/types';
 import { text, BADGE, TABLE_TYPE, RADIUS } from '@/theme/recipes';
 
 const SIMPLE_VIEWS = {
@@ -32,14 +32,14 @@ const DETAILED_VIEWS = {
   compact: SIMPLE_VIEWS.compact,
 } as const;
 
-function renderTestCategoryBadge(test: OrderTest, testCatalog: TestSummary[]) {
+function renderTestCategoryBadge(test: OrderTest, testCatalog: OrderableTestSummary[]) {
   const category = getTestProperty(test.testCode, 'category', testCatalog);
   if (!category) return null;
   return <StatusValueBadge value={category} size="xs" className={BADGE.tableEmbed} />;
 }
 
 function createTestTableCard(
-  testCatalog: TestSummary[]
+  testCatalog: OrderableTestSummary[]
 ): ComponentType<CardComponentProps<OrderTest>> {
   return function TestTableCard({ item, onClick }) {
     const categoryBadge = renderTestCategoryBadge(item, testCatalog);
@@ -75,7 +75,7 @@ function createTestTableCard(
 }
 
 export function createTestsTableConfig(
-  testCatalog: TestSummary[],
+  testCatalog: OrderableTestSummary[],
   variant: 'simple' | 'detailed' = 'detailed'
 ): TableViewConfig<OrderTest> {
   const columnMap = {

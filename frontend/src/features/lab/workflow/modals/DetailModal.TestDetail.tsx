@@ -57,7 +57,7 @@ export function TestDetailModal({
         modalStage={view.modalStage}
         order={view.order}
         orderTest={view.orderTest}
-        catalogParameterCount={view.catalogTest?.parameters?.length ?? 0}
+        analyteCount={view.catalogTest?.analytes?.length ?? 0}
         turnaroundHours={view.catalogTest?.turnaroundTime}
       />
     ) : null;

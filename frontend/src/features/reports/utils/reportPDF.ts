@@ -1,7 +1,7 @@
 /** Lab report PDF — printable export (header + body; body expanded incrementally). */
 import type jsPDF from 'jspdf';
 import { getBrandingPresentation, getCompanyFullName } from '@/config';
-import type { Test } from '@/types';
+import type  { OrderableTest } from '@/types';
 import type { LabReportPayload, ReportTemplate } from '@/types';
 import { drawLabReportBody } from './reportPDFBody';
 import { drawLabReportHeader, drawLabReportPageFooter } from './reportPDFHeader';
@@ -38,7 +38,7 @@ function stampPageFooters(doc: jsPDF, margin: number): void {
 export async function generateLabReport(
   reportData: LabReportPayload,
   _template: ReportTemplate = getDefaultTemplate(),
-  catalogTests: Test[] = []
+  orderableTests: OrderableTest[] = []
 ): Promise<jsPDF> {
   const { default: JsPDF } = await import('jspdf');
   const doc = new JsPDF();
@@ -47,7 +47,7 @@ export async function generateLabReport(
   const { endY } = drawLabReportHeader(doc, reportData, MARGIN);
 
   drawBodySeparator(doc, endY, MARGIN, pageWidth);
-  drawLabReportBody(doc, reportData, endY, MARGIN, catalogTests, nextDoc => {
+  drawLabReportBody(doc, reportData, endY, MARGIN, orderableTests, nextDoc => {
     const nextHeader = drawLabReportHeader(nextDoc, reportData, MARGIN);
     drawBodySeparator(
       nextDoc,

@@ -2,7 +2,7 @@
  * Derived presentation state for TestDetailModal.
  */
 import { useEffect, useMemo } from 'react';
-import type { Order, OrderTest, Test } from '@/types';
+import type { Order, OrderTest, OrderableTest } from '@/types';
 import { getLabQueueUrlForTest, hasResultsOnWorkItem, orderTestKey } from '../../utils/labSearchAndLinks';
 import {
   buildOrderTestOverviewFields,
@@ -31,7 +31,7 @@ export function useTestDetailModalDerived({
   order: Order | undefined;
   orderTest: OrderTest | undefined;
   linked: ReturnType<typeof resolveLinkedOrderTests>;
-  catalogTest: Test | undefined;
+  catalogTest: OrderableTest | undefined;
   openLinkedTest: (linkedTest: OrderTest) => void;
   onClose: () => void;
   detailWorkItem: LabModalWorkItem | undefined;
@@ -96,7 +96,7 @@ export function useTestDetailModalDerived({
 function buildTestDetailGridSections(
   orderTest: OrderTest,
   linked: ReturnType<typeof resolveLinkedOrderTests>,
-  catalogTest: Test | undefined,
+  catalogTest: OrderableTest | undefined,
   options: {
     onOpenLinkedTest?: (linkedTest: OrderTest) => void;
     omitWorkflowResultDuplicates: boolean;

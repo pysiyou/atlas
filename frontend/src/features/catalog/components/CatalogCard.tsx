@@ -1,5 +1,5 @@
 import type { CardComponentProps } from '@/components/data-table';
-import type { TestSummary } from '@/types';
+import type { OrderableTestSummary } from '@/types';
 import { ListCard } from '@/components/surfaces';
 import { RecordId, StatusValueBadge } from '@/features/shared';
 import { BADGE, PRICE_DISPLAY, text } from '@/theme/recipes';
@@ -16,7 +16,7 @@ import { formatSynonymsPreview } from '@/utils/presentation';
  * @param index - Index of the test in the list
  * @param onClick - Optional click handler
  */
-export function CatalogCard({ item: test, onClick }: CardComponentProps<TestSummary>) {
+export function CatalogCard({ item: test, onClick }: CardComponentProps<OrderableTestSummary>) {
   return (
     <ListCard onPress={onClick}>
       <ListCard.Header

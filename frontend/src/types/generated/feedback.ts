@@ -61,7 +61,7 @@ export type FeedbackId =
   | "lab.entry.fixValidationBeforeSubmit"
   | "lab.entry.modalUnavailable"
   | "lab.entry.noResults"
-  | "lab.entry.parametersMissing"
+  | "lab.entry.resultComponentsMissing"
   | "lab.entry.save.error"
   | "lab.entry.save.success"
   | "lab.entry.selectInvalid"
@@ -236,7 +236,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   "lab.entry.fixValidationBeforeSubmit": { channel: "inline", variant: "danger", title: "Please correct invalid values before submitting" },
   "lab.entry.modalUnavailable": { channel: "toast", variant: "error", title: "Unable to open result entry", subtitle: "Refresh the page and try again.", brief: "failed" },
   "lab.entry.noResults": { channel: "toast", variant: "error", title: "No results to save", subtitle: "There are no results entered for this {{test}}. Enter values in the required fields before saving.", brief: "failed" },
-  "lab.entry.parametersMissing": { channel: "toast", variant: "error", title: "{{testCap}} parameters not found", subtitle: "The {{test}} configuration could not be loaded. Refresh the page or contact support.", brief: "failed" },
+  "lab.entry.resultComponentsMissing": { channel: "toast", variant: "error", title: "{{testCap}} result components not found", subtitle: "The {{test}} configuration could not be loaded. Refresh the page or contact support.", brief: "failed" },
   "lab.entry.save.error": { channel: "toast", variant: "error", title: "Failed to save results", subtitle: "The results could not be saved. Check your connection and try again.", brief: "failed" },
   "lab.entry.save.success": { channel: "toast", variant: "success", title: "Results saved successfully", subtitle: "The results have been saved and the {{order}} has been updated. You can continue with other {{tests}}.", brief: "resulted" },
   "lab.entry.selectInvalid": { channel: "toast", variant: "error", title: "Invalid selection value", subtitle: "Choose a valid option from the list before saving.", brief: "invalid" },

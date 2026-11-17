@@ -8,9 +8,9 @@ import type { NavigateFunction } from 'react-router-dom';
 import { Badge, type BadgeProps } from '@/components/primitives';
 import { Avatar } from '@/components/primitives';
 import { RecordId } from '@/features/shared';
-import { getTestName } from '@/features/catalog/testLookup';
+import { getTestName } from '@/features/catalog';
 import { LabPresentationCompactBadge, LabPresentationStack } from '@/features/lab/cross';
-import type { Gender, OrderTest, TestSummary } from '@/types';
+import type { Gender, OrderTest, OrderableTestSummary } from '@/types';
 import type { StatusPresentation } from '@/lib/api/types';
 import { PRESENTATION_STACK_CLASS, TABLE_TYPE } from '@/theme/recipes';
 import { cn, formatCurrency, formatDateTime, type EntityType } from '@/utils';
@@ -110,7 +110,7 @@ export function renderTestNameCodeStack(
 
 export function renderOrderTestIdentity(
   test: Pick<OrderTest, 'testCode' | 'testName'>,
-  testCatalog: TestSummary[]
+  testCatalog: OrderableTestSummary[]
 ): ReactNode {
   const name = getTestName(test.testCode, testCatalog) || test.testName || test.testCode;
   return <TestNameCodeStack testName={name} testCode={test.testCode} title={name} />;

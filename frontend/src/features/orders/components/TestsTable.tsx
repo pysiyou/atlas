@@ -8,7 +8,7 @@ import { DataTable } from '@/components/data-table';
 import { EmptyState } from '@/components/display';
 import { getEmptyCopy, PANEL_EMPTY_STATE } from '@/strings';
 
-import { useTestCatalog } from '@/features/catalog';
+import { useOrderableTests } from '@/features/catalog';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
 import type { Order, OrderTest, Patient } from '@/types';
 import { createTestsTableConfig } from '../config/TestsTable.config';
@@ -36,7 +36,7 @@ export function TestsTable({
   loading = false,
 }: TestsTableProps) {
   const { openModal } = useModal();
-  const { tests: testCatalog = [] } = useTestCatalog();
+  const { tests: testCatalog = [] } = useOrderableTests();
   const visibleTests = useMemo(() => tests.filter(t => t.status !== 'removed'), [tests]);
 
   const viewConfig = useMemo(

@@ -3,7 +3,7 @@
  */
 
 import { useCallback, useEffect, useMemo } from 'react';
-import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
+import { uniqueSortedTestCodes, useOrderableTestsByCodes } from '@/features/catalog';
 import {
   useLabQueueBarFilters,
   useLabQueueFilterBarProps,
@@ -60,13 +60,13 @@ export function ResultEntryQueue() {
     () => uniqueSortedTestCodes(entryRows.map(row => row.testCode)),
     [entryRows],
   );
-  const { byCode: fullByCode, isLoading: catalogLoading } = useTestsByCodes(uniqueCodes);
+  const { byCode: fullByCode, isLoading: catalogLoading } = useOrderableTestsByCodes(uniqueCodes);
 
   const {
     entryDrafts,
     handleResultChange,
     handleNotesChange,
-    areAllParametersFilled,
+    areAllAnalytesFilled,
     handleSaveResults,
     openTestModal,
   } = useResultEntryWorkflow({ entryRows, fullByCode });
@@ -101,7 +101,7 @@ export function ResultEntryQueue() {
   const catalogReadyForVisible =
     uniqueCodes.length === 0 ||
     (!catalogLoading &&
-      filteredRows.every(row => fullByCode.get(row.testCode)?.parameters != null));
+      filteredRows.every(row => fullByCode.get(row.testCode)?.analytes != null));
   const queueLoading =
     (worklistChrome.loading && hasNoItems) ||
     (filteredRows.length > 0 && !catalogReadyForVisible);
@@ -114,8 +114,8 @@ export function ResultEntryQueue() {
         renderCard={(row, idx) => {
           const entryRow = row as EntryQueueRow;
           const testDef = fullByCode.get(entryRow.testCode);
-          const isComplete = testDef?.parameters
-            ? areAllParametersFilled(entryRow.orderTestId, testDef.parameters.length)
+          const isComplete = testDef?.analytes
+            ? areAllAnalytesFilled(entryRow.orderTestId, testDef.analytes.length)
             : false;
           const draft = entryDrafts[entryRow.orderTestId];
           return (
@@ -127,8 +127,8 @@ export function ResultEntryQueue() {
               technicianNotes={draft?.technicianNotes ?? ''}
               isComplete={isComplete}
               isMobile={isMobile}
-              onResultsChange={(_key, paramCode, value) =>
-                handleResultChange(entryRow.orderTestId, paramCode, value)
+              onResultsChange={(_key, analyteCode, value) =>
+                handleResultChange(entryRow.orderTestId, analyteCode, value)
               }
               onNotesChange={(_key, notes) => handleNotesChange(entryRow.orderTestId, notes)}
               onSaveRow={handleSaveRow}

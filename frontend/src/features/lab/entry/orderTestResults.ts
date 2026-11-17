@@ -11,7 +11,7 @@ function scalarResultValue(value: unknown): string {
   return String(value);
 }
 
-/** Map API result record to string values keyed by parameter code. */
+/** Map API result record to string values keyed by analyte code. */
 export function resultsFromOrderTest(
   results: Record<string, unknown> | undefined
 ): Record<string, string> {

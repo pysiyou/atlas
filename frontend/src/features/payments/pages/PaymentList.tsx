@@ -11,7 +11,7 @@ import { PaymentFilters } from '../components/PaymentFilters';
 import { PAYMENT_URL_FILTER_KEYS } from '../config/paymentFilters.config';
 import { createPaymentTableConfig } from '../config/PaymentTable.config';
 import { PaymentDetailModal } from '../components/PaymentDetailModal';
-import { useTestNameLookup } from '@/features/catalog';
+import { useOrderableTestNameLookup } from '@/features/catalog';
 import { usePaginatedPaymentOrders } from '../api/payments';
 import { DEFAULT_LIST_PAGE_SIZE, LIST_PAGE_SIZE_OPTIONS } from '@/lib/api';
 import { useServerListChrome } from '@/hooks';
@@ -70,7 +70,7 @@ export function PaymentList() {
     setPageSize,
   } = usePaginatedPaymentOrders(serverFilters, 1, DEFAULT_LIST_PAGE_SIZE);
 
-  const { getTestName } = useTestNameLookup();
+  const { getTestName } = useOrderableTestNameLookup();
 
   const { loading, listPagination, setFilterAndReset } = useServerListChrome({
     setFilter,

@@ -12,7 +12,7 @@ import { createFilterOptions } from '@/utils/filtering';
 import { getErrorMessage } from '@/utils/errors';
 import { getFeedback } from '@/feedback';
 import { useOrderForm } from './useOrderForm';
-import { useTestCatalog, useTestSearch } from '@/features/catalog';
+import { useOrderableTests, useOrderableTestSearch } from '@/features/catalog';
 import { usePatient, usePatientSearch } from '@/features/patients';
 import type { ReferentDoctor } from '@/features/referent-doctors';
 import { useCreatePayment } from '@/features/payments';
@@ -165,8 +165,8 @@ export function useOrderUpsertModal({
     setValue('referentDoctorId', null, { shouldValidate: true });
   }, [order?.orderId, setValue]);
 
-  const { tests, byCode } = useTestCatalog();
-  const { results: filteredTests } = useTestSearch(testSearch);
+  const { tests, byCode } = useOrderableTests();
+  const { results: filteredTests } = useOrderableTestSearch(testSearch);
 
   const totalPrice = useMemo(() => {
     const selectedTestCodes = testCodes ?? [];

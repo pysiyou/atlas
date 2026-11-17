@@ -11,7 +11,7 @@ import {
   OrderTestSampleTabs,
   TestRelatedTestsPanel,
 } from '@/features/orders';
-import type { Order, OrderTest, Patient, Sample, Test } from '@/types';
+import type { Order, OrderTest, Patient, Sample, OrderableTest } from '@/types';
 import { text } from '@/theme/recipes';
 import type { QualityIssueResult } from '@/types';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
@@ -44,7 +44,7 @@ export function TestDetailHeaderColumn({
   modalStage,
   order,
   orderTest,
-  catalogParameterCount,
+  analyteCount,
   turnaroundHours,
 }: {
   row: LabModalWorkItem;
@@ -53,7 +53,7 @@ export function TestDetailHeaderColumn({
   modalStage: LabModalStage;
   order: Order;
   orderTest: OrderTest;
-  catalogParameterCount: number;
+  analyteCount: number;
   turnaroundHours?: number;
 }) {
   const queueSince = resolveTestDetailQueueSince(modalStage, order, orderTest, row);
@@ -71,8 +71,8 @@ export function TestDetailHeaderColumn({
       flagCount={headerVariant === 'validation' ? flagCount : undefined}
       reasonCode={headerVariant === 'escalation' ? row.reasonCode ?? undefined : undefined}
       filledCount={headerVariant === 'entry' ? filledCount : undefined}
-      parameterCount={
-        headerVariant === 'entry' && catalogParameterCount > 0 ? catalogParameterCount : undefined
+      analyteCount={
+        headerVariant === 'entry' && analyteCount > 0 ? analyteCount : undefined
       }
       turnaroundHours={headerVariant === 'entry' ? turnaroundHours : undefined}
       includeResultEntered={includeResultEntered}
@@ -205,7 +205,7 @@ type TestDetailModalBodyProps = {
   criticalSeen?: boolean;
   ready: boolean;
   order: Order | undefined;
-  catalogTest: Test | undefined;
+  catalogTest: OrderableTest | undefined;
   relatedSamples: Sample[];
   detailGridSections: DetailGridSectionConfig[] | undefined;
   onViewFullSample: (sampleId: string) => void;

@@ -2,7 +2,7 @@
  * Sample collection detail modal — shell and body when sample is loaded.
  */
 
-import type { ContainerType, Order, Sample, Test } from '@/types';
+import type { ContainerType, Order, Sample, OrderableTest } from '@/types';
 import { FooterInfo } from '@/components/display';
 
 import { IconKeys } from '@/icons';
@@ -54,7 +54,7 @@ export function SampleCollectionDetailModalView({
   readOnly: boolean;
   isPopoverSubmitting: boolean;
   onPopoverSubmittingChange: (submitting: boolean) => void;
-  testDetails: Test[];
+  testDetails: OrderableTest[];
   testNames: string[];
   fields: CollectionFields;
   getUserName: (userId: string) => string;

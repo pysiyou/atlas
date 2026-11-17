@@ -9,6 +9,7 @@ export {
   PANEL_EMPTY_STATE,
   emptySubtitle,
   emptyTitle,
+  getCatalogOrderPickerCopy,
   getEmptyCopy,
   getEventLogCopy,
   getLabCopy,

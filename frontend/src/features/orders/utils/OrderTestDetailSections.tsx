@@ -4,7 +4,7 @@
 
 import { Link } from 'react-router-dom';
 import type { DescriptionListItemConfig } from '@/components/display/DescriptionList';
-import type { OrderTest, Test } from '@/types';
+import type { OrderTest, OrderableTest } from '@/types';
 import { RecordId } from '@/features/shared';
 import { INLINE_LINK } from '@/theme/recipes';
 import { formatCurrency, formatOrderTestDisplay } from '@/utils';
@@ -24,7 +24,7 @@ export interface OrderTestOverviewOptions {
 
 export function buildOrderTestOverviewFields(
   orderTest: OrderTest,
-  catalogTest: Test | undefined,
+  catalogTest: OrderableTest | undefined,
   options?: OrderTestOverviewOptions
 ): DescriptionListItemConfig[] {
   const fields: DescriptionListItemConfig[] = [

@@ -27,8 +27,8 @@ export {
 } from './constants/labConstants';
 export type { LabTabId, LabWorkflowKpiStage, LabWorkflowStage } from './constants/labConstants';
 
-export { ResultsParameterGrid } from './components/ResultsParameterGrid';
-export type { ResultsGridLayout } from './components/ResultsParameterGrid';
+export { LabResultGrid } from './components/LabResultGrid';
+export type { ResultsGridLayout, ResultsGridVariant } from './components/LabResultGrid';
 export { ResultValueAnnotations } from './components/ResultValueAnnotations';
 
 export {
@@ -41,7 +41,7 @@ export {
 export { formatVolume } from './utils/labSample';
 export { formatRejectionCriteriaList } from './utils/catalogRejectionCriteria';
 export {
-  getParameterReferenceIntervalLines,
+  getAnalyteReferenceIntervalLines,
   parseResultEntry,
   statusMapFromFlags,
 } from './utils/labResult';

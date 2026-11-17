@@ -1,5 +1,5 @@
 /** Parse and format order_test.flags for display (range + delta). */
-import { resolveParameterLabel } from '@/features/catalog';
+import { resolveAnalyteLabel } from '@/features/catalog';
 
 export type AnalyticalFlag =
   | { kind: 'range'; code: string; status: string }
@@ -25,9 +25,9 @@ export function parseAnalyticalFlags(flags: string[] | undefined): AnalyticalFla
 
 export function analyticalFlagLabel(
   flag: AnalyticalFlag,
-  parameterLabels: Record<string, string>
+  analyteLabels: Record<string, string>
 ): string {
-  return resolveParameterLabel(flag.code, parameterLabels);
+  return resolveAnalyteLabel(flag.code, analyteLabels);
 }
 
 export function analyticalFlagDetail(flag: AnalyticalFlag): string {
@@ -40,7 +40,7 @@ export function analyticalFlagDetail(flag: AnalyticalFlag): string {
 
 export function formatAnalyticalFlag(
   flag: AnalyticalFlag,
-  parameterLabels: Record<string, string>
+  analyteLabels: Record<string, string>
 ): string {
-  return `${analyticalFlagLabel(flag, parameterLabels)}: ${analyticalFlagDetail(flag)}`;
+  return `${analyticalFlagLabel(flag, analyteLabels)}: ${analyticalFlagDetail(flag)}`;
 }

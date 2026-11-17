@@ -31,10 +31,7 @@ async def lifespan(app: FastAPI):
 
         db = SessionLocal()
         try:
-            from app.domains.catalog.schema_finalize import finalize_catalog_schema
-
             CatalogSeedService(db).seed_from_contracts()
-            finalize_catalog_schema(db)
         finally:
             db.close()
     except Exception:

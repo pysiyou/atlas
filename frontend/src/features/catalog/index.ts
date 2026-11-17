@@ -3,17 +3,17 @@
  */
 
 export {
-  testAPI,
-  useTestCatalog,
-  useTest,
-  useTestsByCodes,
-  useTestSearch,
-  useTestsByCategory,
-  useActiveTests,
-  useTestNameLookup,
-  useParameterLabelMap,
-  useInvalidateTestCatalog,
-} from './api/tests';
+  orderableTestAPI,
+  useOrderableTests,
+  useOrderableTest,
+  useOrderableTestsByCodes,
+  useOrderableTestSearch,
+  useOrderableTestsByCategory,
+  useActiveOrderableTests,
+  useOrderableTestNameLookup,
+  useAnalyteLabelMap,
+  useInvalidateOrderableTests,
+} from './api/orderableTests';
 
 export {
   clinicalWorkupAPI,
@@ -28,7 +28,7 @@ export {
   useSelectedAffiliationPrice,
 } from './api/affiliations';
 
-export * from './testLookup';
+export * from './utils/orderableTestLookup';
 
 export { Catalog as CatalogPage } from './pages/CatalogPage';
 export { CatalogList } from './pages/CatalogList';

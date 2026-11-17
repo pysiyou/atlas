@@ -71,10 +71,10 @@ class CatalogSeedService:
         Removes stale junction rows and catalog rows absent from contracts.
         """
         analyte_doc = _load_json("analyte-catalog.json")
-        tests_doc = _load_json("orderable-tests.json")
+        orderable_tests_doc = _load_json("orderable-tests.json")
         workups_doc = _load_json("clinical-workups.json")
 
-        counts = {"analytes": 0, "tests": 0, "workups": 0}
+        counts = {"analytes": 0, "orderable_tests": 0, "workups": 0}
 
         desired_analyte_codes: set[str] = set()
         for raw in analyte_doc.get("analytes") or []:
@@ -104,7 +104,7 @@ class CatalogSeedService:
         self._delete_stale_rows(CatalogAnalyte, desired_analyte_codes)
 
         desired_test_codes: set[str] = set()
-        for raw in tests_doc.get("tests") or []:
+        for raw in orderable_tests_doc.get("tests") or []:
             if not isinstance(raw, dict) or not raw.get("test_code"):
                 continue
             fields = _copy_test_fields(raw)
@@ -113,7 +113,7 @@ class CatalogSeedService:
             row = self.db.get(OrderableTest, code)
             if row is None:
                 self.db.add(OrderableTest(**fields))
-                counts["tests"] += 1
+                counts["orderable_tests"] += 1
             else:
                 for key, val in fields.items():
                     if key != "code":

@@ -7,11 +7,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query';
 import { sampleAPI, useCollectSample, useSampleWorkContext } from '../../api/samples';
 import type { ContainerType } from '@/types';
-import { uniqueSortedTestCodes, useTestCatalog, useTestsByCodes } from '@/features/catalog';
+import { uniqueSortedTestCodes, useOrderableTests, useOrderableTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api';
 import { useOrder } from '@/features/orders';
 import { ModalType, useModal } from '@/lib/context/ModalContext';
-import { getTestNames } from '@/features/catalog/testLookup';
+import { getTestNames } from '@/features/catalog';
 import type { SampleCollectionQueueItem } from '@/types';
 import { deriveCollectionModalFields } from '@/utils/presentation';
 import { actionButtonPreset, Button } from '@/components/primitives';
@@ -36,7 +36,7 @@ export function SampleCollectionDetailModal({
 }: SampleDetailModalProps) {
   const labCopy = useLabCopy();
   const { getUserName } = useUserLookup();
-  const { tests = [] } = useTestCatalog();
+  const { tests = [] } = useOrderableTests();
   const { openModal } = useModal();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthStore();
@@ -94,7 +94,7 @@ export function SampleCollectionDetailModal({
     () => uniqueSortedTestCodes(sample?.testCodes ?? []),
     [sample?.testCodes]
   );
-  const { byCode: fullByCode } = useTestsByCodes(isOpen ? sampleTestCodes : []);
+  const { byCode: fullByCode } = useOrderableTestsByCodes(isOpen ? sampleTestCodes : []);
 
   const testDetails = useMemo(() => {
     if (!sample?.testCodes) return [];

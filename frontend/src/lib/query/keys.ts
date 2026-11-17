@@ -22,23 +22,23 @@ export interface PaginationParams {
  * Hierarchical structure enables granular cache invalidation.
  *
  * Usage:
- * - queryKeys.tests.all -> ['tests']
- * - queryKeys.tests.byCode('CBC') -> ['tests', 'detail', 'CBC']
+ * - queryKeys.orderableTests.all -> ['orderableTests']
+ * - queryKeys.orderableTests.byCode('CBC') -> ['orderableTests', 'detail', 'CBC']
  * - queryKeys.orders.list({ status: 'pending' }) -> ['orders', 'list', { status: 'pending' }]
  */
 export const queryKeys = {
   /**
-   * Test catalog queries (static data)
+   * Orderable test catalog queries (static data)
    */
-  tests: {
-    all: ['tests'] as const,
-    lists: () => [...queryKeys.tests.all, 'list'] as const,
+  orderableTests: {
+    all: ['orderableTests'] as const,
+    lists: () => [...queryKeys.orderableTests.all, 'list'] as const,
     list: (filters?: { category?: TestCategory; activeOnly?: boolean }) =>
-      [...queryKeys.tests.lists(), filters] as const,
-    details: () => [...queryKeys.tests.all, 'detail'] as const,
-    byCode: (code: string) => [...queryKeys.tests.details(), code] as const,
-    byCodes: (codes: string[]) => [...queryKeys.tests.all, 'byCodes', codes] as const,
-    search: (query: string) => [...queryKeys.tests.all, 'search', query] as const,
+      [...queryKeys.orderableTests.lists(), filters] as const,
+    details: () => [...queryKeys.orderableTests.all, 'detail'] as const,
+    byCode: (code: string) => [...queryKeys.orderableTests.details(), code] as const,
+    byCodes: (codes: string[]) => [...queryKeys.orderableTests.all, 'byCodes', codes] as const,
+    search: (query: string) => [...queryKeys.orderableTests.all, 'search', query] as const,
   },
 
   clinicalWorkups: {
@@ -302,6 +302,6 @@ export const queryKeys = {
  * Query key prefixes for static data (no refetch on window focus).
  * Used by query client refetchOnWindowFocus; add new static domains here.
  */
-export const STATIC_QUERY_KEY_PREFIXES = ['tests', 'users', 'affiliations'] as const;
+export const STATIC_QUERY_KEY_PREFIXES = ['orderableTests', 'users', 'affiliations'] as const;
 
 export type QueryKeys = typeof queryKeys;

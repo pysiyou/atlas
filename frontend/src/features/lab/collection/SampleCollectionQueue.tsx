@@ -25,7 +25,7 @@ import { getEmptyCopy, emptySubtitle } from '@/strings';
 
 import { ErrorBoundary } from '@/feedback';
 import { useAuthStore } from '@/app/authStore';
-import { useTestCatalog } from '@/features/catalog';
+import { useOrderableTests } from '@/features/catalog';
 import { useClientListChrome } from '@/hooks';
 
 export function SampleCollectionQueue() {
@@ -36,7 +36,7 @@ export function SampleCollectionQueue() {
   const breakpoint = useBreakpoint();
   const isMobile = isBreakpointAtMost(breakpoint, 'sm');
 
-  const { tests: catalogTests } = useTestCatalog();
+  const { tests: catalogTests } = useOrderableTests();
   const bar = useLabQueueBarFilters('collection');
   const {
     items: worklistItems,

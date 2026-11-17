@@ -1,5 +1,5 @@
 /** Sample definitions, collection helpers, container inference, and label printing. */
-import type { SampleType, ContainerTopColor, OrderTest, Test } from '@/types';
+import type { SampleType, ContainerTopColor, OrderTest, OrderableTest } from '@/types';
 import type { ContainerCatalogId } from '@/types';
 import { COLLECTION_TOP_COLOR_PRESETS } from '@/types';
 import type { FeedbackId } from '@/types/generated/feedback';
@@ -121,7 +121,7 @@ export function getCollectionRequirements(sampleType: SampleType): {
 
 export function groupTestsBySample(
   tests: OrderTest[],
-  testCatalog: Test[]
+  testCatalog: OrderableTest[]
 ): Map<string, OrderTest[]> {
   const grouped = new Map<string, OrderTest[]>();
   tests.forEach(test => {
@@ -134,7 +134,7 @@ export function groupTestsBySample(
   return grouped;
 }
 
-export function calculateTotalVolume(tests: OrderTest[], testCatalog: Test[]): number {
+export function calculateTotalVolume(tests: OrderTest[], testCatalog: OrderableTest[]): number {
   return tests.reduce((total, orderTest) => {
     const testDef = testCatalog.find(t => t.code === orderTest.testCode);
     return total + (testDef?.minimumVolume ?? 0);

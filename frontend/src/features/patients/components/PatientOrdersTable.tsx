@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/display/EmptyState';
 import { PANEL_EMPTY_STATE } from '@/strings';
 import { DataTable } from '@/components/data-table';
 import type { Order } from '@/types';
-import { useTestNameLookup } from '@/features/catalog';
+import { useOrderableTestNameLookup } from '@/features/catalog';
 import { createPatientRelatedOrdersTableConfig } from '../config/PatientOrdersTable.config';
 export interface PatientOrdersTableProps {
   orders: Order[];
@@ -29,7 +29,7 @@ export function PatientOrdersTable({
   onOrderClick,
   loading = false,
 }: PatientOrdersTableProps) {
-  const { getTestName } = useTestNameLookup();
+  const { getTestName } = useOrderableTestNameLookup();
 
   const viewConfig = useMemo(
     () => createPatientRelatedOrdersTableConfig(getTestName),

@@ -3,9 +3,9 @@
  */
 
 import { useMemo } from 'react';
-import { useTest } from '@/features/catalog';
+import { useOrderableTest } from '@/features/catalog';
 import { findLinkedOrderTests } from '@/features/orders';
-import type { Order, OrderTest, Patient, Test } from '@/types';
+import type { Order, OrderTest, Patient, OrderableTest } from '@/types';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import {
   resolveTestDetailHeaderVariant,
@@ -32,7 +32,7 @@ export interface UseTestDetailModelResult {
   patient: Patient | null | undefined;
   queueWorkItem: LabModalWorkItem | undefined;
   detailWorkItem: LabModalWorkItem | undefined;
-  catalogTest: Test | undefined;
+  catalogTest: OrderableTest | undefined;
   testDisplayName: string;
   relatedSamples: ReturnType<typeof import('@/features/orders').useOrderTestDetailSamples>['relatedSamples'];
   activeSample: import('@/types').Sample | undefined;
@@ -49,7 +49,7 @@ export function useTestDetailModel(input: UseTestDetailModelInput): UseTestDetai
   const { orderTest, queueWorkItem, detailWorkItem, ...base } = useLabModalWorkItemModel(input);
 
   const code = orderTest?.testCode ?? queueWorkItem?.testCode ?? '';
-  const { test: catalogTest, isLoading: isCatalogLoading } = useTest(isOpen && code ? code : undefined);
+  const { test: catalogTest, isLoading: isCatalogLoading } = useOrderableTest(isOpen && code ? code : undefined);
   const testDisplayName =
     orderTest?.testName || queueWorkItem?.testName || catalogTest?.name || '';
 

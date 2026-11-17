@@ -1,6 +1,6 @@
 /** Result flags, reference ranges, physiologic limits, and result tile styles. */
 import type { ResultStatus } from '@/types/generated/enums';
-import type { CatalogReferenceRange, CriticalRange, TestParameter, Patient, Gender } from '@/types';
+import type { CatalogReferenceRange, CriticalRange, AnalyteDefinition, Patient, Gender } from '@/types';
 import type { DemographicRange } from '@/types';
 import { calculateAge } from '@/utils/string';
 import { FG, TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
@@ -132,18 +132,18 @@ export function isCriticalValue(value: number, criticalRange?: CriticalRange): b
 
 export function checkReferenceRangeWithDemographics(
   value: number,
-  parameter: TestParameter,
+  analyte: AnalyteDefinition,
   patient?: Patient | { gender?: Gender; age?: number }
 ): ResultStatus {
-  if (parameter.criticalLow !== undefined && value < parameter.criticalLow) return 'critical';
-  if (parameter.criticalHigh !== undefined && value > parameter.criticalHigh) return 'critical';
-  if (parameter.catalogReferenceRange) {
-    const range = getPatientSpecificRange(parameter.catalogReferenceRange, patient);
+  if (analyte.criticalLow !== undefined && value < analyte.criticalLow) return 'critical';
+  if (analyte.criticalHigh !== undefined && value > analyte.criticalHigh) return 'critical';
+  if (analyte.catalogReferenceRange) {
+    const range = getPatientSpecificRange(analyte.catalogReferenceRange, patient);
     if (range.low !== undefined && value < range.low) return 'low';
     if (range.high !== undefined && value > range.high) return 'high';
     return 'normal';
   }
-  return checkReferenceRange(value, parameter.referenceRange);
+  return checkReferenceRange(value, analyte.referenceRange);
 }
 
 function formatRangeBounds(low: number, high: number): string {
@@ -179,12 +179,12 @@ function singleReferenceLine(value: string): ReferenceIntervalLine[] {
 }
 
 /** Reference interval column — split Male/Female lines when catalog ranges differ. */
-export function getParameterReferenceIntervalLines(
-  parameter?: TestParameter,
+export function getAnalyteReferenceIntervalLines(
+  analyte?: AnalyteDefinition,
   storedReferenceRange?: string,
   patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string }
 ): ReferenceIntervalLine[] {
-  const catalog = parameter?.catalogReferenceRange;
+  const catalog = analyte?.catalogReferenceRange;
   if (catalog) {
     const male = formatDemographicRangeSegment(catalog.adult_male);
     const female = formatDemographicRangeSegment(catalog.adult_female);
@@ -201,7 +201,7 @@ export function getParameterReferenceIntervalLines(
     if (male || female) return singleReferenceLine(male || female);
   }
 
-  const fallback = storedReferenceRange?.trim() || parameter?.referenceRange?.trim();
+  const fallback = storedReferenceRange?.trim() || analyte?.referenceRange?.trim();
   return singleReferenceLine(fallback || '—');
 }
 

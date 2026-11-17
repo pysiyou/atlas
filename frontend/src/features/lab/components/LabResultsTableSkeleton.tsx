@@ -4,7 +4,7 @@
 
 import { TableLoadingPlaceholder } from '@/components/data-table/TableLoadingPlaceholder';
 
-export const LAB_RESULTS_TABLE_HEADERS = ['Parameter', 'Result', 'Reference interval'] as const;
+export const LAB_RESULTS_TABLE_HEADERS = ['Result', 'Value', 'Reference interval'] as const;
 
 /** Thin wrapper: lab result column titles + the shared table body placeholder. */
 export function LabResultsTableSkeleton() {

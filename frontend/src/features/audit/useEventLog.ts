@@ -4,7 +4,7 @@
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useTestNameLookup } from '@/features/catalog';
+import { useOrderableTestNameLookup } from '@/features/catalog';
 import { usePatientNameLookup } from '@/features/patients';
 import { queryKeys } from '@/lib/query';
 import { eventLogQueryKeyParams } from './buildEventLogQuery';
@@ -66,7 +66,7 @@ export function useEventLog(query: EventLogQuery, options?: UseEventLogOptions) 
     () => eventLogQueryKeyParams({ ...query, cursorCreatedAt: undefined, cursorEventId: undefined }),
     [query]
   );
-  const { getTestName } = useTestNameLookup();
+  const { getTestName } = useOrderableTestNameLookup();
   const { getPatientName: lookupPatientName } = usePatientNameLookup();
   const resolveOptions = useMemo(
     () => ({

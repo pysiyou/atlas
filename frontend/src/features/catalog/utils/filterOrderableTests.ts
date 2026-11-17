@@ -1,5 +1,5 @@
 import type { FilterValues } from '@/components/filters/types';
-import type { TestCategory, TestSummary } from '@/types';
+import type { TestCategory, OrderableTestSummary } from '@/types';
 import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
 import { PRICE_RANGE } from '@/utils/constants';
 
@@ -11,7 +11,7 @@ export const catalogListInitialFilters: FilterValues = {
 };
 
 /** Client-side catalog list filtering (search, category, sample type, price, name sort). */
-export function filterOrderableTests(tests: TestSummary[], filters: FilterValues): TestSummary[] {
+export function filterOrderableTests(tests: OrderableTestSummary[], filters: FilterValues): OrderableTestSummary[] {
   const searchQuery = (filters.search as string) ?? '';
   const categoryFilters = (filters.category as TestCategory[]) ?? [];
   const sampleTypeFilters = (filters.sampleType as string[]) ?? [];

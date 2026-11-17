@@ -8,7 +8,7 @@ import { Panel } from '@/components/surfaces';
 import { useUserLookup } from '@/lib/api';
 import { OrderTestDescriptionItemGrid } from '../utils/OrderTestDescriptionColumns';
 import { splitDescriptionItemsIntoTwoColumns } from '../utils/orderTestDescriptionLayout';
-import type { Sample, Test } from '@/types';
+import type { Sample, OrderableTest } from '@/types';
 import { buildSampleCollectionDescriptionItems } from '@/utils/presentation';
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
@@ -19,7 +19,7 @@ import { usePanelCopy } from '@/strings';
 export interface OrderTestSampleTabsProps {
   samples: Sample[];
   linkedSampleId?: string;
-  catalogTest?: Test;
+  catalogTest?: OrderableTest;
   onViewFullSample: (sampleId: string) => void;
 }
 
@@ -34,7 +34,7 @@ function sampleTabLabel(sample: Sample, linkedSampleId?: string): string {
   return id;
 }
 
-function CatalogSampleRequirements({ catalogTest }: { catalogTest: Test }) {
+function CatalogSampleRequirements({ catalogTest }: { catalogTest: OrderableTest }) {
   return (
     <div className={`${text({ role: 'body', intent: 'muted' })} space-y-space-2`}>
       <p>Expected sample type: {formatStatusBadgeLabel(catalogTest.sampleType)}</p>

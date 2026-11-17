@@ -346,7 +346,7 @@ export default defineConfig([
   },
   {
     files: [
-      'src/features/lab/components/ResultsParameterGrid.tsx',
+      'src/features/lab/components/LabResultGrid.tsx',
       'src/features/patients/components/CareSnapshotSection.tsx',
       'src/features/reports/utils/prepareReportData.ts',
       'src/features/lab/utils/queueDisplay.ts',

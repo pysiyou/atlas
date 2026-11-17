@@ -10,8 +10,8 @@ import { text, FIELD_ERROR, TONE } from '@/theme/recipes';
 
 
 export interface CriticalValueBannerProps {
-  /** List of critical parameters */
-  criticalParameters: Array<{
+  /** Analyte result lines flagged critical */
+  criticalResults: Array<{
     name: string;
     value: string | number;
     unit?: string;
@@ -24,10 +24,10 @@ export interface CriticalValueBannerProps {
  * Shows which values are critical without requiring explicit acknowledgment.
  */
 export function ResultCriticalValueBanner({
-  criticalParameters,
+  criticalResults,
   className,
 }: CriticalValueBannerProps) {
-  if (criticalParameters.length === 0) {
+  if (criticalResults.length === 0) {
     return null;
   }
 
@@ -41,12 +41,12 @@ export function ResultCriticalValueBanner({
           </h4>
         </div>
         <div className="pl-space-6 space-y-space-1">
-          {criticalParameters.map((param, index) => (
+          {criticalResults.map((result, index) => (
             <div key={index} className={`flex items-baseline gap-space-2 ${text({ role: 'body' })}`}>
-              <span className={`shrink-0 font-medium ${TONE.danger.fg}`}>{param.name}</span>
+              <span className={`shrink-0 font-medium ${TONE.danger.fg}`}>{result.name}</span>
               <span className={`font-normal ${TONE.danger.fg}`}>
-                {param.value}
-                {param.unit && <span className={`ml-space-1 ${text({ role: 'caption' })}`}>{param.unit}</span>}
+                {result.value}
+                {result.unit && <span className={`ml-space-1 ${text({ role: 'caption' })}`}>{result.unit}</span>}
               </span>
             </div>
           ))}

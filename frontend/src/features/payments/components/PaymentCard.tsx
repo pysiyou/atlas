@@ -5,7 +5,7 @@ import { hasRecordedPayment, isFullyPaid } from '../utils/paymentStatus';
 import { PaymentButton } from './PaymentButton';
 import { Avatar } from '@/components/primitives';
 import { ListCard } from '@/components/surfaces';
-import { useTestNameLookup } from '@/features/catalog';
+import { useOrderableTestNameLookup } from '@/features/catalog';
 import { getBillableTests, OrderStatusBadge, renderOrderTestsBlock } from '@/features/orders';
 import { RecordId, StatusValueBadge } from '@/features/shared';
 import { INTERACTIVE, PRICE_DISPLAY } from '@/theme/recipes';
@@ -18,7 +18,7 @@ import { TABLE_DATETIME_SECONDARY_CLASS } from '@/utils/TableColumnRenders';
  */
 export function PaymentCard({ item, onClick }: CardComponentProps<OrderPaymentView>) {
   const { invalidateAll } = useInvalidatePayments();
-  const { getTestName } = useTestNameLookup();
+  const { getTestName } = useOrderableTestNameLookup();
   const { order } = item;
 
   const handlePaymentSuccess = () => {

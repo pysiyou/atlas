@@ -1,7 +1,7 @@
 /**
- * TestSelect
+ * OrderTestPicker
  *
- * Test selection control for order creation.
+ * Orderable test selection control for order creation.
  *
  * UX requirement:
  * - Tests are NOT selected in a modal.
@@ -10,12 +10,12 @@
  * - The popover stays open while selecting; outside click or Escape closes it.
  */
 import React, { useMemo, useRef, useState } from 'react';
-import { getEmptyCopy, usePanelCopy } from '@/strings';
+import { getCatalogOrderPickerCopy, getEmptyCopy } from '@/strings';
 
 import { RemovableTag, CheckboxIndicator } from '@/components/primitives';
-import type { TestSummary } from '@/types';
+import type { OrderableTestSummary } from '@/types';
 import type { ClinicalWorkup } from '@/features/catalog';
-import { indexTestsByCode } from '@/features/catalog/testLookup';
+import { indexTestsByCode } from '@/features/catalog';
 import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { IconKeys } from '@/icons';
@@ -28,7 +28,7 @@ import {
 import { CONTROL } from '@/theme/recipes';
 import { useAnchoredPopoverDismiss } from '@/hooks';
 
-function TestSelectMetaLine({ code, test }: { code: string; test: TestSummary }) {
+function OrderTestPickerMetaLine({ code, test }: { code: string; test: OrderableTestSummary }) {
   const segments: Array<{ id: string; label: string }> = [];
 
   if (test.category) {
@@ -67,20 +67,20 @@ function TestSelectMetaLine({ code, test }: { code: string; test: TestSummary })
   );
 }
 
-function TestSelectedChip({
+function OrderTestPickerSelectedChip({
   code,
   name,
   test,
 }: {
   code: string;
   name: string;
-  test?: TestSummary;
+  test?: OrderableTestSummary;
 }) {
   return (
     <div className="min-w-0 flex flex-col">
       <span className={`${text({ role: 'body' })} font-normal truncate`}>{name}</span>
       {test ? (
-        <TestSelectMetaLine code={code} test={test} />
+        <OrderTestPickerMetaLine code={code} test={test} />
       ) : (
         <p className={`${text({ role: 'caption' })} font-normal truncate uppercase`}>{code}</p>
       )}
@@ -88,15 +88,15 @@ function TestSelectedChip({
   );
 }
 
-interface TestSelectorProps {
+interface OrderTestPickerProps {
   selectedTests: string[];
   testSearch: string;
   onTestSearchChange: (value: string) => void;
-  filteredTests: TestSummary[];
+  filteredTests: OrderableTestSummary[];
   onToggleTest: (testCode: string) => void;
   error?: string;
   /** Slim catalog for looking up names and prices by code */
-  tests?: TestSummary[];
+  tests?: OrderableTestSummary[];
   workups?: ClinicalWorkup[];
   onAddWorkup?: (memberCodes: string[]) => void;
 }
@@ -109,7 +109,7 @@ interface TestSelectorProps {
  * Tags match the patient tag styling (bg-brand-muted, border-border-default) but without avatars.
  */
 function TestSearchTagInput({ selectedTags, selectedCount, value, onValueChange, onRemoveTag, error }: {
-  selectedTags: Array<{ code: string; name: string; test?: TestSummary }>;
+  selectedTags: Array<{ code: string; name: string; test?: OrderableTestSummary }>;
   selectedCount: number;
   value: string;
   onValueChange: (value: string) => void;
@@ -135,7 +135,7 @@ function TestSearchTagInput({ selectedTags, selectedCount, value, onValueChange,
         removeAriaLabel={`Remove ${code}`}
         className={SELECTED_SEARCH_CHIP_CLASS}
       >
-        <TestSelectedChip code={code} name={name} test={test} />
+        <OrderTestPickerSelectedChip code={code} name={name} test={test} />
       </RemovableTag>
     ))}
 
@@ -153,26 +153,26 @@ function TestSearchTagInput({ selectedTags, selectedCount, value, onValueChange,
   </SearchTagInputChrome>
 ); }
 
-interface TestSelectPopoverProps {
-  visibleTests: TestSummary[];
+interface OrderTestPickerPopoverProps {
+  visibleTests: OrderableTestSummary[];
   selectedSet: Set<string>;
   onToggleTest: (testCode: string) => void;
   visibleWorkups: ClinicalWorkup[];
   onAddWorkup?: (memberCodes: string[]) => void;
 }
 
-function TestSelectPopover({
+function OrderTestPickerPopover({
   visibleTests,
   selectedSet,
   onToggleTest,
   visibleWorkups,
   onAddWorkup,
-}: TestSelectPopoverProps) {
-  const panels = usePanelCopy();
+}: OrderTestPickerPopoverProps) {
+  const copy = getCatalogOrderPickerCopy();
   const resultCount = visibleTests.length + visibleWorkups.length;
   return (
   <SearchResultsPopoverShell
-    title={panels.orders.matchingTests}
+    title={copy.orderableTests}
     resultCount={resultCount}
     emptyMessage={getEmptyCopy().matchingTests.title}
     emptyDescription={getEmptyCopy().matchingTests.description}
@@ -194,7 +194,7 @@ function TestSelectPopover({
         <div className="min-w-0 flex-1">
           <p className={`${text({ role: 'body' })} font-normal truncate`}>{workup.name}</p>
           <p className={`${text({ role: 'caption' })} truncate`}>
-            Workup · {workup.testCodes.length} tests
+            {copy.testProfile} · {workup.code}
             {workup.description?.trim() ? ` · ${workup.description.trim()}` : ''}
           </p>
         </div>
@@ -225,7 +225,7 @@ function TestSelectPopover({
               >
                 <div className="min-w-0 flex-1">
                   <p className={`${text({ role: 'body' })} font-normal truncate`}>{safeName}</p>
-                  <TestSelectMetaLine code={code} test={test} />
+                  <OrderTestPickerMetaLine code={code} test={test} />
                 </div>
                 <div className="flex shrink-0 items-center gap-layout-section">
                   <span className={`${text({ role: 'amount' })} font-medium ${FG.captionMuted} tabular-nums`}>
@@ -242,7 +242,7 @@ function TestSelectPopover({
   </SearchResultsPopoverShell>
 ); }
 
-export function TestSelect({
+export function OrderTestPicker({
   selectedTests,
   testSearch,
   onTestSearchChange,
@@ -252,7 +252,7 @@ export function TestSelect({
   tests = [],
   workups = [],
   onAddWorkup,
-}: TestSelectorProps) {
+}: OrderTestPickerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   useAnchoredPopoverDismiss(containerRef, setIsPopoverOpen);
@@ -314,7 +314,7 @@ export function TestSelect({
       />
 
       {isPopoverOpen && hasSearch && (
-        <TestSelectPopover
+        <OrderTestPickerPopover
           visibleTests={visibleTests}
           selectedSet={selectedSet}
           onToggleTest={onToggleTest}

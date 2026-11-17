@@ -4,7 +4,7 @@
 
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTestCatalog } from '../api/tests';
+import { useOrderableTests } from '../api/orderableTests';
 import { ListView } from '@/components/surfaces';
 import { DEFAULT_PAGE_SIZE_OPTIONS_WITH_ALL } from '@/components/data-table';
 import { CatalogFilters } from '../components/CatalogFilters';
@@ -14,14 +14,14 @@ import {
   filterOrderableTests,
 } from '../utils/filterOrderableTests';
 import { applyPageFilters, useClientListChrome, usePageFilters } from '@/hooks';
-import type { TestSummary } from '@/types';
+import type { OrderableTestSummary } from '@/types';
 import { useModuleListTitles } from '@/hooks';
 
 export function CatalogList() {
   const listTitles = useModuleListTitles();
   const navigate = useNavigate();
 
-  const { tests, isLoading, isError, error: queryError, refetch } = useTestCatalog();
+  const { tests, isLoading, isError, error: queryError, refetch } = useOrderableTests();
 
   const { filters, setFilter } = usePageFilters({
     initialFilters: catalogListInitialFilters,
@@ -48,7 +48,7 @@ export function CatalogList() {
         items={filteredTests}
         viewConfig={catalogTableConfig}
         loading={loading}
-        onRowClick={(test: TestSummary) => navigate(`/catalog/${test.code}`)}
+        onRowClick={(test: OrderableTestSummary) => navigate(`/catalog/${test.code}`)}
         title={listTitles.catalog}
         filters={<CatalogFilters filters={filters} setFilter={setFilter} />}
         pagination={{

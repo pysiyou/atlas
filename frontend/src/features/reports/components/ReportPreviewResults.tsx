@@ -22,17 +22,17 @@ interface ReportPreviewResultsProps {
 
 type ReportTestResult = LabReportPayload['testResults'][number];
 
-function parametersToResultsRecord(
-  parameters: ReportTestResult['parameters']
+function reportResultRowsToRecord(
+  resultRows: ReportTestResult['parameters']
 ): Record<string, unknown> {
   const record: Record<string, unknown> = {};
-  for (const parameter of parameters) {
-    if (!parameter.code) continue;
-    record[parameter.code] = {
-      value: parameter.value,
-      unit: parameter.unit,
-      referenceRange: parameter.referenceRange,
-      status: parameter.status,
+  for (const row of resultRows) {
+    if (!row.code) continue;
+    record[row.code] = {
+      value: row.value,
+      unit: row.unit,
+      referenceRange: row.referenceRange,
+      status: row.status,
     };
   }
   return record;
@@ -99,7 +99,7 @@ export function ReportPreviewResults({
             }
           >
             <ResultValidationResultsBody
-              results={parametersToResultsRecord(test.parameters)}
+              results={reportResultRowsToRecord(test.parameters)}
               flags={orderTest?.flags}
               testCode={test.testCode}
               patient={patient}

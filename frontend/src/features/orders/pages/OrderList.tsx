@@ -4,7 +4,7 @@
 
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTestNameLookup } from '@/features/catalog';
+import { useOrderableTestNameLookup } from '@/features/catalog';
 import { usePaginatedOrders } from '../api/orders';
 import { actionButtonPreset } from '@/components/primitives';
 import { ListView } from '@/components/surfaces';
@@ -89,7 +89,7 @@ export function OrderList() {
     [setFilterAndReset],
   );
 
-  const { getTestName } = useTestNameLookup();
+  const { getTestName } = useOrderableTestNameLookup();
 
   const orderTableConfig = useMemo(
     () => createOrderTableConfig(navigate, () => '—', getTestName),

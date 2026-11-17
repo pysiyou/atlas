@@ -15,7 +15,7 @@ import { FooterInfo, ModalContextSubtitle } from '@/components/display';
 
 import { IconKeys } from '@/icons';
 import { ReportPreviewResults } from './ReportPreviewResults';
-import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
+import { uniqueSortedTestCodes, useOrderableTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api';
 import { createSampleLookupForOrder } from '@/features/lab/cross';
 import { reportsAPI, useReportableOrder } from '../api/reports';
@@ -46,7 +46,7 @@ export function ReportPreviewModal({
       ),
     [reportableOrder]
   );
-  const { tests, isLoading: catalogLoading } = useTestsByCodes(orderTestCodes);
+  const { tests, isLoading: catalogLoading } = useOrderableTestsByCodes(orderTestCodes);
   const [reportData, setReportData] = useState<LabReportPayload | null>(null);
   const [isBuilding, setIsBuilding] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -65,7 +65,7 @@ export function ReportPreviewModal({
         const payload = prepareReportData({
           reportableOrder,
           patients: undefined,
-          catalogTests: tests,
+          orderableTests: tests,
           getSample,
           getUserName: id => getUserName(id),
         });

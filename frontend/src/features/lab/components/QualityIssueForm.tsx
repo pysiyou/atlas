@@ -67,6 +67,118 @@ export interface QualityIssueFormProps {
   onOptionsLoaded?: (options: QualityIssueOptions | undefined) => void;
 }
 
+type QualityIssueFormContentProps = Omit<
+  QualityIssueFormProps,
+  'targetId' | 'title' | 'onOptionsLoaded'
+> & {
+  options: QualityIssueOptions | undefined;
+  isLoading: boolean;
+  labCopy: ReturnType<typeof useLabCopy>;
+};
+
+function QualityIssueFormLoaded({
+  targetType,
+  error,
+  onReasonChange,
+  onNotesChange,
+  preferredRemedy = '',
+  onPreferredRemedyChange,
+  reason,
+  notes,
+  options,
+  isLoading,
+  labCopy,
+}: Omit<QualityIssueFormContentProps, 'subtitle' | 'isSubmitting'>) {
+  const collectionCopy =
+    targetType === 'sample' && options ? getCollectionFormCopy(options) : null;
+
+  const sampleRemedyOptions = React.useMemo(
+    () => (targetType === 'sample' ? buildSampleRemedyOptions(options?.allowedRemedies) : []),
+    [targetType, options?.allowedRemedies]
+  );
+
+  const suggestedRemedy = React.useMemo(
+    () =>
+      resolveSuggestedRemedy(
+        options?.suggestedRemedy ?? options?.previewRemedy,
+        sampleRemedyOptions
+      ),
+    [options?.previewRemedy, options?.suggestedRemedy, sampleRemedyOptions]
+  );
+
+  const effectivePreferredRemedy = preferredRemedy || suggestedRemedy;
+  const reasonLabel =
+    collectionCopy?.reasonLabel ??
+    (targetType === 'test'
+      ? QUALITY_ISSUE_POPOVER_COPY.reject.reasonLabel
+      : labCopy.quality.sampleIssue);
+  const onReason = onReasonChange ?? (() => {});
+  const onNotes = onNotesChange ?? (() => {});
+
+  return (
+    <>
+      {error ? (
+        <Alert variant="danger" className="py-space-2">
+          <p className={text({ role: 'body' })}>{error}</p>
+        </Alert>
+      ) : null}
+
+      {collectionCopy?.alert ? (
+        <QualityIssueInlineWarning message={collectionCopy.alert.message} />
+      ) : null}
+
+      <CatalogRejectionCriteriaFields
+        criteria={options?.allowedCriteria ?? []}
+        criteriaLoading={isLoading}
+        rejectionReason={reason}
+        rejectionNotes={notes}
+        onReasonChange={onReason}
+        onNotesChange={onNotes}
+        reasonLabel={reasonLabel}
+        showNotes={false}
+      />
+
+      {targetType === 'sample' && sampleRemedyOptions.length > 0 ? (
+        <QualityIssueRemedyPicker
+          label={QUALITY_ISSUE_POPOVER_COPY.collection.actions.followUpLabel}
+          options={sampleRemedyOptions}
+          value={effectivePreferredRemedy}
+          onChange={remedy => onPreferredRemedyChange?.(remedy)}
+        />
+      ) : null}
+
+      <CatalogRejectionCriteriaFields
+        criteria={options?.allowedCriteria ?? []}
+        rejectionReason={reason}
+        rejectionNotes={notes}
+        onReasonChange={onReason}
+        onNotesChange={onNotes}
+        notesLabel={collectionCopy?.notesLabel ?? QUALITY_ISSUE_POPOVER_COPY.reject.notesLabel}
+        notesRows={QUALITY_ISSUE_POPOVER_LAYOUT.reasonTextareaRows}
+        showReason={false}
+      />
+    </>
+  );
+}
+
+function QualityIssueFormContent(props: QualityIssueFormContentProps) {
+  const { subtitle, isLoading, isSubmitting } = props;
+
+  return (
+    <div className="space-y-space-3">
+      {subtitle ? <p className={text({ role: 'body', intent: 'muted' })}>{subtitle}</p> : null}
+
+      {isLoading || isSubmitting ? (
+        <div className="flex justify-center py-space-4">
+          <SpinnerLoader size="sm" />
+        </div>
+      ) : (
+        <QualityIssueFormLoaded {...props} />
+      )}
+    </div>
+  );
+}
+
 export function QualityIssueForm({
   targetType,
   targetId,
@@ -89,84 +201,21 @@ export function QualityIssueForm({
     onOptionsLoaded?.(options);
   }, [options, onOptionsLoaded]);
 
-  const collectionCopy =
-    targetType === 'sample' && options ? getCollectionFormCopy(options) : null;
-
-  const sampleRemedyOptions = React.useMemo(
-    () => (targetType === 'sample' ? buildSampleRemedyOptions(options?.allowedRemedies) : []),
-    [targetType, options?.allowedRemedies]
-  );
-
-  const suggestedRemedy = React.useMemo(
-    () =>
-      resolveSuggestedRemedy(
-        options?.suggestedRemedy ?? options?.previewRemedy,
-        sampleRemedyOptions
-      ),
-    [options?.previewRemedy, options?.suggestedRemedy, sampleRemedyOptions]
-  );
-
-  const effectivePreferredRemedy = preferredRemedy || suggestedRemedy;
-
   return (
-    <div className="space-y-space-3">
-      {subtitle && <p className={text({ role: 'body', intent: 'muted' })}>{subtitle}</p>}
-
-      {isLoading || isSubmitting ? (
-        <div className="flex justify-center py-space-4">
-          <SpinnerLoader size="sm" />
-        </div>
-      ) : (
-        <>
-          {error && (
-            <Alert variant="danger" className="py-space-2">
-              <p className={text({ role: 'body' })}>{error}</p>
-            </Alert>
-          )}
-
-          {collectionCopy?.alert && (
-            <QualityIssueInlineWarning message={collectionCopy.alert.message} />
-          )}
-
-          <CatalogRejectionCriteriaFields
-            criteria={options?.allowedCriteria ?? []}
-            criteriaLoading={isLoading}
-            rejectionReason={reason}
-            rejectionNotes={notes}
-            onReasonChange={onReasonChange ?? (() => {})}
-            onNotesChange={onNotesChange ?? (() => {})}
-            reasonLabel={
-              collectionCopy?.reasonLabel ??
-              (targetType === 'test'
-                ? QUALITY_ISSUE_POPOVER_COPY.reject.reasonLabel
-                : labCopy.quality.sampleIssue)
-            }
-            showNotes={false}
-          />
-
-          {targetType === 'sample' && sampleRemedyOptions.length > 0 && (
-            <QualityIssueRemedyPicker
-              label={QUALITY_ISSUE_POPOVER_COPY.collection.actions.followUpLabel}
-              options={sampleRemedyOptions}
-              value={effectivePreferredRemedy}
-              onChange={remedy => onPreferredRemedyChange?.(remedy)}
-            />
-          )}
-
-          <CatalogRejectionCriteriaFields
-            criteria={options?.allowedCriteria ?? []}
-            rejectionReason={reason}
-            rejectionNotes={notes}
-            onReasonChange={onReasonChange ?? (() => {})}
-            onNotesChange={onNotesChange ?? (() => {})}
-            notesLabel={
-              collectionCopy?.notesLabel ?? QUALITY_ISSUE_POPOVER_COPY.reject.notesLabel
-            }
-            notesRows={QUALITY_ISSUE_POPOVER_LAYOUT.reasonTextareaRows}
-            showReason={false}
-          />
-        </>
-      )}
-    </div>
+    <QualityIssueFormContent
+      targetType={targetType}
+      subtitle={subtitle}
+      error={error}
+      isSubmitting={isSubmitting}
+      onReasonChange={onReasonChange}
+      onNotesChange={onNotesChange}
+      preferredRemedy={preferredRemedy}
+      onPreferredRemedyChange={onPreferredRemedyChange}
+      reason={reason}
+      notes={notes}
+      options={options}
+      isLoading={isLoading}
+      labCopy={labCopy}
+    />
   );
 }

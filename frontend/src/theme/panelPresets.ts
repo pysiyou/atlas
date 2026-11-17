@@ -123,7 +123,7 @@ const PAGE_EMBED_AUTO: PanelPresetDefinition = {
   scroll: 'auto',
 };
 
-/** Embedded detail tables with many rows (e.g. catalog result parameters). */
+/** Embedded detail tables with many rows (e.g. catalog result components). */
 const PAGE_EMBED_SCROLL_MAX: PanelPresetDefinition = {
   title: '',
   variant: 'pageEmbed',

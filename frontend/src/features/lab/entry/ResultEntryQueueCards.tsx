@@ -3,7 +3,7 @@
  */
 
 import { memo, useCallback } from 'react';
-import type { Test } from '@/types';
+import type  { OrderableTest } from '@/types';
 import type { EntryQueueRow } from '../types/queues';
 import { ResultEntryCard } from '../workflow';
 import { orderTestKey } from '../utils/labSearchAndLinks';
@@ -11,12 +11,12 @@ import { orderTestKey } from '../utils/labSearchAndLinks';
 export interface ResultEntryQueueItemProps {
   row: EntryQueueRow;
   idx: number;
-  testDef: Test | undefined;
+  testDef: OrderableTest | undefined;
   results: Record<string, string>;
   technicianNotes: string;
   isComplete: boolean;
   isMobile: boolean;
-  onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
+  onResultsChange: (resultKey: string, analyteCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
   onSaveRow: (row: EntryQueueRow) => void;
   onOpenRow: (row: EntryQueueRow) => void;

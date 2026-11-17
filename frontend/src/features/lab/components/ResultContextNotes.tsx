@@ -6,7 +6,7 @@ import { Icon } from '@/components/primitives';
 import { IconKeys } from '@/icons';
 import {text, FIELD_ERROR, RADIUS, TONE, FG } from '@/theme/recipes';
 import { cn } from '@/utils';
-import { useParameterLabelMap } from '@/features/catalog';
+import { useAnalyteLabelMap } from '@/features/catalog';
 import {
   analyticalFlagDetail,
   analyticalFlagLabel,
@@ -30,7 +30,7 @@ function AnalyticalFlagsBlock({
   testCode?: string;
   compact?: boolean;
 }) {
-  const parameterLabels = useParameterLabelMap(testCode);
+  const analyteLabels = useAnalyteLabelMap(testCode);
   const rows = useMemo(() => parseAnalyticalFlags(flags), [flags]);
 
   if (rows.length === 0) return null;
@@ -54,7 +54,7 @@ function AnalyticalFlagsBlock({
           }
         >
           <span className={`${text({ role: 'label' })} ${FG.labelMuted} shrink-0`}>
-            {analyticalFlagLabel(flag, parameterLabels)}:
+            {analyticalFlagLabel(flag, analyteLabels)}:
           </span>
           <span className={`${text({ role: 'caption' })} ${TONE.warning.fg} leading-snug`}>
             {analyticalFlagDetail(flag)}

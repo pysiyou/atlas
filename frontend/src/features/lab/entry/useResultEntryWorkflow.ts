@@ -12,26 +12,26 @@ import { toRawResultPayload } from './resultEntry';
 import { isLabActionAllowed } from '../utils/queueDisplay';
 import { useResultEntryDetailModal } from './useResultEntryDetailModal';
 import { useLabDraftStore } from '../state/labDraftStore';
-import type { Test } from '@/types';
+import type  { OrderableTest } from '@/types';
 import { findEntryRowById, type EntryQueueRow } from '../types/queues';
 
 export interface UseEntryWorkflowOptions {
   entryRows: EntryQueueRow[];
-  /** Full catalog documents keyed by code — summaries do not include parameters. */
-  fullByCode: Map<string, Test>;
+  /** Full catalog documents keyed by code — summaries do not include analytes. */
+  fullByCode: Map<string, OrderableTest>;
 }
 
 export interface EntryWorkflow {
   entryDrafts: Record<number, { results: Record<string, string>; technicianNotes: string }>;
   enterMutation: ReturnType<typeof useEnterResults>;
-  handleResultChange: (orderTestId: number, paramCode: string, value: string) => void;
+  handleResultChange: (orderTestId: number, analyteCode: string, value: string) => void;
   handleNotesChange: (orderTestId: number, notes: string) => void;
-  areAllParametersFilled: (orderTestId: number, parameterCount: number) => boolean;
+  areAllAnalytesFilled: (orderTestId: number, analyteCount: number) => boolean;
   handleSaveResults: (
     orderTestId: number,
     orderId: string,
     rows?: EntryQueueRow[],
-    fullByCode?: Map<string, Test>,
+    fullByCode?: Map<string, OrderableTest>,
     finalResults?: Record<string, string>,
     finalNotes?: string
   ) => Promise<void>;
@@ -43,16 +43,16 @@ export function useResultEntryWorkflow({
   fullByCode,
 }: UseEntryWorkflowOptions): EntryWorkflow {
   const entryDrafts = useLabDraftStore(s => s.entry);
-  const setEntryResultParam = useLabDraftStore(s => s.setEntryResultParam);
+  const setEntryAnalyteResult = useLabDraftStore(s => s.setEntryAnalyteResult);
   const setEntryNotes = useLabDraftStore(s => s.setEntryNotes);
   const clearEntryDraft = useLabDraftStore(s => s.clearEntryDraft);
   const enterMutation = useEnterResults();
 
   const handleResultChange = useCallback(
-    (orderTestId: number, paramCode: string, value: string) => {
-      setEntryResultParam(orderTestId, paramCode, value);
+    (orderTestId: number, analyteCode: string, value: string) => {
+      setEntryAnalyteResult(orderTestId, analyteCode, value);
     },
-    [setEntryResultParam]
+    [setEntryAnalyteResult]
   );
 
   const handleNotesChange = useCallback(
@@ -62,11 +62,11 @@ export function useResultEntryWorkflow({
     [setEntryNotes]
   );
 
-  const areAllParametersFilled = useCallback(
-    (orderTestId: number, parameterCount: number): boolean => {
+  const areAllAnalytesFilled = useCallback(
+    (orderTestId: number, analyteCount: number): boolean => {
       const testResults = entryDrafts[orderTestId]?.results;
       if (!testResults) return false;
-      return Object.values(testResults).filter(v => v?.trim()).length === parameterCount;
+      return Object.values(testResults).filter(v => v?.trim()).length === analyteCount;
     },
     [entryDrafts]
   );
@@ -76,7 +76,7 @@ export function useResultEntryWorkflow({
       orderTestId: number,
       orderId: string,
       saveRows: EntryQueueRow[] = entryRows,
-      saveFullByCode: Map<string, Test> = fullByCode,
+      saveFullByCode: Map<string, OrderableTest> = fullByCode,
       finalResults?: Record<string, string>,
       finalNotes?: string
     ) => {
@@ -99,8 +99,8 @@ export function useResultEntryWorkflow({
       }
 
       const testDef = saveFullByCode.get(row.testCode);
-      if (!testDef?.parameters) {
-        notify.show('lab.entry.parametersMissing');
+      if (!testDef?.analytes) {
+        notify.show('lab.entry.resultComponentsMissing');
         return;
       }
 
@@ -132,7 +132,7 @@ export function useResultEntryWorkflow({
     enterMutation,
     handleResultChange,
     handleNotesChange,
-    areAllParametersFilled,
+    areAllAnalytesFilled,
     handleSaveResults,
     openTestModal,
   };

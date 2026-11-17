@@ -32,7 +32,7 @@ export interface SearchTagInputChromeProps {
 
 /**
  * Label, leading icon, wrapping input well, and field error used by
- * PatientSelect and TestSelect. Chip/input children stay domain-specific.
+ * PatientSelect and OrderTestPicker. Chip/input children stay domain-specific.
  */
 export function SearchTagInputChrome({
   label,

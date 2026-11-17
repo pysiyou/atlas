@@ -9,14 +9,14 @@ import { actionButtonPreset, Button, CircularProgress } from '@/components/primi
 import { Panel } from '@/components/surfaces';
 import { ResultEntryForm } from '../../entry/ResultEntryForm';
 import { ResultValidationPanel } from '../../validation/ResultValidationForm';
-import type { Test } from '@/types';
+import type  { OrderableTest } from '@/types';
 import { useAsyncAction } from '@/hooks';
 import { useListLoadErrorToast } from '@/hooks';
 import { ModalFooter, QueueModalShell, labModalHeaderContext } from '../shared/DetailModalLayout';
 import { LazyLabEventLogPanel } from '@/features/audit/LazyLabEventLogPanel';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
-import { useTest } from '@/features/catalog';
+import { useOrderableTest } from '@/features/catalog';
 import { LabRelatedTestsPanel } from '../../components/LabRelatedWorkflowPanel';
 import { ResultEntryDetailGrid } from './DetailModal.ResultEntry.Grid';
 import { useEnterResults } from '../../api/results';
@@ -73,7 +73,7 @@ export function ResultEntryDetailModal({
     isLoading: catalogLoading,
     isError: catalogError,
     error: catalogQueryError,
-  } = useTest(isOpen ? testCode : undefined);
+  } = useOrderableTest(isOpen ? testCode : undefined);
   const enterMutation = useEnterResults();
   const draft = useLabDraftStore(s => s.entry[orderTestId]);
   const seedEntryDraft = useLabDraftStore(s => s.seedEntryDraft);
@@ -176,7 +176,7 @@ export function ResultEntryDetailModal({
   );
   const isSaving = saveAction.isPending;
 
-  const catalogReady = !testCode || (Boolean(resolvedTestDef?.parameters) && !catalogLoading);
+  const catalogReady = !testCode || (Boolean(resolvedTestDef?.analytes) && !catalogLoading);
   const awaitingOpen = isOpen && !displayWorkItem && (isContextLoading || Boolean(orderTestSnapshot));
   const contentReady = Boolean(
     displayWorkItem &&
@@ -218,7 +218,7 @@ export function ResultEntryDetailModal({
               onClick={() => {
                 if (testCode) {
                   void queryClient.invalidateQueries({
-                    queryKey: queryKeys.tests.byCode(testCode),
+                    queryKey: queryKeys.orderableTests.byCode(testCode),
                   });
                 }
               }}
@@ -242,16 +242,16 @@ export function ResultEntryDetailModal({
     orderTestSnapshot?.denyMessage;
   const testDisplayName = orderTest?.testName ?? displayWorkItem?.testName ?? '';
   const filledCount = Object.values(displayResults).filter(value => value?.trim()).length;
-  const totalParams = resolvedTestDef?.parameters?.length ?? 0;
-  const isComplete = filledCount === totalParams;
-  const completionPercentage = totalParams > 0 ? Math.round((filledCount / totalParams) * 100) : 0;
+  const totalAnalytes = resolvedTestDef?.analytes?.length ?? 0;
+  const isComplete = filledCount === totalAnalytes;
+  const completionPercentage = totalAnalytes > 0 ? Math.round((filledCount / totalAnalytes) * 100) : 0;
   const turnaroundTime = resolvedTestDef?.turnaroundTime;
   const showTurnaroundTime =
     typeof turnaroundTime === 'number' && Number.isFinite(turnaroundTime) && turnaroundTime > 0;
-  const remainingParams = totalParams - filledCount;
+  const remainingAnalytes = totalAnalytes - filledCount;
 
-  const handleLocalResultChange = (_key: string, paramCode: string, value: string) => {
-    setEntryResults(orderTestId, { ...displayResults, [paramCode]: value ?? '' });
+  const handleLocalResultChange = (_key: string, analyteCode: string, value: string) => {
+    setEntryResults(orderTestId, { ...displayResults, [analyteCode]: value ?? '' });
   };
 
   const handleLocalNotesChange = (_key: string, notes: string) => {
@@ -269,7 +269,7 @@ export function ResultEntryDetailModal({
       percentage={completionPercentage}
       trackColorClass="stroke-border-default"
       progressColorClass={completionPercentage === 100 ? 'stroke-success' : 'stroke-brand'}
-      label={`${filledCount}/${totalParams}`}
+      label={`${filledCount}/${totalAnalytes}`}
       className="h-7"
     />
   );
@@ -295,7 +295,7 @@ export function ResultEntryDetailModal({
         variant="entry"
         queueSince={workItem.collectedAt ?? undefined}
         filledCount={filledCount}
-        parameterCount={totalParams}
+        analyteCount={totalAnalytes}
         turnaroundHours={turnaroundTime}
         tone="modal"
       />
@@ -368,10 +368,10 @@ export function ResultEntryDetailModal({
 
           <ResultEntryDetailGrid
             workItem={workItem}
-            totalParams={totalParams}
+            totalAnalytes={totalAnalytes}
             filledCount={filledCount}
             isComplete={isComplete}
-            remainingParams={remainingParams}
+            remainingAnalytes={remainingAnalytes}
             showTurnaroundTime={showTurnaroundTime}
             turnaroundTime={turnaroundTime}
           />
@@ -437,14 +437,14 @@ function EntryDetailMainPanel({
 }: {
   readOnly: boolean;
   workItem: LabModalWorkItem;
-  resolvedTestDef: Test;
+  resolvedTestDef: OrderableTest;
   resultKey: string;
   displayResults: Record<string, string>;
   displayNotes: string;
   progressIndicator: React.ReactNode;
   isComplete: boolean;
   canEnter: boolean;
-  onResultsChange: (key: string, paramCode: string, value: string) => void;
+  onResultsChange: (key: string, analyteCode: string, value: string) => void;
   onNotesChange: (key: string, notes: string) => void;
   onSave: () => void;
 }) {

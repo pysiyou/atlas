@@ -7,13 +7,13 @@ import { useMemo, type FC } from 'react';
 import { actionButtonPreset, IconButton } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
-import { getTestNames } from '@/features/catalog/testLookup';
+import { getTestNames } from '@/features/catalog';
 import type {
   ContainerType,
   Sample,
   SampleCollectionQueueItem,
   SampleRequirement,
-  TestSummary,
+  OrderableTestSummary,
 } from '@/types';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
@@ -64,7 +64,7 @@ export interface SampleCollectionCardProps {
   isCollecting?: boolean;
   isMobile?: boolean;
   /** Catalog tests hoisted from the queue to avoid per-card fetches. */
-  tests: TestSummary[];
+  tests: OrderableTestSummary[];
 }
 
 function SampleCollectionCardLeftColumnFromVm({

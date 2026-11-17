@@ -75,10 +75,10 @@ export type { User, AuthUser } from './domain/entities';
 // catalog
 // =============================================================================
 export type {
-  Test,
-  TestSummary,
+  OrderableTest,
+  OrderableTestSummary,
   TestCategory,
-  TestParameter,
+  AnalyteDefinition,
   CatalogReferenceRange,
   CriticalRange,
   DemographicRange,

@@ -3,10 +3,11 @@
  */
 
 import type jsPDF from 'jspdf';
-import type { Gender, Test, TestParameter } from '@/types';
-import { catalogParametersByCode } from '@/features/catalog/testLookup';
-import { getParameterReferenceIntervalLines } from '@/features/lab/cross';
+import type { Gender, OrderableTest, AnalyteDefinition } from '@/types';
+import { getTestAnalytesByCode } from '@/features/catalog';
+import { getAnalyteReferenceIntervalLines } from '@/features/lab/cross';
 import type { LabReportPayload } from '@/types';
+import type { ReportResultRow } from './prepareReportData';
 import { RESULT_NOT_AVAILABLE } from '@/types';
 
 const FONT = 'courier';
@@ -34,7 +35,7 @@ const RESULT_BAR_HEIGHT = 3.1;
 const RESULT_BAR_BASELINE_OFFSET = 0.9;
 const COL_GAP = 2;
 const FLAG_COLUMN_WIDTH = 3;
-/** Indent before parameter / result rows under each exam (one tab). */
+/** Indent before nested result rows under each exam (one tab). */
 const RESULT_TAB_INDENT = 3.5;
 
 const COLOR_TEXT = { r: 0, g: 0, b: 0 } as const;
@@ -45,7 +46,6 @@ const COLOR_RESULT_BAR = { r: 232, g: 232, b: 232 } as const;
 const COLOR_NOTE_BAR = { r: 232, g: 232, b: 232 } as const;
 
 type ReportTest = LabReportPayload['testResults'][number];
-type ReportParameter = ReportTest['parameters'][number];
 
 interface CategoryGroup {
   category: string;
@@ -57,8 +57,8 @@ interface BodyLayout {
   pageWidth: number;
   pageHeight: number;
   contentWidth: number;
-  colParameter: number;
-  colParameterW: number;
+  colResultLabel: number;
+  colResultLabelW: number;
   contentRight: number;
   /** Returns the Y where body content may resume after a new page chrome. */
   onNewPage?: (doc: jsPDF) => number;
@@ -103,8 +103,8 @@ function groupTestsByCategory(testResults: ReportTest[]): CategoryGroup[] {
 function withResultIndent(layout: BodyLayout, indent: number): BodyLayout {
   return {
     ...layout,
-    colParameter: layout.margin + indent,
-    colParameterW: Math.max(layout.colParameterW - indent, 20),
+    colResultLabel: layout.margin + indent,
+    colResultLabelW: Math.max(layout.colResultLabelW - indent, 20),
   };
 }
 
@@ -116,15 +116,15 @@ function getBodyLayout(
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const contentWidth = pageWidth - margin * 2;
-  const colParameterW = contentWidth * 0.36;
+  const colResultLabelW = contentWidth * 0.36;
 
   return {
     margin,
     pageWidth,
     pageHeight,
     contentWidth,
-    colParameter: margin,
-    colParameterW,
+    colResultLabel: margin,
+    colResultLabelW,
     contentRight: margin + contentWidth,
     onNewPage,
   };
@@ -143,18 +143,18 @@ function ensureVerticalSpace(
   return layout.onNewPage ? layout.onNewPage(doc) : layout.margin;
 }
 
-function resultValueText(parameter: ReportParameter): string {
-  const raw = String(parameter.value ?? '').trim();
+function resultValueText(resultRow: ReportResultRow): string {
+  const raw = String(resultRow.value ?? '').trim();
   if (!raw || raw === RESULT_NOT_AVAILABLE) {
     return RESULT_NOT_AVAILABLE;
   }
   return raw;
 }
 
-function resultUnitText(parameter: ReportParameter): string | undefined {
-  const value = resultValueText(parameter);
+function resultUnitText(resultRow: ReportResultRow): string | undefined {
+  const value = resultValueText(resultRow);
   if (value === RESULT_NOT_AVAILABLE) return undefined;
-  const unit = parameter.unit?.trim();
+  const unit = resultRow.unit?.trim();
   return unit || undefined;
 }
 
@@ -216,18 +216,18 @@ export function formatUnitForPdf(unit: string): string {
 function computeResultRowLayout(
   doc: jsPDF,
   layout: BodyLayout,
-  parameters: ReportParameter[]
+  resultRows: ReportResultRow[]
 ): ResultRowLayout {
   doc.setFont(FONT, 'bold');
   doc.setFontSize(TABLE_SIZE);
 
   let maxValueWidth = 0;
 
-  for (const parameter of parameters) {
-    maxValueWidth = Math.max(maxValueWidth, doc.getTextWidth(resultValueText(parameter)));
+  for (const row of resultRows) {
+    maxValueWidth = Math.max(maxValueWidth, doc.getTextWidth(resultValueText(row)));
   }
 
-  const resultBarX = layout.colParameter + layout.colParameterW + COL_GAP;
+  const resultBarX = layout.colResultLabel + layout.colResultLabelW + COL_GAP;
   const resultBarW = maxValueWidth + RESULT_BAR_PADDING * 2;
   const flagX = resultBarX + resultBarW + COL_GAP;
   const unitX = flagX + FLAG_COLUMN_WIDTH + COL_GAP;
@@ -240,7 +240,7 @@ function computeReferenceSubColumnLayout(
   doc: jsPDF,
   layout: BodyLayout,
   test: ReportTest,
-  catalogParameters: Record<string, TestParameter>,
+  catalogAnalytes: Record<string, AnalyteDefinition>,
   patient: ReportPatientContext
 ): ReferenceSubColumnLayout {
   doc.setFont(FONT, 'normal');
@@ -248,10 +248,10 @@ function computeReferenceSubColumnLayout(
 
   let maxValueWidth = 0;
 
-  for (const parameter of test.parameters) {
-    const lines = getParameterReferenceIntervalLines(
-      catalogParameters[parameter.code],
-      parameter.referenceRange,
+  for (const row of test.parameters) {
+    const lines = getAnalyteReferenceIntervalLines(
+      catalogAnalytes[row.code],
+      row.referenceRange,
       patient
     );
     for (const line of lines) {
@@ -266,13 +266,13 @@ function computeReferenceSubColumnLayout(
 }
 
 function referenceLineCount(
-  parameter: ReportParameter,
-  catalogParameters: Record<string, TestParameter>,
+  resultRow: ReportResultRow,
+  catalogAnalytes: Record<string, AnalyteDefinition>,
   patient: ReportPatientContext
 ): number {
-  const lines = getParameterReferenceIntervalLines(
-    catalogParameters[parameter.code],
-    parameter.referenceRange,
+  const lines = getAnalyteReferenceIntervalLines(
+    catalogAnalytes[resultRow.code],
+    resultRow.referenceRange,
     patient
   );
   return Math.max(lines.length, 1);
@@ -316,15 +316,15 @@ function drawResultBar(
 function drawResultCell(
   doc: jsPDF,
   y: number,
-  parameter: ReportParameter,
+  resultRow: ReportResultRow,
   rowLayout: ResultRowLayout
 ): void {
-  const value = resultValueText(parameter);
-  const unit = resultUnitText(parameter);
+  const value = resultValueText(resultRow);
+  const unit = resultUnitText(resultRow);
   const unitText = unit ? formatUnitForPdf(unit) : undefined;
-  const flag = resultFlagSymbol(parameter.status);
-  const abnormal = isAbnormalStatus(parameter.status);
-  const critical = isCriticalStatus(parameter.status);
+  const flag = resultFlagSymbol(resultRow.status);
+  const abnormal = isAbnormalStatus(resultRow.status);
+  const critical = isCriticalStatus(resultRow.status);
 
   if (value !== RESULT_NOT_AVAILABLE) {
     drawResultBar(doc, y, value, rowLayout, abnormal, critical);
@@ -361,14 +361,14 @@ function drawResultCell(
 function drawReferenceCell(
   doc: jsPDF,
   y: number,
-  parameter: ReportParameter,
+  resultRow: ReportResultRow,
   subColumns: ReferenceSubColumnLayout,
-  catalogParameters: Record<string, TestParameter>,
+  catalogAnalytes: Record<string, AnalyteDefinition>,
   patient: ReportPatientContext
 ): number {
-  const lines = getParameterReferenceIntervalLines(
-    catalogParameters[parameter.code],
-    parameter.referenceRange,
+  const lines = getAnalyteReferenceIntervalLines(
+    catalogAnalytes[resultRow.code],
+    resultRow.referenceRange,
     patient
   );
 
@@ -393,28 +393,28 @@ function drawReferenceCell(
   return lines.length;
 }
 
-function drawParameterRow(
+function drawReportResultRow(
   doc: jsPDF,
   y: number,
   layout: BodyLayout,
-  parameter: ReportParameter,
+  resultRow: ReportResultRow,
   rowLayout: ResultRowLayout,
   referenceSubColumns: ReferenceSubColumnLayout,
-  catalogParameters: Record<string, TestParameter>,
+  catalogAnalytes: Record<string, AnalyteDefinition>,
   patient: ReportPatientContext
 ): number {
   doc.setFont(FONT, 'normal');
   doc.setFontSize(TABLE_SIZE);
   doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
 
-  const nameLines = doc.splitTextToSize(parameter.name, layout.colParameterW - 1);
-  drawResultCell(doc, y, parameter, rowLayout);
+  const nameLines = doc.splitTextToSize(resultRow.name, layout.colResultLabelW - 1);
+  drawResultCell(doc, y, resultRow, rowLayout);
   const refLineCount = drawReferenceCell(
     doc,
     y,
-    parameter,
+    resultRow,
     referenceSubColumns,
-    catalogParameters,
+    catalogAnalytes,
     patient
   );
 
@@ -424,7 +424,7 @@ function drawParameterRow(
   for (let i = 0; i < nameLines.length; i += 1) {
     const lineY = y + i * ROW_HEIGHT;
     if (nameLines[i]) {
-      doc.text(nameLines[i], layout.colParameter, lineY, { align: 'left' });
+      doc.text(nameLines[i], layout.colResultLabel, lineY, { align: 'left' });
     }
   }
 
@@ -441,8 +441,8 @@ function drawResultsTableHeader(
   doc.setFont(FONT, 'normal');
   doc.setFontSize(TABLE_HEAD_SIZE);
   doc.setTextColor(COLOR_UNIT.r, COLOR_UNIT.g, COLOR_UNIT.b);
-  doc.text('PARAMETER', resultsLayout.colParameter, y, { align: 'left' });
-  doc.text('RESULT', rowLayout.resultBarX, y, { align: 'left' });
+  doc.text('RESULT', resultsLayout.colResultLabel, y, { align: 'left' });
+  doc.text('VALUE', rowLayout.resultBarX, y, { align: 'left' });
   doc.text('REFERENCE INTERVAL', referenceSubColumns.valueRightX, y, { align: 'right' });
   doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
   return y + TABLE_HEAD_GAP + ROW_HEIGHT * 0.65;
@@ -453,10 +453,10 @@ function drawNoteBlock(doc: jsPDF, y: number, layout: BodyLayout, note: string):
   doc.setFontSize(NOTES_SIZE);
   doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
   const label = 'NOTE:';
-  doc.text(label, layout.colParameter, y);
+  doc.text(label, layout.colResultLabel, y);
 
   const labelWidth = doc.getTextWidth(label) + COL_GAP;
-  const barX = layout.colParameter + labelWidth;
+  const barX = layout.colResultLabel + labelWidth;
   const barW = layout.contentRight - barX;
   const barTop = y - RESULT_BAR_HEIGHT + RESULT_BAR_BASELINE_OFFSET;
 
@@ -489,7 +489,7 @@ function drawTestSection(
   test: ReportTest,
   startY: number,
   layout: BodyLayout,
-  catalogTests: Test[],
+  orderableTests: OrderableTest[],
   patient: ReportPatientContext
 ): number {
   let y = ensureVerticalSpace(doc, startY, ROW_HEIGHT * 3, layout);
@@ -513,31 +513,31 @@ function drawTestSection(
   y += 1;
 
   const resultsLayout = withResultIndent(layout, RESULT_TAB_INDENT);
-  const catalogParameters = catalogParametersByCode(test.testCode, catalogTests);
+  const catalogAnalytes = getTestAnalytesByCode(test.testCode, orderableTests);
   const rowLayout = computeResultRowLayout(doc, resultsLayout, test.parameters);
   const referenceSubColumns = computeReferenceSubColumnLayout(
     doc,
     resultsLayout,
     test,
-    catalogParameters,
+    catalogAnalytes,
     patient
   );
 
   y = ensureVerticalSpace(doc, y, ROW_HEIGHT, resultsLayout);
   y = drawResultsTableHeader(doc, y, resultsLayout, rowLayout, referenceSubColumns);
 
-  for (const parameter of test.parameters) {
-    const refLines = referenceLineCount(parameter, catalogParameters, patient);
+  for (const row of test.parameters) {
+    const refLines = referenceLineCount(row, catalogAnalytes, patient);
     const neededHeight = Math.max(ROW_HEIGHT * 2, referenceBlockHeight(refLines));
     y = ensureVerticalSpace(doc, y, neededHeight, resultsLayout);
-    y = drawParameterRow(
+    y = drawReportResultRow(
       doc,
       y,
       resultsLayout,
-      parameter,
+      row,
       rowLayout,
       referenceSubColumns,
-      catalogParameters,
+      catalogAnalytes,
       patient
     );
   }
@@ -562,7 +562,7 @@ function drawCategorySection(
   group: CategoryGroup,
   startY: number,
   layout: BodyLayout,
-  catalogTests: Test[],
+  orderableTests: OrderableTest[],
   patient: ReportPatientContext
 ): number {
   let y = ensureVerticalSpace(doc, startY, CATEGORY_GAP + ROW_HEIGHT * 4, layout);
@@ -576,7 +576,7 @@ function drawCategorySection(
   y += 3.5;
 
   for (const test of group.tests) {
-    y = drawTestSection(doc, test, y, layout, catalogTests, patient);
+    y = drawTestSection(doc, test, y, layout, orderableTests, patient);
   }
 
   return y;
@@ -590,7 +590,7 @@ export function drawLabReportBody(
   reportData: LabReportPayload,
   startY: number,
   margin: number,
-  catalogTests: Test[] = [],
+  orderableTests: OrderableTest[] = [],
   onNewPage?: (doc: jsPDF) => number
 ): number {
   const layout = getBodyLayout(doc, margin, onNewPage);
@@ -606,7 +606,7 @@ export function drawLabReportBody(
 
   const groups = groupTestsByCategory(reportData.testResults);
   for (const group of groups) {
-    y = drawCategorySection(doc, group, y, layout, catalogTests, patient);
+    y = drawCategorySection(doc, group, y, layout, orderableTests, patient);
   }
 
   return y;

@@ -34,7 +34,7 @@ export const LAB_CONFIG = {
   SAMPLE_LOOKUP_MIN_CHARS: 3,
   DEFAULT_TEXTAREA_ROWS: 2,
   REJECTION_TEXTAREA_ROWS: 3,
-  PARAMETER_PREVIEW_LIMIT: 5,
+  ANALYTE_PREVIEW_LIMIT: 5,
   TAB_COUNT_REFRESH_MS: 30_000,
   COMPACT_RESULT_GRID_LIMIT: 8,
   /** Result validation panel body — scroll when results + flags exceed this height. */

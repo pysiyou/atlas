@@ -2,7 +2,7 @@ import type { CardComponentProps } from '@/components/data-table';
 import { OrderStatusBadge } from './OrderDomainBadges';
 import { Avatar } from '@/components/primitives';
 import { ListCard } from '@/components/surfaces';
-import { useTestNameLookup } from '@/features/catalog';
+import { useOrderableTestNameLookup } from '@/features/catalog';
 import {
   RecordId,
   renderCardDateTimeSecondary,
@@ -21,7 +21,7 @@ type OrderTableCardProps = CardComponentProps<Order> & {
 };
 
 export function OrderTableCard({ item: order, onClick, hidePatientName = false }: OrderTableCardProps) {
-  const { getTestName } = useTestNameLookup();
+  const { getTestName } = useOrderableTestNameLookup();
   const activeTests = getBillableTests(order.tests ?? []);
   const hasTests =
     activeTests.length > 0 ||

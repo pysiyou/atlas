@@ -1,5 +1,5 @@
 /**
- * Entry form parameter inputs — radio select, numeric, and text fields.
+ * Lab result entry inputs — radio select, numeric, and text fields per analyte.
  */
 
 import React, { useCallback } from 'react';
@@ -9,13 +9,19 @@ import { text, CONTROL, RADIUS , FG } from '@/theme/recipes';
 import { inputTrigger, inputTriggerOpen, inputBase, inputError } from '@/theme/recipes';
 import { cn } from '@/utils';
 import { IconKeys } from '@/icons';
-import type { TestParameter } from '@/types';
+import type { AnalyteDefinition } from '@/types';
 import { validatePhysiologicValue } from '../utils';
 import { titleCaseWords } from '@/utils/string';
 import { RadioCard } from '@/components/overlays';
 
-function SelectParameterInput({ param, value, onChange, inputId, disabled = false }: {
-  param: TestParameter;
+function SelectAnalyteValueInput({
+  analyte,
+  value,
+  onChange,
+  inputId,
+  disabled = false,
+}: {
+  analyte: AnalyteDefinition;
   value: string;
   onChange: (value: string) => void;
   inputId: string;
@@ -72,10 +78,10 @@ function SelectParameterInput({ param, value, onChange, inputId, disabled = fals
     >
       {({ close }) => (
         <div className="flex flex-col gap-space-2 p-space-2 max-h-[250px] overflow-y-auto">
-          {param.allowedValues?.map(option => (
+          {analyte.allowedValues?.map(option => (
             <RadioCard
               key={option}
-              name={`entry-param-${inputId}`}
+              name={`entry-analyte-${inputId}`}
               label={titleCaseWords(option)}
               selected={value === option}
               align="center"
@@ -91,8 +97,17 @@ function SelectParameterInput({ param, value, onChange, inputId, disabled = fals
   );
 }
 
-export function ParameterInput({ param, value, onChange, onKeyDown, inputId, validationError, onValidationChange, disabled }: {
-  param: TestParameter;
+export function LabResultInput({
+  analyte,
+  value,
+  onChange,
+  onKeyDown,
+  inputId,
+  validationError,
+  onValidationChange,
+  disabled,
+}: {
+  analyte: AnalyteDefinition;
   value: string;
   onChange: (value: string) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
@@ -102,19 +117,19 @@ export function ParameterInput({ param, value, onChange, onKeyDown, inputId, val
   disabled?: boolean;
 }) {
   const valueType =
-    param.valueType ||
-    (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
+    analyte.valueType ||
+    (analyte.type === 'numeric' ? 'NUMERIC' : analyte.type === 'select' ? 'SELECT' : 'TEXT');
   const normalizedValue = value ?? '';
-  const limit = valueType === 'NUMERIC' ? param.physiologicRange : undefined;
+  const limit = valueType === 'NUMERIC' ? analyte.physiologicRange : undefined;
 
   const handleBlur = useCallback(() => {
     if (valueType !== 'NUMERIC' || !normalizedValue) {
       onValidationChange?.(undefined);
       return;
     }
-    const result = validatePhysiologicValue(normalizedValue, param.physiologicRange);
+    const result = validatePhysiologicValue(normalizedValue, analyte.physiologicRange);
     onValidationChange?.(result.error);
-  }, [normalizedValue, valueType, onValidationChange, param.physiologicRange]);
+  }, [normalizedValue, valueType, onValidationChange, analyte.physiologicRange]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -134,10 +149,10 @@ export function ParameterInput({ param, value, onChange, onKeyDown, inputId, val
     disabled,
   };
 
-  if (valueType === 'SELECT' && param.allowedValues) {
+  if (valueType === 'SELECT' && analyte.allowedValues) {
     return (
-      <SelectParameterInput
-        param={param}
+      <SelectAnalyteValueInput
+        analyte={analyte}
         value={normalizedValue}
         onChange={onChange}
         inputId={inputId}

@@ -9,12 +9,12 @@ import type { PanelPresetId } from '@/theme/panelPresets';
 import { ResultCriticalValueBanner } from './ResultCriticalValueBanner';
 import { statusMapFromFlags, parseResultEntry, isCritical } from '../utils/labResult';
 import {
-  ResultsParameterGrid,
+  LabResultGrid,
   type ResultsGridLayout,
-} from '../components/ResultsParameterGrid';
+} from '../components/LabResultGrid';
 import { ResultContextNotes } from '../components/ResultContextNotes';
 import { text, METRIC_TILE } from '@/theme/recipes';
-import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
+import { resolveAnalyteLabel, useAnalyteLabelMap } from '@/features/catalog';
 import { LAB_CONFIG } from '../constants';
 import type { Gender, Patient } from '@/types';
 
@@ -46,7 +46,7 @@ export function ResultValidationResultsBody({
   layout?: ResultsGridLayout;
 }) {
   const hasResults = results && Object.keys(results).length > 0;
-  const parameterLabels = useParameterLabelMap(testCode);
+  const analyteLabels = useAnalyteLabelMap(testCode);
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
 
   const criticalValues = useMemo(() => {
@@ -58,22 +58,22 @@ export function ResultValidationResultsBody({
         if (!isCritical(status)) return null;
 
         return {
-          name: resolveParameterLabel(key, parameterLabels),
+          name: resolveAnalyteLabel(key, analyteLabels),
           value: resultValue,
           unit,
         };
       })
       .filter((cv): cv is NonNullable<typeof cv> => cv !== null);
-  }, [results, flagStatusMap, hasResults, parameterLabels]);
+  }, [results, flagStatusMap, hasResults, analyteLabels]);
 
   return (
     <div className="space-y-space-2-5">
       {criticalValues.length > 0 && (
-        <ResultCriticalValueBanner criticalParameters={criticalValues} className="py-space-2" />
+        <ResultCriticalValueBanner criticalResults={criticalValues} className="py-space-2" />
       )}
 
       {hasResults && (
-        <ResultsParameterGrid
+        <LabResultGrid
           results={results}
           flags={flags}
           testCode={testCode}

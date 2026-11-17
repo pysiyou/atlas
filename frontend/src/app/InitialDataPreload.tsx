@@ -5,7 +5,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useAuthStore } from '@/app/authStore';
-import { useTestCatalog } from '@/features/catalog';
+import { useOrderableTests } from '@/features/catalog';
 import { ErrorFallback, getFeedback, notify } from '@/feedback';
 import { getErrorMessage } from '@/utils/errors';
 
@@ -14,7 +14,7 @@ interface AuthenticatedPreloadProps {
 }
 
 function AuthenticatedPreload({ children }: AuthenticatedPreloadProps) {
-  const testsQuery = useTestCatalog();
+  const testsQuery = useOrderableTests();
   const hasCachedCatalog = testsQuery.tests.length > 0;
   const catalogUnavailable = testsQuery.isError && !hasCachedCatalog;
   const lastNotifiedError = useRef<unknown>(null);

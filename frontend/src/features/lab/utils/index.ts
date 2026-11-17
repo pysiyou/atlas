@@ -33,7 +33,7 @@ export {
   isCriticalValue,
   checkReferenceRangeWithDemographics,
   normalizeReferenceRangeDisplay,
-  getParameterReferenceIntervalLines,
+  getAnalyteReferenceIntervalLines,
   formatReferenceRange,
   validatePhysiologicValue,
   resultTileStatusClass,

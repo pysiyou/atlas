@@ -4,7 +4,7 @@
  */
 
 import { useParams } from 'react-router-dom';
-import { useTest } from '../api/tests';
+import { useOrderableTest } from '../api/orderableTests';
 import { useBreakpoint } from '@/hooks';
 import { BalancedColumnsLayout } from '@/components/display';
 
@@ -24,7 +24,7 @@ import {
   formatTurnaroundTime,
 } from '@/utils';
 import type { ReactNode } from 'react';
-import type { Test, TestParameter } from '@/types';
+import type  { OrderableTest, AnalyteDefinition } from '@/types';
 import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
 import { useModuleListTitles } from '@/strings';
 
@@ -39,7 +39,7 @@ function catalogDetailColumnCount(breakpoint: string): number {
 }
 
 function formatReferenceRangeLine(
-  range: Test['referenceRanges'][number],
+  range: OrderableTest['referenceRanges'][number],
   index: number,
 ): { label: string; value: string } {
   const rangeStr =
@@ -69,15 +69,16 @@ function formatReferenceRangeLine(
 }
 
 /**
- * Left-column identifier for a result parameter: observation LOINC, else mnemonic.
+ * Left-column identifier for a result component: analyte code and LOINC when present.
  */
-function parameterRowLabel(param: TestParameter): string {
+function formatAnalyteRow(param: AnalyteDefinition): string {
   const loinc = param.loincCode?.trim();
-  return loinc && loinc.length > 0 ? loinc : param.code;
+  if (loinc) return `${param.code} · ${loinc}`;
+  return param.code;
 }
 
 /** Secondary line: reference range and critical limits when present. */
-function formatParameterDetailsLine(param: TestParameter): string {
+function formatAnalyteDetailsLine(param: AnalyteDefinition): string {
   const parts: string[] = [];
   const referenceRange = param.referenceRange?.trim();
   if (referenceRange) parts.push(`Ref: ${referenceRange}`);
@@ -91,9 +92,9 @@ function formatParameterDetailsLine(param: TestParameter): string {
 }
 
 /**
- * Uniform parameter value: name (code) unit on the first line; ref / critical on the second.
+ * Analyte row value: name (code) unit on the first line; ref / critical on the second.
  */
-function formatParameterValue(param: TestParameter): ReactNode {
+function formatAnalyteValue(param: AnalyteDefinition): ReactNode {
   const unit = param.unit?.trim();
   return (
     <div className={`flex flex-col ${SPACING.gapTight}`}>
@@ -106,13 +107,13 @@ function formatParameterValue(param: TestParameter): ReactNode {
         </span>
         {unit ? <span>{unit}</span> : null}
       </div>
-      <div className={TABLE_TYPE.meta}>{formatParameterDetailsLine(param)}</div>
+      <div className={TABLE_TYPE.meta}>{formatAnalyteDetailsLine(param)}</div>
     </div>
   );
 }
 
-/** Build the overview / sample / pricing / parameter tables for a catalog test. */
-function buildCatalogDetailTables(test: Test): TableInput[] {
+/** Build the overview / sample / pricing / analyte tables for a catalog test. */
+function buildCatalogDetailTables(test: OrderableTest): TableInput[] {
   const tables: TableInput[] = [
     {
       key: 'overview',
@@ -127,7 +128,7 @@ function buildCatalogDetailTables(test: Test): TableInput[] {
         { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms, '-') },
         { label: 'LOINC Code', value: test.loincCode?.trim() || '-' },
         {
-          label: 'Clinical Workups',
+          label: 'Included in profiles',
           value: formatArrayWithFallback(
             test.workups?.map(resolveClinicalWorkupLabel),
             '-'
@@ -177,16 +178,16 @@ function buildCatalogDetailTables(test: Test): TableInput[] {
     },
   ];
 
-  if (test.parameters && test.parameters.length > 0) {
+  if (test.analytes && test.analytes.length > 0) {
     tables.push({
-      key: 'parameters',
+      key: 'analytes',
       preset: 'panel.pageEmbed.scrollAuto.maxH',
-      title: 'Result Parameters',
-      meta: String(test.parameters.length),
+      title: 'Result components',
+      meta: String(test.analytes.length),
       balanceHeight: CATALOG_SCROLL_PANEL_BALANCE_ROWS,
-      rows: test.parameters.map(param => ({
-        label: parameterRowLabel(param),
-        value: formatParameterValue(param),
+      rows: test.analytes.map(analyte => ({
+        label: formatAnalyteRow(analyte),
+        value: formatAnalyteValue(analyte),
       })),
     });
   }
@@ -211,7 +212,7 @@ export function CatalogDetail() {
   const { testCode } = useParams<{ testCode: string }>();
   const breakpoint = useBreakpoint();
   const columnCount = catalogDetailColumnCount(breakpoint);
-  const { test, isLoading, isError } = useTest(testCode);
+  const { test, isLoading, isError } = useOrderableTest(testCode);
   const titles = useModuleListTitles();
   const testLabel = titles.testDetail;
 

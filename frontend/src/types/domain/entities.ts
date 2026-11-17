@@ -473,10 +473,10 @@ export interface SampleRequirements {
 }
 
 /**
- * Slim catalog row used for list, search, and name lookup.
- * Full parameter documents are loaded separately via `useTest` / `useTestsByCodes`.
+ * Slim orderable test row for list, search, and name lookup.
+ * Full analyte definitions load separately via `useOrderableTest` / `useOrderableTestsByCodes`.
  */
-export interface TestSummary {
+export interface OrderableTestSummary {
   code: string;
   name: string;
   synonyms?: string[];
@@ -496,15 +496,15 @@ export interface TestSummary {
 }
 
 /**
- * Full catalog document including parameters and collection metadata.
+ * Full orderable test document including analytes and collection metadata.
  */
-export interface Test extends TestSummary {
+export interface OrderableTest extends OrderableTestSummary {
   sampleVolume: string;
   minimumVolume?: number;
   optimalVolume?: number;
   specialRequirements?: string;
   referenceRanges: ReferenceRange[];
-  parameters?: TestParameter[];
+  analytes?: AnalyteDefinition[];
   numberOfContainers?: number;
   methodology?: string;
   containerDescription?: string;
@@ -518,9 +518,9 @@ export interface Test extends TestSummary {
 }
 
 /**
- * Test parameter - enhanced to support all value types
+ * Catalog analyte view model (measurable result component on an orderable test).
  */
-export interface TestParameter {
+export interface AnalyteDefinition {
   name: string;
   code: string;
   unit: string;
@@ -548,7 +548,7 @@ export interface TestParameter {
  * Use this type instead of creating feature-specific variants.
  *
  * Built by `useOrderTestsWithLabContext` — the single enrichment hook that joins
- * Order[] + Sample[] + Patient[] + Test[] into this unified shape.
+ * Order[] + Sample[] + Patient[] + OrderableTest[] into this unified shape.
  */
 export interface TestWithContext {
   orderId: string;

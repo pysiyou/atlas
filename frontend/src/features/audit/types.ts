@@ -74,7 +74,7 @@ export interface ResolvedEventLogItem {
   showEventTypeInMeta?: boolean;
   narrativeLabel?: string;
   narrativeText?: string;
-  /** When present, shown in the detail box with ResultsParameterGrid (validation card layout). */
+  /** When present, shown in the detail box with LabResultGrid (validation card layout). */
   results?: Record<string, unknown>;
   resultFlags?: string[];
   /** Debug payload (verbosity=debug): raw metadata and changes. */

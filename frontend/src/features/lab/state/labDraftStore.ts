@@ -39,7 +39,7 @@ interface LabDraftState {
   validationDrafts: Record<number, ValidationDraft>;
   getEntryDraft: (orderTestId: number) => EntryDraft | undefined;
   setEntryResults: (orderTestId: number, results: Record<string, string>) => void;
-  setEntryResultParam: (orderTestId: number, paramCode: string, value: string) => void;
+  setEntryAnalyteResult: (orderTestId: number, analyteCode: string, value: string) => void;
   setEntryNotes: (orderTestId: number, notes: string) => void;
   seedEntryDraft: (orderTestId: number, draft: EntryDraft) => void;
   retainEntryDrafts: (orderTestIds: Iterable<number>) => void;
@@ -89,7 +89,7 @@ export const useLabDraftStore = create<LabDraftState>((set, get) => ({
     });
   },
 
-  setEntryResultParam: (orderTestId, paramCode, value) => {
+  setEntryAnalyteResult: (orderTestId, analyteCode, value) => {
     set(state => {
       const current = state.entry[orderTestId] ?? EMPTY_ENTRY;
       return {
@@ -97,7 +97,7 @@ export const useLabDraftStore = create<LabDraftState>((set, get) => ({
           ...state.entry,
           [orderTestId]: {
             ...current,
-            results: { ...current.results, [paramCode]: value ?? '' },
+            results: { ...current.results, [analyteCode]: value ?? '' },
           },
         },
       };

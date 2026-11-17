@@ -3,96 +3,32 @@
  */
 /* eslint-disable react-refresh/only-export-components -- queue card + colocated data hook */
 
-import { useMemo, useState, type FC } from 'react';
+import { useMemo, type FC } from 'react';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Card } from '@/components/surfaces';
 import { cn } from '@/utils';
-import { useUserLookup } from '@/lib/api';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { QualityIssuePopover } from '../../components';
-import { ResultsParameterGrid } from '../../components/ResultsParameterGrid';
+import { LabResultGrid } from '../../components/LabResultGrid';
 import { SampleRejectedBanner } from '../../components/SampleRejectedBanner';
-import { useLabWorkflowCardClickGuard } from '../../hooks';
-import { isLabActionAllowed } from '../../utils/queueDisplay';
-import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
-import type { ValidationQueueRow } from '../../types/queues';
-import {
-  labModalWorkItemFromDto,
-  retestContextFromRow,
-  type LabOrderTestQueueRow,
-} from '../../types/labQueueChrome';
-import type { QualityIssueResult } from '@/types';
+import type { LabOrderTestQueueRow } from '../../types/labQueueChrome';
 import { QueueCard, QueueCardMobile } from '../shared/QueueCardLayout';
 import { TestWorkflowCardLeftColumn } from '../shared/QueueCardLeftColumn';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import { useLabCopy } from '@/strings';
 import { CriticalSeenConfirm } from '../../validation/CriticalSeenConfirm';
 
-export interface ResultValidationCardProps {
-  row: ValidationQueueRow;
-  commentKey: string;
-  comments: string;
-  onCommentsChange: (commentKey: string, value: string) => void;
-  onApprove: (criticalSeen?: boolean) => void;
-  onReject: (result: QualityIssueResult) => void;
-  onClick: () => void;
-  isApproving?: boolean;
-  isMobile?: boolean;
-}
-
-export interface ResultValidationCardSharedData {
-  row: ValidationQueueRow;
-  chromeRow: LabOrderTestQueueRow;
-  patientName: string;
-  onApprove: (criticalSeen?: boolean) => void;
-  onReject: ResultValidationCardProps['onReject'];
-  isApproving: boolean;
-  handleCardClick: () => void;
-  getUserName: (id: string) => string;
-  sampleRejection: ReturnType<typeof useSampleRejectionDisplay>;
-  rejection: ReturnType<typeof retestContextFromRow>;
-  canValidate: boolean;
-  canReject: boolean;
-  hasCriticalValues: boolean;
-  criticalSeen: boolean;
-  setCriticalSeen: (checked: boolean) => void;
-}
-
-export function useResultValidationCardData(
-  props: ResultValidationCardProps
-): ResultValidationCardSharedData | null {
-  const { row, onApprove, onReject, onClick, isApproving = false } = props;
-  const { getUserName } = useUserLookup();
-  const handleCardClick = useLabWorkflowCardClickGuard(onClick);
-  const chromeRow = useMemo(() => labModalWorkItemFromDto(row), [row]);
-  const canValidate = isLabActionAllowed(row.allowedActions, 'validate');
-  const canReject = isLabActionAllowed(row.allowedActions, 'reject');
-  const rejection = useMemo(() => retestContextFromRow(chromeRow), [chromeRow]);
-  const sampleRejection = useSampleRejectionDisplay(chromeRow);
-  const hasCriticalValues = Boolean(row.hasCriticalValues);
-  const [criticalSeen, setCriticalSeen] = useState(false);
-
-  if (!row.results) return null;
-
-  return {
-    row,
-    chromeRow,
-    patientName: row.patientName || '—',
-    onApprove,
-    onReject,
-    isApproving,
-    handleCardClick,
-    getUserName,
-    sampleRejection,
-    rejection,
-    canValidate,
-    canReject,
-    hasCriticalValues,
-    criticalSeen,
-    setCriticalSeen,
-  };
-}
+export type {
+  ResultValidationCardProps,
+  ResultValidationCardSharedData,
+} from './QueueCard.ResultValidation.data';
+export { useResultValidationCardData } from './QueueCard.ResultValidation.data';
+import type {
+  ResultValidationCardProps,
+  ResultValidationCardSharedData,
+} from './QueueCard.ResultValidation.data';
+import { useResultValidationCardData } from './QueueCard.ResultValidation.data';
 
 function useResultValidationCardHeader(chromeRow: LabOrderTestQueueRow, patientName: string) {
   const flagCount = chromeRow.flags?.length ?? 0;
@@ -195,7 +131,7 @@ function ResultValidationCardDesktop({
               />
             </div>
           ) : null}
-          <ResultsParameterGrid
+          <LabResultGrid
             results={row.results!}
             flags={row.flags ?? undefined}
             testCode={row.testCode}
@@ -295,7 +231,7 @@ function ResultValidationCardMobile({
             />
           </div>
         ) : null}
-        <ResultsParameterGrid
+        <LabResultGrid
           results={row.results!}
           flags={row.flags ?? undefined}
           testCode={row.testCode}

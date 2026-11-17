@@ -277,6 +277,18 @@ export function getEmptyCopy(): Record<string, EmptyCopy> {
 }
 
 // =============================================================================
+// catalog order picker (LIS labels)
+// =============================================================================
+/** Labels for order entry test search (orderable tests + test profiles). */
+export function getCatalogOrderPickerCopy() {
+  return {
+    orderableTests: 'Tests',
+    testProfiles: 'Test profiles',
+    testProfile: 'Test profile',
+  };
+}
+
+// =============================================================================
 // empty-state-presets
 // =============================================================================
 export const PANEL_EMPTY_STATE = {

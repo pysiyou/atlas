@@ -5,7 +5,7 @@
 import Barcode from 'react-barcode';
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
-import type { ContainerType, Order, RejectedSample, Sample, Test } from '@/types';
+import type { ContainerType, Order, RejectedSample, Sample, OrderableTest } from '@/types';
 import { text, RADIUS, SURFACE, FG } from '@/theme/recipes';
 import { displayId, formatDateTime } from '@/utils';
 import { CollectionDetailGrid } from './DetailModal.SampleCollection.Grid';
@@ -71,7 +71,7 @@ export function SampleCollectionDetailContent({
   isCollected: boolean;
   rejectedSample: RejectedSample | null;
   testNames: string[];
-  testDetails: Test[];
+  testDetails: OrderableTest[];
   testCodes: string[];
   getUserName: (userId: string) => string;
   collectionNotes?: string;

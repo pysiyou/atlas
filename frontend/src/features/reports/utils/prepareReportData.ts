@@ -1,4 +1,4 @@
-import type { LabReportPayload, OrderTest, Patient, ReportableOrder, Test, TestParameter, TestResult } from '@/types';
+import type { LabReportPayload, OrderTest, Patient, ReportableOrder, OrderableTest, AnalyteDefinition, TestResult } from '@/types';
 import { getBrandingPresentation } from '@/config';
 import { RESULT_NOT_AVAILABLE } from '@/types';
 import { isDateInInclusiveRange } from '@/utils/date';
@@ -13,12 +13,12 @@ interface SampleLookup {
 interface PrepareReportDataOptions {
   reportableOrder: ReportableOrder;
   patients: Patient[] | undefined;
-  catalogTests: Test[];
+  orderableTests: OrderableTest[];
   getSample: SampleLookup;
   getUserName: (userId: string) => string;
 }
 
-export type LabReportParameter = LabReportPayload['testResults'][number]['parameters'][number];
+export type ReportResultRow = LabReportPayload['testResults'][number]['parameters'][number];
 
 /**
  * Filters reportable orders by inclusive order-date range.
@@ -43,7 +43,7 @@ function isCriticalStatus(status: string | undefined): boolean {
   );
 }
 
-function placeholderParameter(name: string, code: string): LabReportParameter {
+function placeholderResultRow(name: string, code: string): ReportResultRow {
   return {
     name,
     code,
@@ -51,11 +51,11 @@ function placeholderParameter(name: string, code: string): LabReportParameter {
   };
 }
 
-function parameterFromResult(
+function resultRowFromStored(
   name: string,
   code: string,
   result: { value?: string | number | null; unit?: string; referenceRange?: string; status?: string }
-): LabReportParameter {
+): ReportResultRow {
   if (!hasResultValue(result.value)) {
     return {
       name,
@@ -76,33 +76,36 @@ function parameterFromResult(
   };
 }
 
-function parameterFromCatalog(
-  parameter: TestParameter,
+function resultRowFromCatalogAnalyte(
+  analyte: AnalyteDefinition,
   result: TestResult | undefined
-): LabReportParameter {
+): ReportResultRow {
   if (!result) {
-    return placeholderParameter(parameter.name, parameter.code);
+    return placeholderResultRow(analyte.name, analyte.code);
   }
-  return parameterFromResult(parameter.name, parameter.code, result);
+  return resultRowFromStored(analyte.name, analyte.code, result);
 }
 
 /**
- * Builds investigation rows from catalog parameters when present, merging stored results.
+ * Builds investigation rows from catalog analytes when present, merging stored results.
  * Missing values use {@link RESULT_NOT_AVAILABLE}. Extra result keys not in the catalog are appended.
  */
-function buildParameterRows(test: OrderTest, catalogTest: Test | undefined): LabReportParameter[] {
+function buildReportResultRows(
+  test: OrderTest,
+  orderableTest: OrderableTest | undefined
+): ReportResultRow[] {
   const results = test.results ?? {};
-  const catalogParameters = catalogTest?.parameters ?? [];
+  const catalogAnalytes = orderableTest?.analytes ?? [];
 
-  if (catalogParameters.length > 0) {
-    const catalogCodes = new Set(catalogParameters.map(parameter => parameter.code));
-    const rows = catalogParameters.map(parameter =>
-      parameterFromCatalog(parameter, results[parameter.code])
+  if (catalogAnalytes.length > 0) {
+    const catalogCodes = new Set(catalogAnalytes.map(analyte => analyte.code));
+    const rows = catalogAnalytes.map(analyte =>
+      resultRowFromCatalogAnalyte(analyte, results[analyte.code])
     );
     for (const [code, result] of Object.entries(results)) {
       if (catalogCodes.has(code) || !result) continue;
-      const catalogMatch = catalogTest?.parameters?.find(parameter => parameter.code === code);
-      rows.push(parameterFromResult(catalogMatch?.name || code, code, result));
+      const catalogMatch = orderableTest?.analytes?.find(analyte => analyte.code === code);
+      rows.push(resultRowFromStored(catalogMatch?.name || code, code, result));
     }
     return rows;
   }
@@ -110,24 +113,24 @@ function buildParameterRows(test: OrderTest, catalogTest: Test | undefined): Lab
   const resultEntries = Object.entries(results);
   if (resultEntries.length > 0) {
     return resultEntries.map(([code, result]) =>
-      parameterFromResult(code, code, result ?? {})
+      resultRowFromStored(code, code, result ?? {})
     );
   }
 
-  return [placeholderParameter(test.testName, test.testCode)];
+  return [placeholderResultRow(test.testName, test.testCode)];
 }
 
 function buildTestResultEntry(
   test: OrderTest,
-  catalogTest: Test | undefined,
+  orderableTest: OrderableTest | undefined,
   getUserName: (userId: string) => string
 ) {
   return {
     testCode: test.testCode,
     testName: test.testName,
-    category: catalogTest?.category ?? 'Uncategorized',
-    methodology: catalogTest?.methodology?.trim() || undefined,
-    parameters: buildParameterRows(test, catalogTest),
+    category: orderableTest?.category ?? 'Uncategorized',
+    methodology: orderableTest?.methodology?.trim() || undefined,
+    parameters: buildReportResultRows(test, orderableTest),
     technicianNotes: test.technicianNotes,
     validationNotes: test.validationNotes,
     enteredBy: test.enteredBy,
@@ -184,7 +187,7 @@ function resolveSampleCollectedAt(
 export function prepareReportData({
   reportableOrder,
   patients,
-  catalogTests,
+  orderableTests,
   getSample,
   getUserName,
 }: PrepareReportDataOptions): LabReportPayload {
@@ -202,10 +205,10 @@ export function prepareReportData({
   const collectedBy =
     sample && sample.status !== 'pending' ? sample.collectedBy : undefined;
 
-  const catalogByCode = new Map(catalogTests.map(catalog => [catalog.code, catalog]));
+  const orderableByCode = new Map(orderableTests.map(entry => [entry.code, entry]));
   const testResults = activeTests.map(test => {
-    const catalogTest = catalogByCode.get(test.testCode);
-    return buildTestResultEntry(test, catalogTest, getUserName);
+    const orderableTest = orderableByCode.get(test.testCode);
+    return buildTestResultEntry(test, orderableTest, getUserName);
   });
 
   const patientEmail =
@@ -253,12 +256,12 @@ export function prepareReportData({
 export async function downloadLabReport(
   reportableOrder: ReportableOrder,
   reportData: LabReportPayload,
-  catalogTests: Test[],
-  generateLabReport: (data: LabReportPayload, catalogTests: Test[]) => jsPDF | Promise<jsPDF>,
+  orderableTests: OrderableTest[],
+  generateLabReport: (data: LabReportPayload, orderableTests: OrderableTest[]) => jsPDF | Promise<jsPDF>,
   downloadPDF: (doc: jsPDF, filename: string) => void,
   formatDate: (date: Date) => string
 ): Promise<void> {
-  const doc = await generateLabReport(reportData, catalogTests);
+  const doc = await generateLabReport(reportData, orderableTests);
   const filler = reportableOrder.order?.orderId ?? '-';
   const filename = `lab-report-${filler}_${formatDate(new Date())}.pdf`;
   downloadPDF(doc, filename);

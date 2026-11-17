@@ -1,34 +1,30 @@
 /**
- * Tests API service — slim list for names/search, full documents by code.
+ * Orderable tests API — slim list for names/search, full documents by code.
  */
 import { apiClient } from '@/lib/api';
 import { expectArray } from '@/lib/api';
-import type { ApiTestResponse, ApiTestSummaryResponse } from '@/lib/api/types';
+import type { ApiOrderableTestResponse, ApiOrderableTestSummaryResponse } from '@/lib/api/types';
 import { REFERENCE_DATA_LIMIT } from '@/lib/api';
 import type {
+  AnalyteDefinition,
+  CatalogReferenceRange,
   ContainerTopColor,
   ContainerType,
-  CatalogReferenceRange,
+  OrderableTest,
+  OrderableTestSummary,
   SampleType,
-  Test,
   TestCategory,
-  TestParameter,
-  TestSummary,
 } from '@/types';
 import { useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  buildParameterLabelMap,
+  buildAnalyteLabelMap,
   chunkTestCodes,
   indexTestsByCode,
   uniqueSortedTestCodes,
-} from '../testLookup';
+} from '../utils/orderableTestLookup';
 import { cacheConfig, getQueryClient, queryKeys, useAuthQueryEnabled } from '@/lib/query';
-import { useInvalidateQueryKey } from '@/lib/query';
-import {
-  CLINICAL_WORKUP_BY_ID,
-  resolveClinicalWorkupLabel,
-} from '@/types/generated/clinicalWorkups';
+import { CLINICAL_WORKUP_BY_ID } from '@/types/generated/clinicalWorkups';
 
 function workupIdsForTest(testCode: string): string[] {
   return Object.values(CLINICAL_WORKUP_BY_ID)
@@ -36,7 +32,7 @@ function workupIdsForTest(testCode: string): string[] {
     .map(workup => workup.id);
 }
 
-interface GetTestsParams {
+interface GetOrderableTestsParams {
   category?: TestCategory;
   activeOnly?: boolean;
   skip?: number;
@@ -51,20 +47,19 @@ type ApiAnalyteSummary = {
   definition?: Record<string, unknown> | null;
 };
 
-/** Backend full orderable test DTO with analytes before domain transform. */
-type APITestResponse = ApiTestResponse & {
+type APIOrderableTestResponse = ApiOrderableTestResponse & {
   analytes?: ApiAnalyteSummary[];
 };
 
-const EMPTY_SUMMARIES: TestSummary[] = [];
-const EMPTY_SUMMARY_BY_CODE = new Map<string, TestSummary>();
-const EMPTY_FULL_TESTS: Test[] = [];
-const EMPTY_FULL_BY_CODE = new Map<string, Test>();
+const EMPTY_SUMMARIES: OrderableTestSummary[] = [];
+const EMPTY_SUMMARY_BY_CODE = new Map<string, OrderableTestSummary>();
+const EMPTY_FULL_TESTS: OrderableTest[] = [];
+const EMPTY_FULL_BY_CODE = new Map<string, OrderableTest>();
 
-function mapAnalytesToParameters(analytes?: ApiAnalyteSummary[]): TestParameter[] | undefined {
+function mapApiAnalytes(analytes?: ApiAnalyteSummary[]): AnalyteDefinition[] | undefined {
   if (!analytes || analytes.length === 0) return undefined;
 
-  return analytes.map((item): TestParameter => {
+  return analytes.map((item): AnalyteDefinition => {
     const def = item.definition && typeof item.definition === 'object' ? item.definition : {};
     const merged = { ...def, ...item };
     const valueType = (merged as { value_type?: string }).value_type;
@@ -106,7 +101,7 @@ function mapAnalytesToParameters(analytes?: ApiAnalyteSummary[]): TestParameter[
       type,
       loincCode: item.loincCode ?? undefined,
       referenceRange: referenceRangeText,
-      valueType: valueType as TestParameter['valueType'],
+      valueType: valueType as AnalyteDefinition['valueType'],
       catalogReferenceRange: catalogRefRange,
       criticalLow: crit?.low,
       criticalHigh: crit?.high,
@@ -118,7 +113,7 @@ function mapAnalytesToParameters(analytes?: ApiAnalyteSummary[]): TestParameter[
   });
 }
 
-function transformAPITestSummary(apiTest: ApiTestSummaryResponse): TestSummary {
+function transformSummary(apiTest: ApiOrderableTestSummaryResponse): OrderableTestSummary {
   return {
     code: apiTest.code,
     name: apiTest.name,
@@ -138,18 +133,18 @@ function transformAPITestSummary(apiTest: ApiTestSummaryResponse): TestSummary {
   };
 }
 
-function transformAPITest(apiTest: APITestResponse): Test {
+function transformOrderableTest(apiTest: APIOrderableTestResponse): OrderableTest {
   const { analytes, turnaroundTimeHours, ...rest } = apiTest;
   return {
-    ...(rest as unknown as Test),
+    ...(rest as unknown as OrderableTest),
     turnaroundTime: turnaroundTimeHours ?? 0,
     workups: workupIdsForTest(apiTest.code),
-    parameters: mapAnalytesToParameters(analytes),
+    analytes: mapApiAnalytes(analytes),
   };
 }
 
-export const testAPI = {
-  async getAll(params?: GetTestsParams): Promise<TestSummary[]> {
+export const orderableTestAPI = {
+  async getAll(params?: GetOrderableTestsParams): Promise<OrderableTestSummary[]> {
     const queryParams: Record<string, string> = {
       limit: String(REFERENCE_DATA_LIMIT),
     };
@@ -158,50 +153,49 @@ export const testAPI = {
     if (params?.skip) queryParams.skip = String(params.skip);
     if (params?.limit) queryParams.limit = String(params.limit);
 
-    const apiTests = expectArray<ApiTestSummaryResponse>(
-      await apiClient.get<ApiTestSummaryResponse[]>('/orderable-tests', queryParams),
+    const apiTests = expectArray<ApiOrderableTestSummaryResponse>(
+      await apiClient.get<ApiOrderableTestSummaryResponse[]>('/orderable-tests', queryParams),
       'catalog'
     );
-    return apiTests.map(transformAPITestSummary);
+    return apiTests.map(transformSummary);
   },
 
-  async getByCode(testCode: string): Promise<Test | null> {
+  async getByCode(testCode: string): Promise<OrderableTest | null> {
     try {
-      const apiTest = await apiClient.get<APITestResponse>(`/orderable-tests/${testCode}`);
-      return transformAPITest(apiTest);
+      const apiTest = await apiClient.get<APIOrderableTestResponse>(`/orderable-tests/${testCode}`);
+      return transformOrderableTest(apiTest);
     } catch {
       return null;
     }
   },
 
-  async getByCodes(codes: string[]): Promise<Test[]> {
+  async getByCodes(codes: string[]): Promise<OrderableTest[]> {
     if (codes.length === 0) return [];
-    const apiTests = expectArray<APITestResponse>(
-      await apiClient.get<APITestResponse[]>('/orderable-tests/by-codes', { codes: codes.join(',') }),
+    const apiTests = expectArray<APIOrderableTestResponse>(
+      await apiClient.get<APIOrderableTestResponse[]>('/orderable-tests/by-codes', {
+        codes: codes.join(','),
+      }),
       'catalog by-codes'
     );
-    return apiTests.map(transformAPITest);
+    return apiTests.map(transformOrderableTest);
   },
 
-  async search(query: string): Promise<Test[]> {
-    const apiTests = expectArray<APITestResponse>(
-      await apiClient.get<APITestResponse[]>('/orderable-tests/search', { q: query }),
+  async search(query: string): Promise<OrderableTest[]> {
+    const apiTests = expectArray<APIOrderableTestResponse>(
+      await apiClient.get<APIOrderableTestResponse[]>('/orderable-tests/search', { q: query }),
       'catalog search'
     );
-    return apiTests.map(transformAPITest);
+    return apiTests.map(transformOrderableTest);
   },
-
 };
 
-/**
- * Prefetched slim catalog (names, search, pickers). Full parameters are not included.
- */
-export function useTestCatalog() {
+/** Prefetched slim catalog (names, search, pickers). */
+export function useOrderableTests() {
   const enabled = useAuthQueryEnabled();
 
   const query = useQuery({
-    queryKey: queryKeys.tests.list({ activeOnly: true }),
-    queryFn: () => testAPI.getAll({ activeOnly: true }),
+    queryKey: queryKeys.orderableTests.list({ activeOnly: true }),
+    queryFn: () => orderableTestAPI.getAll({ activeOnly: true }),
     enabled,
     ...cacheConfig.static,
   });
@@ -211,7 +205,10 @@ export function useTestCatalog() {
     () => (tests.length > 0 ? indexTestsByCode(tests) : EMPTY_SUMMARY_BY_CODE),
     [tests]
   );
-  const getTest = useCallback((testCode: string): TestSummary | undefined => byCode.get(testCode), [byCode]);
+  const getTest = useCallback(
+    (testCode: string): OrderableTestSummary | undefined => byCode.get(testCode),
+    [byCode]
+  );
   const getTestName = useCallback(
     (testCode: string): string => byCode.get(testCode)?.name ?? testCode,
     [byCode]
@@ -230,24 +227,17 @@ export function useTestCatalog() {
   };
 }
 
-/**
- * Parameter code → display name for one full catalog document.
- */
-export function useParameterLabelMap(testCode?: string): Record<string, string> {
-  const { test } = useTest(testCode);
-  return useMemo(() => buildParameterLabelMap(test ?? undefined), [test]);
+export function useAnalyteLabelMap(testCode?: string): Record<string, string> {
+  const { test } = useOrderableTest(testCode);
+  return useMemo(() => buildAnalyteLabelMap(test ?? undefined), [test]);
 }
 
-/**
- * Fetch one full orderable test by code (`GET /orderable-tests/{code}`).
- * Does not treat a slim list row as a full Test.
- */
-export function useTest(testCode: string | undefined) {
+export function useOrderableTest(testCode: string | undefined) {
   const enabled = useAuthQueryEnabled(Boolean(testCode));
 
   const query = useQuery({
-    queryKey: queryKeys.tests.byCode(testCode ?? ''),
-    queryFn: () => testAPI.getByCode(testCode!),
+    queryKey: queryKeys.orderableTests.byCode(testCode ?? ''),
+    queryFn: () => orderableTestAPI.getByCode(testCode!),
     enabled,
     ...cacheConfig.static,
   });
@@ -260,24 +250,21 @@ export function useTest(testCode: string | undefined) {
   };
 }
 
-/**
- * Batch-load full catalog documents for the given codes and seed `tests.byCode` cache.
- */
-export function useTestsByCodes(codes: readonly string[]) {
+export function useOrderableTestsByCodes(codes: readonly string[]) {
   const codesKey = uniqueSortedTestCodes(codes).join(',');
   const sortedCodes = useMemo(() => (codesKey ? codesKey.split(',') : []), [codesKey]);
   const enabled = useAuthQueryEnabled(sortedCodes.length > 0);
 
   const query = useQuery({
-    queryKey: queryKeys.tests.byCodes(sortedCodes),
+    queryKey: queryKeys.orderableTests.byCodes(sortedCodes),
     queryFn: async () => {
-      const tests: Test[] = [];
+      const tests: OrderableTest[] = [];
       for (const chunk of chunkTestCodes(sortedCodes)) {
-        tests.push(...(await testAPI.getByCodes(chunk)));
+        tests.push(...(await orderableTestAPI.getByCodes(chunk)));
       }
       const client = getQueryClient();
       for (const test of tests) {
-        client.setQueryData(queryKeys.tests.byCode(test.code), test);
+        client.setQueryData(queryKeys.orderableTests.byCode(test.code), test);
       }
       return tests;
     },
@@ -301,79 +288,10 @@ export function useTestsByCodes(codes: readonly string[]) {
   };
 }
 
-/**
- * Client-side search over the slim catalog (name, code, synonyms, LOINC, workups).
- */
-export function useTestSearch(searchQuery: string) {
-  const { tests, isLoading } = useTestCatalog();
-
-  const results = searchQuery.trim()
-    ? tests.filter(test => {
-        const query = searchQuery.toLowerCase();
-        return (
-          test.name.toLowerCase().includes(query) ||
-          test.code.toLowerCase().includes(query) ||
-          test.synonyms?.some(syn => syn.toLowerCase().includes(query)) ||
-          (test.loincCode?.toLowerCase().includes(query) ?? false) ||
-          test.workups?.some(
-            workupId =>
-              workupId.toLowerCase().includes(query) ||
-              resolveClinicalWorkupLabel(workupId).toLowerCase().includes(query)
-          )
-        );
-      })
-    : tests;
-
-  return {
-    results,
-    isSearching: isLoading,
-    totalCount: tests.length,
-  };
-}
-
-/**
- * Slim catalog rows for one category (active only).
- */
-export function useTestsByCategory(category: TestCategory | undefined) {
-  const { tests, isLoading } = useTestCatalog();
-
-  const filteredTests = category
-    ? tests.filter(test => test.category === category && test.isActive)
-    : tests.filter(test => test.isActive);
-
-  return {
-    tests: filteredTests,
-    isLoading,
-  };
-}
-
-/**
- * Active slim catalog rows.
- */
-export function useActiveTests() {
-  const { tests, isLoading } = useTestCatalog();
-
-  const activeTests = tests.filter(test => test.isActive);
-
-  return {
-    tests: activeTests,
-    isLoading,
-    count: activeTests.length,
-  };
-}
-
-/**
- * Name lookup over the slim catalog Map. `getTest` returns a summary, not parameters.
- */
-export function useTestNameLookup() {
-  const { getTest, getTestName, isLoading } = useTestCatalog();
-  return { getTestName, getTest, isLoading };
-}
-
-/**
- * Invalidate the slim catalog list (and nested test queries under `tests`).
- */
-export function useInvalidateTestCatalog() {
-  const { invalidateAll: invalidate } = useInvalidateQueryKey(queryKeys.tests.all);
-  return { invalidate };
-}
+export {
+  useActiveOrderableTests,
+  useInvalidateOrderableTests,
+  useOrderableTestNameLookup,
+  useOrderableTestSearch,
+  useOrderableTestsByCategory,
+} from './orderableTestHooks';

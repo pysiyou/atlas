@@ -16,7 +16,7 @@ import {
   IconKeys,
 } from '@/icons';
 import { useUserLookup } from '@/lib/api';
-import { useTestNameLookup } from '@/features/catalog';
+import { useOrderableTestNameLookup } from '@/features/catalog';
 import { getBillableTests } from '../utils/orderCalculator';
 import { OrderDoctorApprovalControl } from './OrderDoctorApprovalControl';
 
@@ -26,7 +26,7 @@ export interface OrderInfoSectionProps {
 
 export function OrderInfoSection({ order }: OrderInfoSectionProps) {
   const { getUserName } = useUserLookup();
-  const { getTestName } = useTestNameLookup();
+  const { getTestName } = useOrderableTestNameLookup();
   const createdById = order.createdBy?.trim() || null;
   const createdByName = createdById ? getUserName(createdById) : null;
   const activeTests = useMemo(() => getBillableTests(order.tests ?? []), [order.tests]);

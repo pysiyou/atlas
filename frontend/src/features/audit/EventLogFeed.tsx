@@ -2,7 +2,7 @@ import { collectTestCodes } from './catalog';
 import { DENSE_EMPTY_STATE, useEventLogCopy } from '@/strings';
 import { EmptyState } from '@/components/display/EmptyState';
 import { InlineHighlight } from '@/components/primitives';
-import { resolveParameterLabel, useParameterLabelMap } from '@/features/catalog';
+import { resolveAnalyteLabel, useAnalyteLabelMap } from '@/features/catalog';
 import { parseResultEntry, ResultValueAnnotations, statusMapFromFlags } from '@/features/lab/cross';
 import { FG, RADIUS, text, text as detailText } from '@/theme/recipes';
 import { cn } from '@/utils';
@@ -49,7 +49,7 @@ function EventLogResultsList({
   testCode?: string;
 }) {
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
-  const parameterLabels = useParameterLabelMap(testCode);
+  const analyteLabels = useAnalyteLabelMap(testCode);
   const entries = Object.entries(results ?? {});
 
   if (entries.length === 0) {
@@ -65,7 +65,7 @@ function EventLogResultsList({
             {index > 0 ? <span className="mr-space-1"> </span> : null}
             <span className={DETAIL_STYLES.line}>
               <span className={DETAIL_STYLES.lineLabel}>
-                {resolveParameterLabel(key, parameterLabels)}:{' '}
+                {resolveAnalyteLabel(key, analyteLabels)}:{' '}
               </span>
               <ResultValueAnnotations resultValue={resultValue} unit={unit} status={status} dense />
             </span>

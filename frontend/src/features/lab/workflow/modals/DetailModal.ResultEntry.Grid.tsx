@@ -13,18 +13,18 @@ import { FG } from '@/theme/recipes';
 
 export function ResultEntryDetailGrid({
   workItem,
-  totalParams,
+  totalAnalytes,
   filledCount,
   isComplete,
-  remainingParams,
+  remainingAnalytes,
   showTurnaroundTime,
   turnaroundTime,
 }: {
   workItem: LabModalWorkItem;
-  totalParams: number;
+  totalAnalytes: number;
   filledCount: number;
   isComplete: boolean;
-  remainingParams: number;
+  remainingAnalytes: number;
   showTurnaroundTime: boolean;
   turnaroundTime?: number;
 }) {
@@ -32,11 +32,11 @@ export function ResultEntryDetailGrid({
     <DetailGrid
       sections={[
         {
-          preset: 'panel.compact.standard', title: 'Test Parameters',
+          preset: 'panel.compact.standard', title: 'Result components',
           fields: [
             {
-              label: 'Total Parameters',
-              value: <span className="font-normal">{totalParams}</span>,
+              label: 'Total results',
+              value: <span className="font-normal">{totalAnalytes}</span>,
             },
             {
               label: 'Filled',
@@ -49,8 +49,8 @@ export function ResultEntryDetailGrid({
             {
               label: 'Remaining',
               value: (
-                <span className={remainingParams === 0 ? 'text-success-fg' : FG.captionMuted}>
-                  {remainingParams}
+                <span className={remainingAnalytes === 0 ? 'text-success-fg' : FG.captionMuted}>
+                  {remainingAnalytes}
                 </span>
               ),
             },

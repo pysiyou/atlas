@@ -6,7 +6,7 @@ import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { usePageFilters } from '@/hooks';
 import { useServerListChrome } from '@/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
-import { uniqueSortedTestCodes, useTestsByCodes } from '@/features/catalog';
+import { uniqueSortedTestCodes, useOrderableTestsByCodes } from '@/features/catalog';
 import { useUserLookup } from '@/lib/api';
 import { createSampleLookupForOrder } from '@/features/lab/cross';
 import {
@@ -73,7 +73,7 @@ export function ReportList() {
     () => uniqueSortedTestCodes(reportableOrders.flatMap(item => item.testCodes)),
     [reportableOrders]
   );
-  const { tests } = useTestsByCodes(pageTestCodes);
+  const { tests } = useOrderableTestsByCodes(pageTestCodes);
   const { getUserName } = useUserLookup();
 
   const { loading, listPagination, setFilterAndReset } = useServerListChrome({
@@ -100,7 +100,7 @@ export function ReportList() {
       return prepareReportData({
         reportableOrder,
         patients: undefined,
-        catalogTests: tests,
+        orderableTests: tests,
         getSample,
         getUserName: id => getUserName(id),
       });

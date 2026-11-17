@@ -3,7 +3,7 @@ import type { OrderFormInput } from '../schemas/order.schema';
 import type { Patient, PriorityLevel } from '@/types';
 import { OrderPaymentSection } from './OrderPaymentSection';
 import { PatientSelect } from './PatientSelect';
-import { TestSelect } from './TestSelect';
+import { OrderUpsertTestCodesField } from './OrderUpsertTestCodesField';
 import { Textarea } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
@@ -97,37 +97,13 @@ export function OrderUpsertFormFields({
         )}
       />
 
-      <Controller
-        name="testCodes"
+      <OrderUpsertTestCodesField
         control={control}
-        rules={{ required: 'At least one test is required' }}
-        render={({ field, fieldState }) => (
-          <TestSelect
-            selectedTests={field.value || []}
-            testSearch={testSearch}
-            onTestSearchChange={setTestSearch}
-            filteredTests={filteredTests}
-            onToggleTest={(code: string) => {
-              const current = field.value || [];
-              const isAdding = !current.includes(code);
-              const newValue = isAdding
-                ? [...current, code]
-                : current.filter(c => c !== code);
-              field.onChange(newValue);
-            }}
-            error={fieldState.error?.message}
-            tests={tests}
-            workups={workups}
-            onAddWorkup={memberCodes => {
-              const current = field.value || [];
-              const merged = [...current];
-              for (const code of memberCodes) {
-                if (!merged.includes(code)) merged.push(code);
-              }
-              field.onChange(merged);
-            }}
-          />
-        )}
+        testSearch={testSearch}
+        setTestSearch={setTestSearch}
+        filteredTests={filteredTests}
+        tests={tests}
+        workups={workups}
       />
 
       <ReferentDoctorSelect

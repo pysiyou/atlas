@@ -7,8 +7,8 @@ import { actionButtonPreset, Button } from '@/components/primitives';
 import { Textarea } from '@/components/inputs';
 import { cn } from '@/utils';
 import { feedbackTitle } from '@/feedback';
-import type { Test, Patient } from '@/types';
-import { ParameterInput } from './ResultParameterInputs';
+import type  { OrderableTest, Patient } from '@/types';
+import { LabResultInput } from './LabResultInputs';
 import { getReferenceRangeDisplay, checkCriticalStatus } from './resultEntry';
 import { text, METRIC_TILE , FG } from '@/theme/recipes';
 import { resultTileStatusClass } from '../utils/labResult';
@@ -16,12 +16,12 @@ import { labDisabledActionTooltip, labModalFooterDenyMessage } from '../utils/qu
 import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 
 interface EntryFormProps {
-  testDef: Test;
+  testDef: OrderableTest;
   resultKey: string;
   results: Record<string, string>;
   technicianNotes: string;
   patient?: Patient;
-  onResultsChange: (resultKey: string, paramCode: string, value: string) => void;
+  onResultsChange: (resultKey: string, analyteCode: string, value: string) => void;
   onNotesChange: (resultKey: string, notes: string) => void;
   onSave: () => void;
   isComplete: boolean;
@@ -48,8 +48,8 @@ export function ResultEntryForm({
 }: EntryFormProps) {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
 
-  const handleValidationChange = useCallback((paramCode: string, error: string | undefined) => {
-    setValidationErrors(prev => ({ ...prev, [paramCode]: error }));
+  const handleValidationChange = useCallback((analyteCode: string, error: string | undefined) => {
+    setValidationErrors(prev => ({ ...prev, [analyteCode]: error }));
   }, []);
 
   const hasValidationErrors = Object.values(validationErrors).some(error => !!error);
@@ -58,36 +58,36 @@ export function ResultEntryForm({
   const footerDenyStatus = labModalFooterDenyMessage({ denyMessage });
   const saveDisabledTitle = labDisabledActionTooltip({ denyMessage });
 
-  if (!testDef?.parameters) return null;
+  if (!testDef?.analytes) return null;
 
   return (
     <div className={cn(!isModal && cn('bg-surface-page p-panel border border-border-subtle', RADIUS.menu))}>
       <div className={METRIC_TILE.grid}>
-        {testDef.parameters.map(param => {
-          const value = results[param.code] ?? '';
+        {testDef.analytes.map(analyte => {
+          const value = results[analyte.code] ?? '';
           const hasValue = Boolean(value.trim());
-          const refRange = getReferenceRangeDisplay(param, patient);
-          const isCritical = hasValue && checkCriticalStatus(param, value);
+          const refRange = getReferenceRangeDisplay(analyte, patient);
+          const isCritical = hasValue && checkCriticalStatus(analyte, value);
           const valueType =
-            param.valueType ||
-            (param.type === 'numeric' ? 'NUMERIC' : param.type === 'select' ? 'SELECT' : 'TEXT');
+            analyte.valueType ||
+            (analyte.type === 'numeric' ? 'NUMERIC' : analyte.type === 'select' ? 'SELECT' : 'TEXT');
           const status = isCritical ? 'critical' : 'normal';
 
           return (
             <div
-              key={param.code}
+              key={analyte.code}
               className={cn(
                 METRIC_TILE.tile,
                 resultTileStatusClass(status, hasValue),
-                validationErrors[param.code] && 'border-danger-stroke ring-1 ring-danger-stroke/30',
+                validationErrors[analyte.code] && 'border-danger-stroke ring-1 ring-danger-stroke/30',
               )}
             >
               <div className="flex items-baseline justify-between gap-space-2 min-w-0">
                 <label
-                  htmlFor={`result-${resultKey}-${param.code}`}
+                  htmlFor={`result-${resultKey}-${analyte.code}`}
                   className={METRIC_TILE.label}
                 >
-                  {param.name}
+                  {analyte.name}
                 </label>
                 <span
                   className={cn(
@@ -101,30 +101,30 @@ export function ResultEntryForm({
               </div>
 
               <div className="relative">
-                <ParameterInput
-                  param={param}
+                <LabResultInput
+                  analyte={analyte}
                   value={value}
-                  onChange={newValue => onResultsChange(resultKey, param.code, newValue ?? '')}
+                  onChange={newValue => onResultsChange(resultKey, analyte.code, newValue ?? '')}
                   onKeyDown={e => {
                     if (e.key === 'Enter' && canSubmit) {
                       e.preventDefault();
                       onSave();
                     }
                   }}
-                  inputId={`result-${resultKey}-${param.code}`}
-                  validationError={validationErrors[param.code]}
-                  onValidationChange={error => handleValidationChange(param.code, error)}
+                  inputId={`result-${resultKey}-${analyte.code}`}
+                  validationError={validationErrors[analyte.code]}
+                  onValidationChange={error => handleValidationChange(analyte.code, error)}
                   disabled={entryLocked}
                 />
-                {valueType !== 'TEXT' && param.unit && (
+                {valueType !== 'TEXT' && analyte.unit && (
                   <div className="absolute inset-y-0 right-0 pr-space-3 flex items-center pointer-events-none z-0">
-                    <span className={`${text({ role: 'body', intent: 'muted' })} select-none`}>{param.unit}</span>
+                    <span className={`${text({ role: 'body', intent: 'muted' })} select-none`}>{analyte.unit}</span>
                   </div>
                 )}
               </div>
 
-              {validationErrors[param.code] && (
-                <p className={`${FIELD_ERROR_CAPTION} truncate`} title={validationErrors[param.code]}>
+              {validationErrors[analyte.code] && (
+                <p className={`${FIELD_ERROR_CAPTION} truncate`} title={validationErrors[analyte.code]}>
                   {feedbackTitle('lab.entry.fieldInvalid')}
                 </p>
               )}
