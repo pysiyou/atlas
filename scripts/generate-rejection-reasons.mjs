@@ -9,9 +9,9 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
-const regDir = path.join(root, 'contracts', 'registries');
-const samplePath = path.join(regDir, 'sample-rejection-reasons.json');
-const resultPath = path.join(regDir, 'result-rejection-reasons.json');
+const contractsDir = path.join(root, 'contracts');
+const samplePath = path.join(contractsDir, 'rejection-specimen.json');
+const resultPath = path.join(contractsDir, 'rejection-analytical.json');
 const pyOut = path.join(root, 'backend', 'app', 'shared', 'contracts', 'rejection_reasons.py');
 const tsOut = path.join(root, 'frontend', 'src', 'types', 'generated', 'rejectionReasons.ts');
 
@@ -74,7 +74,7 @@ function pyReasonEntry(id) {
 }
 
 const py = `"""
-Rejection reason registry — GENERATED from contracts/registries/sample-rejection-reasons.json
+Rejection reason registry — GENERATED from contracts/rejection-specimen.json + rejection-analytical.json
 and result-rejection-reasons.json. DO NOT EDIT.
 
 Each reason: id, code, label, domain (specimen | analytical).

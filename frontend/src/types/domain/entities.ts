@@ -463,7 +463,7 @@ export interface ReferenceRange {
   criticalHigh?: number; // Above this is critical
 }
 
-/** Registry reason id (contracts/catalog/orderable-tests.json / analyte-catalog.json rejection criteria). */
+/** Registry reason id (contracts/orderable-tests.json / analytes.json rejection criteria). */
 export type RejectionReasonId = string;
 
 /** Wire shape (catalog JSON) — snake_case field names. */
@@ -479,13 +479,13 @@ export interface SampleRequirements {
   rejection_criteria?: RejectionReasonId[];
 }
 
-/** Slim orderable test row (OpenAPI) with optional workup index enrichment. */
-export type OrderableTestSummary = ApiOrderableTestSummaryResponse & { workups?: string[] };
+/** Slim orderable test row from catalog API (includes workup ids). */
+export type OrderableTestSummary = ApiOrderableTestSummaryResponse;
 
-/** Full orderable test (OpenAPI) with catalog analyte entries and optional workups. */
-export type OrderableTest = ApiOrderableTestResponse & { workups?: string[] };
+/** Full orderable test with embedded analyte catalog entries. */
+export type OrderableTest = ApiOrderableTestResponse;
 
-/** One analyte-catalog.json row — OpenAPI wire type (matches contract JSON keys). */
+/** One analytes.json row — OpenAPI wire type (matches contract JSON keys). */
 export type AnalyteDefinition = ApiCatalogAnalyteEntry;
 
 /**

@@ -1,14 +1,13 @@
 """
-Validate rejection reasons against orderable-tests / analyte-catalog rejection criteria.
+Validate rejection reasons against orderable-tests / analytes rejection criteria.
 
 Runtime checks use persisted ``OrderableTest`` rows (synced from contracts). Contract
 registry ids are validated in CI via ``scripts/validate-catalog.mjs`` against
-``sample-rejection-reasons.json`` (pre-analytical) and ``result-rejection-reasons.json`` (validation).
+``rejection-specimen.json`` (pre-analytical) and ``rejection-analytical.json`` (validation).
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Literal
 
 from app.domains.catalog.models import OrderableTest
@@ -21,10 +20,6 @@ from app.shared.contracts.rejection_reasons import (
 from sqlalchemy.orm import Session
 
 QualityContext = Literal["sample", "validation"]
-
-CATALOG_CONTRACT_DIR = Path(__file__).resolve().parents[5] / "contracts" / "catalog"
-ORDERABLE_TESTS_CONTRACT = CATALOG_CONTRACT_DIR / "orderable-tests.json"
-ANALYTE_CATALOG_CONTRACT = CATALOG_CONTRACT_DIR / "analyte-catalog.json"
 
 
 @dataclass(frozen=True)

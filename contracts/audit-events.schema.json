@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://atlas.local/contracts/registries/audit-events.schema.json",
+  "$id": "https://atlas.local/contracts/audit-events.schema.json",
   "title": "Atlas audit event taxonomy",
   "type": "object",
   "required": ["events", "query"],

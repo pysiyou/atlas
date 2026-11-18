@@ -29,7 +29,7 @@ export const PERSIST_MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
  * Query key prefixes that should be persisted
  * Only static/semi-static data
  */
-const PERSISTABLE_QUERY_KEYS = ['tests', 'users', 'affiliations'];
+const PERSISTABLE_QUERY_KEYS = ['orderableTests', 'users', 'affiliations'];
 
 /** Discard pre-summary catalog blobs still sitting in localStorage. */
 export const PERSIST_BUSTER = 'catalog-summary-v1';
@@ -42,9 +42,9 @@ export function shouldPersistQuery(queryKey: readonly unknown[]): boolean {
   if (!queryKey.length) return false;
   const firstKey = queryKey[0];
   if (typeof firstKey !== 'string') return false;
-  if (firstKey === 'tests') {
+  if (firstKey === 'orderableTests') {
     const second = queryKey[1];
-    return second === 'list' || second === 'detail';
+    return second === 'list' || second === 'byCode';
   }
   return PERSISTABLE_QUERY_KEYS.includes(firstKey);
 }

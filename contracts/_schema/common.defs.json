@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.local/contracts/_schema/common.defs.json",
+  "title": "Atlas contract shared definitions",
+  "$defs": {
+    "loincCode": {
+      "type": "string",
+      "pattern": "^[0-9]{1,5}-[0-9]$",
+      "description": "LOINC code"
+    },
+    "rejectionReasonId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 1
+    },
+    "testCode": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{1,7}$",
+      "minLength": 2,
+      "maxLength": 8
+    },
+    "analyteCode": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{0,31}$",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "valueType": {
+      "type": "string",
+      "enum": ["NUMERIC", "SELECT", "TEXT"]
+    },
+    "demographicRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "low": { "type": "number" },
+        "high": { "type": "number" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 32 }
+      },
+      "anyOf": [
+        { "required": ["low"] },
+        { "required": ["high"] },
+        { "required": ["text"] }
+      ]
+    },
+    "referenceRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "adult_general": { "$ref": "#/$defs/demographicRange" },
+        "adult_male": { "$ref": "#/$defs/demographicRange" },
+        "adult_female": { "$ref": "#/$defs/demographicRange" },
+        "pediatric": { "$ref": "#/$defs/demographicRange" }
+      }
+    },
+    "criticalRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "low": { "type": "number" },
+        "high": { "type": "number" }
+      }
+    },
+    "physiologicRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min", "max"],
+      "properties": {
+        "min": { "type": "number" },
+        "max": { "type": "number" }
+      }
+    },
+    "validationBlock": {
+      "type": "object",
+      "required": ["rejection_criteria"],
+      "additionalProperties": false,
+      "properties": {
+        "rejection_criteria": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rejectionReasonId" },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    },
+    "testCategorySlug": {
+      "type": "string",
+      "enum": [
+        "hematology",
+        "biochemistry",
+        "microbiology",
+        "serology",
+        "urinalysis",
+        "coagulation",
+        "immunology",
+        "molecular",
+        "toxicology",
+        "imaging",
+        "stool",
+        "general"
+      ]
+    },
+    "specimenType": {
+      "type": "string",
+      "enum": [
+        "blood",
+        "urine",
+        "stool",
+        "saliva",
+        "swab",
+        "tissue",
+        "sputum",
+        "csf",
+        "pleural_fluid",
+        "serum",
+        "plasma",
+        "other"
+      ]
+    },
+    "collectionBlock": {
+      "type": "object",
+      "required": ["sample_type"],
+      "additionalProperties": false,
+      "properties": {
+        "sample_type": { "$ref": "#/$defs/specimenType" },
+        "container_types": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "container_top_colors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "volume_ml_min": { "type": "number" },
+        "volume_description": { "type": "string" },
+        "container_description": { "type": "string" },
+        "fasting_required": { "type": "boolean" },
+        "collection_notes": { "type": "string" },
+        "rejection_criteria": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rejectionReasonId" },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

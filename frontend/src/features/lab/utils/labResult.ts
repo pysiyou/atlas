@@ -264,12 +264,13 @@ export function formatReferenceRange(
   demographics?: { gender?: Gender; age?: number; dateOfBirth?: string }
 ): string {
   if ('source' in range && range.source !== 'none') {
-    if (range.text?.trim()) return range.text.trim();
-    if (range.low !== undefined && range.high !== undefined) {
-      return formatRangeBounds(range.low, range.high);
+    const display = range as ReferenceRangeDisplay;
+    if (display.text?.trim()) return display.text.trim();
+    if (display.low !== undefined && display.high !== undefined) {
+      return formatRangeBounds(display.low, display.high);
     }
-    if (range.low !== undefined) return `> ${range.low}`;
-    if (range.high !== undefined) return `< ${range.high}`;
+    if (display.low !== undefined) return `> ${display.low}`;
+    if (display.high !== undefined) return `< ${display.high}`;
     return 'N/A';
   }
   if ('adult_general' in range || 'adult_male' in range || 'adult_female' in range) {

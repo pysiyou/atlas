@@ -14,16 +14,19 @@
     "codegen:feedback": "node ../scripts/generate-feedback-catalog.mjs",
     "codegen:audit": "node ../scripts/generate-audit-catalog.mjs",
     "codegen:client-config": "node ../scripts/generate-client-config-types.mjs",
-    "codegen:workups": "node ../scripts/generate-clinical-workups.mjs",
+    "codegen:workups": "node ../scripts/generate-workups.mjs",
     "codegen:catalog": "node ../scripts/generate-catalog-contract-types.mjs",
     "codegen:rejection": "node ../scripts/generate-rejection-reasons.mjs",
-    "codegen:openapi": "python ../scripts/export-openapi.py && openapi-typescript ../contracts/registries/openapi.json -o src/lib/api/types/generated/api.d.ts",
-    "codegen": "npm run codegen:rejection && npm run codegen:catalog && npm run codegen:openapi && npm run codegen:feedback && npm run codegen:audit && npm run codegen:client-config && npm run codegen:workups",
+    "codegen:enums": "node ../scripts/generate-enums.mjs",
+    "codegen:entity-ids": "node ../scripts/generate-entity-ids.mjs",
+    "codegen:contracts": "node ../scripts/codegen-contracts.mjs",
+    "codegen:openapi": "python ../scripts/export-openapi.py && openapi-typescript ../contracts/openapi.json -o src/lib/api/types/generated/api.d.ts",
+    "codegen": "npm run codegen:contracts && npm run codegen:openapi && npm run codegen:client-config",
     "validate:catalog": "node ../scripts/validate-catalog.mjs",
     "validate:client-config": "node ../scripts/validate-client-config.mjs",
     "validate:ui-strings": "node ../scripts/validate-ui-strings.mjs",
     "validate": "npm run validate:catalog && npm run validate:client-config && npm run validate:ui-strings",
-    "check:openapi": "python ../scripts/export-openapi.py && git diff --exit-code ../contracts/registries/openapi.json src/lib/api/types/generated/api.d.ts"
+    "check:openapi": "python ../scripts/export-openapi.py && git diff --exit-code ../contracts/openapi.json src/lib/api/types/generated/api.d.ts"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.16",

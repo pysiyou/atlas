@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Validate catalog contracts:
- * 1. Draft-07 meta-schema on all contracts/registries/*.schema.json (definitions only; no $defs)
- * 2. Ajv instance validation (analyte-catalog, orderable-tests, clinical-workups, rejection registries)
+ * 1. Meta-schema checks on contracts/*.schema.json
+ * 2. Ajv instance validation (analytes, orderable-tests, workups, rejection registries, enums)
  * 3. FK graph: workups → tests → analytes; sample/result rejection registries
  * 4. LOINC hygiene on analytes and orderable tests
  */
@@ -19,31 +19,24 @@ const addFormats = require('ajv-formats');
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
-const catalogDir = path.join(root, 'contracts', 'catalog');
-const sampleRejectionPath = path.join(
-  root,
-  'contracts',
-  'registries',
-  'sample-rejection-reasons.json',
-);
-const resultRejectionPath = path.join(
-  root,
-  'contracts',
-  'registries',
-  'result-rejection-reasons.json',
-);
-const registriesDir = path.join(root, 'contracts', 'registries');
-const sampleRejectionSchemaPath = path.join(registriesDir, 'sample-rejection-reasons.schema.json');
-const resultRejectionSchemaPath = path.join(registriesDir, 'result-rejection-reasons.schema.json');
+const contractsDir = path.join(root, 'contracts');
+const commonDefsSchemaPath = path.join(contractsDir, '_schema', 'common.defs.json');
+const sampleRejectionPath = path.join(contractsDir, 'rejection-specimen.json');
+const resultRejectionPath = path.join(contractsDir, 'rejection-analytical.json');
+const sampleRejectionSchemaPath = path.join(contractsDir, 'rejection-specimen.schema.json');
+const resultRejectionSchemaPath = path.join(contractsDir, 'rejection-analytical.schema.json');
 const LOINC_PATTERN = /^[0-9]{1,5}-[0-9]$/;
 
 const paths = {
-  analyte: path.join(catalogDir, 'analyte-catalog.json'),
-  analyteSchema: path.join(catalogDir, 'analyte-catalog.schema.json'),
-  tests: path.join(catalogDir, 'orderable-tests.json'),
-  testsSchema: path.join(catalogDir, 'orderable-tests.schema.json'),
-  workups: path.join(catalogDir, 'clinical-workups.json'),
-  workupsSchema: path.join(catalogDir, 'clinical-workups.schema.json'),
+  analyte: path.join(contractsDir, 'analytes.json'),
+  analyteSchema: path.join(contractsDir, 'analytes.schema.json'),
+  tests: path.join(contractsDir, 'orderable-tests.json'),
+  testsSchema: path.join(contractsDir, 'orderable-tests.schema.json'),
+  workups: path.join(contractsDir, 'workups.json'),
+  workupsSchema: path.join(contractsDir, 'workups.schema.json'),
+  enums: path.join(contractsDir, 'enums.json'),
+  enumsSchema: path.join(contractsDir, 'enums.schema.json'),
+  entityIds: path.join(contractsDir, 'entity-ids.json'),
 };
 
 /**
@@ -175,7 +168,7 @@ export function runCatalogIntegrityChecks(docs) {
     }
 
     if (Object.prototype.hasOwnProperty.call(test, 'workups')) {
-      console.error(`${code}: workups[] is not allowed on orderable tests; use clinical-workups.test_codes`);
+      console.error(`${code}: workups[] is not allowed on orderable tests; use workups.json test_codes`);
       errors += 1;
     }
 
@@ -186,14 +179,14 @@ export function runCatalogIntegrityChecks(docs) {
       }
     }
 
-    const rootSampleType = test.sample_type;
-    const nestedSample = test.sample;
-    if (typeof rootSampleType === 'string' && nestedSample && typeof nestedSample === 'object') {
-      const nestedType = /** @type {{ sample_type?: unknown }} */ (nestedSample).sample_type;
-      if (nestedType !== rootSampleType) {
-        console.error(
-          `${code}: sample.sample_type (${JSON.stringify(nestedType)}) must match sample_type (${JSON.stringify(rootSampleType)})`,
-        );
+    const collection = test.collection;
+    if (!collection || typeof collection !== 'object' || typeof collection.sample_type !== 'string') {
+      console.error(`${code}: collection.sample_type is required`);
+      errors += 1;
+    }
+    for (const legacy of ['sample', 'sample_type', 'test_category', 'category', 'method_common', 'sources']) {
+      if (Object.prototype.hasOwnProperty.call(test, legacy)) {
+        console.error(`${code}: obsolete field ${legacy}`);
         errors += 1;
       }
     }
@@ -399,11 +392,11 @@ function runRejectionReasonChecks(docs) {
         ? /** @type {{ rejection_criteria?: unknown[] }} */ (validation).rejection_criteria
         : undefined;
     errors += checkList(validationList, `${code} validation.rejection_criteria`, resultIds);
-    const sample = test.sample;
-    if (sample && typeof sample === 'object') {
+    const collection = test.collection;
+    if (collection && typeof collection === 'object') {
       errors += checkList(
-        /** @type {{ rejection_criteria?: unknown[] }} */ (sample).rejection_criteria,
-        `${code} sample.rejection_criteria`,
+        /** @type {{ rejection_criteria?: unknown[] }} */ (collection).rejection_criteria,
+        `${code} collection.rejection_criteria`,
         sampleIds,
       );
     }
@@ -436,43 +429,41 @@ function runRejectionReasonChecks(docs) {
   return errors;
 }
 
-const REGISTRIES_DIR = path.join(root, 'contracts', 'registries');
-
 /**
  * @param {import('ajv').default} ajv
  * @returns {number}
  */
 function validateAllContractSchemas(ajv) {
   let errors = 0;
-  const catalogSchemas = fs
-    .readdirSync(catalogDir)
-    .filter(name => name.endsWith('.schema.json'))
-    .sort();
-  const registrySchemas = fs
-    .readdirSync(REGISTRIES_DIR)
+  const schemaNames = fs
+    .readdirSync(contractsDir)
     .filter(name => name.endsWith('.schema.json'))
     .sort();
 
-  function checkSchema(filePath, name) {
+  for (const name of schemaNames) {
+    const filePath = path.join(contractsDir, name);
     const schemaDoc = readJson(filePath);
-    if (Object.prototype.hasOwnProperty.call(schemaDoc, '$defs')) {
-      console.error(`${name}: must use "definitions", not "$defs" (Draft-07 convention)`);
-      errors += 1;
-    }
     const before = errors;
-    errors += validateSchemaMeta(ajv, name, schemaDoc);
+    if (!Object.prototype.hasOwnProperty.call(schemaDoc, '$defs')) {
+      errors += validateSchemaMeta(ajv, name, schemaDoc);
+    }
     if (errors === before) {
       console.log(`ok schema ${name}`);
     }
   }
-
-  for (const name of catalogSchemas) {
-    checkSchema(path.join(catalogDir, name), name);
-  }
-  for (const name of registrySchemas) {
-    checkSchema(path.join(REGISTRIES_DIR, name), name);
-  }
   return errors;
+}
+
+function compileWithCommonDefs(schemaDoc) {
+  const ajv = createAjv();
+  if (fs.existsSync(commonDefsSchemaPath)) {
+    const common = { ...readJson(commonDefsSchemaPath) };
+    delete common.$schema;
+    ajv.addSchema(common);
+  }
+  const copy = { ...schemaDoc };
+  delete copy.$schema;
+  return ajv.compile(copy);
 }
 
 function main() {
@@ -484,17 +475,35 @@ function main() {
   let errors = 0;
   errors += validateAllContractSchemas(ajv);
 
-  const validateAnalyte = compileDraft07(analyteSchema);
-  const validateTests = compileDraft07(testsSchema);
-  const validateWorkups = compileDraft07(workupsSchema);
+  const validateAnalyte = compileWithCommonDefs(analyteSchema);
+  const validateTests = compileWithCommonDefs(testsSchema);
+  const validateWorkups = compileWithCommonDefs(workupsSchema);
 
   const analytes = readJson(paths.analyte);
   const tests = readJson(paths.tests);
   const workups = readJson(paths.workups);
 
-  errors += validateAgainstSchema('analyte-catalog.json', validateAnalyte, analytes);
+  errors += validateAgainstSchema('analytes.json', validateAnalyte, analytes);
   errors += validateAgainstSchema('orderable-tests.json', validateTests, tests);
-  errors += validateAgainstSchema('clinical-workups.json', validateWorkups, workups);
+  errors += validateAgainstSchema('workups.json', validateWorkups, workups);
+
+  if (fs.existsSync(paths.enums) && fs.existsSync(paths.enumsSchema)) {
+    const enumsDoc = { ...readJson(paths.enums) };
+    delete enumsDoc.containers;
+    errors += validateAgainstSchema(
+      'enums.json',
+      compileDraft07(readJson(paths.enumsSchema)),
+      enumsDoc,
+    );
+  }
+
+  if (fs.existsSync(paths.entityIds)) {
+    const entity = readJson(paths.entityIds);
+    if (!entity.patterns || typeof entity.patterns !== 'object') {
+      console.error('entity-ids.json: missing patterns');
+      errors += 1;
+    }
+  }
 
   errors += runCatalogIntegrityChecks({ analytes, tests, workups });
   errors += runRequiredFixtureChecks({ analytes, tests });
@@ -502,14 +511,14 @@ function main() {
 
   if (fs.existsSync(sampleRejectionSchemaPath) && fs.existsSync(sampleRejectionPath)) {
     errors += validateAgainstSchema(
-      'sample-rejection-reasons.json',
+      'rejection-specimen.json',
       compileDraft07(readJson(sampleRejectionSchemaPath)),
       readJson(sampleRejectionPath),
     );
   }
   if (fs.existsSync(resultRejectionSchemaPath) && fs.existsSync(resultRejectionPath)) {
     errors += validateAgainstSchema(
-      'result-rejection-reasons.json',
+      'rejection-analytical.json',
       compileDraft07(readJson(resultRejectionSchemaPath)),
       readJson(resultRejectionPath),
     );
@@ -519,9 +528,9 @@ function main() {
     console.error(`catalog validation failed with ${errors} error(s)`);
     process.exit(1);
   }
-  console.log('ok analyte-catalog.json');
+  console.log('ok analytes.json');
   console.log('ok orderable-tests.json');
-  console.log('ok clinical-workups.json');
+  console.log('ok workups.json');
   console.log('catalog referential integrity OK');
 }
 

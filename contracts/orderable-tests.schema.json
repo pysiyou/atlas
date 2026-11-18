@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.local/contracts/orderable-tests.schema.json",
+  "title": "Atlas orderable test registry",
+  "type": "object",
+  "required": ["tests"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/testEntry" }
+    }
+  },
+  "$defs": {
+    "testCode": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/testCode" },
+    "analyteCode": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/analyteCode" },
+    "loincCode": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/loincCode" },
+    "testCategorySlug": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/testCategorySlug" },
+    "collectionBlock": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/collectionBlock" },
+    "validationBlock": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/validationBlock" },
+    "testEntry": {
+      "type": "object",
+      "required": [
+        "test_code",
+        "name",
+        "category_slug",
+        "category_label",
+        "analytes",
+        "collection",
+        "validation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "test_code": { "$ref": "#/$defs/testCode" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "category_slug": { "$ref": "#/$defs/testCategorySlug" },
+        "category_label": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "loinc_code": { "$ref": "#/$defs/loincCode" },
+        "order_obs": { "type": "string", "enum": ["order", "observation", "both"] },
+        "analytes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/analyteCode" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "collection": { "$ref": "#/$defs/collectionBlock" },
+        "validation": { "$ref": "#/$defs/validationBlock" },
+        "turnaround_time_hours": { "type": "number", "minimum": 0 },
+        "price": { "type": "number", "minimum": 0 },
+        "methodology": { "type": "string", "maxLength": 500 },
+        "synonyms": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "confidence": { "type": "string", "enum": ["HIGH", "MEDIUM", "LOW"] },
+        "notes": { "type": "string", "maxLength": 2000 }
+      }
+    }
+  }
+}

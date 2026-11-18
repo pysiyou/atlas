@@ -7,7 +7,7 @@ import { OrderUpsertTestCodesField } from './OrderUpsertTestCodesField';
 import { Textarea } from '@/components/inputs';
 import { MultiSelectFilter } from '@/components/overlays';
 import { Panel } from '@/components/surfaces';
-import { useClinicalWorkups } from '@/features/catalog';
+import { useWorkups } from '@/features/catalog';
 import { ReferentDoctorSelect } from '@/features/referent-doctors';
 import { IconKeys } from '@/icons';
 import { FIELD_ERROR } from '@/theme/recipes';
@@ -68,7 +68,7 @@ export function OrderUpsertFormFields({
     onClearReferentDoctor,
     onCreatePatient,
   } = modalState;
-  const { workups } = useClinicalWorkups();
+  const { workups } = useWorkups();
 
   return (
     <Panel preset="panel.page.formHiddenHeader">

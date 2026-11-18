@@ -41,9 +41,9 @@ export const queryKeys = {
     search: (query: string) => [...queryKeys.orderableTests.all, 'search', query] as const,
   },
 
-  clinicalWorkups: {
-    all: ['clinical-workups'] as const,
-    list: () => [...queryKeys.clinicalWorkups.all, 'list'] as const,
+  workups: {
+    all: ['workups'] as const,
+    list: () => [...queryKeys.workups.all, 'list'] as const,
   },
 
   /**

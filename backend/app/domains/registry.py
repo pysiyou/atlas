@@ -6,8 +6,8 @@ from app.domains.billing.models import Invoice, Payment
 from app.domains.catalog.models import (
     AffiliationPricing,
     CatalogAnalyte,
-    ClinicalWorkup,
-    ClinicalWorkupTest,
+    Workup,
+    WorkupTest,
     OrderableTest,
     OrderableTestAnalyte,
 )
@@ -28,8 +28,8 @@ __all__ = [
     "OrderableTest",
     "CatalogAnalyte",
     "OrderableTestAnalyte",
-    "ClinicalWorkup",
-    "ClinicalWorkupTest",
+    "Workup",
+    "WorkupTest",
     "IdSequence",
     "ReportDocument",
     "Order",

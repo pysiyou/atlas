@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org",
-  "$id": "https://atlas.local/registries/sample-rejection-reasons",
+  "$id": "https://atlas.local/contracts/rejection-specimen.schema.json",
   "title": "Atlas sample (specimen) rejection reasons registry",
   "type": "object",
   "required": ["reasons"],

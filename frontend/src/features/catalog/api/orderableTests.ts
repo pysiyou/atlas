@@ -1,6 +1,6 @@
 /**
  * Orderable tests API — slim list for names/search, full documents by code.
- * Wire types come from OpenAPI; workups[] is the only client-side enrichment.
+ * Wire types come from OpenAPI; workups[] are normalized to [] when omitted.
  */
 import { apiClient } from '@/lib/api';
 import { expectArray } from '@/lib/api';
@@ -16,20 +16,12 @@ import {
   uniqueSortedTestCodes,
 } from '../utils/orderableTestLookup';
 import { cacheConfig, getQueryClient, queryKeys, useAuthQueryEnabled } from '@/lib/query';
-import { CLINICAL_WORKUP_BY_ID } from '@/types/generated/clinicalWorkups';
-
-function workupIdsForTest(testCode: string): string[] {
-  return Object.values(CLINICAL_WORKUP_BY_ID)
-    .filter(workup => workup.test_codes?.includes(testCode))
-    .map(workup => workup.id);
+function toSummary(test: ApiOrderableTestSummaryResponse): OrderableTestSummary {
+  return { ...test, workups: test.workups ?? [] };
 }
 
-function withWorkupsSummary(test: ApiOrderableTestSummaryResponse): OrderableTestSummary {
-  return { ...test, workups: workupIdsForTest(test.code) };
-}
-
-function withWorkupsFull(test: ApiOrderableTestResponse): OrderableTest {
-  return { ...test, workups: workupIdsForTest(test.code) };
+function toFull(test: ApiOrderableTestResponse): OrderableTest {
+  return { ...test, workups: test.workups ?? [] };
 }
 
 interface GetOrderableTestsParams {
@@ -58,13 +50,13 @@ export const orderableTestAPI = {
       await apiClient.get<ApiOrderableTestSummaryResponse[]>('/orderable-tests', queryParams),
       'catalog'
     );
-    return apiTests.map(withWorkupsSummary);
+    return apiTests.map(toSummary);
   },
 
   async getByCode(testCode: string): Promise<OrderableTest | null> {
     try {
       const apiTest = await apiClient.get<ApiOrderableTestResponse>(`/orderable-tests/${testCode}`);
-      return withWorkupsFull(apiTest);
+      return toFull(apiTest);
     } catch {
       return null;
     }
@@ -78,15 +70,15 @@ export const orderableTestAPI = {
       }),
       'catalog by-codes'
     );
-    return apiTests.map(withWorkupsFull);
+    return apiTests.map(toFull);
   },
 
-  async search(query: string): Promise<OrderableTest[]> {
-    const apiTests = expectArray<ApiOrderableTestResponse>(
-      await apiClient.get<ApiOrderableTestResponse[]>('/orderable-tests/search', { q: query }),
+  async search(query: string): Promise<OrderableTestSummary[]> {
+    const apiTests = expectArray<ApiOrderableTestSummaryResponse>(
+      await apiClient.get<ApiOrderableTestSummaryResponse[]>('/orderable-tests/search', { q: query }),
       'catalog search'
     );
-    return apiTests.map(withWorkupsFull);
+    return apiTests.map(toSummary);
   },
 };
 

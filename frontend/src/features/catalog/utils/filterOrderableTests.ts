@@ -1,6 +1,6 @@
 import type { FilterValues } from '@/components/filters/types';
 import type { TestCategory, OrderableTestSummary } from '@/types';
-import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
+import { resolveWorkupLabel } from '@/types/generated/workups';
 import { PRICE_RANGE } from '@/utils/constants';
 
 export const catalogListInitialFilters: FilterValues = {
@@ -31,7 +31,7 @@ export function filterOrderableTests(tests: OrderableTestSummary[], filters: Fil
         test.workups?.some(
           workupId =>
             workupId.toLowerCase().includes(query) ||
-            resolveClinicalWorkupLabel(workupId).toLowerCase().includes(query)
+            resolveWorkupLabel(workupId).toLowerCase().includes(query)
         )
       );
     });

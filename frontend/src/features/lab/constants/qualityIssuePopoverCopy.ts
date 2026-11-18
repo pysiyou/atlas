@@ -1,8 +1,8 @@
 /** Quality-issue popover copy, layout, and remedy destination options. */
 /**
  * QualityIssuePopover — layout constants and catalog-backed copy.
- * User-visible strings live in contracts/registries/feedback.json (codegen → `@/types/generated/feedback`).
- * Remedy allow-list order and presentation ids live in contracts/registries/lab.json → policies.
+ * User-visible strings live in contracts/feedback.json (codegen → `@/types/generated/feedback`).
+ * Remedy allow-list order and presentation ids live in contracts/lab-policy.json → policies.
  */
 
 import { LAB_CONFIG } from './labConstants';

@@ -1,12 +1,12 @@
 /**
- * Clinical workup bundles — groups of orderable test codes.
+ * Workup bundles — groups of orderable test codes (GET /workups).
  */
 import { apiClient } from '@/lib/api';
 import { expectArray } from '@/lib/api';
 import { cacheConfig, queryKeys, useAuthQueryEnabled } from '@/lib/query';
 import { useQuery } from '@tanstack/react-query';
 
-export interface ClinicalWorkup {
+export interface Workup {
   code: string;
   name: string;
   description?: string | null;
@@ -14,20 +14,20 @@ export interface ClinicalWorkup {
   isActive: boolean;
 }
 
-export const clinicalWorkupAPI = {
-  async list(activeOnly = true): Promise<ClinicalWorkup[]> {
-    const rows = await apiClient.get<ClinicalWorkup[]>('/clinical-workups', {
+export const workupsAPI = {
+  async list(activeOnly = true): Promise<Workup[]> {
+    const rows = await apiClient.get<Workup[]>('/workups', {
       activeOnly: String(activeOnly),
     });
-    return expectArray(rows, 'clinical workups');
+    return expectArray(rows, 'workups');
   },
 };
 
-export function useClinicalWorkups() {
+export function useWorkups() {
   const enabled = useAuthQueryEnabled();
   const query = useQuery({
-    queryKey: queryKeys.clinicalWorkups.list(),
-    queryFn: () => clinicalWorkupAPI.list(true),
+    queryKey: queryKeys.workups.list(),
+    queryFn: () => workupsAPI.list(true),
     enabled,
     ...cacheConfig.static,
   });

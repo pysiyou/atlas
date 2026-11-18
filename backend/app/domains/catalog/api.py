@@ -1,10 +1,10 @@
-"""Catalog API routes — orderable tests, clinical workups, affiliation pricing."""
+"""Catalog API routes — orderable tests, workups, affiliation pricing."""
 from app.domains.catalog.schemas import (
-    ClinicalWorkupResponse,
+    WorkupResponse,
     OrderableTestResponse,
     OrderableTestSummaryResponse,
 )
-from app.domains.catalog.service import BY_CODES_MAX, AffiliationPricingService, ClinicalWorkupService, OrderableTestService
+from app.domains.catalog.service import BY_CODES_MAX, AffiliationPricingService, OrderableTestService, WorkupService
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http import get_current_user
@@ -78,13 +78,13 @@ def get_orderable_test(
     return OrderableTestService(db).get_by_code(testCode)
 
 
-@router.get("/clinical-workups", response_model=list[ClinicalWorkupResponse])
-def list_clinical_workups(
+@router.get("/workups", response_model=list[WorkupResponse])
+def list_workups(
     activeOnly: bool = True,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return ClinicalWorkupService(db).list_workups(active_only=activeOnly)
+    return WorkupService(db).list_workups(active_only=activeOnly)
 
 
 @router.get("/affiliations/pricing")

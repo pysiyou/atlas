@@ -16,10 +16,10 @@ export {
 } from './api/orderableTests';
 
 export {
-  clinicalWorkupAPI,
-  useClinicalWorkups,
-  type ClinicalWorkup,
-} from './api/clinicalWorkups';
+  workupsAPI,
+  useWorkups,
+  type Workup,
+} from './api/workups';
 
 export {
   affiliationAPI,

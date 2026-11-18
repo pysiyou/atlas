@@ -1,4 +1,4 @@
-/** GENERATED — DO NOT EDIT. Source: contracts/registries/lab.json, contracts/catalog/orderable-tests.json, analyte-catalog.json */
+/** GENERATED — DO NOT EDIT. Source: contracts/lab-policy.json, contracts/orderable-tests.json */
 
 // =============================================================================
 // lab-policy
@@ -251,7 +251,7 @@ export {
 // =============================================================================
 // catalog-categories
 // =============================================================================
-export const TEST_CATEGORY_VALUES = ["biochemistry","coagulation","hematology","microbiology","serology","urinalysis"] as const;
+export const TEST_CATEGORY_VALUES = ["biochemistry","coagulation","hematology","immunology","microbiology","serology"] as const;
 
 export type GeneratedTestCategory = (typeof TEST_CATEGORY_VALUES)[number];
 
@@ -259,16 +259,17 @@ export const TEST_CATEGORY_CONFIG: Record<
   GeneratedTestCategory,
   { label: string; color: string }
 > = {
-  "biochemistry": { label: "Biochemistry", color: "biochemistry" },
+  "biochemistry": { label: "Clinical Chemistry", color: "biochemistry" },
   "coagulation": { label: "Coagulation", color: "coagulation" },
   "hematology": { label: "Hematology", color: "hematology" },
+  "immunology": { label: "Immunology / HIV Monitoring", color: "immunology" },
   "microbiology": { label: "Microbiology", color: "microbiology" },
-  "serology": { label: "Serology", color: "serology" },
-  "urinalysis": { label: "Urinalysis", color: "urinalysis" },
+  "serology": { label: "Serology / Infectious Disease", color: "serology" },
 };
 
 export function getGeneratedCategoryLabel(category: string): string {
   const known = TEST_CATEGORY_CONFIG[category as GeneratedTestCategory];
   if (known) return known.label;
-  return category.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+  return category.replace(/-/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
+

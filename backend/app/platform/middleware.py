@@ -32,7 +32,7 @@ class CacheHeadersMiddleware(BaseHTTPMiddleware):
         "/api/v1/auth",
         "/api/v1/users/me",
         "/api/v1/orderable-tests",
-        "/api/v1/clinical-workups",
+        "/api/v1/workups",
         "/api/v1/affiliations",
     }
     SEMI_STATIC_ENDPOINTS = {

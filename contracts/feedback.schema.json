@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://atlas.local/contracts/registries/feedback.schema.json",
+  "$id": "https://atlas.local/contracts/feedback.schema.json",
   "title": "Atlas user feedback catalog",
   "type": "object",
   "required": ["entries"],

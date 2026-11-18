@@ -1,7 +1,7 @@
 /**
  * Secondary React Query hooks built on {@link useOrderableTests}.
  */
-import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
+import { resolveWorkupLabel } from '@/types/generated/workups';
 import type { TestCategory } from '@/types';
 import { queryKeys, useInvalidateQueryKey } from '@/lib/query';
 import { useOrderableTests } from './orderableTests';
@@ -20,7 +20,7 @@ export function useOrderableTestSearch(searchQuery: string) {
           test.workups?.some(
             workupId =>
               workupId.toLowerCase().includes(query) ||
-              resolveClinicalWorkupLabel(workupId).toLowerCase().includes(query)
+              resolveWorkupLabel(workupId).toLowerCase().includes(query)
           )
         );
       })

@@ -1,7 +1,7 @@
 """
 Audit event log — persist rows, query for the API, and emit domain events.
 
-Dot-notation types match ``EventType`` in ``app.shared.contracts.audit_events`` (from contracts/registries/audit-events.json). Rows store target
+Dot-notation types match ``EventType`` in ``app.shared.contracts.audit_events`` (from contracts/audit-events.json). Rows store target
 (entity type + id), optional context (orderId, patientId, testId), metadata
 (e.g. ``test_code`` vs ``test_codes``), and actor snapshot (user or system).
 """

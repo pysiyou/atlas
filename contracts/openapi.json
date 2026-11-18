@@ -1357,13 +1357,13 @@
         }
       }
     },
-    "/api/v1/clinical-workups": {
+    "/api/v1/workups": {
       "get": {
         "tags": [
           "catalog"
         ],
-        "summary": "List Clinical Workups",
-        "operationId": "list_clinical_workups_api_v1_clinical_workups_get",
+        "summary": "List Workups",
+        "operationId": "list_workups_api_v1_workups_get",
         "security": [
           {
             "HTTPBearer": []
@@ -1389,9 +1389,9 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ClinicalWorkupResponse"
+                    "$ref": "#/components/schemas/WorkupResponse"
                   },
-                  "title": "Response List Clinical Workups Api V1 Clinical Workups Get"
+                  "title": "Response List Workups Api V1 Workups Get"
                 }
               }
             }
@@ -5405,20 +5405,6 @@
               }
             ],
             "title": "Decimals Suggested"
-          },
-          "citations": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Citations"
           }
         },
         "additionalProperties": true,
@@ -5429,7 +5415,7 @@
           "validation"
         ],
         "title": "CatalogAnalyteEntry",
-        "description": "One analyte-catalog.json row \u2014 shared with frontend generated types."
+        "description": "One analytes.json row \u2014 shared with frontend generated types."
       },
       "CatalogValidationBlock": {
         "properties": {
@@ -5444,71 +5430,6 @@
         "additionalProperties": true,
         "type": "object",
         "title": "CatalogValidationBlock"
-      },
-      "ClinicalWorkupResponse": {
-        "properties": {
-          "code": {
-            "type": "string",
-            "title": "Code"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
-          "description": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Description"
-          },
-          "testCodes": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Testcodes"
-          },
-          "isActive": {
-            "type": "boolean",
-            "title": "Isactive",
-            "default": true
-          },
-          "createdAt": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Createdat"
-          },
-          "updatedAt": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Updatedat"
-          }
-        },
-        "type": "object",
-        "required": [
-          "code",
-          "name"
-        ],
-        "title": "ClinicalWorkupResponse"
       },
       "CollectionWorklistItem": {
         "properties": {
@@ -8728,6 +8649,39 @@
             "type": "string",
             "title": "Category"
           },
+          "categoryLabel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categorylabel"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "orderObs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Orderobs"
+          },
           "price": {
             "type": "number",
             "title": "Price"
@@ -8940,18 +8894,12 @@
             ],
             "title": "Notes"
           },
-          "contract": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Contract",
-            "description": "Full orderable-tests.json entry (snake_case keys) for this test_code."
+          "workups": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Workups"
           },
           "createdAt": {
             "type": "string",
@@ -8997,6 +8945,39 @@
           "category": {
             "type": "string",
             "title": "Category"
+          },
+          "categoryLabel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categorylabel"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "orderObs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Orderobs"
           },
           "price": {
             "type": "number",
@@ -9064,6 +9045,13 @@
               }
             ],
             "title": "Fastingrequired"
+          },
+          "workups": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Workups"
           },
           "createdAt": {
             "type": "string",
@@ -12566,6 +12554,71 @@
         ],
         "title": "WorksheetRow",
         "description": "One bench-worksheet line for a single order test."
+      },
+      "WorkupResponse": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "testCodes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Testcodes"
+          },
+          "isActive": {
+            "type": "boolean",
+            "title": "Isactive",
+            "default": true
+          },
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name"
+        ],
+        "title": "WorkupResponse"
       }
     },
     "securitySchemes": {

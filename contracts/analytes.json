@@ -1,5 +1,5 @@
 {
-  "$schema": "./analyte-catalog.schema.json",
+  "$schema": "./analytes.schema.json",
   "analytes": [
     {
       "analyte_code": "ABO_GROUP",
@@ -10,9 +10,6 @@
         "B",
         "AB",
         "O"
-      ],
-      "citations": [
-        "SRC018"
       ],
       "reference_range": {
         "adult_general": {
@@ -69,10 +66,6 @@
       "name": "Cyclic Citrullinated Peptide Ab",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -129,10 +122,6 @@
       "name": "Corticotropin",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -189,10 +178,6 @@
       "name": "Activated protein C resistance",
       "specimen": "Plasma (citrated)",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -249,10 +234,6 @@
       "name": "Activated Clotting Time (ACT)",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -314,10 +295,6 @@
         "3+",
         "Not seen"
       ],
-      "citations": [
-        "SRC010",
-        "SRC005"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "Negative"
@@ -373,10 +350,6 @@
       "name": "Alpha-1-Fetoprotein",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -439,10 +412,6 @@
           "high": 50
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 7.5,
         "max": 150
@@ -506,10 +475,6 @@
           "high": 147
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 11,
         "max": 441
@@ -577,10 +542,6 @@
       "critical_range": {
         "high": 1000
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 1.75,
         "max": 1500
@@ -635,10 +596,6 @@
       "name": "Amylase",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -702,10 +659,6 @@
       "name": "Amylase",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -772,10 +725,6 @@
         "low": 0,
         "high": 1000
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 2000
@@ -830,10 +779,6 @@
       "name": "Nuclear Ab",
       "specimen": "Serum",
       "value_type": "SELECT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -895,9 +840,6 @@
         "Negative",
         "Positive"
       ],
-      "citations": [
-        "SRC008"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "Negative"
@@ -954,9 +896,6 @@
       "allowed_values": [
         "Negative",
         "Positive"
-      ],
-      "citations": [
-        "SRC008"
       ],
       "reference_range": {
         "adult_general": {
@@ -1016,9 +955,6 @@
         "Positive",
         "Indeterminate"
       ],
-      "citations": [
-        "SRC008"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "Negative"
@@ -1074,10 +1010,6 @@
       "name": "Apolipoprotein A-I",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_male": {
@@ -1138,10 +1070,6 @@
       "name": "Apolipoprotein B",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_male": {
@@ -1202,10 +1130,6 @@
       "name": "Apolipoprotein C",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1262,10 +1186,6 @@
       "name": "Apolipoprotein A-I/Apolipoprotein B",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1322,10 +1242,6 @@
       "name": "Apolipoprotein B/Apolipoprotein A-I",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1382,10 +1298,6 @@
       "name": "Apolipoprotein B-100",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1442,10 +1354,6 @@
       "name": "Apolipoprotein LPA",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1502,10 +1410,6 @@
       "name": "Apolipoprotein A-II",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1571,10 +1475,6 @@
       "critical_range": {
         "high": 100
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 6.25,
         "max": 150
@@ -1629,10 +1529,6 @@
       "name": "Arsenic Inorganic/Creatinine",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1689,10 +1585,6 @@
       "name": "Arsenic Inorganic+methylated",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1749,10 +1641,6 @@
       "name": "Arsenic",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1809,10 +1697,6 @@
       "name": "Arsenic",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1869,10 +1753,6 @@
       "name": "Arsenic/Creatinine",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1929,10 +1809,6 @@
       "name": "Arsenic Inorganic",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -1989,10 +1865,6 @@
       "name": "Arsenic Methylated",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -2049,10 +1921,6 @@
       "name": "Arsenic Organic",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -2109,10 +1977,6 @@
       "name": "Arsenic Trioxide",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -2169,10 +2033,6 @@
       "name": "Arsenite",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -2229,10 +2089,6 @@
       "name": "Arsenobetaine",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -2289,10 +2145,6 @@
       "name": "Arsenocholine",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -2358,10 +2210,6 @@
       "critical_range": {
         "high": 1000
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 2.5,
         "max": 1500
@@ -2416,10 +2264,6 @@
       "name": "Thyrotropin Receptor Ab",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -2486,10 +2330,6 @@
         "low": 40,
         "high": 150
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 200
@@ -2544,10 +2384,6 @@
       "name": "Thyroperoxidase Ab",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -2604,10 +2440,6 @@
       "name": "Vitamin B12",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -2668,10 +2500,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -2725,10 +2553,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -2782,10 +2606,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -2839,10 +2659,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -2896,10 +2712,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -2953,10 +2765,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3010,10 +2818,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3067,10 +2871,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3124,10 +2924,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3181,10 +2977,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3238,10 +3030,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3295,10 +3083,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3352,10 +3136,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3409,10 +3189,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3466,10 +3242,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3523,10 +3295,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3580,10 +3348,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3637,10 +3401,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3694,10 +3454,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3751,10 +3507,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3808,10 +3560,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3865,10 +3613,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3922,10 +3666,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -3979,10 +3719,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -4036,10 +3772,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -4093,10 +3825,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -4150,10 +3878,6 @@
       "name": "Bacteria",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -4207,10 +3931,6 @@
       "name": "Basophils absolute count",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -4271,10 +3991,6 @@
       "name": "Basophils/Leukocytes",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -4345,10 +4061,6 @@
         "low": 0,
         "high": 300000
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 500000
@@ -4406,9 +4118,6 @@
         "ORGANISM_ISOLATED",
         "CONTAMINATION",
         "FUNGAL"
-      ],
-      "citations": [
-        "SRC002"
       ],
       "reference_range": {
         "adult_general": {
@@ -4475,10 +4184,6 @@
         "low": 0,
         "high": 5000
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 375
@@ -4542,10 +4247,6 @@
       "critical_range": {
         "high": 35.7
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.625,
         "max": 53.55
@@ -4600,10 +4301,6 @@
       "name": "Complement C3",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -4660,10 +4357,6 @@
       "name": "Complement C4",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -4720,10 +4413,6 @@
       "name": "Calcium total",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -4798,10 +4487,6 @@
         "low": 1.63,
         "high": 3.25
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.5,
         "max": 5
@@ -4856,10 +4541,6 @@
       "name": "Cancer Ag 125",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -4916,10 +4597,6 @@
       "name": "Cancer Ag 15-3",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -4976,10 +4653,6 @@
       "name": "Cancer Ag 19-9",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5036,10 +4709,6 @@
       "name": "Cardiolipin IgG Ab",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5096,10 +4765,6 @@
       "name": "Cardiolipin IgM Ab",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5156,10 +4821,6 @@
       "name": "Cardiolipin IGM Ab",
       "specimen": "Serum",
       "value_type": "SELECT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -5219,10 +4880,6 @@
       "name": "Cardiolipin IGG Ab",
       "specimen": "Serum",
       "value_type": "SELECT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -5282,10 +4939,6 @@
       "name": "Cardiolipin IgA Ab",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5352,10 +5005,6 @@
         "low": 0.05,
         "high": 5
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 5
@@ -5416,9 +5065,6 @@
           "high": 2.5
         }
       },
-      "citations": [
-        "SRC002"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 1000
@@ -5477,10 +5123,6 @@
       "name": "CD19 Cells/cells",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5537,10 +5179,6 @@
       "name": "CD20 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5597,10 +5235,6 @@
       "name": "CD33 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5657,10 +5291,6 @@
       "name": "CD34 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5717,10 +5347,6 @@
       "name": "CD38 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5777,10 +5403,6 @@
       "name": "CD41a Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5837,10 +5459,6 @@
       "name": "CD45 (Lymphs) Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5897,10 +5515,6 @@
       "name": "CD56 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -5957,10 +5571,6 @@
       "name": "CD71 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6017,10 +5627,6 @@
       "name": "CD22 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6077,10 +5683,6 @@
       "name": "CD3+CD4+ (T4 Helper) Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6137,10 +5739,6 @@
       "name": "CD23 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6197,10 +5795,6 @@
       "name": "CD25 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6257,10 +5851,6 @@
       "name": "CD3 cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6317,10 +5907,6 @@
       "name": "CD3+CD4+ (T4 helper) cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6377,10 +5963,6 @@
       "name": "CD3+CD8+ (T8 suppressor) cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6437,10 +6019,6 @@
       "name": "CD3+CD8+ (T8 Suppressor) Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6497,10 +6075,6 @@
       "name": "CD16+CD56+ Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6557,10 +6131,6 @@
       "name": "CD10 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6617,10 +6187,6 @@
       "name": "CD13 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6677,10 +6243,6 @@
       "name": "CD14 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6737,10 +6299,6 @@
       "name": "CD11b Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6797,10 +6355,6 @@
       "name": "CD11c Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6857,10 +6411,6 @@
       "name": "CD15 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6917,10 +6467,6 @@
       "name": "CD1a Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -6977,10 +6523,6 @@
       "name": "CD2 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -7037,10 +6579,6 @@
       "name": "CD3 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -7097,10 +6635,6 @@
       "name": "CD41 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -7157,10 +6691,6 @@
       "name": "CD5 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -7217,10 +6747,6 @@
       "name": "CD64 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -7277,10 +6803,6 @@
       "name": "CD7 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -7337,10 +6859,6 @@
       "name": "FMC7 Cells/cells",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -7399,9 +6917,6 @@
         "Negative",
         "Positive"
       ],
-      "citations": [
-        "SRC019"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "Negative"
@@ -7457,10 +6972,6 @@
       "name": "Chlamydia Trachomatis RRNA",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -7514,10 +7025,6 @@
       "name": "Cholesterol total",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -7584,10 +7091,6 @@
           "low": 0
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.52,
         "max": 25.9
@@ -7646,10 +7149,6 @@
       "name": "Chronic Leukemia Markers",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -7703,10 +7202,6 @@
       "name": "Chronic Leukemia Markers",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -7769,10 +7264,6 @@
       "critical_range": {
         "high": 5000
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 7.5,
         "max": 7500
@@ -7833,10 +7324,6 @@
           "high": 5
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 500
@@ -7901,10 +7388,6 @@
           "high": 107
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 40,
         "max": 180
@@ -7965,9 +7448,6 @@
         "Negative",
         "Positive"
       ],
-      "citations": [
-        "SRC023"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "Negative"
@@ -8025,9 +7505,6 @@
         "Negative",
         "Positive"
       ],
-      "citations": [
-        "SRC023"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "Negative"
@@ -8083,10 +7560,6 @@
       "name": "Bicarbonate",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -8151,10 +7624,6 @@
       "name": "APTT",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -8211,10 +7680,6 @@
       "name": "APTT",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -8271,10 +7736,6 @@
       "name": "aPTT W excess hexagonal phase phospholipid",
       "specimen": "Plasma (citrated)",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -8331,10 +7792,6 @@
       "name": "Cortisol",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -8391,10 +7848,6 @@
       "name": "Creatinine",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -8464,10 +7917,6 @@
           "low": 0
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 15
@@ -8526,10 +7975,6 @@
       "name": "Bilirubin direct",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -8590,10 +8035,6 @@
       "name": "D-dimer",
       "specimen": "Plasma",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -8654,10 +8095,6 @@
       "name": "Dimethylarsinate",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -8714,10 +8151,6 @@
       "name": "Glomerular filtration rate CKD-EPI",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -8780,10 +8213,6 @@
       "name": "Eosinophils absolute count",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -8844,10 +8273,6 @@
       "name": "Eosinophils/Leukocytes",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -8904,10 +8329,6 @@
       "name": "Ferritin",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -8968,10 +8389,6 @@
       "name": "Fibrinogen",
       "specimen": "Plasma",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -9045,10 +8462,6 @@
         "low": 0.8,
         "high": 23.1
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.875,
         "max": 19.5
@@ -9109,10 +8522,6 @@
           "high": 23
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 2,
         "max": 97.5
@@ -9177,10 +8586,6 @@
           "high": 61
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 2,
         "max": 183
@@ -9239,10 +8644,6 @@
       "name": "Glucose fasting",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -9313,10 +8714,6 @@
           "high": 5.6
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 1,
         "max": 21
@@ -9384,10 +8781,6 @@
         "low": 20,
         "high": 60
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 10,
         "max": 90
@@ -9447,10 +8840,6 @@
           "low": 1.04
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.26,
         "max": 31.2
@@ -9519,10 +8908,6 @@
         "low": 70,
         "high": 200
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 35,
         "max": 300
@@ -9577,10 +8962,6 @@
       "name": "IgA",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -9637,10 +9018,6 @@
       "name": "IgG",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -9697,10 +9074,6 @@
       "name": "Immunodeficiency Markers",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -9754,10 +9127,6 @@
       "name": "Immunodeficiency Markers",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -9820,10 +9189,6 @@
       "critical_range": {
         "high": 5
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.2,
         "max": 7.5
@@ -9884,10 +9249,6 @@
           "high": 30
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 2.25,
         "max": 90
@@ -9956,10 +9317,6 @@
         "low": 2.8,
         "high": 6.2
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 1.4,
         "max": 9.3
@@ -10026,10 +9383,6 @@
         "min": 0.125,
         "max": 6
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -10087,10 +9440,6 @@
           "low": 0
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 7.77
@@ -10149,10 +9498,6 @@
       "name": "Lipase",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -10216,10 +9561,6 @@
       "name": "Lymphocytes absolute count",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -10280,10 +9621,6 @@
       "name": "Kappa Lymphocytes/Lymphocytes",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -10340,10 +9677,6 @@
       "name": "Lambda Lymphocytes/Lymphocytes",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -10400,10 +9733,6 @@
       "name": "Lymphocytes/Leukocytes",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -10466,10 +9795,6 @@
           "high": 33
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 6.75,
         "max": 99
@@ -10534,10 +9859,6 @@
           "high": 360
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 80,
         "max": 1080
@@ -10602,10 +9923,6 @@
           "high": 100
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 20,
         "max": 300
@@ -10670,10 +9987,6 @@
           "high": 0.99
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.2,
         "max": 2.85
@@ -10732,10 +10045,6 @@
       "name": "Monocytes absolute count",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -10796,10 +10105,6 @@
       "name": "Monomethylarsonate",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -10856,10 +10161,6 @@
       "name": "Monocytes/Leukocytes",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -10922,10 +10223,6 @@
           "high": 11.5
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 1.875,
         "max": 34.5
@@ -10994,10 +10291,6 @@
         "low": 120,
         "high": 160
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 60,
         "max": 240
@@ -11052,10 +10345,6 @@
       "name": "Neisseria Gonorrhoeae RRNA",
       "specimen": "Serum",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "validation": {
         "rejection_criteria": [
           "abnormal",
@@ -11109,10 +10398,6 @@
       "name": "Neutrophils absolute count",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -11176,10 +10461,6 @@
       "name": "Neutrophils/Leukocytes",
       "specimen": "Whole Blood",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -11242,10 +10523,6 @@
           "high": 1.45
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.16,
         "max": 4.35
@@ -11314,10 +10591,6 @@
         "low": 30,
         "high": 1000
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 15,
         "max": 1500
@@ -11372,10 +10645,6 @@
       "name": "Prothrombin time",
       "specimen": "Plasma",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -11449,10 +10718,6 @@
         "low": 2,
         "high": 8
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 1.05,
         "max": 17.7
@@ -11513,10 +10778,6 @@
           "high": 14.5
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 2.875,
         "max": 43.5
@@ -11577,9 +10838,6 @@
         "Positive",
         "Negative"
       ],
-      "citations": [
-        "SRC018"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "Rh+ / Rh-"
@@ -11638,9 +10896,6 @@
         "Positive",
         "Invalid"
       ],
-      "citations": [
-        "SRC016"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "Negative"
@@ -11694,9 +10949,6 @@
       "analyte_code": "SPEP_RESULT",
       "loinc_code": "12851-2",
       "value_type": "TEXT",
-      "citations": [
-        "SRC002"
-      ],
       "reference_range": {
         "adult_general": {
           "text": "No M-protein"
@@ -11752,10 +11004,6 @@
       "name": "Bilirubin total",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -11825,10 +11073,6 @@
           "high": 81
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 11.25,
         "max": 243
@@ -11893,10 +11137,6 @@
           "high": 83
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 10,
         "max": 200
@@ -11955,10 +11195,6 @@
       "name": "Protein total",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -12019,10 +11255,6 @@
       "name": "Triglycerides",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -12086,10 +11318,6 @@
       "name": "High-sensitivity troponin T",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
@@ -12159,10 +11387,6 @@
           "high": 4
         }
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.025,
         "max": 75
@@ -12221,10 +11445,6 @@
       "name": "Uric acid",
       "specimen": "Serum",
       "value_type": "NUMERIC",
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -12294,9 +11514,6 @@
           "high": 664
         }
       },
-      "citations": [
-        "SRC020"
-      ],
       "physiologic_range": {
         "min": 0,
         "max": 3690
@@ -12365,10 +11582,6 @@
         "low": 1.5,
         "high": 50
       },
-      "citations": [
-        "SRC002",
-        "SRC003"
-      ],
       "physiologic_range": {
         "min": 0.75,
         "max": 75

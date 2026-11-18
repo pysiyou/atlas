@@ -1,5 +1,5 @@
 """
-Rejection reason registry — GENERATED from contracts/registries/sample-rejection-reasons.json
+Rejection reason registry — GENERATED from contracts/rejection-specimen.json + rejection-analytical.json
 and result-rejection-reasons.json. DO NOT EDIT.
 
 Each reason: id, code, label, domain (specimen | analytical).

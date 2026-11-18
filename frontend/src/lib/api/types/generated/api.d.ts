@@ -331,15 +331,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/clinical-workups": {
+    "/api/v1/workups": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Clinical Workups */
-        get: operations["list_clinical_workups_api_v1_clinical_workups_get"];
+        /** List Workups */
+        get: operations["list_workups_api_v1_workups_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1275,7 +1275,7 @@ export interface components {
         };
         /**
          * CatalogAnalyteEntry
-         * @description One analyte-catalog.json row — shared with frontend generated types.
+         * @description One analytes.json row — shared with frontend generated types.
          */
         CatalogAnalyteEntry: {
             /** Analyte Code */
@@ -1310,8 +1310,6 @@ export interface components {
             } | null;
             /** Decimals Suggested */
             decimals_suggested?: number | null;
-            /** Citations */
-            citations?: string[] | null;
         } & {
             [key: string]: unknown;
         };
@@ -1321,26 +1319,6 @@ export interface components {
             rejection_criteria?: string[];
         } & {
             [key: string]: unknown;
-        };
-        /** ClinicalWorkupResponse */
-        ClinicalWorkupResponse: {
-            /** Code */
-            code: string;
-            /** Name */
-            name: string;
-            /** Description */
-            description?: string | null;
-            /** Testcodes */
-            testCodes?: string[];
-            /**
-             * Isactive
-             * @default true
-             */
-            isActive: boolean;
-            /** Createdat */
-            createdAt?: string | null;
-            /** Updatedat */
-            updatedAt?: string | null;
         };
         /** CollectionWorklistItem */
         CollectionWorklistItem: {
@@ -2331,6 +2309,12 @@ export interface components {
             displayName: string;
             /** Category */
             category: string;
+            /** Categorylabel */
+            categoryLabel?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Orderobs */
+            orderObs?: string | null;
             /** Price */
             price: number;
             /** Turnaroundtimehours */
@@ -2378,13 +2362,8 @@ export interface components {
             confidence?: string | null;
             /** Notes */
             notes?: string | null;
-            /**
-             * Contract
-             * @description Full orderable-tests.json entry (snake_case keys) for this test_code.
-             */
-            contract?: {
-                [key: string]: unknown;
-            } | null;
+            /** Workups */
+            workups?: string[];
             /**
              * Createdat
              * Format: date-time
@@ -2406,6 +2385,12 @@ export interface components {
             displayName: string;
             /** Category */
             category: string;
+            /** Categorylabel */
+            categoryLabel?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Orderobs */
+            orderObs?: string | null;
             /** Price */
             price: number;
             /** Turnaroundtimehours */
@@ -2427,6 +2412,8 @@ export interface components {
             loincCode?: string | null;
             /** Fastingrequired */
             fastingRequired?: boolean | null;
+            /** Workups */
+            workups?: string[];
             /**
              * Createdat
              * Format: date-time
@@ -3578,6 +3565,26 @@ export interface components {
             /** Testname */
             testName: string;
         };
+        /** WorkupResponse */
+        WorkupResponse: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description?: string | null;
+            /** Testcodes */
+            testCodes?: string[];
+            /**
+             * Isactive
+             * @default true
+             */
+            isActive: boolean;
+            /** Createdat */
+            createdAt?: string | null;
+            /** Updatedat */
+            updatedAt?: string | null;
+        };
     };
     responses: never;
     parameters: never;
@@ -4183,7 +4190,7 @@ export interface operations {
             };
         };
     };
-    list_clinical_workups_api_v1_clinical_workups_get: {
+    list_workups_api_v1_workups_get: {
         parameters: {
             query?: {
                 activeOnly?: boolean;
@@ -4200,7 +4207,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ClinicalWorkupResponse"][];
+                    "application/json": components["schemas"]["WorkupResponse"][];
                 };
             };
             /** @description Validation Error */

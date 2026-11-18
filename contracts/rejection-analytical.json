@@ -1,5 +1,5 @@
 {
-  "$schema": "./result-rejection-reasons.schema.json",
+  "$schema": "./rejection-analytical.schema.json",
   "reasons": [
     {
       "id": "steroid_treatment",

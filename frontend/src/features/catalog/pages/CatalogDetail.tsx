@@ -26,13 +26,13 @@ import {
 } from '@/utils';
 import type { ReactNode } from 'react';
 import type { OrderableTest, AnalyteDefinition } from '@/types';
-import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
+import { resolveWorkupLabel } from '@/types/generated/workups';
 import { useModuleListTitles } from '@/strings';
 import {
   getTestClinicalCategory,
   getTestDescription,
   getTestOrderObsLabel,
-} from '../utils/orderableTestContract';
+} from '../utils/testDisplay';
 import { getCategoryLabel } from '../constants/catalogConfig';
 
 /** Visible row budget for scroll-capped catalog panels when balancing columns. */
@@ -117,7 +117,7 @@ function buildCatalogDetailTables(test: OrderableTest): TableInput[] {
         {
           label: 'Included in profiles',
           value: formatArrayWithFallback(
-            test.workups?.map(resolveClinicalWorkupLabel),
+            test.workups?.map(resolveWorkupLabel),
             '-'
           ),
         },

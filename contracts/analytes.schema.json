@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.local/contracts/analytes.schema.json",
+  "title": "Atlas analyte catalog",
+  "type": "object",
+  "required": ["analytes"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "analytes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/analyteEntry" }
+    }
+  },
+  "$defs": {
+    "loincCode": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/loincCode" },
+    "rejectionReasonId": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/rejectionReasonId" },
+    "valueType": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/valueType" },
+    "referenceRange": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/referenceRange" },
+    "criticalRange": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/criticalRange" },
+    "physiologicRange": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/physiologicRange" },
+    "validationBlock": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/validationBlock" },
+    "analyteCode": { "$ref": "https://atlas.local/contracts/_schema/common.defs.json#/$defs/analyteCode" },
+    "analyteEntry": {
+      "type": "object",
+      "required": ["analyte_code", "name", "validation"],
+      "additionalProperties": false,
+      "properties": {
+        "analyte_code": { "$ref": "#/$defs/analyteCode" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "loinc_code": { "$ref": "#/$defs/loincCode" },
+        "specimen": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "value_type": { "$ref": "#/$defs/valueType" },
+        "unit": { "type": "string", "maxLength": 50 },
+        "decimals_suggested": { "type": "integer", "minimum": 0, "maximum": 6 },
+        "allowed_values": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "reference_range": { "$ref": "#/$defs/referenceRange" },
+        "critical_range": { "$ref": "#/$defs/criticalRange" },
+        "physiologic_range": { "$ref": "#/$defs/physiologicRange" },
+        "validation": { "$ref": "#/$defs/validationBlock" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "value_type": { "const": "NUMERIC" } }, "required": ["value_type"] },
+          "then": { "required": ["unit", "reference_range"] }
+        },
+        {
+          "if": { "properties": { "value_type": { "const": "SELECT" } }, "required": ["value_type"] },
+          "then": { "required": ["allowed_values"] }
+        }
+      ]
+    }
+  }
+}

@@ -7,7 +7,7 @@ from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Payment
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.billing.service import BillingService
-from app.domains.catalog.models import ClinicalWorkup, ClinicalWorkupTest, OrderableTest
+from app.domains.catalog.models import OrderableTest, Workup, WorkupTest
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.public import (
     generate_samples_for_order,
@@ -299,18 +299,18 @@ class OrderService:
         codes: list[str] = [item.testCode for item in order_data.tests]
         for workup_code in order_data.workupCodes or []:
             workup = (
-                self.db.query(ClinicalWorkup)
-                .filter(ClinicalWorkup.code == workup_code, ClinicalWorkup.isActive.is_(True))
+                self.db.query(Workup)
+                .filter(Workup.code == workup_code, Workup.isActive.is_(True))
                 .first()
             )
             if not workup:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"ClinicalWorkup {workup_code} not found",
+                    detail=f"Workup {workup_code} not found",
                 )
             member_rows = (
-                self.db.query(ClinicalWorkupTest.testCode)
-                .filter(ClinicalWorkupTest.workupCode == workup_code)
+                self.db.query(WorkupTest.testCode)
+                .filter(WorkupTest.workupCode == workup_code)
                 .all()
             )
             for (member,) in member_rows:

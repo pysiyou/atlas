@@ -14,9 +14,9 @@ import { getCatalogOrderPickerCopy, getEmptyCopy } from '@/strings';
 
 import { RemovableTag, CheckboxIndicator } from '@/components/primitives';
 import type { OrderableTestSummary } from '@/types';
-import type { ClinicalWorkup } from '@/features/catalog';
+import type { Workup } from '@/features/catalog';
 import { indexTestsByCode } from '@/features/catalog';
-import { getCategoryLabel } from '@/features/catalog/constants/catalogConfig';
+import { getTestClinicalCategory } from '@/features/catalog/utils/testDisplay';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { IconKeys } from '@/icons';
 import { text, FG } from '@/theme/recipes';
@@ -32,8 +32,7 @@ function OrderTestPickerMetaLine({ code, test }: { code: string; test: Orderable
   const segments: Array<{ id: string; label: string }> = [];
 
   if (test.category) {
-    const slug = String(test.category).toLowerCase();
-    segments.push({ id: 'category', label: getCategoryLabel(slug) });
+    segments.push({ id: 'category', label: getTestClinicalCategory(test) });
   }
   if (test.sampleType) {
     const slug = String(test.sampleType).toLowerCase();
@@ -97,7 +96,7 @@ interface OrderTestPickerProps {
   error?: string;
   /** Slim catalog for looking up names and prices by code */
   tests?: OrderableTestSummary[];
-  workups?: ClinicalWorkup[];
+  workups?: Workup[];
   onAddWorkup?: (memberCodes: string[]) => void;
 }
 
@@ -157,7 +156,7 @@ interface OrderTestPickerPopoverProps {
   visibleTests: OrderableTestSummary[];
   selectedSet: Set<string>;
   onToggleTest: (testCode: string) => void;
-  visibleWorkups: ClinicalWorkup[];
+  visibleWorkups: Workup[];
   onAddWorkup?: (memberCodes: string[]) => void;
 }
 

@@ -1,5 +1,5 @@
 import { Controller, type Control } from 'react-hook-form';
-import type { ClinicalWorkup } from '@/features/catalog';
+import type { Workup } from '@/features/catalog';
 import type { OrderableTestSummary } from '@/types';
 import { OrderTestPicker } from './OrderTestPicker';
 import type { OrderFormInput } from '../schemas/order.schema';
@@ -17,7 +17,7 @@ export function OrderUpsertTestCodesField({
   setTestSearch: (value: string) => void;
   filteredTests: OrderableTestSummary[];
   tests: OrderableTestSummary[];
-  workups: ClinicalWorkup[];
+  workups: Workup[];
 }) {
   return (
     <Controller

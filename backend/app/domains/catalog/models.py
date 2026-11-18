@@ -16,7 +16,6 @@ class CatalogAnalyte(Base):
     unit = Column(String, nullable=True)
     specimen = Column(String, nullable=True)
     definition = Column(JSON, nullable=True)
-    contractEntry = Column("contract_entry", JSON, nullable=True)
     validationRejectionCriteria = Column("validation_rejection_criteria", JSON, nullable=True)
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
     updatedAt = Column(
@@ -35,6 +34,9 @@ class OrderableTest(Base):
     displayName = Column("display_name", String, nullable=False)
     synonyms = Column(JSON, nullable=True)
     category = Column(String, nullable=False, index=True)
+    categoryLabel = Column("category_label", String, nullable=True)
+    description = Column(Text, nullable=True)
+    orderObs = Column("order_obs", String, nullable=True)
     price = Column(Float, nullable=False)
     turnaroundTimeHours = Column("turnaround_time_hours", Integer, nullable=False)
     sampleType = Column("sample_type", String, nullable=False)
@@ -54,7 +56,6 @@ class OrderableTest(Base):
     methodology = Column(String, nullable=True)
     confidence = Column(String, nullable=True)
     notes = Column(String, nullable=True)
-    contractEntry = Column("contract_entry", JSON, nullable=True)
     isActive = Column("is_active", Boolean, default=True)
     createdAt = Column("created_at", DateTime(timezone=True), server_default=func.now())
     updatedAt = Column(
@@ -90,8 +91,8 @@ class OrderableTestAnalyte(Base):
     analyte = relationship("CatalogAnalyte")
 
 
-class ClinicalWorkup(Base):
-    __tablename__ = "clinical_workups"
+class Workup(Base):
+    __tablename__ = "workups"
 
     code = Column(String, primary_key=True, index=True)
     name = Column(String, nullable=False, index=True)
@@ -106,21 +107,21 @@ class ClinicalWorkup(Base):
     )
 
     testLinks = relationship(
-        "ClinicalWorkupTest",
+        "WorkupTest",
         back_populates="workup",
         cascade="all, delete-orphan",
     )
 
 
-class ClinicalWorkupTest(Base):
-    __tablename__ = "clinical_workup_tests"
-    __table_args__ = (UniqueConstraint("workup_code", "test_code", name="uq_clinical_workup_test"),)
+class WorkupTest(Base):
+    __tablename__ = "workup_tests"
+    __table_args__ = (UniqueConstraint("workup_code", "test_code", name="uq_workup_test"),)
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     workupCode = Column(
         "workup_code",
         String,
-        ForeignKey("clinical_workups.code", ondelete="CASCADE"),
+        ForeignKey("workups.code", ondelete="CASCADE"),
         nullable=False,
     )
     testCode = Column(
@@ -130,7 +131,7 @@ class ClinicalWorkupTest(Base):
         nullable=False,
     )
 
-    workup = relationship("ClinicalWorkup", back_populates="testLinks")
+    workup = relationship("Workup", back_populates="testLinks")
     test = relationship("OrderableTest")
 
 

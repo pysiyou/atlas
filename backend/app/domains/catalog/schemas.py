@@ -7,7 +7,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
-# --- Analytes (contracts/catalog/analyte-catalog.json wire shape) ---
+# --- Analytes (contracts/analytes.json wire shape) ---
 
 
 class CatalogValidationBlock(BaseModel):
@@ -17,7 +17,7 @@ class CatalogValidationBlock(BaseModel):
 
 
 class CatalogAnalyteEntry(BaseModel):
-    """One analyte-catalog.json row — shared with frontend generated types."""
+    """One analytes.json row — shared with frontend generated types."""
 
     analyte_code: str
     name: str
@@ -31,8 +31,6 @@ class CatalogAnalyteEntry(BaseModel):
     critical_range: dict[str, Any] | None = None
     physiologic_range: dict[str, Any] | None = None
     decimals_suggested: int | None = None
-    citations: list[str] | None = None
-
     model_config = ConfigDict(extra="allow")
 
 
@@ -68,6 +66,9 @@ class OrderableTestBase(BaseModel):
     name: str
     displayName: str
     category: str
+    categoryLabel: str | None = None
+    description: str | None = None
+    orderObs: str | None = None
     price: float
     turnaroundTimeHours: int
     sampleType: str
@@ -80,6 +81,7 @@ class OrderableTestSummaryResponse(OrderableTestBase):
     synonyms: list[str] | None = None
     loincCode: str | None = None
     fastingRequired: bool | None = None
+    workups: list[str] = Field(default_factory=list)
     createdAt: datetime
     updatedAt: datetime
 
@@ -103,10 +105,7 @@ class OrderableTestResponse(OrderableTestBase):
     methodology: str | None = None
     confidence: str | None = None
     notes: str | None = None
-    contract: dict[str, Any] | None = Field(
-        default=None,
-        description="Full orderable-tests.json entry (snake_case keys) for this test_code.",
-    )
+    workups: list[str] = Field(default_factory=list)
     createdAt: datetime
     updatedAt: datetime
 
@@ -127,10 +126,10 @@ class OrderableTestResponse(OrderableTestBase):
     model_config = {"from_attributes": True}
 
 
-# --- Clinical workups ---
+# --- Workups ---
 
 
-class ClinicalWorkupResponse(BaseModel):
+class WorkupResponse(BaseModel):
     code: str
     name: str
     description: str | None = None

@@ -6,7 +6,7 @@
  */
 
 /**
- * Regex contracts — canonical list in `contracts/registries/entity-ids.json`;
+ * Regex contracts — canonical list in `contracts/entity-ids.json`;
  * keep in sync with `backend/app/platform/utils.py`.
  */
 export const ID_PATTERNS = {
@@ -14,13 +14,11 @@ export const ID_PATTERNS = {
   filler: /^\d{13}$/,
   accession: /^\d{2}-\d{5}$/,
   aliquotAccession: /^\d{2}-\d{5}\.\d{1,2}$/,
-  /** Accession or aliquot suffix — matches backend SAMPLE_ID_PATTERN. */
   sampleId: /^\d{2}-\d{5}(\.\d{1,2})?$/,
-  /** Employee login id or analyzer sentinel (100000). */
-  labActorUserId: /^(?:100000|1\d{7})$/,
   testMnemonic: /^[A-Z][A-Z0-9]{1,7}$/,
   referentDoctorId: /^2\d{7}$/,
   employeeNumber: /^1\d{7}$/,
+  labActorUserId: /^(?:100000|1\d{7})$/,
   invoiceNumber: /^\d{12}$/,
   receiptNumber: /^\d{8}$/,
   memberId: /^[0-9A-Z]{6,20}$/,

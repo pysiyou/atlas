@@ -1,4 +1,4 @@
-/** GENERATED — DO NOT EDIT. Source: contracts/registries/enums.json */
+/** GENERATED — DO NOT EDIT. Source: contracts/enums.json */
 
 // =============================================================================
 // affiliation
