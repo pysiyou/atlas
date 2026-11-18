@@ -11,6 +11,7 @@ const root = path.resolve(__dirname, '..');
 
 const steps = [
   ['node', ['validate-catalog.mjs']],
+  ['node', ['generate-enums.mjs']],
   ['node', ['validate-enums-sync.mjs']],
   ['node', ['generate-rejection-reasons.mjs']],
   ['node', ['generate-catalog-contract-types.mjs']],

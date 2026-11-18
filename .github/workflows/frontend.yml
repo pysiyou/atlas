@@ -9,16 +9,11 @@ on:
       - 'config/client-config.json'
       - 'config/client-config.schema.json'
       - 'contracts/**'
-      - '!contracts/openapi.json'
       - 'backend/app/platform/utils.py'
       - 'backend/app/domains/**/schemas.py'
       - 'backend/app/domains/**/api.py'
-      - 'contracts/openapi.json'
-      - 'scripts/export-openapi.py'
-      - 'scripts/validate-*.mjs'
-      - 'scripts/codegen-contracts.mjs'
-      - 'scripts/generate-*.mjs'
       - 'backend/app/domains/catalog/**'
+      - 'scripts/**'
       - '.github/workflows/frontend.yml'
   pull_request:
     paths:
@@ -28,16 +23,11 @@ on:
       - 'config/client-config.json'
       - 'config/client-config.schema.json'
       - 'contracts/**'
-      - '!contracts/openapi.json'
       - 'backend/app/platform/utils.py'
       - 'backend/app/domains/**/schemas.py'
       - 'backend/app/domains/**/api.py'
-      - 'contracts/openapi.json'
-      - 'scripts/export-openapi.py'
-      - 'scripts/validate-*.mjs'
-      - 'scripts/codegen-contracts.mjs'
-      - 'scripts/generate-*.mjs'
       - 'backend/app/domains/catalog/**'
+      - 'scripts/**'
       - '.github/workflows/frontend.yml'
 
 defaults:
@@ -64,7 +54,13 @@ jobs:
         working-directory: backend
       - run: npm run validate:client-config
       - run: npm run validate:ui-strings
-      - run: npm run validate:catalog
+      - run: npm run codegen:contracts
+      - name: Assert committed codegen outputs match contracts
+        run: |
+          git diff --exit-code -- \
+            ../frontend/src/types/generated \
+            ../backend/app/shared/contracts/enums.py \
+            ../contracts/openapi.json
       - run: npm run check:openapi
       - run: npm run typecheck
       - run: npm run lint

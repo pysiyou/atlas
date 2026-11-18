@@ -30,6 +30,12 @@ export {
 
 export * from './utils/orderableTestLookup';
 
+export {
+  getTestClinicalCategory,
+  getTestDescription,
+  getTestOrderObsLabel,
+} from './utils/testDisplay';
+
 export { Catalog as CatalogPage } from './pages/CatalogPage';
 export { CatalogList } from './pages/CatalogList';
 export { CatalogDetail } from './pages/CatalogDetail';

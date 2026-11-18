@@ -10,6 +10,7 @@ import { buildViews, TABLE_COLUMN_WIDTH } from '@/components/data-table';
 import { formatCurrency } from '@/utils';
 import type { OrderableTestSummary } from '@/types';
 import { CatalogCard } from '../components/CatalogCard';
+import { getTestClinicalCategory } from '../utils/testDisplay';
 import { formatSynonymsPreview } from '@/utils/presentation';
 import { BADGE, TABLE_TYPE, FG } from '@/theme/recipes';
 
@@ -74,7 +75,12 @@ export const createCatalogTableConfig = (_navigate: NavigateFunction): TableView
       sortable: true,
       accessor: (test: OrderableTestSummary) => test.category,
       render: (test: OrderableTestSummary) => (
-        <StatusValueBadge value={test.category} size="xs" className={BADGE.tableEmbed} />
+        <StatusValueBadge
+          value={test.category}
+          size="xs"
+          className={BADGE.tableEmbed}
+          title={getTestClinicalCategory(test)}
+        />
       ),
     },
     sampleType: {

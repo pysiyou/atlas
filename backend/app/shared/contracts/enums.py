@@ -3,7 +3,6 @@ Enum types — GENERATED from contracts/enums.json. DO NOT EDIT.
 """
 import enum
 
-
 class Gender(str, enum.Enum):
     MALE = "male"
     FEMALE = "female"
@@ -173,19 +172,7 @@ class PresentationPrimary(str, enum.Enum):
     ESCALATED = "escalated"
     REJECTED = "rejected"
 
-
-PRESENTATION_PRIMARY_VALUES: tuple[str, ...] = (
-    "pending",
-    "blocked",
-    "in_progress",
-    "partial_results",
-    "completed",
-    "cancelled",
-    "superseded",
-    "removed",
-    "escalated",
-    "rejected",
-)
+PRESENTATION_PRIMARY_VALUES: tuple[str, ...] = ("pending", "blocked", "in_progress", "partial_results", "completed", "cancelled", "superseded", "removed", "escalated", "rejected")
 
 PRESENTATION_PRIMARY_BADGE_VARIANTS: dict[str, str] = {
     "pending": "neutral",
@@ -212,3 +199,4 @@ PRESENTATION_PRIMARY_DISPLAY_LABELS: dict[str, str] = {
     "escalated": "ESCALATED",
     "rejected": "REJECTED",
 }
+

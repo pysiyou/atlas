@@ -429,7 +429,6 @@ class AuditEventQueryService:
 
         if actor_id is not None:
             from app.domains.lab.constants import is_analyzer_user_id
-            from sqlalchemy import or_
 
             if is_analyzer_user_id(actor_id):
                 query = query.filter(

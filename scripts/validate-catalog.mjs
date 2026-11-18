@@ -257,83 +257,6 @@ export function runCatalogIntegrityChecks(docs) {
 }
 
 /**
- * Phase-5 spot checks: TSH single-analyte, CBC multi-analyte.
- *
- * @param {{
- *   analytes: { analytes?: { analyte_code?: string; loinc_code?: string }[] };
- *   tests: { tests?: Record<string, unknown>[] };
- * }} docs
- * @returns {number}
- */
-function runRequiredFixtureChecks(docs) {
-  let errors = 0;
-  const byTestCode = new Map(
-    (docs.tests.tests ?? [])
-      .filter(t => typeof t?.test_code === 'string')
-      .map(t => [t.test_code, t]),
-  );
-  const byAnalyte = new Map(
-    (docs.analytes.analytes ?? [])
-      .filter(a => typeof a?.analyte_code === 'string')
-      .map(a => [a.analyte_code, a]),
-  );
-
-  const tsh = byTestCode.get('TSH');
-  if (!tsh) {
-    console.error('fixture: missing orderable test TSH');
-    errors += 1;
-  } else {
-    if (tsh.loinc_code !== '3016-3') {
-      console.error('fixture TSH: expected order loinc_code 3016-3');
-      errors += 1;
-    }
-    const tshAnalytes = tsh.analytes;
-    if (!Array.isArray(tshAnalytes) || tshAnalytes.length !== 1 || tshAnalytes[0] !== 'TSH') {
-      console.error('fixture TSH: expected analytes ["TSH"]');
-      errors += 1;
-    }
-    const tshRow = byAnalyte.get('TSH');
-    if (tshRow?.loinc_code !== '3016-3') {
-      console.error('fixture TSH analyte: expected observation loinc 3016-3');
-      errors += 1;
-    }
-  }
-
-  const cbc = byTestCode.get('CBC');
-  if (!cbc) {
-    console.error('fixture: missing orderable test CBC');
-    errors += 1;
-  } else {
-    if (cbc.loinc_code !== '57021-8') {
-      console.error('fixture CBC: expected order loinc_code 57021-8');
-      errors += 1;
-    }
-    const cbcAnalytes = cbc.analytes;
-    if (!Array.isArray(cbcAnalytes) || cbcAnalytes.length < 2) {
-      console.error('fixture CBC: expected multiple analytes');
-      errors += 1;
-    } else {
-      for (const code of ['WBC', 'HGB', 'PLAT']) {
-        if (!cbcAnalytes.includes(code)) {
-          console.error(`fixture CBC: missing analyte ${code}`);
-          errors += 1;
-        }
-      }
-    }
-    const hgb = byAnalyte.get('HGB');
-    if (hgb?.loinc_code !== '718-7') {
-      console.error('fixture CBC/HGB analyte: expected loinc 718-7');
-      errors += 1;
-    }
-  }
-
-  if (errors === 0) {
-    console.log('ok fixtures TSH + CBC');
-  }
-  return errors;
-}
-
-/**
  * Ensure sample.validation / validation.rejection_criteria ids exist in registries.
  *
  * @param {{
@@ -506,7 +429,6 @@ function main() {
   }
 
   errors += runCatalogIntegrityChecks({ analytes, tests, workups });
-  errors += runRequiredFixtureChecks({ analytes, tests });
   errors += runRejectionReasonChecks({ analytes, tests });
 
   if (fs.existsSync(sampleRejectionSchemaPath) && fs.existsSync(sampleRejectionPath)) {

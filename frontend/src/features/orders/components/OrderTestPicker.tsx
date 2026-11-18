@@ -16,7 +16,7 @@ import { RemovableTag, CheckboxIndicator } from '@/components/primitives';
 import type { OrderableTestSummary } from '@/types';
 import type { Workup } from '@/features/catalog';
 import { indexTestsByCode } from '@/features/catalog';
-import { getTestClinicalCategory } from '@/features/catalog/utils/testDisplay';
+import { getTestClinicalCategory } from '@/features/catalog';
 import { cn, formatCurrency, formatTurnaroundTime, titleCaseWords } from '@/utils';
 import { IconKeys } from '@/icons';
 import { text, FG } from '@/theme/recipes';

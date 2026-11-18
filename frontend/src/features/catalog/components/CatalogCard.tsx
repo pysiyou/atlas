@@ -5,6 +5,7 @@ import { RecordId, StatusValueBadge } from '@/features/shared';
 import { BADGE, PRICE_DISPLAY, text } from '@/theme/recipes';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatSynonymsPreview } from '@/utils/presentation';
+import { getTestClinicalCategory } from '../utils/testDisplay';
 
 /**
  * CatalogCard Component
@@ -47,7 +48,12 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Orderabl
           TAT: {formatTurnaroundTime(test.turnaroundTimeHours)}
         </div>
         <div className="flex items-center gap-space-2">
-          <StatusValueBadge value={test.category} size="xs" className={BADGE.tableEmbed} />
+          <StatusValueBadge
+            value={test.category}
+            size="xs"
+            className={BADGE.tableEmbed}
+            title={getTestClinicalCategory(test)}
+          />
           <StatusValueBadge value={test.sampleType} size="xs" />
         </div>
       </div>
