@@ -43,6 +43,9 @@ export {
   type PhysiologicLimit,
   type ReferenceRangeDisplay,
   type ReferenceIntervalLine,
+  type ReferenceIntervalDisplay,
+  referenceIntervalLineText,
+  parseSexLabeledReferenceLines,
   type ValidationResult,
 } from './labResult';
 export {

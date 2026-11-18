@@ -78,7 +78,17 @@
       "properties": {
         "test_code": { "$ref": "#/definitions/testCode" },
         "loinc_code": { "$ref": "#/definitions/loincCode" },
+        "order_obs": {
+          "type": "string",
+          "enum": ["order", "observation", "both"],
+          "description": "Whether loinc_code is an order, observation, or shared code"
+        },
         "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "category": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Human-readable clinical grouping shown in catalog detail (distinct from test_category slug)"
+        },
         "description": { "type": "string", "maxLength": 2000 },
         "test_category": { "$ref": "#/definitions/testCategory" },
         "sample_type": { "$ref": "#/definitions/specimenType" },

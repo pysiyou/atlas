@@ -182,37 +182,80 @@ function singleReferenceLine(value: string): ReferenceIntervalLine[] {
   return trimmed ? [{ value: trimmed }] : [{ value: '—' }];
 }
 
-/** Reference interval column — split Male/Female lines when catalog ranges differ. */
+export type ReferenceIntervalDisplay = 'resolved' | 'all_catalog_bands';
+
+const SEX_LABEL_REF =
+  /^(male|female|general|pediatric)\s*:\s*(.+)$/i;
+
+/** Split stored HL7-style refs: `Male: <17 …; female: <25 …` into stacked report lines. */
+export function parseSexLabeledReferenceLines(
+  raw: string
+): ReferenceIntervalLine[] | null {
+  const trimmed = raw.trim();
+  if (!trimmed.includes(';')) return null;
+  const parts = trimmed.split(/\s*;\s*/).filter(Boolean);
+  if (parts.length < 2) return null;
+  const lines: ReferenceIntervalLine[] = [];
+  for (const part of parts) {
+    const match = part.match(SEX_LABEL_REF);
+    if (!match) return null;
+    lines.push({
+      label: `${match[1].toLowerCase()}:`,
+      value: match[2].trim(),
+    });
+  }
+  return lines.length >= 2 ? lines : null;
+}
+
+function getAllCatalogReferenceIntervalLines(
+  catalog: CatalogReferenceRange
+): ReferenceIntervalLine[] {
+  const bands = listReferenceRangeBands(catalog);
+  if (bands.length === 0) return [];
+
+  if (bands.length === 1) {
+    const segment = formatDemographicRangeSegment(bands[0].range) || '—';
+    const parsed = parseSexLabeledReferenceLines(segment);
+    if (parsed) return parsed;
+    return [{ value: segment }];
+  }
+
+  return bands.map(b => {
+    const segment = formatDemographicRangeSegment(b.range) || '—';
+    return { label: `${b.label.toLowerCase()}:`, value: segment };
+  });
+}
+
+/** One physical line for layout width (PDF / column sizing). */
+export function referenceIntervalLineText(line: ReferenceIntervalLine): string {
+  if (line.label?.trim()) {
+    return `${line.label} ${line.value}`;
+  }
+  return line.value;
+}
+
+/** Reference interval column — `resolved` (lab entry) or `all_catalog_bands` (reports). */
 export function getAnalyteReferenceIntervalLines(
   analyte?: AnalyteDefinition,
   storedReferenceRange?: string,
-  patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string }
+  patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string },
+  display: ReferenceIntervalDisplay = 'resolved'
 ): ReferenceIntervalLine[] {
   const catalog = analyte?.reference_range as CatalogReferenceRange | null | undefined;
   if (catalog) {
-    const bands = listReferenceRangeBands(catalog);
-    if (bands.length > 1) {
-      return bands.map((b) => ({
-        label: b.label,
-        value: formatDemographicRangeSegment(b.range) || '—',
-      }));
+    if (display === 'all_catalog_bands') {
+      const lines = getAllCatalogReferenceIntervalLines(catalog);
+      if (lines.length > 0) return lines;
     }
-    if (bands.length === 1) return singleReferenceLine(formatDemographicRangeSegment(bands[0].range) || '—');
-    const male = formatDemographicRangeSegment(catalog.adult_male);
-    const female = formatDemographicRangeSegment(catalog.adult_female);
-    if (male && female && male !== female) {
-      return [{ label: 'Male', value: male }, { label: 'Female', value: female }];
-    }
-    if (patient) {
-      const resolved = formatReferenceRange(catalog, patient);
-      if (resolved !== 'N/A') return singleReferenceLine(resolved);
-    }
-    const general = formatDemographicRangeSegment(catalog.adult_general);
-    if (general) return singleReferenceLine(general);
-    if (male || female) return singleReferenceLine(male || female);
+    const resolved = formatReferenceRange(catalog, patient);
+    if (resolved !== 'N/A') return singleReferenceLine(resolved);
   }
 
   const fallback = storedReferenceRange?.trim();
+  if (fallback && display === 'all_catalog_bands') {
+    const parsed = parseSexLabeledReferenceLines(fallback);
+    if (parsed) return parsed;
+  }
   return singleReferenceLine(fallback || '—');
 }
 
@@ -230,7 +273,9 @@ export function formatReferenceRange(
     return 'N/A';
   }
   if ('adult_general' in range || 'adult_male' in range || 'adult_female' in range) {
-    const resolved = getPatientSpecificRange(range as CatalogReferenceRange, demographics);
+    const catalogRange = range as CatalogReferenceRange;
+    const resolved = getPatientSpecificRange(catalogRange, demographics);
+    if (resolved.text?.trim()) return resolved.text.trim();
     if (resolved.low !== undefined && resolved.high !== undefined) {
       return formatRangeBounds(resolved.low, resolved.high);
     }

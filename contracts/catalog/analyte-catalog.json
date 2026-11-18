@@ -4461,7 +4461,7 @@
     },
     {
       "analyte_code": "BNP",
-      "loinc_code": "30934-4",
+      "loinc_code": "33762-6",
       "value_type": "NUMERIC",
       "unit": "ng/L",
       "decimals_suggested": 0,

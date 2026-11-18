@@ -1,4 +1,4 @@
-/** Resolve catalog `reference_range` bands — SI demographic convention only. */
+/** Resolve catalog `reference_range` bands — pediatric if age <18, then sex, else general → male → female → pediatric. */
 import type { CatalogReferenceRange, DemographicRange, Gender } from '@/types';
 
 export type ReferenceBandSource =
@@ -20,6 +20,22 @@ const BAND_LABELS: Record<string, string> = {
   adult_female: 'Female',
   pediatric: 'Pediatric',
 };
+
+/** When sex/age is unknown, first populated band wins (general → male → female → pediatric). */
+const FALLBACK_BAND_ORDER: { bandKey: string; source: ReferenceBandSource }[] = [
+  { bandKey: 'adult_general', source: 'adult_general' },
+  { bandKey: 'adult_male', source: 'adult_male' },
+  { bandKey: 'adult_female', source: 'adult_female' },
+  { bandKey: 'pediatric', source: 'pediatric' },
+];
+
+function resolveFallbackBand(catalogRange: CatalogReferenceRange): ResolvedDemographicRange {
+  for (const { bandKey, source } of FALLBACK_BAND_ORDER) {
+    const band = pickBand(catalogRange, bandKey);
+    if (band) return { ...band, source, bandKey };
+  }
+  return { source: 'none' };
+}
 
 function asDemographicRange(value: unknown): DemographicRange | undefined {
   if (!value || typeof value !== 'object') return undefined;
@@ -65,8 +81,8 @@ export function resolveReferenceBand(
     if (female) return { ...female, source: 'adult_female', bandKey: 'adult_female' };
   }
 
-  const general = pickBand(catalogRange, 'adult_general');
-  if (general) return { ...general, source: 'adult_general', bandKey: 'adult_general' };
+  const fallback = resolveFallbackBand(catalogRange);
+  if (fallback.source !== 'none') return fallback;
 
   const legacy = catalogRange as CatalogReferenceRange & { low?: number; high?: number };
   if (legacy.low !== undefined || legacy.high !== undefined) {

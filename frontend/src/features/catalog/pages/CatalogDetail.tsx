@@ -28,6 +28,12 @@ import type { ReactNode } from 'react';
 import type { OrderableTest, AnalyteDefinition } from '@/types';
 import { resolveClinicalWorkupLabel } from '@/types/generated/clinicalWorkups';
 import { useModuleListTitles } from '@/strings';
+import {
+  getTestClinicalCategory,
+  getTestDescription,
+  getTestOrderObsLabel,
+} from '../utils/orderableTestContract';
+import { getCategoryLabel } from '../constants/catalogConfig';
 
 /** Visible row budget for scroll-capped catalog panels when balancing columns. */
 const CATALOG_SCROLL_PANEL_BALANCE_ROWS = 12;
@@ -94,11 +100,20 @@ function buildCatalogDetailTables(test: OrderableTest): TableInput[] {
       rows: [
         { label: 'Test Code', value: <RecordId>{test.code}</RecordId> },
         { label: 'Test Name', value: test.name },
-        { label: 'Category', value: capitalize(test.category) },
+        { label: 'Category', value: getTestClinicalCategory(test) },
+        {
+          label: 'Catalog group',
+          value: getCategoryLabel(test.category),
+        },
         { label: 'Turnaround Time', value: formatTurnaroundTime(test.turnaroundTimeHours) },
         { label: 'Methodology', value: test.methodology || '-' },
-        { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms, '-') },
+        {
+          label: 'LOINC role',
+          value: getTestOrderObsLabel(test) ?? '—',
+        },
         { label: 'LOINC Code', value: test.loincCode?.trim() || '-' },
+        { label: 'Synonyms', value: formatArrayWithFallback(test.synonyms, '-') },
+        { label: 'Description', value: getTestDescription(test) ?? '—' },
         {
           label: 'Included in profiles',
           value: formatArrayWithFallback(

@@ -5846,11 +5846,11 @@
     {
       "test_code": "BNP",
       "synonyms": [
-        "BNP",
-        "Brain Natriuretic Peptide"
+        "NT-proBNP",
+        "BNP prohormone N-terminal"
       ],
       "category": "Clinical Chemistry - Cardiac",
-      "loinc_code": "30934-4",
+      "loinc_code": "33762-6",
       "order_obs": "both",
       "method_common": "Immunoassay (fluorescence or chemiluminescence)",
       "turnaround_time_hours": 2,
@@ -5877,7 +5877,7 @@
         "SRC003"
       ],
       "confidence": "MEDIUM",
-      "notes": "Heart failure and fluid overload assessment; interpret with clinical context",
+      "notes": "Heart failure and fluid overload assessment (NT-proBNP); interpret with clinical context",
       "container_types": [
         "tube"
       ],
@@ -5886,7 +5886,7 @@
       ],
       "sample_volume_description": "3mL",
       "price": 45,
-      "name": "B-Type Natriuretic Peptide (BNP)",
+      "name": "N-terminal pro-BNP (NT-proBNP)",
       "analytes": [
         "BNP"
       ],
@@ -7540,7 +7540,7 @@
         "Creatine Kinase MB"
       ],
       "category": "Clinical Chemistry - Cardiac",
-      "loinc_code": "32673-6",
+      "loinc_code": "13969-1",
       "order_obs": "both",
       "method_common": "Immunoassay",
       "turnaround_time_hours": 2,
@@ -8468,7 +8468,7 @@
         "Cardiac Troponin I"
       ],
       "category": "Clinical Chemistry - Cardiac",
-      "loinc_code": "10839-9",
+      "loinc_code": "6598-7",
       "order_obs": "both",
       "method_common": "High-sensitivity troponin immunoassay",
       "turnaround_time_hours": 1,
@@ -8742,7 +8742,7 @@
         "Calculated GFR"
       ],
       "category": "Clinical Chemistry - Renal Function",
-      "loinc_code": "98979-8",
+      "loinc_code": "33914-3",
       "order_obs": "both",
       "method_common": "Calculated from serum creatinine (CKD-EPI 2021, race-free equation)",
       "turnaround_time_hours": 0,
@@ -9474,7 +9474,7 @@
         "Fasting Blood Sugar"
       ],
       "category": "Clinical Chemistry",
-      "loinc_code": "1558-6",
+      "loinc_code": "2345-7",
       "order_obs": "both",
       "method_common": "Hexokinase enzymatic method",
       "turnaround_time_hours": 1,
@@ -9657,7 +9657,7 @@
         "CO2 (serum)"
       ],
       "category": "Clinical Chemistry - Acid-Base",
-      "loinc_code": "1963-8",
+      "loinc_code": "2028-9",
       "order_obs": "both",
       "method_common": "Calculation or direct ISE measurement",
       "turnaround_time_hours": 1,
@@ -9879,7 +9879,7 @@
       "analytes": [
         "CRP"
       ],
-      "loinc_code": "30522-7",
+      "loinc_code": "1988-5",
       "sample_type": "blood",
       "test_category": "biochemistry",
       "validation": {
@@ -9967,11 +9967,11 @@
       "sample_volume_description": "3mL",
       "price": 30,
       "test_code": "HSTROP",
-      "name": "Troponin I.cardiac in Serum or Plasma by High sensitivity method",
+      "name": "High-sensitivity cardiac troponin T",
       "analytes": [
         "TROP"
       ],
-      "loinc_code": "89579-7",
+      "loinc_code": "6598-7",
       "sample_type": "blood",
       "test_category": "biochemistry",
       "validation": {
@@ -10673,7 +10673,7 @@
         "LDL-C"
       ],
       "category": "Clinical Chemistry - Lipid Panel",
-      "loinc_code": "2089-1",
+      "loinc_code": "13457-7",
       "order_obs": "both",
       "method_common": "Direct immunochemical or calculated",
       "turnaround_time_hours": 1,

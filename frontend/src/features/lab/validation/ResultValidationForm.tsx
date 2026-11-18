@@ -39,11 +39,13 @@ export function ResultValidationResultsBody({
   patient,
   technicianNotes,
   layout = 'table',
+  referenceIntervalDisplay = 'resolved',
 }: Pick<
   ValidationFormProps,
   'results' | 'flags' | 'testCode' | 'patient' | 'technicianNotes'
 > & {
   layout?: ResultsGridLayout;
+  referenceIntervalDisplay?: 'resolved' | 'all_catalog_bands';
 }) {
   const hasResults = results && Object.keys(results).length > 0;
   const analyteLabels = useAnalyteLabelMap(testCode);
@@ -78,6 +80,7 @@ export function ResultValidationResultsBody({
           flags={flags}
           testCode={testCode}
           patient={patient}
+          referenceIntervalDisplay={referenceIntervalDisplay}
           variant="inline"
           layout={layout}
         />

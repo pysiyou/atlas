@@ -6,7 +6,12 @@ import { resolveAnalyteLabel } from '@/features/catalog';
 import { DATA_GRID } from '@/theme/recipes';
 import { useLabCopy } from '@/strings';
 import type { AnalyteDefinition, Gender, Patient } from '@/types';
-import { getAnalyteReferenceIntervalLines, parseResultEntry, type ResultStatus } from '../utils/labResult';
+import {
+  getAnalyteReferenceIntervalLines,
+  parseResultEntry,
+  type ReferenceIntervalDisplay,
+  type ResultStatus,
+} from '../utils/labResult';
 import { ReferenceIntervalCell } from './ReferenceIntervalCell';
 import { ResultValueAnnotations } from './ResultValueAnnotations';
 
@@ -18,6 +23,7 @@ type LabResultInlineTableProps = {
   patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string };
   referenceValueColumnCh: number;
   showStatus: boolean;
+  referenceIntervalDisplay?: ReferenceIntervalDisplay;
 };
 
 export function LabResultInlineTable({
@@ -28,6 +34,7 @@ export function LabResultInlineTable({
   patient,
   referenceValueColumnCh,
   showStatus,
+  referenceIntervalDisplay = 'resolved',
 }: LabResultInlineTableProps) {
   const labCopy = useLabCopy();
 
@@ -62,7 +69,8 @@ export function LabResultInlineTable({
             const intervalLines = getAnalyteReferenceIntervalLines(
               analyteDef,
               referenceRange,
-              patient
+              patient,
+              referenceIntervalDisplay
             );
 
             return (

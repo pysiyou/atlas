@@ -9,6 +9,7 @@ from app.domains.lab.constants import ANALYZER_USER_ID, is_analyzer_user_id
 from app.domains.catalog.models import OrderableTest
 from app.domains.lab.results.delta_check import DeltaCheckService
 from app.domains.lab.results.flags import ResultFlag
+from app.shared.catalog.reference_range import band_low_high, resolve_reference_band
 from app.domains.lab.results.reflex import ReflexEngine
 from app.domains.orders.models import Order, OrderTest
 from app.platform.utils import parse_numeric_result_value
@@ -32,15 +33,32 @@ def _scalar_result_value(raw: Any) -> Any:
     return raw
 
 
-def _reference_range_text(flag: ResultFlag | None) -> str:
-    if flag is None:
-        return ""
-    if flag.reference_low is not None and flag.reference_high is not None:
-        return f"{flag.reference_low} - {flag.reference_high}"
-    if flag.reference_low is not None:
-        return f"> {flag.reference_low}"
-    if flag.reference_high is not None:
-        return f"< {flag.reference_high}"
+def _reference_range_text(
+    flag: ResultFlag | None,
+    *,
+    analyte_item: dict[str, Any] | None = None,
+) -> str:
+    """Numeric flags supply bounds; SELECT/TEXT rows use catalog ``reference_range`` text."""
+    if flag is not None:
+        if flag.reference_low is not None and flag.reference_high is not None:
+            return f"{flag.reference_low} - {flag.reference_high}"
+        if flag.reference_low is not None:
+            return f"> {flag.reference_low}"
+        if flag.reference_high is not None:
+            return f"< {flag.reference_high}"
+
+    if analyte_item:
+        band = resolve_reference_band(analyte_item.get("reference_range") or {})
+        text = band.get("text")
+        if text:
+            return str(text).strip()
+        low, high = band_low_high(band)
+        if low is not None and high is not None:
+            return f"{low} - {high}"
+        if low is not None:
+            return f"> {low}"
+        if high is not None:
+            return f"< {high}"
     return ""
 
 
@@ -69,7 +87,7 @@ class ResultCommandHandler:
             shaped[code] = {
                 "value": _scalar_result_value(raw),
                 "unit": item.get("unit") or (flag.unit if flag is not None else None),
-                "referenceRange": _reference_range_text(flag),
+                "referenceRange": _reference_range_text(flag, analyte_item=item),
                 "status": status,
             }
         return self._svc._results_to_json_serializable(shaped)

@@ -105,6 +105,7 @@ export function ReportPreviewResults({
               patient={patient}
               technicianNotes={test.technicianNotes}
               layout={layout}
+              referenceIntervalDisplay="all_catalog_bands"
             />
           </Panel>
         );

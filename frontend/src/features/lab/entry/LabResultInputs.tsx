@@ -179,13 +179,20 @@ export function LabResultInput({
   }
 
   const hasError = !!validationError;
+  const decimals = analyte.decimals_suggested;
+  const step =
+    typeof decimals === 'number' && decimals >= 0 && Number.isInteger(decimals)
+      ? decimals === 0
+        ? '1'
+        : (1 / 10 ** decimals).toString()
+      : 'any';
   const noSpinner =
     '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0';
   return (
     <input
       {...commonProps}
       type="number"
-      step="any"
+      step={step}
       min={limit?.min}
       max={limit?.max}
       inputMode="decimal"

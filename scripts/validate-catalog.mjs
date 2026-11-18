@@ -231,6 +231,19 @@ export function runCatalogIntegrityChecks(docs) {
       console.error(`${code}: multi-analyte test requires order loinc_code`);
       errors += 1;
     }
+
+    if (analyteList.length === 1 && test.loinc_code) {
+      const sole = analyteList[0];
+      const analyteRow = docs.analytes.analytes?.find(a => a.analyte_code === sole);
+      const analyteLoinc =
+        analyteRow && typeof analyteRow.loinc_code === 'string' ? analyteRow.loinc_code : null;
+      if (analyteLoinc && test.loinc_code !== analyteLoinc) {
+        console.error(
+          `${code}: single-analyte test loinc_code ${JSON.stringify(test.loinc_code)} must match analyte ${sole} (${analyteLoinc})`,
+        );
+        errors += 1;
+      }
+    }
   }
 
   for (const workup of docs.workups.workups ?? []) {

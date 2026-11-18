@@ -54,9 +54,15 @@ def resolve_reference_band(
         if female:
             return {**female, "source": "adult_female", "band_key": "adult_female"}
 
-    general = _as_band(reference_range.get("adult_general"))
-    if general:
-        return {**general, "source": "adult_general", "band_key": "adult_general"}
+    for band_key, source in (
+        ("adult_general", "adult_general"),
+        ("adult_male", "adult_male"),
+        ("adult_female", "adult_female"),
+        ("pediatric", "pediatric"),
+    ):
+        band = _as_band(reference_range.get(band_key))
+        if band:
+            return {**band, "source": source, "band_key": band_key}
 
     if "low" in reference_range or "high" in reference_range:
         return {

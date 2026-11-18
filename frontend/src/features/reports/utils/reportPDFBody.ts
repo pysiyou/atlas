@@ -23,8 +23,8 @@ const REFERENCE_LABEL_SIZE = 5;
 const NOTES_SIZE = 6;
 
 const ROW_HEIGHT = 3.6;
-/** Stacked Male / Female reference lines (minimal leading). */
-const REFERENCE_PAIR_LINE_HEIGHT = 2.35;
+/** Vertical step between stacked reference lines (male / female / …). */
+const REFERENCE_PAIR_LINE_HEIGHT = 3.4;
 const SECTION_GAP = 3.5;
 const CATEGORY_GAP = 5;
 
@@ -247,20 +247,30 @@ function computeReferenceSubColumnLayout(
   doc.setFontSize(REFERENCE_VALUE_SIZE);
 
   let maxValueWidth = 0;
+  let maxLabelWidth = 0;
 
+  doc.setFontSize(REFERENCE_LABEL_SIZE);
   for (const row of test.parameters) {
     const lines = getAnalyteReferenceIntervalLines(
       catalogAnalytes[row.code],
       row.referenceRange,
-      patient
+      patient,
+      'all_catalog_bands'
     );
     for (const line of lines) {
+      doc.setFontSize(REFERENCE_VALUE_SIZE);
       maxValueWidth = Math.max(maxValueWidth, doc.getTextWidth(line.value));
+      if (line.label?.trim()) {
+        doc.setFontSize(REFERENCE_LABEL_SIZE);
+        maxLabelWidth = Math.max(maxLabelWidth, doc.getTextWidth(line.label));
+      }
     }
   }
+  doc.setFontSize(REFERENCE_VALUE_SIZE);
 
   const valueRightX = layout.contentRight;
-  const labelRightX = valueRightX - maxValueWidth - COL_GAP;
+  const labelRightX =
+    maxLabelWidth > 0 ? valueRightX - maxValueWidth - COL_GAP : valueRightX;
 
   return { valueRightX, labelRightX };
 }
@@ -273,7 +283,8 @@ function referenceLineCount(
   const lines = getAnalyteReferenceIntervalLines(
     catalogAnalytes[resultRow.code],
     resultRow.referenceRange,
-    patient
+    patient,
+    'all_catalog_bands'
   );
   return Math.max(lines.length, 1);
 }
@@ -369,23 +380,24 @@ function drawReferenceCell(
   const lines = getAnalyteReferenceIntervalLines(
     catalogAnalytes[resultRow.code],
     resultRow.referenceRange,
-    patient
+    patient,
+    'all_catalog_bands'
   );
 
   doc.setFont(FONT, 'normal');
 
   const lineHeight = lines.length > 1 ? REFERENCE_PAIR_LINE_HEIGHT : 0;
   for (let i = 0; i < lines.length; i += 1) {
-    const lineY = lines.length > 1 ? y + i * lineHeight : y;
-    doc.setFontSize(REFERENCE_VALUE_SIZE);
-    doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
-    doc.text(lines[i].value, subColumns.valueRightX, lineY, { align: 'right' });
-    const label = lines[i].label;
+    const lineY = y + i * (lines.length > 1 ? lineHeight : 0);
+    const label = lines[i].label?.trim();
     if (label) {
       doc.setFontSize(REFERENCE_LABEL_SIZE);
       doc.setTextColor(COLOR_UNIT.r, COLOR_UNIT.g, COLOR_UNIT.b);
       doc.text(label, subColumns.labelRightX, lineY, { align: 'right' });
     }
+    doc.setFontSize(REFERENCE_VALUE_SIZE);
+    doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+    doc.text(lines[i].value, subColumns.valueRightX, lineY, { align: 'right' });
   }
 
   doc.setFontSize(TABLE_SIZE);

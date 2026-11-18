@@ -58,7 +58,7 @@
     },
     "referenceRange": {
       "type": "object",
-      "description": "SI / IFCC-style demographic reference bands only. Utilities resolve pediatric → sex → adult_general.",
+      "description": "SI / IFCC-style demographic reference bands only. Utilities resolve pediatric (if age <18), then sex when known, else adult_general → adult_male → adult_female → pediatric.",
       "additionalProperties": false,
       "properties": {
         "adult_general": { "$ref": "#/definitions/demographicRange" },

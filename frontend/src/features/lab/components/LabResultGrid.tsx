@@ -6,6 +6,7 @@ import {
   getAnalyteReferenceIntervalLines,
   parseResultEntry,
   statusMapFromFlags,
+  type ReferenceIntervalDisplay,
 } from '../utils/labResult';
 import { LabResultInlineTable } from './LabResultInlineTable';
 import { LAB_CONFIG } from '../constants';
@@ -34,6 +35,8 @@ interface LabResultGridProps {
   layout?: ResultsGridLayout;
   /** Truncate grid after N analytes (validation queue mobile cards). */
   dense?: boolean;
+  /** Reports show every catalog band; lab entry uses one resolved band. */
+  referenceIntervalDisplay?: ReferenceIntervalDisplay;
 }
 
 export function LabResultGrid({
@@ -44,6 +47,7 @@ export function LabResultGrid({
   variant = 'inline',
   layout = 'table',
   dense = false,
+  referenceIntervalDisplay = 'resolved',
 }: LabResultGridProps) {
   const flagStatusMap = useMemo(() => statusMapFromFlags(flags), [flags]);
   const { test: catalogTest } = useOrderableTest(testCode);
@@ -68,14 +72,15 @@ export function LabResultGrid({
       const lines = getAnalyteReferenceIntervalLines(
         catalogAnalytes[key],
         referenceRange,
-        patient
+        patient,
+        referenceIntervalDisplay
       );
       for (const line of lines) {
         maxLen = Math.max(maxLen, line.value.length);
       }
     }
     return Math.max(maxLen, 4);
-  }, [layout, variant, entries, catalogAnalytes, patient, flagStatusMap]);
+  }, [layout, variant, entries, catalogAnalytes, patient, flagStatusMap, referenceIntervalDisplay]);
 
   if (entries.length === 0) {
     return <Text role="body" intent="muted">No result values recorded.</Text>;
@@ -91,6 +96,7 @@ export function LabResultGrid({
         patient={patient}
         referenceValueColumnCh={referenceValueColumnCh}
         showStatus={showStatus}
+        referenceIntervalDisplay={referenceIntervalDisplay}
       />
     );
   }
