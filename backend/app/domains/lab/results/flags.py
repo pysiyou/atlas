@@ -4,6 +4,7 @@ from datetime import date, datetime
 from typing import Any
 
 from app.platform.utils import parse_numeric_result_value
+from app.shared.catalog.reference_range import band_low_high, resolve_reference_band
 from app.shared.contracts.enums import ResultStatus
 
 
@@ -69,9 +70,12 @@ class FlagCalculatorService:
                 continue
 
             # Get applicable reference range
-            ref_range = self._get_applicable_range(
-                item.get("reference_range", {}), patient_gender, patient_age
+            ref_band = resolve_reference_band(
+                item.get("reference_range") or {},
+                gender=patient_gender,
+                age=patient_age,
             )
+            ref_low, ref_high = band_low_high(ref_band)
 
             # Get critical range
             critical_range = item.get("critical_range", {})
@@ -79,8 +83,8 @@ class FlagCalculatorService:
             # Calculate status
             status = self._evaluate_value(
                 numeric_value,
-                ref_range.get("low"),
-                ref_range.get("high"),
+                ref_low,
+                ref_high,
                 critical_range.get("low"),
                 critical_range.get("high"),
             )
@@ -91,8 +95,8 @@ class FlagCalculatorService:
                     analyte_name=item.get("name") or analyte_code,
                     value=numeric_value,
                     status=status,
-                    reference_low=ref_range.get("low"),
-                    reference_high=ref_range.get("high"),
+                    reference_low=ref_low,
+                    reference_high=ref_high,
                     critical_low=critical_range.get("low"),
                     critical_high=critical_range.get("high"),
                     unit=item.get("unit"),
@@ -116,40 +120,6 @@ class FlagCalculatorService:
             return age
         except (ValueError, AttributeError):
             return 0
-
-    def _get_applicable_range(
-        self, reference_range: dict[str, Any], gender: str | None, age: int | None
-    ) -> dict[str, float | None]:
-        """
-        Select the appropriate reference range based on patient demographics.
-
-        Priority:
-        1. Pediatric range (if age < 18)
-        2. Gender-specific adult range (if gender matches)
-        3. General adult range
-        """
-        result = {"low": None, "high": None}
-
-        if not reference_range:
-            return result
-
-        if age is not None and age < 18 and "pediatric" in reference_range:
-            return reference_range["pediatric"]
-
-        if gender == "male" and "adult_male" in reference_range:
-            return reference_range["adult_male"]
-        if gender == "female" and "adult_female" in reference_range:
-            return reference_range["adult_female"]
-
-        # Fall back to general adult range
-        if "adult_general" in reference_range:
-            return reference_range["adult_general"]
-
-        # Handle legacy format (direct low/high)
-        if "low" in reference_range or "high" in reference_range:
-            return {"low": reference_range.get("low"), "high": reference_range.get("high")}
-
-        return result
 
     def _evaluate_value(
         self,

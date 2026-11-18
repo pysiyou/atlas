@@ -437,7 +437,10 @@ export interface CatalogReferenceRange {
   adult_male?: DemographicRange;
   adult_female?: DemographicRange;
   pediatric?: DemographicRange;
-  // Can be extended for age-specific ranges
+  /** @deprecated Legacy flat shape on the range object */
+  low?: number;
+  high?: number;
+  [bandKey: string]: DemographicRange | number | undefined;
 }
 
 /**

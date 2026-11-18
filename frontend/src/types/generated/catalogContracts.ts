@@ -17,6 +17,9 @@ export interface CatalogReferenceRange {
   adult_male?: CatalogDemographicRange;
   adult_female?: CatalogDemographicRange;
   pediatric?: CatalogDemographicRange;
+  low?: number;
+  high?: number;
+  [bandKey: string]: CatalogDemographicRange | number | undefined;
 }
 
 export interface CatalogNumericRange {

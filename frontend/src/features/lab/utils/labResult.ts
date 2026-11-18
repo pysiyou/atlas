@@ -2,6 +2,7 @@
 import type { ResultStatus } from '@/types/generated/enums';
 import type { CatalogReferenceRange, CriticalRange, AnalyteDefinition, Patient, Gender } from '@/types';
 import type { DemographicRange } from '@/types';
+import { listReferenceRangeBands, resolveReferenceBand } from './referenceRange';
 import { calculateAge } from '@/utils/string';
 import { FG, TONE, metricTile, metricTileStateFromResult } from '@/theme/recipes';
 export type { ResultStatus };
@@ -100,26 +101,28 @@ export const checkReferenceRange = (value: number, referenceRange: string): Resu
 export interface ReferenceRangeDisplay {
   low?: number;
   high?: number;
-  source: 'adult_male' | 'adult_female' | 'adult_general' | 'pediatric' | 'none';
+  text?: string;
+  source:
+    | 'adult_male'
+    | 'adult_female'
+    | 'adult_general'
+    | 'pediatric'
+    | 'legacy'
+    | 'none';
 }
 
 export function getPatientSpecificRange(
   catalogRange: CatalogReferenceRange,
-  patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string }
+  patient?: Patient | { gender?: Gender; age?: number; dateOfBirth?: string; smoker?: boolean }
 ): ReferenceRangeDisplay {
   let age: number | undefined;
   if (patient) {
     if ('age' in patient && patient.age !== undefined) age = patient.age;
     else if ('dateOfBirth' in patient && patient.dateOfBirth) age = calculateAge(patient.dateOfBirth);
   }
-  if (age !== undefined && age < 18 && catalogRange.pediatric)
-    return { ...catalogRange.pediatric, source: 'pediatric' };
-  if (patient?.gender === 'male' && catalogRange.adult_male)
-    return { ...catalogRange.adult_male, source: 'adult_male' };
-  if (patient?.gender === 'female' && catalogRange.adult_female)
-    return { ...catalogRange.adult_female, source: 'adult_female' };
-  if (catalogRange.adult_general) return { ...catalogRange.adult_general, source: 'adult_general' };
-  return { source: 'none' };
+  const resolved = resolveReferenceBand(catalogRange, patient, age);
+  const { source, bandKey: _bandKey, ...bounds } = resolved;
+  return { ...bounds, source };
 }
 
 export function isCriticalValue(value: number, criticalRange?: CriticalRange): boolean {
@@ -187,12 +190,19 @@ export function getAnalyteReferenceIntervalLines(
 ): ReferenceIntervalLine[] {
   const catalog = analyte?.reference_range as CatalogReferenceRange | null | undefined;
   if (catalog) {
+    const bands = listReferenceRangeBands(catalog);
+    if (bands.length > 1) {
+      return bands.map((b) => ({
+        label: b.label,
+        value: formatDemographicRangeSegment(b.range) || '—',
+      }));
+    }
+    if (bands.length === 1) return singleReferenceLine(formatDemographicRangeSegment(bands[0].range) || '—');
     const male = formatDemographicRangeSegment(catalog.adult_male);
     const female = formatDemographicRangeSegment(catalog.adult_female);
     if (male && female && male !== female) {
       return [{ label: 'Male', value: male }, { label: 'Female', value: female }];
     }
-    if (male && female) return singleReferenceLine(male);
     if (patient) {
       const resolved = formatReferenceRange(catalog, patient);
       if (resolved !== 'N/A') return singleReferenceLine(resolved);
@@ -211,6 +221,7 @@ export function formatReferenceRange(
   demographics?: { gender?: Gender; age?: number; dateOfBirth?: string }
 ): string {
   if ('source' in range && range.source !== 'none') {
+    if (range.text?.trim()) return range.text.trim();
     if (range.low !== undefined && range.high !== undefined) {
       return formatRangeBounds(range.low, range.high);
     }

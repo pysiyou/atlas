@@ -19,7 +19,6 @@ class CatalogReferenceRange(TypedDict, total=False):
     adult_female: CatalogDemographicRange
     pediatric: CatalogDemographicRange
 
-
 class CatalogNumericRange(TypedDict, total=False):
     low: float
     high: float

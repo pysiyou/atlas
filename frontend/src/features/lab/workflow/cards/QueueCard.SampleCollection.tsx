@@ -21,7 +21,6 @@ import { SampleCollectionPopover } from '../../collection/SampleCollectionPopove
 import { SampleRejectionPopover } from '../../collection/SampleRejectionPopover';
 import { useLabWorkflowCardClickGuard } from '../../hooks';
 import { useLabWorkflowResponsiveCard } from '../../hooks/useLabWorkflowResponsiveCard';
-import { printSampleCollectionLabel } from '../../utils';
 import { QueueCard, QueueCardMobile, QueueCardPanel, QueueCardTestList } from '../shared/QueueCardLayout';
 import {
   SampleCollectionCardLeftColumn,
@@ -153,24 +152,14 @@ export function SampleCollectionCardDesktop({
                 onCollect(display, volume, notes, color, containerType)
               }
             />
-          ) : sample.sampleId ? (
-            <>
-              {vm.isCollected ? (
-                <SampleRejectionPopover
-                  sampleId={sample.sampleId}
-                  testCodes={sample.testCodes ?? []}
-                  sampleType={sample.sampleType}
-                  patientName={patientName}
-                  isRecollection={vm.isRecollection}
-                />
-              ) : null}
-              <IconButton
-                onClick={() => printSampleCollectionLabel(display, patientName)}
-                {...actionButtonPreset('print')}
-                size="sm"
-                title={labCopy.actions.printSampleLabel}
-              />
-            </>
+          ) : sample.sampleId && vm.isCollected ? (
+            <SampleRejectionPopover
+              sampleId={sample.sampleId}
+              testCodes={sample.testCodes ?? []}
+              sampleType={sample.sampleType}
+              patientName={patientName}
+              isRecollection={vm.isRecollection}
+            />
           ) : null}
         </div>
       }

@@ -2,6 +2,7 @@
   "$schema": "./analyte-catalog.schema.json",
   "analytes": [
     {
+      "analyte_code": "ABO_GROUP",
       "loinc_code": "883-9",
       "value_type": "SELECT",
       "allowed_values": [
@@ -15,10 +16,9 @@
       ],
       "reference_range": {
         "adult_general": {
-          "text": "Patient-specific (A, B, AB, or O)"
+          "text": "A / B / AB / O"
         }
       },
-      "analyte_code": "ABO_GROUP",
       "name": "ABO Blood Group",
       "specimen": "Whole Blood",
       "validation": {
@@ -76,7 +76,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "< laboratory positive cutoff (method-dependent)"
+          "high": 19.9,
+          "low": 0
         }
       },
       "validation": {
@@ -119,7 +120,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "U"
     },
     {
       "analyte_code": "ACTH",
@@ -134,7 +136,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "08:00 plasma: <120 pg/mL"
+          "low": 7,
+          "high": 50
         }
       },
       "validation": {
@@ -177,7 +180,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ng/L"
     },
     {
       "analyte_code": "ACTIVA2",
@@ -192,7 +196,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "low": 0.8,
+          "high": 1.2
         }
       },
       "validation": {
@@ -235,7 +240,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ratio"
     },
     {
       "analyte_code": "ACTIVATE",
@@ -250,7 +256,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "low": 70,
+          "high": 120
         }
       },
       "validation": {
@@ -293,9 +300,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "s"
     },
     {
+      "analyte_code": "AFB_RESULT",
       "loinc_code": "647-8",
       "value_type": "SELECT",
       "allowed_values": [
@@ -311,10 +320,9 @@
       ],
       "reference_range": {
         "adult_general": {
-          "text": "Negative (no acid-fast bacilli seen)"
+          "text": "Negative"
         }
       },
-      "analyte_code": "AFB_RESULT",
       "name": "AFB Smear Result",
       "specimen": "Sputum",
       "validation": {
@@ -372,7 +380,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "high": 10
+          "high": 10,
+          "low": 0
         }
       },
       "validation": {
@@ -416,17 +425,18 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "ng/mL"
+      "unit": "ug/L"
     },
     {
+      "analyte_code": "ALB",
       "loinc_code": "1751-7",
       "value_type": "NUMERIC",
-      "unit": "g/dL",
-      "decimals_suggested": 1,
+      "unit": "g/L",
+      "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 3.5,
-          "high": 5
+          "low": 35,
+          "high": 50
         }
       },
       "citations": [
@@ -434,13 +444,12 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 0.75,
-        "max": 15
+        "min": 7.5,
+        "max": 150
       },
       "critical_range": {
-        "low": 1.5
+        "low": 15
       },
-      "analyte_code": "ALB",
       "name": "Albumin",
       "specimen": "Serum",
       "validation": {
@@ -486,6 +495,7 @@
       }
     },
     {
+      "analyte_code": "ALP",
       "loinc_code": "6768-6",
       "value_type": "NUMERIC",
       "unit": "U/L",
@@ -508,7 +518,6 @@
         "low": 0,
         "high": 1000
       },
-      "analyte_code": "ALP",
       "name": "Alkaline phosphatase",
       "specimen": "Serum",
       "validation": {
@@ -554,6 +563,7 @@
       }
     },
     {
+      "analyte_code": "ALT",
       "loinc_code": "1742-6",
       "value_type": "NUMERIC",
       "unit": "U/L",
@@ -575,7 +585,6 @@
         "min": 1.75,
         "max": 1500
       },
-      "analyte_code": "ALT",
       "name": "Alanine aminotransferase",
       "specimen": "Serum",
       "validation": {
@@ -748,6 +757,7 @@
       "unit": "U/L"
     },
     {
+      "analyte_code": "AMYLASE",
       "loinc_code": "1798-8",
       "value_type": "NUMERIC",
       "unit": "U/L",
@@ -770,7 +780,6 @@
         "min": 0,
         "max": 2000
       },
-      "analyte_code": "AMYLASE",
       "name": "Amylase",
       "specimen": "Serum",
       "validation": {
@@ -865,9 +874,21 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Indeterminate",
+        "Equivocal"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
+      "analyte_code": "ANTIHBC",
       "loinc_code": "13952-7",
       "value_type": "SELECT",
       "allowed_values": [
@@ -882,7 +903,6 @@
           "text": "Negative"
         }
       },
-      "analyte_code": "ANTIHBC",
       "name": "Anti-HBc",
       "specimen": "Serum",
       "validation": {
@@ -928,6 +948,7 @@
       }
     },
     {
+      "analyte_code": "ANTIHBS",
       "loinc_code": "5193-8",
       "value_type": "SELECT",
       "allowed_values": [
@@ -939,10 +960,9 @@
       ],
       "reference_range": {
         "adult_general": {
-          "text": "Negative (non-immune); ≥10 mIU/mL positive indicates immunity"
+          "text": "Negative"
         }
       },
-      "analyte_code": "ANTIHBS",
       "name": "Anti-HBs",
       "specimen": "Serum",
       "validation": {
@@ -988,6 +1008,7 @@
       }
     },
     {
+      "analyte_code": "ANTIHCV",
       "loinc_code": "16128-1",
       "value_type": "SELECT",
       "allowed_values": [
@@ -1003,7 +1024,6 @@
           "text": "Negative"
         }
       },
-      "analyte_code": "ANTIHCV",
       "name": "Anti-HCV",
       "specimen": "Serum or Plasma",
       "validation": {
@@ -1061,12 +1081,12 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_male": {
-          "low": 80,
-          "high": 151
+          "low": 2.07,
+          "high": 3.91
         },
         "adult_female": {
-          "low": 80,
-          "high": 170
+          "low": 2.07,
+          "high": 4.4
         }
       },
       "validation": {
@@ -1110,7 +1130,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL"
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "APOB",
@@ -1125,12 +1145,12 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_male": {
-          "low": 50,
-          "high": 123
+          "low": 1.3,
+          "high": 3.19
         },
         "adult_female": {
-          "low": 25,
-          "high": 120
+          "low": 0.65,
+          "high": 3.11
         }
       },
       "validation": {
@@ -1174,7 +1194,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL"
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "APOLIP2",
@@ -1189,7 +1209,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "low": 0.14,
+          "high": 0.45
         }
       },
       "validation": {
@@ -1232,7 +1253,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "APOLIP3",
@@ -1247,7 +1269,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "low": 0.8,
+          "high": 2
         }
       },
       "validation": {
@@ -1290,7 +1313,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ratio"
     },
     {
       "analyte_code": "APOLIP4",
@@ -1305,7 +1329,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "low": 0.3,
+          "high": 0.9
         }
       },
       "validation": {
@@ -1348,7 +1373,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ratio"
     },
     {
       "analyte_code": "APOLIP5",
@@ -1363,7 +1389,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "low": 1.35,
+          "high": 3.99
         }
       },
       "validation": {
@@ -1406,7 +1433,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "APOLIP6",
@@ -1421,8 +1449,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 10,
-          "high": 30
+          "low": 0.26,
+          "high": 0.78
         }
       },
       "validation": {
@@ -1466,7 +1494,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL"
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "APOLIPOP",
@@ -1481,7 +1509,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "low": 0.67,
+          "high": 1.11
         }
       },
       "validation": {
@@ -1524,9 +1553,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "mmol/L"
     },
     {
+      "analyte_code": "APTT",
       "loinc_code": "14979-9",
       "value_type": "NUMERIC",
       "unit": "s",
@@ -1548,7 +1579,6 @@
         "min": 6.25,
         "max": 150
       },
-      "analyte_code": "APTT",
       "name": "Activated partial thromboplastin time",
       "specimen": "Plasma",
       "validation": {
@@ -1606,7 +1636,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 50,
+          "low": 0
         }
       },
       "validation": {
@@ -1649,7 +1680,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "umol/mol"
     },
     {
       "analyte_code": "ARSENI3",
@@ -1664,7 +1696,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 15,
+          "low": 0
         }
       },
       "validation": {
@@ -1707,7 +1740,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENI4",
@@ -1722,7 +1756,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "high": 23
+          "high": 23,
+          "low": 0
         }
       },
       "validation": {
@@ -1766,7 +1801,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "μg/L"
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENIC",
@@ -1781,7 +1816,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 50,
+          "low": 0
         }
       },
       "validation": {
@@ -1824,7 +1860,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENICC",
@@ -1839,7 +1876,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 50,
+          "low": 0
         }
       },
       "validation": {
@@ -1882,7 +1920,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "umol/mol"
     },
     {
       "analyte_code": "ARSENICI",
@@ -1897,7 +1936,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 15,
+          "low": 0
         }
       },
       "validation": {
@@ -1940,7 +1980,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENICM",
@@ -1955,7 +1996,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 15,
+          "low": 0
         }
       },
       "validation": {
@@ -1998,7 +2040,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENICO",
@@ -2013,7 +2056,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 15,
+          "low": 0
         }
       },
       "validation": {
@@ -2056,7 +2100,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENICT",
@@ -2071,7 +2116,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 50,
+          "low": 0
         }
       },
       "validation": {
@@ -2114,7 +2160,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENITE",
@@ -2129,7 +2176,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 15,
+          "low": 0
         }
       },
       "validation": {
@@ -2172,7 +2220,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENOBE",
@@ -2187,7 +2236,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 15,
+          "low": 0
         }
       },
       "validation": {
@@ -2230,7 +2280,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "ARSENOCH",
@@ -2245,7 +2296,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 15,
+          "low": 0
         }
       },
       "validation": {
@@ -2288,9 +2340,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
+      "analyte_code": "AST",
       "loinc_code": "1920-8",
       "value_type": "NUMERIC",
       "unit": "U/L",
@@ -2312,7 +2366,6 @@
         "min": 2.5,
         "max": 1500
       },
-      "analyte_code": "AST",
       "name": "Aspartate aminotransferase",
       "specimen": "Serum",
       "validation": {
@@ -2370,7 +2423,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "high": 20,
+          "low": 0
         }
       },
       "validation": {
@@ -2413,9 +2467,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "IU/mL"
     },
     {
+      "analyte_code": "ATIII",
       "loinc_code": "27811-9",
       "value_type": "NUMERIC",
       "unit": "%",
@@ -2438,7 +2494,6 @@
         "min": 0,
         "max": 200
       },
-      "analyte_code": "ATIII",
       "name": "Antithrombin III",
       "specimen": "Serum",
       "validation": {
@@ -2496,7 +2551,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "high": 35,
+          "low": 0
         }
       },
       "validation": {
@@ -2539,7 +2595,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "IU/mL"
     },
     {
       "analyte_code": "B12",
@@ -2554,8 +2611,8 @@
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 200,
-          "high": 900
+          "low": 148,
+          "high": 664
         }
       },
       "validation": {
@@ -2599,10 +2656,10 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "pg/mL",
+      "unit": "pmol/L",
       "physiologic_range": {
-        "min": 50,
-        "max": 2700
+        "min": 37,
+        "max": 1992
       }
     },
     {
@@ -2610,7 +2667,7 @@
       "loinc_code": "9822-8",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -2655,6 +2712,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -2662,7 +2724,7 @@
       "loinc_code": "608-0",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -2707,6 +2769,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -2714,7 +2781,7 @@
       "loinc_code": "609-8",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -2759,6 +2826,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -2766,7 +2838,7 @@
       "loinc_code": "10352-3",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -2811,6 +2883,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -2818,7 +2895,7 @@
       "loinc_code": "10353-1",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -2863,6 +2940,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -2870,7 +2952,7 @@
       "loinc_code": "619-7",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -2915,6 +2997,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -2922,7 +3009,7 @@
       "loinc_code": "634-6",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -2967,6 +3054,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -2974,7 +3066,7 @@
       "loinc_code": "635-3",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3019,6 +3111,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3026,7 +3123,7 @@
       "loinc_code": "21020-3",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3071,6 +3168,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3078,7 +3180,7 @@
       "loinc_code": "6463-4",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3123,6 +3225,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3130,7 +3237,7 @@
       "loinc_code": "32355-0",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3175,6 +3282,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3182,7 +3294,7 @@
       "loinc_code": "6460-0",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3227,6 +3339,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3234,7 +3351,7 @@
       "loinc_code": "623-9",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3279,6 +3396,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3286,7 +3408,7 @@
       "loinc_code": "624-7",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3331,6 +3453,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3338,7 +3465,7 @@
       "loinc_code": "621-3",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3383,6 +3510,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3390,7 +3522,7 @@
       "loinc_code": "17898-8",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3435,6 +3567,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3442,7 +3579,7 @@
       "loinc_code": "626-2",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3487,6 +3624,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3494,7 +3636,7 @@
       "loinc_code": "627-0",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3539,6 +3681,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3546,7 +3693,7 @@
       "loinc_code": "20474-3",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3591,6 +3738,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3598,7 +3750,7 @@
       "loinc_code": "11261-5",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3643,6 +3795,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3650,7 +3807,7 @@
       "loinc_code": "595-9",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3695,6 +3852,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3702,7 +3864,7 @@
       "loinc_code": "610-6",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3747,6 +3909,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3754,7 +3921,7 @@
       "loinc_code": "611-4",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3799,6 +3966,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3806,7 +3978,7 @@
       "loinc_code": "19126-2",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3851,6 +4023,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3858,7 +4035,7 @@
       "loinc_code": "43441-5",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3903,6 +4080,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3910,7 +4092,7 @@
       "loinc_code": "19128-8",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -3955,6 +4137,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -3962,7 +4149,7 @@
       "loinc_code": "606-4",
       "name": "Bacteria",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -4007,6 +4194,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "No growth"
+        }
       }
     },
     {
@@ -4067,7 +4259,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "10^3/uL",
+      "unit": "10*9/L",
       "physiologic_range": {
         "min": 0,
         "max": 0.6
@@ -4134,18 +4326,19 @@
       "unit": "%"
     },
     {
+      "analyte_code": "BHCG_QUANT",
       "loinc_code": "21198-7",
       "value_type": "NUMERIC",
-      "unit": "mIU/mL",
+      "unit": "IU/L",
       "decimals_suggested": 1,
       "reference_range": {
-        "adult_nonpregnant": {
-          "low": 0,
-          "high": 5
-        },
         "adult_male": {
           "low": 0,
           "high": 2
+        },
+        "adult_female": {
+          "low": 0,
+          "high": 5
         }
       },
       "critical_range": {
@@ -4160,7 +4353,6 @@
         "min": 0,
         "max": 500000
       },
-      "analyte_code": "BHCG_QUANT",
       "name": "Beta-hCG (Quantitative)",
       "specimen": "Serum",
       "validation": {
@@ -4206,6 +4398,7 @@
       }
     },
     {
+      "analyte_code": "BLOOD_CULTURE",
       "loinc_code": "600-7",
       "value_type": "SELECT",
       "allowed_values": [
@@ -4219,10 +4412,9 @@
       ],
       "reference_range": {
         "adult_general": {
-          "text": "No growth (NO_GROWTH)"
+          "text": "No growth"
         }
       },
-      "analyte_code": "BLOOD_CULTURE",
       "name": "Culture Outcome",
       "specimen": "Whole Blood (venipuncture)",
       "validation": {
@@ -4268,13 +4460,15 @@
       }
     },
     {
+      "analyte_code": "BNP",
       "loinc_code": "30934-4",
       "value_type": "NUMERIC",
-      "unit": "pg/mL",
+      "unit": "ng/L",
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "high": 125
+          "high": 125,
+          "low": 0
         }
       },
       "critical_range": {
@@ -4289,7 +4483,6 @@
         "min": 0,
         "max": 375
       },
-      "analyte_code": "BNP",
       "name": "NT-proBNP",
       "specimen": "Serum",
       "validation": {
@@ -4335,28 +4528,28 @@
       }
     },
     {
+      "analyte_code": "BUN",
       "loinc_code": "3094-0",
       "value_type": "NUMERIC",
-      "unit": "mg/dL",
-      "decimals_suggested": 0,
+      "unit": "mmol/L",
+      "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 7,
-          "high": 20
+          "low": 2.5,
+          "high": 7.1
         }
       },
       "critical_range": {
-        "high": 100
+        "high": 35.7
       },
       "citations": [
         "SRC002",
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 1.75,
-        "max": 150
+        "min": 0.625,
+        "max": 53.55
       },
-      "analyte_code": "BUN",
       "name": "Blood urea nitrogen",
       "specimen": "Serum",
       "validation": {
@@ -4414,8 +4607,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 1200,
-          "high": 1500
+          "low": 31.08,
+          "high": 38.85
         }
       },
       "validation": {
@@ -4459,7 +4652,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL"
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "C4",
@@ -4474,8 +4667,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 350,
-          "high": 600
+          "low": 9.07,
+          "high": 15.54
         }
       },
       "validation": {
@@ -4519,7 +4712,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL"
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "CA",
@@ -4531,11 +4724,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 1,
+      "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
-          "low": 8.6,
-          "high": 10.2
+          "low": 2.15,
+          "high": 2.55
         }
       },
       "validation": {
@@ -4579,40 +4772,40 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL",
+      "unit": "mmol/L",
       "physiologic_range": {
-        "min": 3.25,
-        "max": 19.5
+        "min": 0.8,
+        "max": 4.95
       },
       "critical_range": {
-        "low": 6.5,
-        "high": 13
+        "low": 1.6,
+        "high": 3.3
       }
     },
     {
+      "analyte_code": "CA_TOTAL",
       "loinc_code": "17861-6",
       "value_type": "NUMERIC",
-      "unit": "mg/dL",
+      "unit": "mmol/L",
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 8.2,
-          "high": 10.2
+          "low": 2.05,
+          "high": 2.55
         }
       },
       "critical_range": {
-        "low": 6.5,
-        "high": 13
+        "low": 1.63,
+        "high": 3.25
       },
       "citations": [
         "SRC002",
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 2,
-        "max": 20
+        "min": 0.5,
+        "max": 5
       },
-      "analyte_code": "CA_TOTAL",
       "name": "Total Calcium",
       "specimen": "Serum",
       "validation": {
@@ -4670,7 +4863,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "high": 35
+          "high": 35,
+          "low": 0
         }
       },
       "validation": {
@@ -4729,7 +4923,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "high": 30
+          "high": 30,
+          "low": 0
         }
       },
       "validation": {
@@ -4788,7 +4983,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "high": 37
+          "high": 37,
+          "low": 0
         }
       },
       "validation": {
@@ -4847,7 +5043,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "high": 20,
+          "low": 0
         }
       },
       "validation": {
@@ -4890,7 +5087,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "GPL"
     },
     {
       "analyte_code": "CARDIO3",
@@ -4905,7 +5103,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "high": 20,
+          "low": 0
         }
       },
       "validation": {
@@ -4948,7 +5147,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "MPL"
     },
     {
       "analyte_code": "CARDIO4",
@@ -5000,6 +5200,17 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Indeterminate",
+        "Equivocal"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
@@ -5052,6 +5263,17 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "allowed_values": [
+        "Negative",
+        "Positive",
+        "Indeterminate",
+        "Equivocal"
+      ],
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
@@ -5067,7 +5289,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "high": 15,
+          "low": 0
         }
       },
       "validation": {
@@ -5110,22 +5333,24 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "U/mL"
     },
     {
+      "analyte_code": "CD4_COUNT",
       "loinc_code": "24467-3",
       "value_type": "NUMERIC",
-      "unit": "cells/µL",
+      "unit": "10*9/L",
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 500,
-          "high": 1500
+          "low": 0.5,
+          "high": 1.5
         }
       },
       "critical_range": {
-        "low": 50,
-        "high": 5000
+        "low": 0.05,
+        "high": 5
       },
       "citations": [
         "SRC002",
@@ -5133,9 +5358,8 @@
       ],
       "physiologic_range": {
         "min": 0,
-        "max": 5000
+        "max": 5
       },
-      "analyte_code": "CD4_COUNT",
       "name": "CD4 Count",
       "specimen": "Whole Blood",
       "validation": {
@@ -5181,18 +5405,15 @@
       }
     },
     {
+      "analyte_code": "CEA",
       "loinc_code": "2039-6",
       "value_type": "NUMERIC",
-      "unit": "ng/mL",
+      "unit": "ug/L",
       "decimals_suggested": 1,
       "reference_range": {
-        "adult_nonsmoker": {
+        "adult_general": {
           "low": 0,
           "high": 2.5
-        },
-        "adult_smoker": {
-          "low": 0,
-          "high": 5
         }
       },
       "citations": [
@@ -5206,7 +5427,6 @@
         "low": 0,
         "high": 100
       },
-      "analyte_code": "CEA",
       "name": "CEA",
       "specimen": "Serum",
       "validation": {
@@ -5264,7 +5484,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0.08,
+          "high": 0.41
         }
       },
       "validation": {
@@ -5307,13 +5528,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "10*9/L"
     },
     {
       "analyte_code": "CELLSC11",
       "loinc_code": "20595-5",
       "name": "CD20 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5322,7 +5544,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 3.2,
+          "high": 22.3
         }
       },
       "validation": {
@@ -5365,13 +5588,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC12",
       "loinc_code": "20601-1",
       "name": "CD33 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5380,7 +5604,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 55,
+          "high": 83
         }
       },
       "validation": {
@@ -5423,13 +5648,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC13",
       "loinc_code": "20602-9",
       "name": "CD34 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5438,7 +5664,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 55,
+          "high": 83
         }
       },
       "validation": {
@@ -5481,13 +5708,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC14",
       "loinc_code": "20603-7",
       "name": "CD38 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5496,7 +5724,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 55,
+          "high": 83
         }
       },
       "validation": {
@@ -5539,13 +5768,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC15",
       "loinc_code": "33775-8",
       "name": "CD41a Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5554,7 +5784,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 28,
+          "high": 57
         }
       },
       "validation": {
@@ -5597,13 +5828,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC16",
       "loinc_code": "20610-2",
       "name": "CD45 (Lymphs) Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5612,7 +5844,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 28,
+          "high": 57
         }
       },
       "validation": {
@@ -5655,13 +5888,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC17",
       "loinc_code": "21166-4",
       "name": "CD56 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5670,7 +5904,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 7,
+          "high": 31
         }
       },
       "validation": {
@@ -5713,13 +5948,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC18",
       "loinc_code": "21169-8",
       "name": "CD71 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5728,7 +5964,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0,
+          "high": 2
         }
       },
       "validation": {
@@ -5771,13 +6008,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC19",
       "loinc_code": "20596-3",
       "name": "CD22 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5786,7 +6024,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 6,
+          "high": 19
         }
       },
       "validation": {
@@ -5829,13 +6068,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC2",
       "loinc_code": "32516-7",
       "name": "CD3+CD4+ (T4 Helper) Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5844,7 +6084,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 32,
+          "high": 64
         }
       },
       "validation": {
@@ -5887,13 +6128,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC20",
       "loinc_code": "19078-5",
       "name": "CD23 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5902,7 +6144,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0,
+          "high": 5
         }
       },
       "validation": {
@@ -5945,13 +6188,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC21",
       "loinc_code": "32495-4",
       "name": "CD25 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -5960,7 +6204,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0,
+          "high": 3
         }
       },
       "validation": {
@@ -6003,7 +6248,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC23",
@@ -6018,7 +6264,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 58,
+          "high": 86
         }
       },
       "validation": {
@@ -6061,7 +6308,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC25",
@@ -6076,7 +6324,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 32,
+          "high": 64
         }
       },
       "validation": {
@@ -6119,7 +6368,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC28",
@@ -6134,7 +6384,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 13,
+          "high": 40
         }
       },
       "validation": {
@@ -6177,13 +6428,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC3",
       "loinc_code": "32518-3",
       "name": "CD3+CD8+ (T8 Suppressor) Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6192,7 +6444,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 13,
+          "high": 40
         }
       },
       "validation": {
@@ -6235,13 +6488,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC34",
       "loinc_code": "20620-1",
       "name": "CD16+CD56+ Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6250,7 +6504,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 7,
+          "high": 31
         }
       },
       "validation": {
@@ -6293,13 +6548,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC4",
       "loinc_code": "20587-2",
       "name": "CD10 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6308,7 +6564,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 6,
+          "high": 19
         }
       },
       "validation": {
@@ -6351,13 +6608,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC5",
       "loinc_code": "20588-0",
       "name": "CD13 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6366,7 +6624,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 6,
+          "high": 19
         }
       },
       "validation": {
@@ -6409,13 +6668,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC6",
       "loinc_code": "20589-8",
       "name": "CD14 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6424,7 +6684,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 2,
+          "high": 10
         }
       },
       "validation": {
@@ -6467,13 +6728,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC7",
       "loinc_code": "32758-5",
       "name": "CD11b Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6482,7 +6744,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0,
+          "high": 15
         }
       },
       "validation": {
@@ -6525,13 +6788,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC8",
       "loinc_code": "21154-0",
       "name": "CD11c Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6540,7 +6804,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 6,
+          "high": 19
         }
       },
       "validation": {
@@ -6583,13 +6848,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSC9",
       "loinc_code": "20590-6",
       "name": "CD15 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6598,7 +6864,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0,
+          "high": 3
         }
       },
       "validation": {
@@ -6641,13 +6908,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSCD1",
       "loinc_code": "26563-7",
       "name": "CD1a Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6656,7 +6924,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0,
+          "high": 2
         }
       },
       "validation": {
@@ -6699,13 +6968,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSCD2",
       "loinc_code": "20594-8",
       "name": "CD2 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6714,7 +6984,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 55,
+          "high": 83
         }
       },
       "validation": {
@@ -6757,13 +7028,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSCD3",
       "loinc_code": "20599-7",
       "name": "CD3 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6772,7 +7044,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 55,
+          "high": 83
         }
       },
       "validation": {
@@ -6815,13 +7088,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSCD4",
       "loinc_code": "20608-6",
       "name": "CD41 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6830,7 +7104,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 28,
+          "high": 57
         }
       },
       "validation": {
@@ -6873,13 +7148,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSCD5",
       "loinc_code": "20611-0",
       "name": "CD5 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6888,7 +7164,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 55,
+          "high": 90
         }
       },
       "validation": {
@@ -6931,13 +7208,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSCD6",
       "loinc_code": "32747-8",
       "name": "CD64 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -6946,7 +7224,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0,
+          "high": 8
         }
       },
       "validation": {
@@ -6989,13 +7268,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSCD7",
       "loinc_code": "20612-8",
       "name": "CD7 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -7004,7 +7284,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 50,
+          "high": 90
         }
       },
       "validation": {
@@ -7047,13 +7328,14 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "CELLSFMC",
       "loinc_code": "21171-4",
       "name": "FMC7 Cells/cells",
-      "specimen": "Serum",
+      "specimen": "Whole Blood",
       "value_type": "NUMERIC",
       "citations": [
         "SRC002",
@@ -7062,7 +7344,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 0,
+          "high": 1
         }
       },
       "validation": {
@@ -7105,9 +7388,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
+      "analyte_code": "CHIKV_IGM",
       "loinc_code": "57934-2",
       "value_type": "SELECT",
       "allowed_values": [
@@ -7122,7 +7407,6 @@
           "text": "Negative"
         }
       },
-      "analyte_code": "CHIKV_IGM",
       "name": "Chikungunya IgM",
       "specimen": "Serum or whole blood",
       "validation": {
@@ -7172,7 +7456,7 @@
       "loinc_code": "43304-5",
       "name": "Chlamydia Trachomatis RRNA",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -7217,6 +7501,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
@@ -7229,10 +7518,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 0,
+      "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
-          "high": 200
+          "high": 5.18,
+          "low": 0
         }
       },
       "validation": {
@@ -7276,20 +7566,22 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL",
+      "unit": "mmol/L",
       "physiologic_range": {
         "min": 0,
-        "max": 600
+        "max": 15.54
       }
     },
     {
+      "analyte_code": "CHOL_TOTAL",
       "loinc_code": "2093-3",
       "value_type": "NUMERIC",
-      "unit": "mg/dL",
+      "unit": "mmol/L",
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "high": 200
+          "high": 5.18,
+          "low": 0
         }
       },
       "citations": [
@@ -7297,14 +7589,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 20,
-        "max": 1000
+        "min": 0.52,
+        "max": 25.9
       },
       "critical_range": {
         "low": 0,
-        "high": 400
+        "high": 10.36
       },
-      "analyte_code": "CHOL_TOTAL",
       "name": "Total Cholesterol",
       "specimen": "Serum (fasting preferred)",
       "validation": {
@@ -7354,7 +7645,7 @@
       "loinc_code": "49313-0",
       "name": "Chronic Leukemia Markers",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -7399,6 +7690,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
@@ -7406,7 +7702,7 @@
       "loinc_code": "45266-4",
       "name": "Chronic Leukemia Markers",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -7451,9 +7747,15 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
+      "analyte_code": "CK",
       "loinc_code": "2157-6",
       "value_type": "NUMERIC",
       "unit": "U/L",
@@ -7475,7 +7777,6 @@
         "min": 7.5,
         "max": 7500
       },
-      "analyte_code": "CK",
       "name": "Creatine kinase",
       "specimen": "Serum",
       "validation": {
@@ -7521,6 +7822,7 @@
       }
     },
     {
+      "analyte_code": "CKMB",
       "loinc_code": "13969-1",
       "value_type": "NUMERIC",
       "unit": "U/L",
@@ -7543,7 +7845,6 @@
         "low": 0,
         "high": 200
       },
-      "analyte_code": "CKMB",
       "name": "CK-MB",
       "specimen": "Serum",
       "validation": {
@@ -7589,6 +7890,7 @@
       }
     },
     {
+      "analyte_code": "CL",
       "loinc_code": "2075-0",
       "value_type": "NUMERIC",
       "unit": "mmol/L",
@@ -7611,7 +7913,6 @@
         "low": 80,
         "high": 120
       },
-      "analyte_code": "CL",
       "name": "Chloride",
       "specimen": "Serum",
       "validation": {
@@ -7657,6 +7958,7 @@
       }
     },
     {
+      "analyte_code": "CMV_IGG",
       "loinc_code": "5124-3",
       "value_type": "SELECT",
       "allowed_values": [
@@ -7668,10 +7970,9 @@
       ],
       "reference_range": {
         "adult_general": {
-          "text": "Negative (no prior exposure); positive indicates past exposure"
+          "text": "Negative"
         }
       },
-      "analyte_code": "CMV_IGG",
       "name": "CMV IgG",
       "specimen": "Serum",
       "validation": {
@@ -7717,6 +8018,7 @@
       }
     },
     {
+      "analyte_code": "CMV_IGM",
       "loinc_code": "5126-8",
       "value_type": "SELECT",
       "allowed_values": [
@@ -7731,7 +8033,6 @@
           "text": "Negative"
         }
       },
-      "analyte_code": "CMV_IGM",
       "name": "CMV IgM",
       "specimen": "Serum",
       "validation": {
@@ -7977,7 +8278,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Method- and population-specific; validate locally"
+          "low": 0.8,
+          "high": 1.2
         }
       },
       "validation": {
@@ -8020,7 +8322,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ratio"
     },
     {
       "analyte_code": "CORT",
@@ -8035,7 +8338,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Total cortisol (plasma): 08:00 5–25 µg/dL; 16:00 3–16 µg/dL"
+          "low": 1.1,
+          "high": 3.5
         }
       },
       "validation": {
@@ -8078,7 +8382,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "umol/L"
     },
     {
       "analyte_code": "CREA",
@@ -8090,11 +8395,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 2,
+      "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 0.6,
-          "high": 1.3
+          "low": 53,
+          "high": 115
         }
       },
       "validation": {
@@ -8138,23 +8443,25 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL",
+      "unit": "umol/L",
       "physiologic_range": {
-        "min": 0.15,
-        "max": 9
+        "min": 13.25,
+        "max": 795
       },
       "critical_range": {
-        "high": 6
+        "high": 530
       }
     },
     {
+      "analyte_code": "CRP",
       "loinc_code": "1988-5",
       "value_type": "NUMERIC",
       "unit": "mg/L",
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "high": 5
+          "high": 5,
+          "low": 0
         }
       },
       "citations": [
@@ -8169,7 +8476,6 @@
         "low": 0,
         "high": 200
       },
-      "analyte_code": "CRP",
       "name": "C-reactive protein",
       "specimen": "Serum",
       "validation": {
@@ -8224,11 +8530,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 2,
+      "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
           "low": 0,
-          "high": 0.3
+          "high": 5
         }
       },
       "validation": {
@@ -8272,10 +8578,10 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL",
+      "unit": "umol/L",
       "physiologic_range": {
         "min": 0,
-        "max": 0.9
+        "max": 15
       }
     },
     {
@@ -8291,7 +8597,8 @@
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "high": 500
+          "high": 500,
+          "low": 0
         }
       },
       "validation": {
@@ -8335,7 +8642,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "ng/mL",
+      "unit": "ug/L",
       "physiologic_range": {
         "min": 0,
         "max": 1500
@@ -8354,7 +8661,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 10,
+          "low": 0
         }
       },
       "validation": {
@@ -8397,7 +8705,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "EGFR",
@@ -8415,7 +8724,7 @@
           "low": 60
         }
       },
-      "unit": "mL/min/1.73m2",
+      "unit": "mL/min/{1.73_m2}",
       "physiologic_range": {
         "min": 7.5,
         "max": 1800
@@ -8523,7 +8832,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "10^3/uL",
+      "unit": "10*9/L",
       "physiologic_range": {
         "min": 0,
         "max": 1.5
@@ -8647,7 +8956,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "ng/mL",
+      "unit": "ug/L",
       "physiologic_range": {
         "min": 5,
         "max": 900
@@ -8663,11 +8972,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 0,
+      "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 200,
-          "high": 400
+          "low": 2,
+          "high": 4
         }
       },
       "validation": {
@@ -8711,39 +9020,39 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL",
+      "unit": "g/L",
       "physiologic_range": {
-        "min": 50,
-        "max": 1200
+        "min": 0.5,
+        "max": 12
       },
       "critical_range": {
-        "low": 100
+        "low": 1
       }
     },
     {
+      "analyte_code": "FT3",
       "loinc_code": "3051-0",
       "value_type": "NUMERIC",
-      "unit": "pg/mL",
+      "unit": "pmol/L",
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 2.3,
-          "high": 4.2
+          "low": 3.5,
+          "high": 6.5
         }
       },
       "critical_range": {
-        "low": 0.5,
-        "high": 15
+        "low": 0.8,
+        "high": 23.1
       },
       "citations": [
         "SRC002",
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 0.575,
-        "max": 12.6
+        "min": 0.875,
+        "max": 19.5
       },
-      "analyte_code": "FT3",
       "name": "Free triiodothyronine",
       "specimen": "Serum",
       "validation": {
@@ -8789,14 +9098,15 @@
       }
     },
     {
+      "analyte_code": "FT4",
       "loinc_code": "3024-7",
       "value_type": "NUMERIC",
-      "unit": "ng/dL",
-      "decimals_suggested": 2,
+      "unit": "pmol/L",
+      "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 0.8,
-          "high": 1.8
+          "low": 10,
+          "high": 23
         }
       },
       "citations": [
@@ -8804,14 +9114,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 0.15,
-        "max": 7.5
+        "min": 2,
+        "max": 97.5
       },
       "critical_range": {
-        "low": 0.3,
-        "high": 5
+        "low": 4,
+        "high": 65
       },
-      "analyte_code": "FT4",
       "name": "Free thyroxine",
       "specimen": "Serum",
       "validation": {
@@ -8857,6 +9166,7 @@
       }
     },
     {
+      "analyte_code": "GGT",
       "loinc_code": "2324-2",
       "value_type": "NUMERIC",
       "unit": "U/L",
@@ -8879,7 +9189,6 @@
         "low": 0,
         "high": 500
       },
-      "analyte_code": "GGT",
       "name": "Gamma glutamyl transferase",
       "specimen": "Serum",
       "validation": {
@@ -8934,11 +9243,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 0,
+      "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 70,
-          "high": 99
+          "low": 3.9,
+          "high": 5.5
         }
       },
       "validation": {
@@ -8982,17 +9291,18 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL",
+      "unit": "mmol/L",
       "physiologic_range": {
-        "min": 22.5,
-        "max": 675
+        "min": 1.25,
+        "max": 37.5
       },
       "critical_range": {
-        "low": 45,
-        "high": 450
+        "low": 2.5,
+        "high": 25
       }
     },
     {
+      "analyte_code": "HBA1C",
       "loinc_code": "4548-4",
       "value_type": "NUMERIC",
       "unit": "%",
@@ -9014,7 +9324,6 @@
       "critical_range": {
         "high": 14
       },
-      "analyte_code": "HBA1C",
       "name": "Hemoglobin A1c",
       "specimen": "Whole Blood",
       "validation": {
@@ -9060,6 +9369,7 @@
       }
     },
     {
+      "analyte_code": "HCT",
       "loinc_code": "4544-3",
       "value_type": "NUMERIC",
       "unit": "%",
@@ -9082,7 +9392,6 @@
         "min": 10,
         "max": 90
       },
-      "analyte_code": "HCT",
       "name": "Hematocrit",
       "specimen": "Whole Blood",
       "validation": {
@@ -9128,13 +9437,14 @@
       }
     },
     {
+      "analyte_code": "HDL",
       "loinc_code": "2085-9",
       "value_type": "NUMERIC",
-      "unit": "mg/dL",
-      "decimals_suggested": 0,
+      "unit": "mmol/L",
+      "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
-          "low": 40
+          "low": 1.04
         }
       },
       "citations": [
@@ -9142,14 +9452,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 10,
-        "max": 1200
+        "min": 0.26,
+        "max": 31.2
       },
       "critical_range": {
         "low": 0,
-        "high": 999
+        "high": 25.87
       },
-      "analyte_code": "HDL",
       "name": "HDL cholesterol",
       "specimen": "Serum",
       "validation": {
@@ -9195,29 +9504,29 @@
       }
     },
     {
+      "analyte_code": "HGB",
       "loinc_code": "718-7",
       "value_type": "NUMERIC",
-      "unit": "g/dL",
-      "decimals_suggested": 1,
+      "unit": "g/L",
+      "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 12.5,
-          "high": 17.5
+          "low": 125,
+          "high": 175
         }
       },
       "critical_range": {
-        "low": 7,
-        "high": 20
+        "low": 70,
+        "high": 200
       },
       "citations": [
         "SRC002",
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 3.5,
-        "max": 30
+        "min": 35,
+        "max": 300
       },
-      "analyte_code": "HGB",
       "name": "Hemoglobin",
       "specimen": "Whole Blood",
       "validation": {
@@ -9275,8 +9584,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 50,
-          "high": 350
+          "low": 1.3,
+          "high": 9.07
         }
       },
       "validation": {
@@ -9320,7 +9629,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL"
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "IGG",
@@ -9335,8 +9644,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 600,
-          "high": 1560
+          "low": 15.54,
+          "high": 40.4
         }
       },
       "validation": {
@@ -9380,14 +9689,14 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL"
+      "unit": "mmol/L"
     },
     {
       "analyte_code": "IMMUNO2",
       "loinc_code": "49314-8",
       "name": "Immunodeficiency Markers",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -9432,6 +9741,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
@@ -9439,7 +9753,7 @@
       "loinc_code": "45265-6",
       "name": "Immunodeficiency Markers",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -9484,9 +9798,15 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
+      "analyte_code": "INR",
       "loinc_code": "6301-6",
       "value_type": "NUMERIC",
       "unit": "ratio",
@@ -9508,7 +9828,6 @@
         "min": 0.2,
         "max": 7.5
       },
-      "analyte_code": "INR",
       "name": "INR",
       "specimen": "Plasma",
       "validation": {
@@ -9554,14 +9873,15 @@
       }
     },
     {
+      "analyte_code": "IRON",
       "loinc_code": "2498-4",
       "value_type": "NUMERIC",
-      "unit": "ug/dL",
-      "decimals_suggested": 0,
+      "unit": "umol/L",
+      "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 50,
-          "high": 170
+          "low": 9,
+          "high": 30
         }
       },
       "citations": [
@@ -9569,14 +9889,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 12.5,
-        "max": 510
+        "min": 2.25,
+        "max": 90
       },
       "critical_range": {
         "low": 0,
-        "high": 500
+        "high": 89.5
       },
-      "analyte_code": "IRON",
       "name": "Iron",
       "specimen": "Serum",
       "validation": {
@@ -9622,6 +9941,7 @@
       }
     },
     {
+      "analyte_code": "K",
       "loinc_code": "2823-3",
       "value_type": "NUMERIC",
       "unit": "mmol/L",
@@ -9644,7 +9964,6 @@
         "min": 1.4,
         "max": 9.3
       },
-      "analyte_code": "K",
       "name": "Potassium",
       "specimen": "Serum",
       "validation": {
@@ -9757,13 +10076,15 @@
       }
     },
     {
+      "analyte_code": "LDL",
       "loinc_code": "13457-7",
       "value_type": "NUMERIC",
-      "unit": "mg/dL",
-      "decimals_suggested": 0,
+      "unit": "mmol/L",
+      "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
-          "high": 100
+          "high": 2.59,
+          "low": 0
         }
       },
       "citations": [
@@ -9772,13 +10093,12 @@
       ],
       "physiologic_range": {
         "min": 0,
-        "max": 300
+        "max": 7.77
       },
       "critical_range": {
         "low": 0,
-        "high": 300
+        "high": 7.77
       },
-      "analyte_code": "LDL",
       "name": "LDL cholesterol",
       "specimen": "Serum",
       "validation": {
@@ -9948,7 +10268,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "10^3/uL",
+      "unit": "10*9/L",
       "physiologic_range": {
         "min": 0.25,
         "max": 14.4
@@ -9967,7 +10287,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 30,
+          "high": 70
         }
       },
       "validation": {
@@ -10010,7 +10331,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "LYMPHOCY",
@@ -10025,7 +10347,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Population-specific; validate per institutional flow cytometry reference"
+          "low": 30,
+          "high": 70
         }
       },
       "validation": {
@@ -10068,7 +10391,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "%"
     },
     {
       "analyte_code": "LYMPHP",
@@ -10131,6 +10455,7 @@
       "unit": "%"
     },
     {
+      "analyte_code": "MCH",
       "loinc_code": "785-6",
       "value_type": "NUMERIC",
       "unit": "pg",
@@ -10153,7 +10478,6 @@
         "low": 15,
         "high": 45
       },
-      "analyte_code": "MCH",
       "name": "Mean corpuscular hemoglobin",
       "specimen": "Whole Blood",
       "validation": {
@@ -10199,14 +10523,15 @@
       }
     },
     {
+      "analyte_code": "MCHC",
       "loinc_code": "786-4",
       "value_type": "NUMERIC",
-      "unit": "g/dL",
-      "decimals_suggested": 1,
+      "unit": "g/L",
+      "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 32,
-          "high": 36
+          "low": 320,
+          "high": 360
         }
       },
       "citations": [
@@ -10214,14 +10539,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 8,
-        "max": 108
+        "min": 80,
+        "max": 1080
       },
       "critical_range": {
-        "low": 25,
-        "high": 40
+        "low": 250,
+        "high": 400
       },
-      "analyte_code": "MCHC",
       "name": "Mean corpuscular hemoglobin concentration",
       "specimen": "Whole Blood",
       "validation": {
@@ -10267,6 +10591,7 @@
       }
     },
     {
+      "analyte_code": "MCV",
       "loinc_code": "787-2",
       "value_type": "NUMERIC",
       "unit": "fL",
@@ -10289,7 +10614,6 @@
         "low": 60,
         "high": 120
       },
-      "analyte_code": "MCV",
       "name": "Mean corpuscular volume",
       "specimen": "Whole Blood",
       "validation": {
@@ -10335,14 +10659,15 @@
       }
     },
     {
+      "analyte_code": "MG",
       "loinc_code": "19123-9",
       "value_type": "NUMERIC",
-      "unit": "mg/dL",
-      "decimals_suggested": 1,
+      "unit": "mmol/L",
+      "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
-          "low": 1.7,
-          "high": 2.4
+          "low": 0.7,
+          "high": 0.99
         }
       },
       "citations": [
@@ -10350,14 +10675,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 0.5,
-        "max": 6.75
+        "min": 0.2,
+        "max": 2.85
       },
       "critical_range": {
-        "low": 1,
-        "high": 4.5
+        "low": 0.4,
+        "high": 1.9
       },
-      "analyte_code": "MG",
       "name": "Magnesium",
       "specimen": "Serum",
       "validation": {
@@ -10460,7 +10784,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "10^3/uL",
+      "unit": "10*9/L",
       "physiologic_range": {
         "min": 0.05,
         "max": 2.4
@@ -10479,7 +10803,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "text": "Occupational/environmental; compare to local toxicology reference"
+          "high": 10,
+          "low": 0
         }
       },
       "validation": {
@@ -10522,7 +10847,8 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
-      }
+      },
+      "unit": "ug/L"
     },
     {
       "analyte_code": "MONOP",
@@ -10585,6 +10911,7 @@
       "unit": "%"
     },
     {
+      "analyte_code": "MPV",
       "loinc_code": "32623-1",
       "value_type": "NUMERIC",
       "unit": "fL",
@@ -10607,7 +10934,6 @@
         "low": 5,
         "high": 20
       },
-      "analyte_code": "MPV",
       "name": "Mean platelet volume",
       "specimen": "Whole Blood",
       "validation": {
@@ -10653,6 +10979,7 @@
       }
     },
     {
+      "analyte_code": "NA",
       "loinc_code": "2951-2",
       "value_type": "NUMERIC",
       "unit": "mmol/L",
@@ -10675,7 +11002,6 @@
         "min": 60,
         "max": 240
       },
-      "analyte_code": "NA",
       "name": "Sodium",
       "specimen": "Serum",
       "validation": {
@@ -10725,7 +11051,7 @@
       "loinc_code": "43305-2",
       "name": "Neisseria Gonorrhoeae RRNA",
       "specimen": "Serum",
-      "value_type": "SELECT",
+      "value_type": "TEXT",
       "citations": [
         "SRC002",
         "SRC003"
@@ -10770,6 +11096,11 @@
           "steroid_treatment",
           "supplemental_oxygen"
         ]
+      },
+      "reference_range": {
+        "adult_general": {
+          "text": "Negative"
+        }
       }
     },
     {
@@ -10830,7 +11161,7 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "10^3/uL",
+      "unit": "10*9/L",
       "physiologic_range": {
         "min": 0.25,
         "max": 23.1
@@ -10900,14 +11231,15 @@
       "unit": "%"
     },
     {
+      "analyte_code": "PHOS",
       "loinc_code": "2777-1",
       "value_type": "NUMERIC",
-      "unit": "mg/dL",
-      "decimals_suggested": 1,
+      "unit": "mmol/L",
+      "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
-          "low": 2.5,
-          "high": 4.5
+          "low": 0.81,
+          "high": 1.45
         }
       },
       "citations": [
@@ -10915,14 +11247,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 0.5,
-        "max": 13.5
+        "min": 0.16,
+        "max": 4.35
       },
       "critical_range": {
-        "low": 1,
-        "high": 9
+        "low": 0.32,
+        "high": 2.9
       },
-      "analyte_code": "PHOS",
       "name": "Phosphorus",
       "specimen": "Serum",
       "validation": {
@@ -10968,9 +11299,10 @@
       }
     },
     {
+      "analyte_code": "PLAT",
       "loinc_code": "777-3",
       "value_type": "NUMERIC",
-      "unit": "10^3/uL",
+      "unit": "10*9/L",
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
@@ -10990,7 +11322,6 @@
         "min": 15,
         "max": 1500
       },
-      "analyte_code": "PLAT",
       "name": "Platelet count",
       "specimen": "Whole Blood",
       "validation": {
@@ -11103,9 +11434,10 @@
       }
     },
     {
+      "analyte_code": "RBC",
       "loinc_code": "789-8",
       "value_type": "NUMERIC",
-      "unit": "10^6/uL",
+      "unit": "10*12/L",
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -11125,7 +11457,6 @@
         "min": 1.05,
         "max": 17.7
       },
-      "analyte_code": "RBC",
       "name": "Red blood cell count",
       "specimen": "Whole Blood",
       "validation": {
@@ -11171,6 +11502,7 @@
       }
     },
     {
+      "analyte_code": "RDW",
       "loinc_code": "788-0",
       "value_type": "NUMERIC",
       "unit": "%",
@@ -11193,7 +11525,6 @@
         "low": 8,
         "high": 30
       },
-      "analyte_code": "RDW",
       "name": "Red cell distribution width",
       "specimen": "Whole Blood",
       "validation": {
@@ -11239,6 +11570,7 @@
       }
     },
     {
+      "analyte_code": "RH_STATUS",
       "loinc_code": "10331-7",
       "value_type": "SELECT",
       "allowed_values": [
@@ -11250,10 +11582,9 @@
       ],
       "reference_range": {
         "adult_general": {
-          "text": "Patient-specific (RhD positive or negative)"
+          "text": "Rh+ / Rh-"
         }
       },
-      "analyte_code": "RH_STATUS",
       "name": "Rh (RhD) Status",
       "specimen": "Whole Blood",
       "validation": {
@@ -11299,6 +11630,7 @@
       }
     },
     {
+      "analyte_code": "SARSCOV2_AG",
       "loinc_code": "95209-3",
       "value_type": "SELECT",
       "allowed_values": [
@@ -11314,7 +11646,6 @@
           "text": "Negative"
         }
       },
-      "analyte_code": "SARSCOV2_AG",
       "name": "SARS-CoV-2 Antigen (RDT)",
       "specimen": "Nasopharyngeal or oropharyngeal swab",
       "validation": {
@@ -11360,6 +11691,7 @@
       }
     },
     {
+      "analyte_code": "SPEP_RESULT",
       "loinc_code": "12851-2",
       "value_type": "TEXT",
       "citations": [
@@ -11367,10 +11699,9 @@
       ],
       "reference_range": {
         "adult_general": {
-          "text": "Albumin predominant; no monoclonal spike"
+          "text": "No M-protein"
         }
       },
-      "analyte_code": "SPEP_RESULT",
       "name": "Protein Fraction Profile",
       "specimen": "Serum",
       "validation": {
@@ -11425,11 +11756,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 1,
+      "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 0.1,
-          "high": 1.2
+          "low": 2,
+          "high": 21
         }
       },
       "validation": {
@@ -11473,24 +11804,25 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL",
+      "unit": "umol/L",
       "physiologic_range": {
-        "min": 0.025,
-        "max": 22.5
+        "min": 0.5,
+        "max": 385.5
       },
       "critical_range": {
-        "high": 15
+        "high": 257
       }
     },
     {
+      "analyte_code": "TIBC",
       "loinc_code": "2500-7",
       "value_type": "NUMERIC",
-      "unit": "ug/dL",
-      "decimals_suggested": 0,
+      "unit": "umol/L",
+      "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 250,
-          "high": 450
+          "low": 45,
+          "high": 81
         }
       },
       "citations": [
@@ -11498,14 +11830,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 62.5,
-        "max": 1350
+        "min": 11.25,
+        "max": 243
       },
       "critical_range": {
         "low": 0,
-        "high": 800
+        "high": 143.2
       },
-      "analyte_code": "TIBC",
       "name": "Total iron binding capacity",
       "specimen": "Serum",
       "validation": {
@@ -11551,14 +11882,15 @@
       }
     },
     {
+      "analyte_code": "TOTAL_PROTEIN",
       "loinc_code": "2885-2",
       "value_type": "NUMERIC",
-      "unit": "g/dL",
+      "unit": "g/L",
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "low": 6,
-          "high": 8.3
+          "low": 60,
+          "high": 83
         }
       },
       "citations": [
@@ -11566,14 +11898,13 @@
         "SRC003"
       ],
       "physiologic_range": {
-        "min": 1,
-        "max": 20
+        "min": 10,
+        "max": 200
       },
       "critical_range": {
-        "low": 4,
-        "high": 12
+        "low": 40,
+        "high": 120
       },
-      "analyte_code": "TOTAL_PROTEIN",
       "name": "Total Protein",
       "specimen": "Serum",
       "validation": {
@@ -11628,11 +11959,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 1,
+      "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 6,
-          "high": 8.3
+          "low": 60,
+          "high": 83
         }
       },
       "validation": {
@@ -11676,10 +12007,10 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "g/dL",
+      "unit": "g/L",
       "physiologic_range": {
-        "min": 1.5,
-        "max": 24.9
+        "min": 15,
+        "max": 249
       }
     },
     {
@@ -11692,10 +12023,11 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 0,
+      "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
-          "high": 150
+          "high": 1.7,
+          "low": 0
         }
       },
       "validation": {
@@ -11739,13 +12071,13 @@
           "supplemental_oxygen"
         ]
       },
-      "unit": "mg/dL",
+      "unit": "mmol/L",
       "physiologic_range": {
         "min": 0,
-        "max": 1500
+        "max": 16.95
       },
       "critical_range": {
-        "high": 1000
+        "high": 11.3
       }
     },
     {
@@ -11761,7 +12093,8 @@
       "decimals_suggested": 1,
       "reference_range": {
         "adult_general": {
-          "high": 14
+          "high": 14,
+          "low": 0
         }
       },
       "unit": "ng/L",
@@ -11815,6 +12148,7 @@
       }
     },
     {
+      "analyte_code": "TSH",
       "loinc_code": "3016-3",
       "value_type": "NUMERIC",
       "unit": "mIU/L",
@@ -11837,7 +12171,6 @@
         "low": 0.05,
         "high": 50
       },
-      "analyte_code": "TSH",
       "name": "Thyroid stimulating hormone",
       "specimen": "Serum",
       "validation": {
@@ -11892,20 +12225,20 @@
         "SRC002",
         "SRC003"
       ],
-      "decimals_suggested": 1,
+      "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
-          "low": 3.5,
-          "high": 7.2
+          "low": 0.21,
+          "high": 0.42
         }
       },
-      "unit": "mg/dL",
+      "unit": "mmol/L",
       "physiologic_range": {
-        "min": 0.875,
-        "max": 21.6
+        "min": 0.053,
+        "max": 1.26
       },
       "critical_range": {
-        "high": 12
+        "high": 0.71
       },
       "validation": {
         "rejection_criteria": [
@@ -11950,14 +12283,15 @@
       }
     },
     {
+      "analyte_code": "VIT_B12",
       "loinc_code": "2132-9",
       "value_type": "NUMERIC",
-      "unit": "pg/mL",
+      "unit": "pmol/L",
       "decimals_suggested": 0,
       "reference_range": {
         "adult_general": {
-          "low": 200,
-          "high": 900
+          "low": 148,
+          "high": 664
         }
       },
       "citations": [
@@ -11965,13 +12299,12 @@
       ],
       "physiologic_range": {
         "min": 0,
-        "max": 5000
+        "max": 3690
       },
       "critical_range": {
         "low": 0,
-        "high": 5000
+        "high": 3690
       },
-      "analyte_code": "VIT_B12",
       "name": "Vitamin B12",
       "specimen": "Serum",
       "validation": {
@@ -12017,9 +12350,10 @@
       }
     },
     {
+      "analyte_code": "WBC",
       "loinc_code": "6690-2",
       "value_type": "NUMERIC",
-      "unit": "10^3/uL",
+      "unit": "10*9/L",
       "decimals_suggested": 2,
       "reference_range": {
         "adult_general": {
@@ -12039,7 +12373,6 @@
         "min": 0.75,
         "max": 75
       },
-      "analyte_code": "WBC",
       "name": "White blood cell count",
       "specimen": "Whole Blood",
       "validation": {

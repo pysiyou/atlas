@@ -52,6 +52,9 @@ export interface CatalogReferenceRange {
   adult_male?: CatalogDemographicRange;
   adult_female?: CatalogDemographicRange;
   pediatric?: CatalogDemographicRange;
+  low?: number;
+  high?: number;
+  [bandKey: string]: CatalogDemographicRange | number | undefined;
 }
 
 export interface CatalogNumericRange {
@@ -145,7 +148,6 @@ class CatalogReferenceRange(TypedDict, total=False):
     adult_male: CatalogDemographicRange
     adult_female: CatalogDemographicRange
     pediatric: CatalogDemographicRange
-
 
 class CatalogNumericRange(TypedDict, total=False):
     low: float

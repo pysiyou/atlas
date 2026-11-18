@@ -46,6 +46,12 @@ export {
   type ValidationResult,
 } from './labResult';
 export {
+  resolveReferenceBand,
+  listReferenceRangeBands,
+  type ReferenceBandSource,
+  type ResolvedDemographicRange,
+} from './referenceRange';
+export {
   compareQueuePriority,
   getQueueAgeInfo,
   isLabActionAllowed,
