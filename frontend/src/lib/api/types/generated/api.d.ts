@@ -703,26 +703,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/worklists/worksheet": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Bench Worksheet
-         * @description Printable entry-stage worksheet grouped by test code.
-         */
-        get: operations["get_bench_worksheet_api_v1_lab_worklists_worksheet_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lab/worklists/dashboard-today": {
         parameters: {
             query?: never;
@@ -3528,43 +3508,6 @@ export interface components {
             /** Hasprev */
             hasPrev: boolean;
         };
-        /** WorksheetGroup */
-        WorksheetGroup: {
-            /** Testcode */
-            testCode: string;
-            /** Testname */
-            testName: string;
-            /** Rows */
-            rows: components["schemas"]["WorksheetRow"][];
-        };
-        /** WorksheetResponse */
-        WorksheetResponse: {
-            /** Groups */
-            groups: components["schemas"]["WorksheetGroup"][];
-        };
-        /**
-         * WorksheetRow
-         * @description One bench-worksheet line for a single order test.
-         */
-        WorksheetRow: {
-            /** Ordertestid */
-            orderTestId: number;
-            /** Orderid */
-            orderId: string;
-            /** Patientid */
-            patientId: string;
-            /** Patientname */
-            patientName: string;
-            /** Sampleid */
-            sampleId: string;
-            /** Sampletype */
-            sampleType: string;
-            priority: components["schemas"]["PriorityLevel"];
-            /** Testcode */
-            testCode: string;
-            /** Testname */
-            testName: string;
-        };
         /** WorkupResponse */
         WorkupResponse: {
             /** Code */
@@ -5043,41 +4986,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationWorklistResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_bench_worksheet_api_v1_lab_worklists_worksheet_get: {
-        parameters: {
-            query?: {
-                testCode?: string | null;
-                category?: string | null;
-                /** @description Comma-separated priority levels */
-                priority?: string | null;
-                priorityGroup?: ("stat" | "routine") | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WorksheetResponse"];
                 };
             };
             /** @description Validation Error */

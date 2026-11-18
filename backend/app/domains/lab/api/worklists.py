@@ -22,7 +22,6 @@ from app.domains.lab.schemas.worklists import (
     ValidationWorklistResponse,
     WorklistPagination,
     WorklistResponse,
-    WorksheetResponse,
 )
 from app.domains.users.models import User
 from app.platform.http import require_lab_tech, require_sample_collector
@@ -236,23 +235,6 @@ def get_validation_worklist(
             sample_type=sampleType,
             category=category,
         ),
-    )
-
-
-@router.get("/worklists/worksheet", response_model=WorksheetResponse)
-def get_bench_worksheet(
-    testCode: str | None = None,
-    category: str | None = None,
-    priority: str | None = Query(None, description="Comma-separated priority levels"),
-    priorityGroup: Literal["stat", "routine"] | None = Query(None),
-    service: LabWorklistService = Depends(get_lab_worklist_service),
-    _user: User = Depends(require_lab_tech),
-):
-    """Printable entry-stage worksheet grouped by test code."""
-    return service.list_worksheet(
-        test_code=testCode,
-        category=category,
-        priorities=_parse_priorities(priority, priorityGroup),
     )
 
 

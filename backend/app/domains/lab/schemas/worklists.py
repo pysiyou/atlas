@@ -190,30 +190,6 @@ class WorklistResponse(BaseModel):
     pagination: WorklistPagination
 
 
-class WorksheetRow(BaseModel):
-    """One bench-worksheet line for a single order test."""
-
-    orderTestId: int
-    orderId: str
-    patientId: str
-    patientName: str
-    sampleId: str
-    sampleType: str
-    priority: PriorityLevel
-    testCode: str
-    testName: str
-
-
-class WorksheetGroup(BaseModel):
-    testCode: str
-    testName: str
-    rows: list[WorksheetRow]
-
-
-class WorksheetResponse(BaseModel):
-    groups: list[WorksheetGroup]
-
-
 class CollectionWorklistResponse(BaseModel):
     items: list[CollectionWorklistItem]
     pagination: WorklistPagination

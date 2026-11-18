@@ -283,6 +283,19 @@ def format_order_test_display(accession: str | None, test_code: str | None) -> s
     return acc or code or "-"
 
 
+def parse_order_test_display_search(term: str) -> tuple[str, str] | None:
+    """Parse order-line display (`YY-NNNNN/CODE`) into accession and mnemonic."""
+    trimmed = term.strip()
+    slash = trimmed.find("/")
+    if slash <= 0:
+        return None
+    accession = trimmed[:slash].strip()
+    test_code = trimmed[slash + 1 :].strip().upper()
+    if not looks_like_accession(accession) or not looks_like_mnemonic(test_code):
+        return None
+    return accession, test_code
+
+
 # ---------------------------------------------------------------------------
 # Query / result helpers
 # ---------------------------------------------------------------------------

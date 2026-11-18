@@ -41,6 +41,7 @@ from app.platform.utils import (
     looks_like_filler,
     looks_like_mnemonic,
     looks_like_mrn,
+    parse_order_test_display_search,
 )
 from app.shared.contracts.enums import PriorityLevel, SampleStatus, TestStatus
 from sqlalchemy import and_, case, desc, exists, func, or_
@@ -95,6 +96,18 @@ def _apply_worklist_window_filters(
 
 def _collection_search_filter(search_term: str):
     term = search_term.strip()
+    parsed = parse_order_test_display_search(term)
+    if parsed:
+        accession, test_code = parsed
+        return and_(
+            Sample.sampleId == accession,
+            exists().where(
+                and_(
+                    OrderTest.sampleId == Sample.sampleId,
+                    OrderTest.testCode == test_code,
+                )
+            ),
+        )
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
         Sample.sampleId.ilike(f"%{term}%"),
@@ -112,8 +125,15 @@ def _collection_search_filter(search_term: str):
 
 
 def _order_test_worklist_search_filter(search_term: str):
-    """Match MRN, filler, accession, test mnemonic, or names."""
+    """Match MRN, filler, accession, test mnemonic, order-test display, or names."""
     term = search_term.strip()
+    parsed = parse_order_test_display_search(term)
+    if parsed:
+        accession, test_code = parsed
+        return and_(
+            Sample.sampleId == accession,
+            OrderTest.testCode == test_code,
+        )
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
         OrderableTest.name.ilike(f"%{term}%"),
@@ -622,50 +642,6 @@ class LabWorklistService:
                 }
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
-
-    def list_worksheet(
-        self,
-        *,
-        test_code: str | None = None,
-        category: str | None = None,
-        priorities: list[PriorityLevel] | None = None,
-    ) -> dict[str, Any]:
-        """Entry-stage tests grouped by testCode for a printable bench worksheet."""
-        extra = [OrderTest.status == TestStatus.SAMPLE_COLLECTED]
-        if test_code:
-            extra.append(OrderTest.testCode == test_code)
-        query, _ = self._order_test_worklist_query(
-            extra_filters=tuple(extra),
-            priorities=priorities,
-            date_from=None,
-            date_to=None,
-            sample_types=None,
-            search=None,
-            category=category,
-        )
-        rows = query.order_by(OrderTest.testCode.asc(), Order.orderDate.asc()).limit(500).all()
-        grouped: dict[str, dict[str, Any]] = {}
-        for ot, order, patient, test, sample in rows:
-            if not sample or not sample.sampleId:
-                continue
-            bucket = grouped.setdefault(
-                ot.testCode,
-                {"testCode": ot.testCode, "testName": test.name, "rows": []},
-            )
-            bucket["rows"].append(
-                {
-                    "orderTestId": ot.id,
-                    "orderId": order.orderId,
-                    "patientId": patient.id,
-                    "patientName": patient.fullName,
-                    "sampleId": sample.sampleId,
-                    "sampleType": test.sampleType or "",
-                    "priority": order.priority,
-                    "testCode": ot.testCode,
-                    "testName": test.name,
-                }
-            )
-        return {"groups": list(grouped.values())}
 
     def list_validation(
         self,

@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { classifyClinicalSearch } from '@/utils/id';
+import { classifyClinicalSearch, parseOrderTestDisplaySearch } from '@/utils/id';
 import { buildEventLogQuery } from './buildEventLogQuery';
 import {
   DEFAULT_EVENT_LOG_USER_FILTERS as DEFAULT_FILTERS,
@@ -30,12 +30,9 @@ export function parseRecordFilterDisplayId(input: string): ParsedRecordIdFilter 
   if (!trimmed) {
     return { kind: 'empty' };
   }
-  const classified = classifyClinicalSearch(trimmed);
   if (
-    classified === 'filler' ||
-    classified === 'mrn' ||
-    classified === 'accession' ||
-    classified === 'mnemonic'
+    parseOrderTestDisplaySearch(trimmed) ||
+    classifyClinicalSearch(trimmed) !== 'text'
   ) {
     return { kind: 'clinical', token: trimmed };
   }

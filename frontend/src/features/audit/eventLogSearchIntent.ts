@@ -8,6 +8,7 @@ import {
   looksLikeFiller,
   looksLikeMnemonic,
   looksLikeMrn,
+  parseOrderTestDisplaySearch,
 } from '@/utils/id';
 import type { IconKey } from '@/icons';
 import { IconKeys } from '@/icons';
@@ -58,13 +59,8 @@ export function classifyEventLogSearchIntent(term: string): EventLogSearchIntent
   if (parsed.kind === 'clinical') {
     const token = parsed.token;
     let classified: EventLogSearchIntentMode = 'record_patient';
-    const slashIdx = token.indexOf('/');
-    if (slashIdx > 0) {
-      const accPart = token.slice(0, slashIdx).trim();
-      const codePart = token.slice(slashIdx + 1).trim();
-      if (looksLikeAccession(accPart) && looksLikeMnemonic(codePart)) {
-        classified = 'record_test';
-      }
+    if (parseOrderTestDisplaySearch(token)) {
+      classified = 'record_test';
     } else if (looksLikeMnemonic(token)) {
       classified = 'record_test';
     } else if (looksLikeFiller(token)) {

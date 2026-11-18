@@ -38,7 +38,6 @@ interface WorklistParams {
   priority?: string;
   priorityGroup?: string;
   category?: string;
-  testCode?: string;
 }
 
 function buildParams(params?: WorklistParams): Record<string, string> {
@@ -90,25 +89,6 @@ export const worklistsAPI = {
       LAB_PATHS.worklists.allTests,
       buildParams(params)
     );
-  },
-
-  getWorksheet(params?: WorklistParams) {
-    return apiClient.get<{
-      groups: Array<{
-        testCode: string;
-        testName: string;
-        rows: Array<{
-          orderTestId: number;
-          orderId: string;
-          patientName: string;
-          sampleId?: string | null;
-          sampleType: string;
-          priority: string;
-          testCode: string;
-          testName: string;
-        }>;
-      }>;
-    }>(LAB_PATHS.worklists.worksheet, buildParams(params));
   },
 };
 

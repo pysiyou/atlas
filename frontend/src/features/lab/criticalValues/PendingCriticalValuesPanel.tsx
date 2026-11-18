@@ -9,6 +9,7 @@ import { RecordId } from '@/features/shared';
 import { IconKeys } from '@/icons';
 import { cn, formatOrderTestDisplay } from '@/utils';
 import { getLabQueueUrl } from '../constants/labConstants';
+import { labQueueSearchTermForTest } from '../utils/labSearchAndLinks';
 import { usePendingCriticalValues } from './criticalValues';
 import { CriticalValueActions } from './CriticalValueActions';
 import { text, RADIUS, TONE } from '@/theme/recipes';
@@ -56,9 +57,10 @@ export function PendingCriticalValuesPanel({
               </div>
               <Link
                 to={getLabQueueUrl('validation', {
-                  search: formatOrderTestDisplay(record.sampleId, record.testCode) !== '-'
-                    ? formatOrderTestDisplay(record.sampleId, record.testCode)
-                    : record.orderId || record.testCode,
+                  search:
+                    labQueueSearchTermForTest(record, record.orderId) ??
+                    record.orderId ??
+                    record.testCode,
                 })}
                 className={`${text({ role: 'caption' })} ${TONE.brand.fg} hover:underline`}
               >

@@ -6,6 +6,7 @@ import {
   displayId,
   formatOrderTestDisplay,
   inclusiveDateRangeBounds,
+  parseOrderTestDisplaySearch,
   toIsoDateParam,
 } from '@/utils';
 import type { TestStatus } from '@/types/generated/enums';
@@ -25,11 +26,21 @@ type LabQueueSearchIntent =
   | { kind: 'accession'; sampleId: string }
   | { kind: 'mrn'; mrn: string }
   | { kind: 'mnemonic'; testCode: string }
+  | { kind: 'orderTest'; accession: string; testCode: string }
   | { kind: 'text'; term: string };
 
 function parseLabQueueSearchIntent(query: string): LabQueueSearchIntent {
   const trimmed = query.trim();
   if (!trimmed) return { kind: 'empty' };
+
+  const orderTest = parseOrderTestDisplaySearch(trimmed);
+  if (orderTest) {
+    return {
+      kind: 'orderTest',
+      accession: orderTest.accession,
+      testCode: orderTest.testCode,
+    };
+  }
 
   const classified = classifyClinicalSearch(trimmed);
   if (classified === 'filler') return { kind: 'filler', orderId: trimmed.replace(/[\s-]/g, '') };
@@ -76,6 +87,14 @@ export function matchLabQueueSearchQuery(
   }
   if (intent.kind === 'mnemonic') {
     return Boolean(ids.testCode && ids.testCode.toUpperCase() === intent.testCode);
+  }
+  if (intent.kind === 'orderTest') {
+    const sampleMatch = Boolean(ids.sampleId && ids.sampleId === intent.accession);
+    if (!sampleMatch) return false;
+    if (ids.testCode) {
+      return ids.testCode.toUpperCase() === intent.testCode;
+    }
+    return textFields.some(field => field.toUpperCase() === intent.testCode);
   }
   const lower = intent.term.toLowerCase();
   return textFields.some(field => field.toLowerCase().includes(lower));
@@ -136,29 +155,37 @@ export function resolveCollectionStatusFilters<T extends string>(
 }
 
 /**
- * Lab queue URL for an order test: workflow tab + accession/mnemonic or filler in `search`.
+ * One clinical search token for deep-linking to a lab queue from an order test.
+ * Prefer accession (sample is the lab work item); else mnemonic; else order filler.
+ */
+export function labQueueSearchTermForTest(
+  test: Pick<OrderTest, 'testCode'> & { sampleId?: string | null },
+  orderId: string,
+): string | undefined {
+  const accession = test.sampleId?.trim();
+  if (accession) return accession;
+  const mnemonic = test.testCode?.trim().toUpperCase();
+  if (mnemonic) return mnemonic;
+  const filler = displayId.order(orderId);
+  return filler !== '-' ? filler : undefined;
+}
+
+/**
+ * Lab queue URL for an order test: workflow tab + single token in `search`.
  */
 export function getLabQueueUrlForTest(
   test: Pick<OrderTest, 'id' | 'status' | 'testCode'> & {
     sampleId?: string | null;
     lab?: { pipelineStage?: string | null } | null;
   },
-  _orderId: string,
-  orderId?: string | null,
+  orderId: string,
 ): string | null {
   const tab = getLabTabForTestStatus(test.status as TestStatus, test.lab?.pipelineStage);
   if (!tab) return null;
 
-  const orderTestDisplay = formatOrderTestDisplay(test.sampleId, test.testCode);
-  if (orderTestDisplay !== '-') {
-    return getLabQueueUrl(tab, { search: orderTestDisplay });
-  }
-  if (test.testCode) {
-    return getLabQueueUrl(tab, { search: test.testCode });
-  }
-  const filler = displayId.order(orderId);
-  if (filler === '-') return getLabQueueUrl(tab);
-  return getLabQueueUrl(tab, { search: filler });
+  const search = labQueueSearchTermForTest(test, orderId);
+  if (!search) return getLabQueueUrl(tab);
+  return getLabQueueUrl(tab, { search });
 }
 
 /** Lab queue URL with accession in the search bar. */

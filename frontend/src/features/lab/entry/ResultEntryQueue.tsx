@@ -14,8 +14,6 @@ import { worklistItemToEntryRow } from '../utils/worklistMappers';
 import type { EntryQueueRow } from '../types/queues';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
-import { printBenchWorksheet } from '../utils/printWorksheet';
-import { Button } from '@/components/primitives';
 import { LabWorklistPaginationNotice } from '../components/LabWorklistPaginationNotice';
 import { getEntryFilterConfig } from '../constants';
 import { useClientConfig } from '@/app/clientConfigContext';
@@ -139,25 +137,7 @@ export function ResultEntryQueue() {
         getItemKey={(row, idx) => `entry-${(row as EntryQueueRow).orderTestId}-${idx}`}
         emptyTitle={getEmptyCopy().pendingResults.title}
         emptyDescription={getEmptyCopy().pendingResults.description}
-        filterRow={
-          <div className="flex flex-wrap items-start gap-space-3">
-            <div className="min-w-0 flex-1">
-              <LabQueueFilters config={entryFilterConfig} {...filterBarProps} />
-            </div>
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() =>
-                void printBenchWorksheet({
-                  priority: bar.serverFilters.priority,
-                  priorityGroup: bar.serverFilters.priorityGroup,
-                })
-              }
-            >
-              Print worksheet
-            </Button>
-          </div>
-        }
+        filterRow={<LabQueueFilters config={entryFilterConfig} {...filterBarProps} />}
         footer={<LabWorklistPaginationNotice pagination={pagination} onPageChange={goToPage} />}
       />
     </ErrorBoundary>

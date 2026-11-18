@@ -36,7 +36,31 @@ export type EntityType =
   | 'user'
   | 'audit';
 
-export type ClinicalSearchKind = 'mrn' | 'filler' | 'accession' | 'mnemonic' | 'text';
+export type ClinicalSearchKind =
+  | 'mrn'
+  | 'filler'
+  | 'accession'
+  | 'mnemonic'
+  | 'orderTest'
+  | 'text';
+
+export type ParsedOrderTestSearch = {
+  accession: string;
+  testCode: string;
+};
+
+/**
+ * Split an order-test display token (`YY-NNNNN/CODE`) into accession + mnemonic.
+ */
+export function parseOrderTestDisplaySearch(input: string): ParsedOrderTestSearch | null {
+  const trimmed = input.trim();
+  const slashIdx = trimmed.indexOf('/');
+  if (slashIdx <= 0) return null;
+  const accession = trimmed.slice(0, slashIdx).trim();
+  const testCode = trimmed.slice(slashIdx + 1).trim().toUpperCase();
+  if (!looksLikeAccession(accession) || !looksLikeMnemonic(testCode)) return null;
+  return { accession, testCode };
+}
 
 /**
  * Render a stored clinical identifier. Empty values become a placeholder dash.
@@ -74,6 +98,7 @@ export function looksLikeMnemonic(input: string): boolean {
 export function classifyClinicalSearch(input: string): ClinicalSearchKind {
   const trimmed = input.trim();
   if (!trimmed) return 'text';
+  if (parseOrderTestDisplaySearch(trimmed)) return 'orderTest';
   if (looksLikeMnemonic(trimmed)) return 'mnemonic';
   if (looksLikeFiller(trimmed)) return 'filler';
   if (looksLikeAccession(trimmed)) return 'accession';

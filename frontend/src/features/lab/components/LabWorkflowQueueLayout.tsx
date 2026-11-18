@@ -192,10 +192,11 @@ export function createLabQueueSearchFilter<
     const orderId = item.orderId || undefined;
     const sampleId = item.sampleId || undefined;
     const extra = extraFields ? extraFields(item) : [];
+    const testCode = item.testCode || undefined;
     const textFields = labQueueSearchTextFields(
-      { orderTestId, orderId, sampleId },
+      { orderTestId, orderId, sampleId, testCode },
       [item.patientName, item.testName, item.testCode, ...extra].filter(Boolean) as string[],
     );
-    return matchLabQueueSearchQuery({ orderTestId, orderId, sampleId }, textFields, query);
+    return matchLabQueueSearchQuery({ orderTestId, orderId, sampleId, testCode }, textFields, query);
   };
 }

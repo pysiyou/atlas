@@ -222,7 +222,6 @@ export const LAB_PATHS = {
     validation: '/lab/worklists/validation',
     dashboardToday: '/lab/worklists/dashboard-today',
     allTests: '/lab/worklists/all-tests',
-    worksheet: '/lab/worklists/worksheet',
   },
   board: { full: '/lab/board', summary: '/lab/board/summary' },
   criticalValues: {
