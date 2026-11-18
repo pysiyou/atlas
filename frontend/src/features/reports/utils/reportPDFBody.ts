@@ -1,5 +1,5 @@
 /**
- * Lab report PDF body — classic result table (gray value bars, aligned units, right-aligned ranges).
+ * Lab report PDF body — result tables with column headers, value bars, and reference intervals.
  */
 
 import type jsPDF from 'jspdf';
@@ -43,7 +43,10 @@ const COLOR_UNIT = { r: 107, g: 114, b: 128 } as const;
 const COLOR_ABNORMAL = { r: 234, g: 88, b: 12 } as const;
 const COLOR_CRITICAL = { r: 220, g: 38, b: 38 } as const;
 const COLOR_RESULT_BAR = { r: 232, g: 232, b: 232 } as const;
-const COLOR_NOTE_BAR = { r: 232, g: 232, b: 232 } as const;
+const COLOR_RESULT_BAR_ABNORMAL = { r: 255, g: 237, b: 213 } as const;
+const COLOR_RESULT_BAR_CRITICAL = { r: 254, g: 226, b: 226 } as const;
+const COLOR_NOTE_BAR = { r: 245, g: 245, b: 245 } as const;
+const COLOR_ROW_ALT = { r: 250, g: 250, b: 250 } as const;
 
 type ReportTest = LabReportPayload['testResults'][number];
 
@@ -294,6 +297,19 @@ function referenceBlockHeight(lineCount: number): number {
   return lineCount * REFERENCE_PAIR_LINE_HEIGHT;
 }
 
+function drawResultRowBackground(
+  doc: jsPDF,
+  layout: BodyLayout,
+  y: number,
+  rowHeight: number,
+  alternate: boolean
+): void {
+  if (!alternate) return;
+  const top = y - ROW_HEIGHT + 0.5;
+  doc.setFillColor(COLOR_ROW_ALT.r, COLOR_ROW_ALT.g, COLOR_ROW_ALT.b);
+  doc.rect(layout.colResultLabel, top, layout.contentRight - layout.colResultLabel, rowHeight, 'F');
+}
+
 function drawResultBar(
   doc: jsPDF,
   y: number,
@@ -303,7 +319,12 @@ function drawResultBar(
   critical: boolean
 ): void {
   const barTop = y - RESULT_BAR_HEIGHT + RESULT_BAR_BASELINE_OFFSET;
-  doc.setFillColor(COLOR_RESULT_BAR.r, COLOR_RESULT_BAR.g, COLOR_RESULT_BAR.b);
+  const fill = critical
+    ? COLOR_RESULT_BAR_CRITICAL
+    : abnormal
+      ? COLOR_RESULT_BAR_ABNORMAL
+      : COLOR_RESULT_BAR;
+  doc.setFillColor(fill.r, fill.g, fill.b);
   doc.rect(rowLayout.resultBarX, barTop, rowLayout.resultBarW, RESULT_BAR_HEIGHT, 'F');
 
   doc.setFont(FONT, 'bold');
@@ -413,25 +434,22 @@ function drawReportResultRow(
   rowLayout: ResultRowLayout,
   referenceSubColumns: ReferenceSubColumnLayout,
   catalogAnalytes: Record<string, AnalyteDefinition>,
-  patient: ReportPatientContext
+  patient: ReportPatientContext,
+  rowIndex: number
 ): number {
   doc.setFont(FONT, 'normal');
   doc.setFontSize(TABLE_SIZE);
-  doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
 
   const nameLines = doc.splitTextToSize(resultRow.name, layout.colResultLabelW - 1);
-  drawResultCell(doc, y, resultRow, rowLayout);
-  const refLineCount = drawReferenceCell(
-    doc,
-    y,
-    resultRow,
-    referenceSubColumns,
-    catalogAnalytes,
-    patient
-  );
-
+  const refLineCount = referenceLineCount(resultRow, catalogAnalytes, patient);
   const refHeight = referenceBlockHeight(refLineCount);
   const rowHeight = Math.max(nameLines.length * ROW_HEIGHT, ROW_HEIGHT, refHeight);
+
+  drawResultRowBackground(doc, layout, y, rowHeight, rowIndex % 2 === 1);
+
+  doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
+  drawResultCell(doc, y, resultRow, rowLayout);
+  drawReferenceCell(doc, y, resultRow, referenceSubColumns, catalogAnalytes, patient);
 
   for (let i = 0; i < nameLines.length; i += 1) {
     const lineY = y + i * ROW_HEIGHT;
@@ -450,12 +468,13 @@ function drawResultsTableHeader(
   rowLayout: ResultRowLayout,
   referenceSubColumns: ReferenceSubColumnLayout
 ): number {
-  doc.setFont(FONT, 'normal');
+  doc.setFont(FONT, 'bold');
   doc.setFontSize(TABLE_HEAD_SIZE);
   doc.setTextColor(COLOR_UNIT.r, COLOR_UNIT.g, COLOR_UNIT.b);
   doc.text('RESULT', resultsLayout.colResultLabel, y, { align: 'left' });
   doc.text('VALUE', rowLayout.resultBarX, y, { align: 'left' });
   doc.text('REFERENCE INTERVAL', referenceSubColumns.valueRightX, y, { align: 'right' });
+  doc.setFont(FONT, 'normal');
   doc.setTextColor(COLOR_TEXT.r, COLOR_TEXT.g, COLOR_TEXT.b);
   return y + TABLE_HEAD_GAP + ROW_HEIGHT * 0.65;
 }
@@ -508,9 +527,10 @@ function drawTestSection(
   y += 2;
 
   const title = test.testName;
-  doc.setFont(FONT, 'normal');
+  doc.setFont(FONT, 'bold');
   doc.setFontSize(TITLE_SIZE);
   doc.text(title, layout.margin, y);
+  doc.setFont(FONT, 'normal');
   y += 3.5;
 
   if (test.methodology) {
@@ -538,7 +558,8 @@ function drawTestSection(
   y = ensureVerticalSpace(doc, y, ROW_HEIGHT, resultsLayout);
   y = drawResultsTableHeader(doc, y, resultsLayout, rowLayout, referenceSubColumns);
 
-  for (const row of test.parameters) {
+  for (let rowIndex = 0; rowIndex < test.parameters.length; rowIndex += 1) {
+    const row = test.parameters[rowIndex];
     const refLines = referenceLineCount(row, catalogAnalytes, patient);
     const neededHeight = Math.max(ROW_HEIGHT * 2, referenceBlockHeight(refLines));
     y = ensureVerticalSpace(doc, y, neededHeight, resultsLayout);
@@ -550,7 +571,8 @@ function drawTestSection(
       rowLayout,
       referenceSubColumns,
       catalogAnalytes,
-      patient
+      patient,
+      rowIndex
     );
   }
 
@@ -583,7 +605,7 @@ function drawCategorySection(
   }
 
   doc.setFont(FONT, 'bold');
-  doc.setFontSize(TITLE_SIZE);
+  doc.setFontSize(TITLE_SIZE + 0.5);
   doc.text(group.category.toUpperCase(), layout.margin, y);
   y += 3.5;
 
