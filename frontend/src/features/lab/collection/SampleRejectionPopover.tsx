@@ -105,7 +105,7 @@ function CollectionRejectionPopoverContent({
 
   return (
     <LabFormPopoverChrome
-      title={labCopy.quality.reportSampleIssue}
+      title={labCopy.quality.rejectSamplePopover}
       subtitle={subtitle}
       onCancel={onCancel}
       onConfirm={handleConfirm}
@@ -157,8 +157,8 @@ export function SampleRejectionPopover({
     <LabAnchoredPopover
       trigger={
         trigger ?? (
-          <Button {...actionButtonPreset('reject')} size="sm" title={labCopy.quality.reportSampleIssue}>
-            {labCopy.quality.reportSampleIssue}
+          <Button {...actionButtonPreset('reject')} size="sm" title={labCopy.quality.rejectSample}>
+            {labCopy.quality.rejectSample}
           </Button>
         )
       }

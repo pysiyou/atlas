@@ -12,8 +12,7 @@
         "CK",
         "CKMB",
         "COAG",
-        "CTNI",
-        "LDH"
+        "CTNI"
       ]
     },
     {
@@ -25,10 +24,7 @@
         "CBC",
         "FE",
         "FERR",
-        "FOL",
-        "HBELEC",
         "IRONP",
-        "RETIC",
         "TIBC"
       ]
     },
@@ -42,9 +38,7 @@
         "C3",
         "C4",
         "IGA",
-        "IGG",
-        "IGM",
-        "RF"
+        "IGG"
       ]
     },
     {
@@ -54,8 +48,7 @@
       "test_codes": [
         "CA",
         "MG",
-        "PO4",
-        "VITD"
+        "PO4"
       ]
     },
     {
@@ -105,8 +98,7 @@
       "name": "Colon Cancer Markers",
       "description": "",
       "test_codes": [
-        "CEA",
-        "FOOB"
+        "CEA"
       ]
     },
     {
@@ -114,18 +106,7 @@
       "name": "COVID-19 Diagnosis Panel",
       "description": "",
       "test_codes": [
-        "COVIDAG",
-        "COVIDPCR"
-      ]
-    },
-    {
-      "id": "DIARRHEA",
-      "name": "Diarrhea Workup Panel",
-      "description": "",
-      "test_codes": [
-        "FOOB",
-        "SCULT",
-        "STOOL"
+        "COVIDAG"
       ]
     },
     {
@@ -145,8 +126,7 @@
       "description": "",
       "test_codes": [
         "GLU",
-        "HBA1C",
-        "UALB"
+        "HBA1C"
       ]
     },
     {
@@ -174,8 +154,7 @@
       "name": "Drug-Resistant TB Panel",
       "description": "",
       "test_codes": [
-        "AFB",
-        "XPERT"
+        "AFB"
       ]
     },
     {
@@ -183,13 +162,7 @@
       "name": "Fertility Hormone Panel",
       "description": "FSH, LH, estradiol, progesterone, prolactin, and testosterone.",
       "test_codes": [
-        "BHCG",
-        "E2",
-        "FSH",
-        "LH",
-        "PRL",
-        "PROG",
-        "TESTO"
+        "BHCG"
       ]
     },
     {
@@ -200,11 +173,7 @@
         "BCULT",
         "CHIKV",
         "CRP",
-        "DENGUE",
-        "LAC",
-        "MALRDT",
-        "MALSMEAR",
-        "YF"
+        "LAC"
       ]
     },
     {
@@ -215,8 +184,7 @@
         "CBC",
         "CMP",
         "LIPID",
-        "TSH",
-        "VITD"
+        "TSH"
       ]
     },
     {
@@ -224,9 +192,7 @@
       "name": "Hemoglobinopathy Panel",
       "description": "",
       "test_codes": [
-        "CBC",
-        "HBELEC",
-        "SICKLE"
+        "CBC"
       ]
     },
     {
@@ -234,9 +200,7 @@
       "name": "Complete Hematology Panel",
       "description": "",
       "test_codes": [
-        "CBC",
-        "ESR",
-        "RETIC"
+        "CBC"
       ]
     },
     {
@@ -245,11 +209,7 @@
       "description": "",
       "test_codes": [
         "CBC",
-        "CK",
-        "DAT",
-        "G6PD",
-        "LDH",
-        "RETIC"
+        "CK"
       ]
     },
     {
@@ -259,10 +219,7 @@
       "test_codes": [
         "AHBC",
         "AHBS",
-        "AHCV",
-        "HBEAG",
-        "HBSAG",
-        "HBVDNA"
+        "AHCV"
       ]
     },
     {
@@ -273,17 +230,7 @@
         "AHBC",
         "AHBS",
         "AHCV",
-        "HBSAG",
         "LFT"
-      ]
-    },
-    {
-      "id": "HIV",
-      "name": "HIV Testing Panel",
-      "description": "",
-      "test_codes": [
-        "HIVAGAB",
-        "HIVCONF"
       ]
     },
     {
@@ -291,10 +238,7 @@
       "name": "HIV Management Panel",
       "description": "",
       "test_codes": [
-        "CD4",
-        "HBVDNA",
-        "HIVCONF",
-        "HIVVL"
+        "CD4"
       ]
     },
     {
@@ -304,8 +248,7 @@
       "test_codes": [
         "CBC",
         "CD4",
-        "CMV",
-        "HIVVL"
+        "CMV"
       ]
     },
     {
@@ -316,10 +259,7 @@
         "BCULT",
         "CBC",
         "CRP",
-        "EBV",
-        "LAC",
-        "MALRDT",
-        "PROCAL"
+        "LAC"
       ]
     },
     {
@@ -329,9 +269,7 @@
       "test_codes": [
         "BCULT",
         "CRP",
-        "LAC",
-        "PROCAL",
-        "UCULT"
+        "LAC"
       ]
     },
     {
@@ -340,8 +278,7 @@
       "description": "CBC with CRP and ESR.",
       "test_codes": [
         "CBC",
-        "CRP",
-        "ESR"
+        "CRP"
       ]
     },
     {
@@ -349,8 +286,7 @@
       "name": "Inflammatory Markers Panel",
       "description": "",
       "test_codes": [
-        "CRP",
-        "ESR"
+        "CRP"
       ]
     },
     {
@@ -383,7 +319,6 @@
         "AST",
         "DBIL",
         "GGT",
-        "LDH",
         "TBIL"
       ]
     },
@@ -415,9 +350,7 @@
       "description": "",
       "test_codes": [
         "B12",
-        "FOL",
-        "HBA1C",
-        "RETIC"
+        "HBA1C"
       ]
     },
     {
@@ -425,8 +358,7 @@
       "name": "Manual Differential Panel",
       "description": "",
       "test_codes": [
-        "CBC",
-        "PBS"
+        "CBC"
       ]
     },
     {
@@ -465,8 +397,6 @@
       "test_codes": [
         "ALB",
         "B12",
-        "FOL",
-        "PAB",
         "TP"
       ]
     },
@@ -485,8 +415,7 @@
       "name": "Pregnancy Panel",
       "description": "",
       "test_codes": [
-        "BHCG",
-        "UHCG"
+        "BHCG"
       ]
     },
     {
@@ -494,10 +423,7 @@
       "name": "Pregnancy Serology Panel",
       "description": "",
       "test_codes": [
-        "CMV",
-        "HIVAGAB",
-        "RUBELLA",
-        "TOXO"
+        "CMV"
       ]
     },
     {
@@ -509,20 +435,7 @@
         "AHBS",
         "BHCG",
         "CBC",
-        "HBSAG",
-        "HIVAGAB",
-        "RUBELLA",
-        "TOXO",
-        "TSH",
-        "UA"
-      ]
-    },
-    {
-      "id": "PSASCR",
-      "name": "Prostate Cancer Screening",
-      "description": "",
-      "test_codes": [
-        "PSA"
+        "TSH"
       ]
     },
     {
@@ -532,9 +445,7 @@
       "test_codes": [
         "BUN",
         "CREA",
-        "EGFR",
-        "UA",
-        "UALB"
+        "EGFR"
       ]
     },
     {
@@ -545,27 +456,7 @@
         "BCULT",
         "BNP",
         "CRP",
-        "LAC",
-        "PROCAL"
-      ]
-    },
-    {
-      "id": "STI",
-      "name": "STI Panel",
-      "description": "",
-      "test_codes": [
-        "HIVAGAB",
-        "RPR",
-        "TPHA"
-      ]
-    },
-    {
-      "id": "SYPH",
-      "name": "Syphilis Diagnosis Panel",
-      "description": "",
-      "test_codes": [
-        "RPR",
-        "TPHA"
+        "LAC"
       ]
     },
     {
@@ -574,8 +465,7 @@
       "description": "",
       "test_codes": [
         "AFB",
-        "BCULT",
-        "XPERT"
+        "BCULT"
       ]
     },
     {
@@ -593,46 +483,7 @@
       "name": "Transfusion Screening Panel",
       "description": "",
       "test_codes": [
-        "ABO",
-        "DAT",
-        "XMATCH"
-      ]
-    },
-    {
-      "id": "UAPANEL",
-      "name": "Routine Urinalysis Panel",
-      "description": "",
-      "test_codes": [
-        "UA"
-      ]
-    },
-    {
-      "id": "ULCER",
-      "name": "Gastric Ulcer Workup",
-      "description": "",
-      "test_codes": [
-        "HPYLORI",
-        "STOOL"
-      ]
-    },
-    {
-      "id": "URINE",
-      "name": "Urinalysis Workup",
-      "description": "Complete urinalysis with microalbumin/creatinine ratio.",
-      "test_codes": [
-        "UA",
-        "UACR",
-        "UALB"
-      ]
-    },
-    {
-      "id": "UTI",
-      "name": "UTI Management Panel",
-      "description": "",
-      "test_codes": [
-        "UA",
-        "UCULT",
-        "UQUANT"
+        "ABO"
       ]
     },
     {

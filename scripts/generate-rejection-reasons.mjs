@@ -27,11 +27,6 @@ function readJson(p) {
  *   code: string;
  *   label: string;
  *   domain: RejectionDomain;
- *   description?: string;
- *   category?: string;
- *   stage?: string;
- *   requires_recollection?: boolean;
- *   blocks_autoverification?: boolean;
  * }} RejectionReasonRow
  */
 
@@ -43,17 +38,18 @@ const byId = new Map();
 
 function ingest(rows, expectedDomain) {
   for (const row of rows ?? []) {
-    if (!row?.id || !row?.label || !row?.code) continue;
-    const domain = row.domain ?? expectedDomain;
-    if (domain !== expectedDomain) {
-      console.error(`rejection ${row.id}: domain ${domain} does not match registry ${expectedDomain}`);
-      process.exit(1);
-    }
+    if (!row?.id || !row?.label) continue;
+    const domain = expectedDomain;
     if (byId.has(row.id)) {
       console.error(`duplicate rejection reason id: ${row.id}`);
       process.exit(1);
     }
-    byId.set(row.id, { ...row, domain });
+    byId.set(row.id, {
+      id: row.id,
+      code: row.id,
+      label: row.label,
+      domain,
+    });
   }
 }
 
@@ -69,22 +65,12 @@ function pyDict(name, fn) {
 
 function pyReasonEntry(id) {
   const row = byId.get(id);
-  const parts = [
+  return `{${[
     `"id": ${JSON.stringify(row.id)}`,
     `"code": ${JSON.stringify(row.code)}`,
     `"label": ${JSON.stringify(row.label)}`,
     `"domain": ${JSON.stringify(row.domain)}`,
-  ];
-  if (row.description) parts.push(`"description": ${JSON.stringify(row.description)}`);
-  if (row.category) parts.push(`"category": ${JSON.stringify(row.category)}`);
-  if (row.stage) parts.push(`"stage": ${JSON.stringify(row.stage)}`);
-  if (row.requires_recollection !== undefined) {
-    parts.push(`"requires_recollection": ${row.requires_recollection ? 'True' : 'False'}`);
-  }
-  if (row.blocks_autoverification !== undefined) {
-    parts.push(`"blocks_autoverification": ${row.blocks_autoverification ? 'True' : 'False'}`);
-  }
-  return `{${parts.join(', ')}}`;
+  ].join(', ')}}`;
 }
 
 const py = `"""
@@ -100,16 +86,11 @@ from typing import Literal, TypedDict
 RejectionDomain = Literal["specimen", "analytical"]
 
 
-class RejectionReasonDef(TypedDict, total=False):
+class RejectionReasonDef(TypedDict):
     id: str
     code: str
     label: str
     domain: RejectionDomain
-    description: str
-    category: str
-    stage: str
-    requires_recollection: bool
-    blocks_autoverification: bool
 
 
 REJECTION_REASONS_BY_ID: dict[str, RejectionReasonDef] = {
@@ -171,15 +152,6 @@ const tsDefLines = ids
       code: row.code,
       label: row.label,
       domain: row.domain,
-      ...(row.description ? { description: row.description } : {}),
-      ...(row.category ? { category: row.category } : {}),
-      ...(row.stage ? { stage: row.stage } : {}),
-      ...(row.requires_recollection !== undefined
-        ? { requires_recollection: row.requires_recollection }
-        : {}),
-      ...(row.blocks_autoverification !== undefined
-        ? { blocks_autoverification: row.blocks_autoverification }
-        : {}),
     })},`;
   })
   .join('\n');
@@ -200,11 +172,6 @@ export interface RejectionReasonDef {
   code: string;
   label: string;
   domain: RejectionDomain;
-  description?: string;
-  category?: string;
-  stage?: string;
-  requires_recollection?: boolean;
-  blocks_autoverification?: boolean;
 }
 
 export const REJECTION_REASONS_BY_ID: Readonly<Record<string, RejectionReasonDef>> = {

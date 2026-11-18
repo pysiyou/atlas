@@ -265,7 +265,7 @@ export function SampleCollectionDetailFooter({
           onSuccess={onClose}
           trigger={
             <Button {...actionButtonPreset('reject')} size="sm">
-              {labCopy.quality.reportSampleIssue}
+              {labCopy.quality.rejectSample}
             </Button>
           }
         />

@@ -3,325 +3,163 @@
   "reasons": [
     {
       "id": "patient_refused",
-      "code": "patient_refused",
-      "label": "Patient refused",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Patient refused to provide a specimen"
     },
     {
       "id": "no_sample_received",
-      "code": "no_sample_received",
-      "label": "No sample received",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "No physical sample was received"
     },
     {
-      "id": "specimen_appears_clotted_or_layered",
-      "code": "specimen_appears_clotted_or_layered",
-      "label": "Specimen appears clotted or layered",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "clotted_layered",
+      "label": "Specimen is clotted or visibly layered"
     },
     {
       "id": "sample_too_old",
-      "code": "sample_too_old",
-      "label": "Sample too old",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Sample exceeds acceptable stability limits"
     },
     {
-      "id": "specimen_appears_scratched_or_abraded",
-      "code": "specimen_appears_scratched_or_abraded",
-      "label": "Specimen appears scratched or abraded",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "scratched_abraded",
+      "label": "Specimen surface is scratched or abraded"
     },
     {
-      "id": "specimen_not_dry_before_mailing",
-      "code": "specimen_not_dry_before_mailing",
-      "label": "Specimen not dry before mailing",
-      "category": "stability_transport",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "not_dry_mailing",
+      "label": "Specimen was not dry before mailing"
     },
     {
-      "id": "specimen_appears_supersaturated",
-      "code": "specimen_appears_supersaturated",
-      "label": "Specimen appears supersaturated",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "supersaturated",
+      "label": "Specimen appears supersaturated on medium"
     },
     {
-      "id": "specimen_appears_diluted_discolored_or_contaminated",
-      "code": "specimen_appears_diluted_discolored_or_contaminated",
-      "label": "Specimen appears diluted, discolored or contaminated",
-      "category": "serum_index",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "diluted_discolored",
+      "label": "Specimen is diluted, discolored, or contaminated"
     },
     {
-      "id": "specimen_exhibits_serum_rings",
-      "code": "specimen_exhibits_serum_rings",
-      "label": "Specimen exhibits serum rings",
-      "category": "serum_index",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "serum_rings",
+      "label": "Specimen shows visible serum separation rings"
     },
     {
       "id": "no_blood",
-      "code": "no_blood",
-      "label": "No blood",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "No blood present in collection device"
     },
     {
       "id": "rejected",
-      "code": "rejected",
-      "label": "Rejected",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Specimen rejected without further specification"
     },
     {
-      "id": "specimen_damaged_during_transport",
-      "code": "specimen_damaged_during_transport",
-      "label": "Specimen damaged during transport",
-      "category": "stability_transport",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "damaged_transport",
+      "label": "Specimen was damaged during transport"
     },
     {
-      "id": "specimen_received_in_sealed_plastic_container",
-      "code": "specimen_received_in_sealed_plastic_container",
-      "label": "Specimen received in sealed plastic container",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "sealed_plastic_container",
+      "label": "Specimen arrived in sealed plastic container"
     },
     {
-      "id": "specimen_quantity_insufficient_due_to_incomplete_saturation_blood_did_not_soak_through_paper",
-      "code": "specimen_quantity_insufficient_due_to_incomplete_saturation_blood_did_not_soak_through_paper",
-      "label": "Specimen quantity insufficient due to incomplete saturation (blood did not soak through paper)",
-      "category": "container_volume",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "insufficient_saturation_dbs",
+      "label": "DBS blood did not soak through filter paper"
     },
     {
-      "id": "specimen_quantity_insufficient_because_blood_did_not_completely_fill_specimen_circles",
-      "code": "specimen_quantity_insufficient_because_blood_did_not_completely_fill_specimen_circles",
-      "label": "Specimen quantity insufficient because blood did not completely fill specimen circles",
-      "category": "container_volume",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "incomplete_circles_dbs",
+      "label": "DBS specimen circles not completely filled"
     },
     {
-      "id": "specimen_has_uneven_saturation",
-      "code": "specimen_has_uneven_saturation",
-      "label": "Specimen has uneven saturation",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "uneven_saturation",
+      "label": "Filter paper has uneven blood saturation"
     },
     {
-      "id": "specimen_not_eluting",
-      "code": "specimen_not_eluting",
-      "label": "Specimen not eluting",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "not_eluting",
+      "label": "Specimen material is not eluting properly"
     },
     {
-      "id": "unsuitable_for_other_reasons",
-      "code": "unsuitable_for_other_reasons",
-      "label": "Unsuitable for other reasons",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "unsuitable_other",
+      "label": "Unsuitable specimen for other documented reasons"
     },
     {
-      "id": "testing_of_this_specimen_indicates_more_than_one_source_of_blood_is_present_on_the_filter_paper_card",
-      "code": "testing_of_this_specimen_indicates_more_than_one_source_of_blood_is_present_on_the_filter_paper_card",
-      "label": "Testing of this specimen indicates more than one source of blood is present on the filter paper card",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "multiple_blood_sources_dbs",
+      "label": "Multiple blood sources detected on filter card"
     },
     {
-      "id": "demographic_information_is_incomplete_or_invalid",
-      "code": "demographic_information_is_incomplete_or_invalid",
-      "label": "Demographic information is incomplete or invalid",
-      "category": "identification_labeling",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "demographics_incomplete",
+      "label": "Patient demographic information is incomplete"
     },
     {
-      "id": "demographic_information_on_filter_paper_does_not_match_electronically_submitted_information",
-      "code": "demographic_information_on_filter_paper_does_not_match_electronically_submitted_information",
-      "label": "Demographic information on filter paper does not match electronically submitted information",
-      "category": "identification_labeling",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "demographics_mismatch",
+      "label": "Paper demographics do not match electronic record"
     },
     {
-      "id": "serial_number_on_filter_paper_does_not_match_serial_number_on_patient_information_form",
-      "code": "serial_number_on_filter_paper_does_not_match_serial_number_on_patient_information_form",
-      "label": "Serial number on filter paper does not match serial number on patient information form",
-      "category": "identification_labeling",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "serial_mismatch",
+      "label": "Filter paper serial number does not match form"
     },
     {
-      "id": "specimen_submitted_on_expired_filter_paper",
-      "code": "specimen_submitted_on_expired_filter_paper",
-      "label": "Specimen submitted on expired filter paper",
-      "category": "stability_transport",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "expired_filter_paper",
+      "label": "Specimen collected on expired filter paper"
     },
     {
-      "id": "sample_collected_too_early",
-      "code": "sample_collected_too_early",
-      "label": "Sample collected too early",
-      "category": "stability_transport",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "collected_too_early",
+      "label": "Sample collected before acceptable time window"
     },
     {
-      "id": "specimen_unsatisfactory_due_to_delay_in_transit",
-      "code": "specimen_unsatisfactory_due_to_delay_in_transit",
-      "label": "Specimen unsatisfactory due to delay in transit",
-      "category": "stability_transport",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "transit_delay",
+      "label": "Specimen compromised by excessive transit delay"
     },
     {
-      "id": "specimen_results_inconsistent",
-      "code": "specimen_results_inconsistent",
-      "label": "Specimen results inconsistent",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "results_inconsistent",
+      "label": "Prior specimen results appear inconsistent"
     },
     {
       "id": "assay_interference",
-      "code": "assay_interference",
-      "label": "Assay interference",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Preanalytical factor causing assay interference"
     },
     {
-      "id": "unable_to_analyze_specimen_due_to_laboratory_accident",
-      "code": "unable_to_analyze_specimen_due_to_laboratory_accident",
-      "label": "Unable to analyze specimen due to laboratory accident",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "lab_accident",
+      "label": "Analysis prevented by laboratory processing accident"
     },
     {
       "id": "physical_limitation",
-      "code": "physical_limitation",
-      "label": "Physical limitation",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Collection not completed due to physical limitation"
     },
     {
-      "id": "participant_ill_or_emergency",
-      "code": "participant_ill_or_emergency",
-      "label": "Participant ill or emergency",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "participant_ill",
+      "label": "Collection deferred due to illness or emergency"
     },
     {
-      "id": "collection_supplies_malfunctioned",
-      "code": "collection_supplies_malfunctioned",
-      "label": "Collection supplies malfunctioned",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "id": "supplies_failed",
+      "label": "Collection supplies failed or malfunctioned"
     },
     {
       "id": "language_issue",
-      "code": "language_issue",
-      "label": "Language issue",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Collection hindered by language or communication barrier"
     },
     {
       "id": "no_time",
-      "code": "no_time",
-      "label": "No time",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Collection not completed due to time constraints"
     },
     {
       "id": "hemolyzed",
-      "code": "hemolyzed",
-      "label": "Hemolyzed",
-      "category": "serum_index",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Specimen is hemolyzed affecting analyte integrity"
     },
     {
       "id": "icteric",
-      "code": "icteric",
-      "label": "Icteric",
-      "category": "serum_index",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Specimen is icteric with bilirubin interference"
     },
     {
       "id": "lactescent",
-      "code": "lactescent",
-      "label": "Lactescent",
-      "category": "serum_index",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Specimen is lactescent or visibly lipemic"
     },
     {
       "id": "diluted",
-      "code": "diluted",
-      "label": "Diluted",
-      "category": "serum_index",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Specimen appears dilute for intended testing"
     },
     {
       "id": "other",
-      "code": "other",
-      "label": "Other",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "domain": "specimen"
+      "label": "Other specimen rejection reason not listed"
     },
     {
-      "id": "phvs_specimenrejectreason_hl7_2x",
-      "code": "phvs_specimenrejectreason_hl7_2x",
-      "label": "PHVS_SpecimenRejectReason_HL7_2x",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "description": "LOINC external answer list LL5353-9; https://phinvads.cdc.gov/vads/ViewValueSet.action?oid=2.16.840.1.114222.4.11.1044",
-      "domain": "specimen"
+      "id": "phvs_specimen_reject",
+      "label": "Reason per CDC PHVS HL7v2 reject value set"
     },
     {
-      "id": "specimencondition_hl7_2x",
-      "code": "specimencondition_hl7_2x",
-      "label": "SpecimenCondition_HL7_2x",
-      "category": "specimen_integrity",
-      "requires_recollection": true,
-      "description": "LOINC external answer list LL5347-1; http://terminology.hl7.org/ValueSet/v2-0493",
-      "domain": "specimen"
+      "id": "hl7v2_specimen_condition",
+      "label": "Condition per HL7v2 specimen condition codes"
     }
   ]
 }

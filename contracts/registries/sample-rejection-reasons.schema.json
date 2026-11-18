@@ -20,31 +20,12 @@
     },
     "sampleRejectionReason": {
       "type": "object",
-      "required": ["id", "code", "label", "domain", "category"],
+      "required": ["id", "label"],
       "properties": {
         "id": { "$ref": "#/definitions/rejectionReasonId" },
-        "domain": { "const": "specimen" },
-        "code": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Interop code (HL7 v2-0490 / LOINC AnswerList / Atlas mnemonic)"
-        },
-        "label": { "type": "string", "minLength": 1 },
-        "label_it": { "type": "string" },
-        "description": { "type": "string" },
-        "category": {
-          "type": "string",
-          "enum": [
-            "specimen_integrity",
-            "container_volume",
-            "identification_labeling",
-            "stability_transport",
-            "serum_index"
-          ]
-        },
-        "requires_recollection": { "type": "boolean", "default": true }
+        "label": { "type": "string", "minLength": 1 }
       },
-      "additionalProperties": true
+      "additionalProperties": false
     }
   },
   "additionalProperties": true

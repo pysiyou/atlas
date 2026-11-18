@@ -242,7 +242,8 @@
     "quality": {
       "sampleRejected": "{{sampleCap}} rejected",
       "sampleIssue": "{{sampleCap}} issue",
-      "reportSampleIssue": "Report {{sampleCap}} Issue",
+      "rejectSample": "Reject {{sample}}",
+      "rejectSamplePopover": "Reject",
       "validatorDecisionRequired": "Validator Decision Required",
       "wasRejected": "was rejected",
       "enteredBeforeRejection": "This result was entered before sample rejection.",

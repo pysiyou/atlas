@@ -3,52 +3,188 @@
   "reasons": [
     {
       "id": "steroid_treatment",
-      "code": "steroid_treatment",
-      "label": "Steroid treatment",
-      "stage": "linearity_interference",
-      "blocks_autoverification": true,
-      "domain": "analytical"
+      "label": "Recent steroid therapy may affect results",
+      "stage": "linearity_interference"
     },
     {
       "id": "supplemental_oxygen",
-      "code": "supplemental_oxygen",
-      "label": "Supplemental oxygen",
-      "stage": "linearity_interference",
-      "blocks_autoverification": true,
-      "domain": "analytical"
+      "label": "Patient receiving supplemental oxygen therapy",
+      "stage": "linearity_interference"
     },
     {
       "id": "anticoagulant_therapy",
-      "code": "anticoagulant_therapy",
-      "label": "Anticoagulant therapy",
-      "stage": "linearity_interference",
-      "blocks_autoverification": true,
-      "domain": "analytical"
+      "label": "Patient on anticoagulant medication therapy",
+      "stage": "linearity_interference"
     },
     {
-      "id": "ivig_therapy_in_the_past_month",
-      "code": "ivig_therapy_in_the_past_month",
-      "label": "IVIG therapy in the past month",
-      "stage": "linearity_interference",
-      "blocks_autoverification": true,
-      "domain": "analytical"
+      "id": "ivig_past_month",
+      "label": "IVIG infusion received within the past month",
+      "stage": "linearity_interference"
     },
     {
-      "id": "platelet_transfusion_in_the_last_3_days",
-      "code": "platelet_transfusion_in_the_last_3_days",
-      "label": "Platelet transfusion in the last 3 days",
-      "stage": "linearity_interference",
-      "blocks_autoverification": true,
-      "domain": "analytical"
+      "id": "platelet_transfusion_3d",
+      "label": "Platelet transfusion within the last three days",
+      "stage": "linearity_interference"
     },
     {
-      "id": "observationinterpretationcodes_hl7_fhir",
-      "code": "observationinterpretationcodes_hl7_fhir",
-      "label": "ObservationInterpretationCodes_HL7_FHIR",
-      "stage": "clinical_review",
-      "blocks_autoverification": true,
-      "description": "LOINC external answer list LL5433-9; http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
-      "domain": "analytical"
+      "id": "qc_failure",
+      "label": "Quality control run failed for this assay",
+      "stage": "analytical_qc"
+    },
+    {
+      "id": "qc_not_in_control",
+      "label": "Quality control is out of statistical control",
+      "stage": "analytical_qc"
+    },
+    {
+      "id": "qc_overdue",
+      "label": "Required quality control testing is overdue",
+      "stage": "analytical_qc"
+    },
+    {
+      "id": "instrument_error",
+      "label": "Analyzer reported an instrument or system error",
+      "stage": "analytical_qc"
+    },
+    {
+      "id": "analytical_range_failed",
+      "label": "Result outside analytical measurement range",
+      "stage": "analytical_qc"
+    },
+    {
+      "id": "failed_feasible_range",
+      "label": "Result outside instrument feasible reportable range",
+      "stage": "analytical_qc"
+    },
+    {
+      "id": "off_scale_low",
+      "label": "Result below measurable low reportable limit",
+      "stage": "analytical_qc"
+    },
+    {
+      "id": "off_scale_high",
+      "label": "Result above measurable high reportable limit",
+      "stage": "analytical_qc"
+    },
+    {
+      "id": "delta_check_failed",
+      "label": "Patient delta check limit exceeded on review",
+      "stage": "delta_check"
+    },
+    {
+      "id": "significant_change_up",
+      "label": "Significant increase versus prior patient result",
+      "stage": "delta_check"
+    },
+    {
+      "id": "significant_change_down",
+      "label": "Significant decrease versus prior patient result",
+      "stage": "delta_check"
+    },
+    {
+      "id": "critical_high",
+      "label": "Critical high value requiring urgent clinical review",
+      "stage": "critical_panic"
+    },
+    {
+      "id": "critical_low",
+      "label": "Critical low value requiring urgent clinical review",
+      "stage": "critical_panic"
+    },
+    {
+      "id": "critical_abnormal",
+      "label": "Critical abnormal interpretation requiring urgent review",
+      "stage": "critical_panic"
+    },
+    {
+      "id": "panic_value",
+      "label": "Panic range value needs immediate clinical attention",
+      "stage": "critical_panic"
+    },
+    {
+      "id": "abnormal",
+      "label": "Result interpretation is abnormal versus reference",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "high",
+      "label": "Result is high versus laboratory reference interval",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "low",
+      "label": "Result is low versus laboratory reference interval",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "significantly_high",
+      "label": "Result is markedly high needing clinical attention",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "significantly_low",
+      "label": "Result is markedly low needing clinical attention",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "reference_range_failed",
+      "label": "Result failed configured reference range rules",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "review_range_failed",
+      "label": "Result failed configured manual review range",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "indeterminate",
+      "label": "Result interpretation remains indeterminate on review",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "equivocal",
+      "label": "Result is equivocal and requires further review",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "interference",
+      "label": "Analytical interference is suspected on this result",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "consistency_failed",
+      "label": "Result failed internal consistency checking rules",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "duplicate_assay",
+      "label": "Duplicate assay order or result was detected",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "previous_result",
+      "label": "Prior performed result conflicts with current testing",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "associated_order_unverified",
+      "label": "Associated test or order is not verified",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "medical_review_hold",
+      "label": "Result held pending physician medical review",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "review_required",
+      "label": "Manual technologist clinical review is required",
+      "stage": "clinical_review"
+    },
+    {
+      "id": "other_analytical",
+      "label": "Other analytical rejection reason not listed",
+      "stage": "clinical_review"
     }
   ]
 }

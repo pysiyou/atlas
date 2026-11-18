@@ -20,18 +20,10 @@
     },
     "resultRejectionReason": {
       "type": "object",
-      "required": ["id", "code", "label", "domain", "stage"],
+      "required": ["id", "label", "stage"],
       "properties": {
         "id": { "$ref": "#/definitions/rejectionReasonId" },
-        "domain": { "const": "analytical" },
-        "code": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Interop code (HL7 ObservationInterpretation / v2-0085 / LOINC AnswerList / Atlas mnemonic)"
-        },
         "label": { "type": "string", "minLength": 1 },
-        "label_it": { "type": "string" },
-        "description": { "type": "string" },
         "stage": {
           "type": "string",
           "enum": [
@@ -41,10 +33,9 @@
             "critical_panic",
             "clinical_review"
           ]
-        },
-        "blocks_autoverification": { "type": "boolean", "default": true }
+        }
       },
-      "additionalProperties": true
+      "additionalProperties": false
     }
   },
   "additionalProperties": true

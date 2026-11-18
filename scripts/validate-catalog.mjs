@@ -360,19 +360,6 @@ function runRejectionReasonChecks(docs) {
       errors += 1;
     }
   }
-  for (const row of sampleRegistry.reasons ?? []) {
-    if (row?.domain && row.domain !== 'specimen') {
-      console.error(`sample rejection ${row.id}: domain must be "specimen"`);
-      errors += 1;
-    }
-  }
-  for (const row of resultRegistry.reasons ?? []) {
-    if (row?.domain && row.domain !== 'analytical') {
-      console.error(`result rejection ${row.id}: domain must be "analytical"`);
-      errors += 1;
-    }
-  }
-
   /**
    * @param {unknown} list
    * @param {string} ctx
