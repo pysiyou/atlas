@@ -17,8 +17,8 @@ from app.domains.lab.quality.schemas import (
 from app.domains.lab.results.flags import ResultFlag
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
-from app.shared.generated.enums import ResultStatus
 from app.shared.errors import LabOperationError
+from app.shared.generated.enums import ResultStatus
 from sqlalchemy.orm import Session
 
 

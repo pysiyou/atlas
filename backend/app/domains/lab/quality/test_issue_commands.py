@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 from app.domains.lab.quality.schemas import QualityIssueResult
 from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine
 from app.domains.orders.models import OrderTest
+from app.shared.errors import LabOperationError
 from app.shared.generated.enums import (
     QualityDomain,
     QualityStage,
@@ -20,7 +21,6 @@ from app.shared.generated.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.errors import LabOperationError
 from app.shared.generated.lab_policy import MAX_RETEST_ATTEMPTS
 from app.shared.generated.rejections import is_specimen_rejection_registry_value
 

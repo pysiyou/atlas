@@ -52,6 +52,25 @@ class ResultValidatorService:
         if item_def:
             value_type = item_def.get("value_type", "NUMERIC")
 
+        if value_type in ("SELECT", "select"):
+            allowed = item_def.get("allowed_values") if item_def else None
+            if allowed is not None:
+                str_val = str(value).strip() if value is not None else ""
+                if str_val not in allowed:
+                    errors.append(
+                        ResultValidationError(
+                            analyte_code=analyte_code,
+                            value=value,
+                            error_type="type_error",
+                            message=(
+                                f"{analyte_code} value {value!r} is not allowed. "
+                                f"Expected one of: {', '.join(str(a) for a in allowed)}"
+                            ),
+                            is_blocking=True,
+                        )
+                    )
+            return errors
+
         if value_type not in ("NUMERIC", "numeric"):
             return errors
 

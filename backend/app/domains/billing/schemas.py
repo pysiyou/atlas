@@ -1,8 +1,8 @@
 """Billing schemas — invoices embedded on order detail."""
 from datetime import datetime
 
-from app.shared.generated.enums import PaymentStatus
 from app.shared.clinical import FILLER_PATTERN, INVOICE_NUMBER_PATTERN, PATIENT_ID_PATTERN
+from app.shared.generated.enums import PaymentStatus
 from pydantic import BaseModel, Field
 
 

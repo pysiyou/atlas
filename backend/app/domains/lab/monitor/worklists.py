@@ -10,19 +10,19 @@ from typing import Any
 from app.domains.catalog.models import OrderableTest
 from app.domains.lab.monitor.board import LabBoardService
 from app.domains.lab.monitor.predicates import (
+    awaiting_validation_predicate,
     inactive_lineage_filter,
     monitor_universe_predicate,
+    order_test_awaiting_validation,
     running_tests_predicate,
 )
 from app.domains.lab.monitor.queries import collection_base_query, order_test_stage_query
 from app.domains.lab.monitor.tat import CatalogTatResolver, age_bucket, hours_since
 from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
-from app.domains.lab.specimen.volume import classify_specimen_volume
 from app.domains.lab.results.display import (
     format_order_test_display,
     parse_order_test_display_search,
 )
-from app.domains.lab.specimen.models import Sample
 from app.domains.lab.rules.blockers import priority_rank, priority_sort_key
 from app.domains.lab.rules.projection import (
     LabWorkItemContext,
@@ -34,11 +34,12 @@ from app.domains.lab.rules.projection import (
 )
 from app.domains.lab.rules.status_sets import COLLECTION_WORKLIST_LINKED_EXCLUDE
 from app.domains.lab.specimen.lookup import linked_order_tests_by_sample_ids
+from app.domains.lab.specimen.models import Sample
+from app.domains.lab.specimen.volume import classify_specimen_volume
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.referent_doctors.service import referent_doctor_projection
 from app.platform.cache import CacheKeys, cache_get, cache_set
-from app.shared.generated.enums import PriorityLevel, SampleStatus, TestStatus
 from app.shared.clinical import (
     compact_identifier,
     looks_like_accession,
@@ -46,6 +47,7 @@ from app.shared.clinical import (
     looks_like_mnemonic,
     looks_like_patient_id,
 )
+from app.shared.generated.enums import PriorityLevel, SampleStatus, TestStatus
 from sqlalchemy import and_, case, desc, exists, func, or_
 from sqlalchemy.orm import Session
 
@@ -475,10 +477,9 @@ class LabWorklistService:
         if len(search_term) < COLLECTION_SAMPLE_LOOKUP_MIN_LEN:
             search_term = ""
         query = collection_base_query(self.db)
+        query = query.filter(Sample.status == SampleStatus.PENDING)
         if search_term:
             query = query.filter(_collection_search_filter(search_term))
-        else:
-            query = query.filter(Sample.status == SampleStatus.PENDING)
         if priorities:
             query = query.filter(Sample.priority.in_(priorities))
         if category:
@@ -574,7 +575,7 @@ class LabWorklistService:
         """True when the test already appears on collection, entry, or validation worklists."""
         if order_test.status == TestStatus.SAMPLE_COLLECTED:
             return True
-        if order_test.status == TestStatus.RESULTED and order_test.resultValidatedAt is None:
+        if order_test_awaiting_validation(order_test):
             return True
         return (
             order_test.status == TestStatus.PENDING
@@ -681,10 +682,7 @@ class LabWorklistService:
         category: str | None = None,
     ) -> dict[str, Any]:
         query, _search_term = self._order_test_worklist_query(
-            extra_filters=(
-                OrderTest.status == TestStatus.RESULTED,
-                OrderTest.resultValidatedAt.is_(None),
-            ),
+            extra_filters=(awaiting_validation_predicate(),),
             priorities=priorities,
             date_from=date_from,
             date_to=date_to,

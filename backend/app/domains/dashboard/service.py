@@ -11,7 +11,8 @@ from app.domains.orders.service import (
     _test_names_for_codes,
 )
 from app.domains.patients.models import Patient
-from app.shared.generated.enums import OrderStatus
+from app.shared.generated.enums import OrderStatus, TestStatus
+from app.shared.generated.lab_policy import INACTIVE_TEST_STATUSES_FOR_BILLING
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 
@@ -64,9 +65,11 @@ class DashboardService:
         recent_ids = [order.orderId for order in recent]
         test_counts: dict[str, int] = {}
         if recent_ids:
+            inactive = tuple(TestStatus(s) for s in INACTIVE_TEST_STATUSES_FOR_BILLING)
             rows = (
                 self.db.query(OrderTest.orderId, func.count(OrderTest.id))
                 .filter(OrderTest.orderId.in_(recent_ids))
+                .filter(OrderTest.status.notin_(inactive + (TestStatus.CANCELLED,)))
                 .group_by(OrderTest.orderId)
                 .all()
             )

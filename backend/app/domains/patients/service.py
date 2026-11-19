@@ -13,8 +13,8 @@ from app.domains.patients.schemas import (
     PatientUpdate,
 )
 from app.platform.config import client_config
-from app.shared.generated.enums import Gender, PaymentStatus
 from app.shared.clinical import allocate_patient_id, compact_identifier, looks_like_patient_id
+from app.shared.generated.enums import Gender, PaymentStatus
 from fastapi import HTTPException, status
 from sqlalchemy import and_, func, or_
 from sqlalchemy.inspection import inspect
@@ -247,7 +247,7 @@ class PatientService:
             fullName=patient_data.fullName,
             dateOfBirth=patient_data.dateOfBirth,
             gender=patient_data.gender,
-            phone=patient_data.phone,
+            phone=patient_data.phone.strip(),
             email=patient_data.email,
             height=patient_data.height,
             weight=patient_data.weight,
@@ -293,9 +293,11 @@ class PatientService:
             "medicalHistory",
             "affiliation",
         }
-        update_data = patient_data.model_dump(exclude_unset=True)
+        update_data = patient_data.model_dump(exclude_unset=True, mode="json")
         for field, value in update_data.items():
             if field in ALLOWED and hasattr(patient, field):
+                if field == "phone" and isinstance(value, str):
+                    value = value.strip()
                 setattr(patient, field, value)
         patient.updatedBy = user_id
         self.emitter.patient_updated(patient_id, user_id, changes=update_data)

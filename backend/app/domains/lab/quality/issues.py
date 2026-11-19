@@ -20,11 +20,12 @@ from app.domains.lab.quality.remedy import (
 )
 from app.domains.lab.quality.sample_commands import SampleIssueCommands
 from app.domains.lab.quality.schemas import QualityIssueOptions, QualityIssueResult
-from app.domains.lab.quality.test_commands import TestIssueCommands
+from app.domains.lab.quality.test_issue_commands import TestIssueCommands
 from app.domains.lab.specimen.collection import SampleCollectionService
 from app.domains.lab.specimen.lookup import get_sample_or_error, linked_order_tests_for_sample
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import OrderTest
+from app.shared.errors import LabOperationError
 from app.shared.generated.enums import (
     QualityDomain,
     QualityIssueTargetType,
@@ -32,7 +33,6 @@ from app.shared.generated.enums import (
     RemedyType,
     TestStatus,
 )
-from app.shared.errors import LabOperationError
 from sqlalchemy.orm import Session
 
 

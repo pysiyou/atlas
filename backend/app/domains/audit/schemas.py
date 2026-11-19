@@ -5,8 +5,8 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from app.shared.generated.audit import EventType
 from app.shared.clinical import FILLER_PATTERN, PATIENT_ID_PATTERN, SAMPLE_ID_PATTERN
+from app.shared.generated.audit import EventType
 from pydantic import BaseModel, Field
 
 __all__ = [

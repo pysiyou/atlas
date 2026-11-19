@@ -5,8 +5,8 @@ from app.domains.audit.emitter import AuditEmitter
 from app.domains.users.models import User
 from app.domains.users.schemas import FirstAdminSetupRequest, UserCreate, UserUpdate
 from app.platform.security import get_password_hash
-from app.shared.generated.enums import UserRole
 from app.shared.clinical import allocate_employee_number
+from app.shared.generated.enums import UserRole
 from fastapi import HTTPException, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session

@@ -2,11 +2,11 @@
 Map stored entity status + lab attention reasons to canonical presentation for UI.
 """
 
+from app.shared.api import StatusPresentation
 from app.shared.generated.enums import (
     PRESENTATION_PRIMARY_BADGE_VARIANTS,
     PresentationPrimary,
 )
-from app.shared.api import StatusPresentation
 from app.shared.generated.lab_policy import (
     ATTENTION_LABELS,
     ORDER_STATUS_TO_PRIMARY,

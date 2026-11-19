@@ -1,8 +1,8 @@
 """Report generation API schemas."""
 from datetime import datetime
 
-from app.shared.generated.enums import Gender, OrderStatus
 from app.shared.api import StatusPresentation
+from app.shared.generated.enums import Gender, OrderStatus
 from pydantic import BaseModel, Field
 
 

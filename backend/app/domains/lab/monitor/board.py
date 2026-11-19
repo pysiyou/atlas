@@ -5,6 +5,7 @@ from typing import Any
 
 from app.domains.lab.monitor.predicates import (
     TERMINAL_PIPELINE_TEST_STATUSES,
+    awaiting_validation_predicate,
     monitor_universe_predicate,
     running_tests_predicate,
 )
@@ -41,12 +42,7 @@ class LabBoardService:
             .count()
         )
         validation_count = (
-            self.db.query(OrderTest.id)
-            .filter(
-                OrderTest.status == TestStatus.RESULTED,
-                OrderTest.resultValidatedAt.is_(None),
-            )
-            .count()
+            self.db.query(OrderTest.id).filter(awaiting_validation_predicate()).count()
         )
         supervisor = 0
         if include_supervisor:
@@ -290,10 +286,7 @@ class LabBoardService:
     def _validation_rows(self) -> list[dict[str, Any]]:
         rows = (
             order_test_stage_query(self.db)
-            .filter(
-                OrderTest.status == TestStatus.RESULTED,
-                OrderTest.resultValidatedAt.is_(None),
-            )
+            .filter(awaiting_validation_predicate())
             .all()
         )
         return [

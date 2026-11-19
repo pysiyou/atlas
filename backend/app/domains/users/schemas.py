@@ -3,9 +3,9 @@ Pydantic schemas for User
 """
 from datetime import datetime
 
-from app.shared.generated.enums import UserRole
 from app.shared.clinical import EMPLOYEE_NUMBER_PATTERN
-from pydantic import BaseModel, ConfigDict, Field
+from app.shared.generated.enums import UserRole
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class UserBase(BaseModel):
@@ -24,9 +24,16 @@ class UserUpdate(BaseModel):
     name: str | None = None
     email: str | None = None
     phone: str | None = None
-    password: str | None = None
+    password: str | None = Field(None, min_length=8)
     role: UserRole | None = None
     isActive: bool | None = None
+
+    @field_validator("password")
+    @classmethod
+    def password_min_length(cls, v: str | None) -> str | None:
+        if v is not None and len(v) < 8:
+            raise ValueError("Password must be at least 8 characters")
+        return v
 
 
 class UserResponse(UserBase):

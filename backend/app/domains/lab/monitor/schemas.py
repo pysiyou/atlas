@@ -6,6 +6,7 @@ from typing import Literal
 
 from app.domains.lab.rules.schemas import LabWorklistAllowedActions, PipelineStage
 from app.domains.orders.schemas import TestResultsDict
+from app.shared.api import StatusPresentation
 from app.shared.generated.enums import (
     ContainerTopColor,
     ContainerType,
@@ -15,7 +16,6 @@ from app.shared.generated.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.api import StatusPresentation
 from pydantic import BaseModel, Field
 
 

@@ -14,13 +14,13 @@ from app.domains.lab.rules.status_sets import (
 )
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
+from app.shared.errors import LabOperationError
 from app.shared.generated.enums import (
     EscalationReasonCode,
     PaymentStatus,
     SampleStatus,
     TestStatus,
 )
-from app.shared.errors import LabOperationError
 from app.shared.generated.lab_policy import ATTENTION_LABELS, reason_blocks_progress
 
 
@@ -108,18 +108,31 @@ def _tests_must_transition_on_collect(order_tests: list[OrderTest]) -> tuple[boo
     return True, None
 
 
-def assert_can_collect(sample: Sample, order: Order, order_tests: list[OrderTest]) -> None:
+def assert_can_collect(
+    sample: Sample,
+    order: Order,
+    order_tests: list[OrderTest],
+    *,
+    db,
+) -> None:
     # Check workflow requirements based on configuration
+    from app.domains.payments.service import derive_payment_status, money, total_paid_for_order
     from app.platform.config import client_config
-    
+    from sqlalchemy.orm import Session
+
+    if not isinstance(db, Session):
+        raise TypeError("assert_can_collect requires db: Session")
+
     # Workflow: requirePaymentBeforeCollection
     require_payment = client_config.workflows.get("requirePaymentBeforeCollection", True)
-    if require_payment and order.paymentStatus != PaymentStatus.PAID:
-        raise LabOperationError(
-            "Sample collection requires payment. Mark the order as paid before collecting.",
-            status_code=402,
-            error_code="PAYMENT_REQUIRED",
-        )
+    if require_payment:
+        paid = total_paid_for_order(db, order.orderId)
+        if derive_payment_status(paid, money(order.totalPrice)) != PaymentStatus.PAID:
+            raise LabOperationError(
+                "Sample collection requires payment. Mark the order as paid before collecting.",
+                status_code=402,
+                error_code="PAYMENT_REQUIRED",
+            )
     
     # Workflow: requireDoctorApproval
     require_doctor_approval = client_config.workflows.get("requireDoctorApproval", False)
@@ -189,7 +202,10 @@ def action_flags_for_collection(
     if sample.status != SampleStatus.PENDING:
         return actions, None
 
-    if attention == "payment_unpaid":
+    from app.platform.config import client_config
+
+    require_payment = client_config.workflows.get("requirePaymentBeforeCollection", True)
+    if require_payment and attention == "payment_unpaid":
         return actions, attention
 
     try:

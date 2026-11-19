@@ -6,18 +6,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Literal
 
-from app.domains.lab.rules.schemas import LabWorkItemProjection
 from app.domains.billing.schemas import InvoiceResponse
+from app.domains.lab.rules.schemas import LabWorkItemProjection
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
-from app.shared.generated.enums import (
-    Gender,
-    OrderStatus,
-    PaymentMethod,
-    PaymentStatus,
-    PriorityLevel,
-    TestStatus,
-)
 from app.shared.api import StatusPresentation
 from app.shared.clinical import (
     EMPLOYEE_NUMBER_PATTERN,
@@ -28,6 +20,14 @@ from app.shared.clinical import (
     REFERENT_DOCTOR_ID_PATTERN,
     SAMPLE_ID_PATTERN,
     TEST_MNEMONIC_PATTERN,
+)
+from app.shared.generated.enums import (
+    Gender,
+    OrderStatus,
+    PaymentMethod,
+    PaymentStatus,
+    PriorityLevel,
+    TestStatus,
 )
 from pydantic import BaseModel, Field, field_validator, model_validator
 

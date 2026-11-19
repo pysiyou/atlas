@@ -6,7 +6,6 @@ from typing import Any
 
 from app.domains.lab.rules.schemas import LabWorkItemProjection, LabWorklistAllowedActions
 from app.domains.orders.schemas import TestResultsDict
-from app.shared.generated.enums import RemedyType, ValidationDecision
 from app.shared.clinical import (
     FILLER_PATTERN,
     LAB_ACTOR_USER_ID_PATTERN,
@@ -14,6 +13,7 @@ from app.shared.clinical import (
     REFERENT_DOCTOR_ID_PATTERN,
     SAMPLE_ID_PATTERN,
 )
+from app.shared.generated.enums import RemedyType, ValidationDecision
 from pydantic import BaseModel, Field, model_validator
 
 

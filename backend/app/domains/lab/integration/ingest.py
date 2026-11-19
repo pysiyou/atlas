@@ -21,9 +21,9 @@ from app.domains.lab.workflow.constants import ANALYZER_USER_ID
 from app.domains.lab.workflow.operations import LabOperationsService
 from app.domains.orders.models import Order, OrderTest
 from app.platform.config import settings
-from app.shared.generated.enums import TestStatus
-from app.shared.errors import LabOperationError
 from app.shared.clinical import looks_like_accession, looks_like_filler
+from app.shared.errors import LabOperationError
+from app.shared.generated.enums import TestStatus
 from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session

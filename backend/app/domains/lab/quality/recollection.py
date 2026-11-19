@@ -5,8 +5,8 @@ from typing import Any
 
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import OrderTest
-from app.shared.generated.enums import QualityStage, TestStatus
 from app.shared.errors import LabOperationError
+from app.shared.generated.enums import QualityStage, TestStatus
 from sqlalchemy.orm import Session
 
 

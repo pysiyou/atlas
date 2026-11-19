@@ -26,8 +26,8 @@ from app.domains.lab.workflow.result_commands import ResultCommandHandler
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.service import apply_order_status_rollup
 from app.platform.cache import invalidate_lab_board_summary_cache
-from app.shared.generated.enums import PaymentStatus, SampleStatus, TestStatus
 from app.shared.errors import LabOperationError
+from app.shared.generated.enums import PaymentStatus, SampleStatus, TestStatus
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -60,8 +60,23 @@ class CollectionCommandHandler:
         if not order:
             raise LabOperationError(f"Order {sample.orderId} not found", status_code=404)
         order_tests_all = self._svc._linked_order_tests(sample)
-        assert_can_collect(sample, order, order_tests_all)
+        assert_can_collect(sample, order, order_tests_all, db=self.db)
         order_tests = active_linked_tests_for_collection(order_tests_all)
+        if not order_tests:
+            raise LabOperationError(
+                "No tests on this sample are eligible for collection.",
+                status_code=400,
+                error_code="INVALID_TRANSITION",
+            )
+        test_ids = [ot.id for ot in order_tests]
+        locked = (
+            self.db.query(OrderTest)
+            .filter(OrderTest.id.in_(test_ids))
+            .with_for_update()
+            .all()
+        )
+        locked_by_id = {ot.id: ot for ot in locked}
+        order_tests = [locked_by_id[i] for i in test_ids if i in locked_by_id]
         before_state = self._svc._serialize_sample_state(sample)
 
         sample.status = SampleStatus.COLLECTED
@@ -181,37 +196,54 @@ class LabOperationsService:
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         if not order:
             raise LabOperationError(f"Order {order_id} not found", status_code=404)
-        sample = (
+        pending_samples = (
             self.db.query(Sample)
             .filter(Sample.orderId == order_id, Sample.status == SampleStatus.PENDING)
-            .first()
+            .order_by(Sample.createdAt.asc(), Sample.sampleId.asc())
+            .all()
         )
-        if sample:
-            order_tests = self._linked_order_tests(sample)
-            assert_can_collect(sample, order, order_tests)
-        elif order.paymentStatus != PaymentStatus.PAID:
+        if pending_samples:
+            for sample in pending_samples:
+                order_tests = self._linked_order_tests(sample)
+                assert_can_collect(sample, order, order_tests, db=self.db)
+            return
+        from app.domains.payments.service import derive_payment_status, money, total_paid_for_order
+
+        paid = total_paid_for_order(self.db, order_id)
+        if derive_payment_status(paid, money(order.totalPrice)) != PaymentStatus.PAID:
             raise LabOperationError(
                 "Sample collection requires payment. Mark the order as paid before collecting.",
                 status_code=402,
                 error_code="PAYMENT_REQUIRED",
             )
 
-    @staticmethod
-    def _resolve_order_id(result: Any, explicit: str | None) -> str | None:
+    def _resolve_order_id(self, result: Any, explicit: str | None) -> str | None:
         if explicit:
             return explicit
         if result is None:
             return None
         if isinstance(result, dict):
             oid = result.get("orderId") or result.get("order_id")
-            return str(oid) if oid is not None else None
+            if oid is not None:
+                return str(oid)
+            sample_id = result.get("sampleId") or result.get("sample_id")
+            if sample_id:
+                row = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
+                return row.orderId if row else None
+            return None
         for attr in ("orderId", "order_id"):
             if hasattr(result, attr):
                 val = getattr(result, attr)
                 if val is not None:
                     return str(val)
         if hasattr(result, "sampleId"):
-            return None
+            oid = getattr(result, "orderId", None)
+            if oid is not None:
+                return str(oid)
+            sample_id = getattr(result, "sampleId", None)
+            if sample_id:
+                row = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
+                return row.orderId if row else None
         return None
 
     def _refresh_mutation_result(self, result: Any) -> None:
@@ -236,6 +268,7 @@ class LabOperationsService:
             self._invalidate_lab_monitor_cache()
             return result
         except LabOperationError:
+            self.db.rollback()
             raise
         except Exception:
             self.db.rollback()
@@ -314,20 +347,22 @@ class LabOperationsService:
         )
         order = self.db.query(Order).filter(Order.orderId == order_test.orderId).first()
         if order and order.overallStatus == OrderStatus.COMPLETED:
-            import logging
+            from fastapi import HTTPException
 
-            logger = logging.getLogger(__name__)
             try:
                 OrderService(self.db).mark_as_reported(
                     order_test.orderId, kwargs["user_id"]
                 )
+            except HTTPException as exc:
+                detail = exc.detail if isinstance(exc.detail, str) else str(exc.detail)
+                raise LabOperationError(detail, status_code=exc.status_code) from exc
+            except LabOperationError:
+                raise
             except Exception as exc:
-                logger.error(
-                    "mark_as_reported failed after validation for order %s: %s",
-                    order_test.orderId,
-                    exc,
-                    exc_info=True,
-                )
+                raise LabOperationError(
+                    f"mark_as_reported failed after validation: {exc}",
+                    status_code=500,
+                ) from exc
         return order_test
 
     def reject_results(self, **kwargs):

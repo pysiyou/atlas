@@ -5,6 +5,7 @@
     "dev:api": "cd backend && uvicorn app.main:app --host 127.0.0.1 --port 8000",
     "dev:web": "npm run dev --prefix frontend",
     "setup:api": "cd backend && poetry install",
+    "lint:api": "cd backend && poetry run ruff check app",
     "setup:web": "npm ci --prefix frontend"
   }
 }

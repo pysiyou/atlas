@@ -6,8 +6,8 @@ from app.domains.billing.models import Invoice, Payment
 from app.domains.orders.models import Order
 from app.domains.payments.schemas import PaymentCreate
 from app.platform.cache import invalidate_lab_board_summary_cache
-from app.shared.generated.enums import PaymentStatus
 from app.shared.clinical import allocate_receipt_number
+from app.shared.generated.enums import PaymentStatus
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 
@@ -20,6 +20,38 @@ def money(value: float | int | None) -> float:
 
 def remaining_balance(order_total: float, total_paid: float) -> float:
     return max(0.0, money(order_total) - money(total_paid))
+
+
+def total_paid_for_order(db: Session, order_id: str) -> float:
+    payments = db.query(Payment).filter(Payment.orderId == order_id).all()
+    return money(sum(p.amount for p in payments))
+
+
+def sync_order_payment_status(db: Session, order: Order) -> None:
+    """Reconcile order.paymentStatus and invoice balances from payment records."""
+    paid = total_paid_for_order(db, order.orderId)
+    order.paymentStatus = derive_payment_status(paid, money(order.totalPrice))
+    invoices = db.query(Invoice).filter(Invoice.orderId == order.orderId).all()
+    for invoice in invoices:
+        invoice_total = money(invoice.total or 0.0)
+        invoice.amountPaid = paid
+        invoice.amountDue = remaining_balance(invoice_total, paid)
+        invoice.paymentStatus = derive_payment_status(paid, invoice_total)
+
+
+def count_billing_active_tests(order: Order | None) -> int:
+    if not order or not order.tests:
+        return 0
+    from app.shared.generated.enums import TestStatus
+    from app.shared.generated.lab_policy import INACTIVE_TEST_STATUSES_FOR_BILLING
+
+    inactive = frozenset(INACTIVE_TEST_STATUSES_FOR_BILLING)
+    return sum(
+        1
+        for ot in order.tests
+        if (ot.status.value if ot.status else str(ot.status)) not in inactive
+        and ot.status != TestStatus.CANCELLED
+    )
 
 
 def derive_payment_status(total_paid: float, order_total: float) -> PaymentStatus:
@@ -45,7 +77,7 @@ def enrich_payment(payment: Payment, order: Order | None) -> dict:
         "receiptGenerated": payment.receiptGenerated,
         "notes": payment.notes,
         "orderTotalPrice": order.totalPrice if order else None,
-        "numberOfTests": len(order.tests) if order else 0,
+        "numberOfTests": count_billing_active_tests(order),
         "patientName": order.patientName if order else None,
         "orderPaymentStatus": order.paymentStatus if order else None,
     }

@@ -12,6 +12,7 @@ from app.domains.lab.quality.models import QualityIssue
 from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import OrderTest
+from app.shared.errors import LabOperationError
 from app.shared.generated.enums import (
     PriorityLevel,
     QualityDomain,
@@ -20,7 +21,6 @@ from app.shared.generated.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.errors import LabOperationError
 from app.shared.generated.lab_policy import (
     SAMPLE_UNFINISHED_REMEDIES as SAMPLE_UNFINISHED_REMEDY_WIRES,
 )

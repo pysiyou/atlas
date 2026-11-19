@@ -27,8 +27,8 @@ from app.platform.http import (
     get_current_user,
     require_sample_collector,
 )
-from app.shared.generated.enums import SampleStatus
 from app.shared.api import OrderIdQuery, PaginatedResponse, SampleIdPath
+from app.shared.generated.enums import SampleStatus
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 

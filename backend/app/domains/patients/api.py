@@ -6,14 +6,14 @@ from app.domains.patients.service import PatientService
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http import PaginationParams, get_current_user, parse_csv_values
-from app.shared.generated.enums import Gender
 from app.shared.api import (
+    PaginatedResponse,
     PatientIdPath,
     PatientIdQuery,
-    PaginatedResponse,
     create_paginated_response,
     skip_to_page,
 )
+from app.shared.generated.enums import Gender
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 

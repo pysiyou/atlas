@@ -12,6 +12,7 @@ from app.domains.lab.quality.remedy import (
 )
 from app.domains.lab.quality.schemas import QualityIssueOptions
 from app.domains.orders.models import OrderTest
+from app.shared.errors import LabOperationError
 from app.shared.generated.enums import (
     QualityIssueTargetType,
     QualityStage,
@@ -19,7 +20,6 @@ from app.shared.generated.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.errors import LabOperationError
 from app.shared.generated.lab_policy import MAX_RETEST_ATTEMPTS
 from sqlalchemy.orm import Session
 

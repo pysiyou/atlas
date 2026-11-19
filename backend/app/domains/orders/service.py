@@ -15,7 +15,6 @@ from app.domains.lab.public import (
     resolve_order_presentation,
 )
 from app.domains.lab.specimen.models import Sample
-from app.domains.lab.specimen.collection import sample_type_matches
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import (
     LatestPaymentSnippet,
@@ -29,23 +28,23 @@ from app.domains.orders.schemas import (
 from app.domains.patients.models import Patient
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
-from app.domains.payments.service import enrich_payment
+from app.domains.payments.service import enrich_payment, sync_order_payment_status
 from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.platform.http import get_or_404
-from app.shared.generated.enums import (
-    OrderStatus,
-    PaymentMethod,
-    PaymentStatus,
-    SampleStatus,
-    TestStatus,
-)
 from app.shared.api import create_paginated_response, skip_to_page
 from app.shared.clinical import (
     allocate_filler_number,
     compact_identifier,
     looks_like_filler,
     looks_like_patient_id,
+)
+from app.shared.generated.enums import (
+    OrderStatus,
+    PaymentMethod,
+    PaymentStatus,
+    SampleStatus,
+    TestStatus,
 )
 from app.shared.generated.lab_policy import INACTIVE_TEST_STATUSES_FOR_BILLING
 from fastapi import HTTPException, status
@@ -375,6 +374,12 @@ class OrderService:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"OrderableTest {', '.join(missing)} not found",
+            )
+        inactive = [code for code, test in by_code.items() if not test.isActive]
+        if inactive:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"OrderableTest {', '.join(inactive)} is not active",
             )
         return by_code
 
@@ -708,6 +713,8 @@ class OrderService:
 
             order.totalPrice = existing_tests_price + total_price_adjustment
             generate_samples_for_order(order.orderId, self.db, user_id, emitter=self.emitter)
+            BillingService(self.db).sync_invoice_for_order(order.orderId)
+            sync_order_payment_status(self.db, order)
 
         if update_data or tests_to_update is not None:
             self.emitter.order_updated(

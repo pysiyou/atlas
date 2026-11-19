@@ -187,7 +187,8 @@ def _choose_active_sample(existing: list[Sample]) -> Sample | None:
         return None
     recollection = [s for s in pending if s.isRecollection]
     pool = recollection if recollection else pending
-    return max(pool, key=lambda s: s.sampleId)
+    epoch = datetime(1970, 1, 1, tzinfo=UTC)
+    return max(pool, key=lambda s: (s.createdAt or epoch, s.sampleId))
 
 
 def _dedupe_pending_samples(

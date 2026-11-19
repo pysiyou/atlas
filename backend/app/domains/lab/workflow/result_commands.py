@@ -6,16 +6,15 @@ from app.domains.catalog.service import analyte_definitions_for_test
 from app.domains.lab.results.delta import DeltaCheckService
 from app.domains.lab.results.flags import ResultFlag
 from app.domains.lab.results.numeric import parse_numeric_result_value
-from app.domains.lab.results.reflex import ReflexEngine
 from app.domains.lab.workflow.constants import ANALYZER_USER_ID, is_analyzer_user_id
 from app.domains.orders.models import Order, OrderTest
+from app.shared.errors import LabOperationError
 from app.shared.generated.enums import (
     RemedyType,
     ResultStatus,
     SampleStatus,
     TestStatus,
 )
-from app.shared.errors import LabOperationError
 from app.shared.ranges import band_low_high, resolve_reference_band
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -240,6 +239,8 @@ class ResultCommandHandler:
             return
         if delta_warnings:
             return
+        if client_config.workflows.get("requireDualValidation", False):
+            return
         validated = self.validate_results(
             order_test.id,
             user_id=ANALYZER_USER_ID,
@@ -311,12 +312,12 @@ class ResultCommandHandler:
         now = datetime.now(UTC)
         if is_first_dual_signoff:
             order_test.validatedBy = user_id_str
-            order_test.resultValidatedAt = now
             order_test.validationNotes = validation_notes
-            # Await second validator; keep status RESULTED
+            # Await second validator; keep status RESULTED (resultValidatedAt set on second)
         elif is_second_signoff:
             order_test.secondValidatorId = user_id_str
             order_test.secondValidatedAt = now
+            order_test.resultValidatedAt = now
             if validation_notes:
                 order_test.validationNotes = validation_notes
             order_test.status = TestStatus.VALIDATED
@@ -342,25 +343,6 @@ class ResultCommandHandler:
                 user_id,
                 metadata=approve_metadata,
             )
-
-        reflex_added = []
-        if not is_first_dual_signoff:
-            reflex_added = ReflexEngine(self._svc.db).evaluate_after_validation(order_test, user_id)
-        if reflex_added:
-            reflex_note = "; ".join(
-                f"Reflex {r.added_test_code}: {r.rule_description}" for r in reflex_added
-            )
-            order_test.validationNotes = (
-                f"{order_test.validationNotes or ''} [{reflex_note}]".strip()
-            )
-            for reflex in reflex_added:
-                self._svc.emitter.order_test_reflex(
-                    order_id,
-                    reflex.order_test_id,
-                    reflex.added_test_code,
-                    order_test.testCode,
-                    user_id,
-                )
 
         return order_test
 

@@ -5,8 +5,9 @@ from collections.abc import Iterable
 
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import OrderTest
-from app.shared.generated.enums import TestStatus
 from app.shared.errors import LabOperationError
+from app.shared.generated.enums import TestStatus
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 
@@ -31,10 +32,16 @@ def linked_order_tests_for_sample(
     *,
     exclude_statuses: Iterable[TestStatus] | None = None,
 ) -> list[OrderTest]:
+    codes = list(sample.testCodes or [])
+    if not codes:
+        return []
     query = db.query(OrderTest).filter(
         OrderTest.orderId == sample.orderId,
-        OrderTest.testCode.in_(sample.testCodes),
-        OrderTest.sampleId == sample.sampleId,
+        OrderTest.testCode.in_(codes),
+        or_(
+            OrderTest.sampleId == sample.sampleId,
+            OrderTest.sampleId.is_(None),
+        ),
     )
     if exclude_statuses:
         query = query.filter(OrderTest.status.notin_(tuple(exclude_statuses)))

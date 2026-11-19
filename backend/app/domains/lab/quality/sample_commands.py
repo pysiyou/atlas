@@ -15,12 +15,12 @@ if TYPE_CHECKING:
     from app.domains.lab.quality.issues import QualityIssueService
 
 from app.domains.lab.quality.schemas import QualityIssueResult
+from app.shared.errors import LabOperationError
 from app.shared.generated.enums import (
     QualityDomain,
     QualityStage,
     RemedyType,
 )
-from app.shared.errors import LabOperationError
 
 
 class SampleIssueCommands:

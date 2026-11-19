@@ -69,9 +69,12 @@ class DeltaCheckService:
         for analyte_code, value in results.items():
             current = parse_numeric_result_value(value)
             prior = prior_results.get(analyte_code)
-            if current is None or prior is None or prior == 0:
+            if current is None or prior is None:
                 continue
-            pct = abs((current - prior) / prior) * 100.0
+            if prior == 0:
+                pct = float("inf") if current != 0 else 0.0
+            else:
+                pct = abs((current - prior) / prior) * 100.0
             if pct >= delta_percent:
                 meta = prior_meta[analyte_code]
                 warnings.append(

@@ -3,13 +3,13 @@ Pydantic schemas for Payment
 """
 from datetime import datetime
 
-from app.shared.generated.enums import PaymentMethod, PaymentStatus
 from app.shared.clinical import (
     EMPLOYEE_NUMBER_PATTERN,
     FILLER_PATTERN,
     INVOICE_NUMBER_PATTERN,
     RECEIPT_NUMBER_PATTERN,
 )
+from app.shared.generated.enums import PaymentMethod, PaymentStatus
 from pydantic import BaseModel, Field
 
 

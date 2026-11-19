@@ -1,8 +1,8 @@
 """Consolidated tube volume math and specimen volume classification."""
 from __future__ import annotations
 
+from collections.abc import Iterable
 from enum import StrEnum
-from typing import Iterable
 
 from app.domains.catalog.models import OrderableTest
 
@@ -43,6 +43,8 @@ def classify_specimen_volume(
     if optimal_ml > 0 and measured_ml < optimal_ml:
         return SpecimenVolumeStatus.SHORT_SAMPLE
     if optimal_ml > 0 and measured_ml >= optimal_ml:
+        return SpecimenVolumeStatus.OPTIMAL
+    if required_min_ml > 0 and measured_ml >= required_min_ml:
         return SpecimenVolumeStatus.OPTIMAL
     return SpecimenVolumeStatus.NO_REQUIREMENT
 

@@ -10,7 +10,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -92,7 +92,7 @@ class AddressConfig(BaseModel):
     state: str
     zipCode: str = Field(alias="zipCode")
     country: str
-    fullAddress: Optional[str] = Field(default=None, alias="fullAddress")
+    fullAddress: str | None = Field(default=None, alias="fullAddress")
 
     class Config:
         populate_by_name = True
@@ -112,12 +112,12 @@ class CompanyConfig(BaseModel):
 
     name: str
     displayName: str = Field(alias="displayName")
-    fullName: Optional[str] = Field(default=None, alias="fullName")
-    subtitle: Optional[str] = None
-    tagline: Optional[str] = None
-    version: Optional[str] = None
-    copyright: Optional[str] = None
-    contact: Optional[ContactConfig] = None
+    fullName: str | None = Field(default=None, alias="fullName")
+    subtitle: str | None = None
+    tagline: str | None = None
+    version: str | None = None
+    copyright: str | None = None
+    contact: ContactConfig | None = None
 
     class Config:
         populate_by_name = True
@@ -135,17 +135,17 @@ class BrandingConfig(BaseModel):
     """Visual identity: logo paths and theme colors."""
 
     logoPath: str = Field(alias="logoPath")
-    faviconPath: Optional[str] = Field(default=None, alias="faviconPath")
+    faviconPath: str | None = Field(default=None, alias="faviconPath")
     primaryColor: str = Field(alias="primaryColor")
-    secondaryColor: Optional[str] = Field(default=None, alias="secondaryColor")
-    defaultTheme: Optional[str] = Field(default=None, alias="defaultTheme")
+    secondaryColor: str | None = Field(default=None, alias="secondaryColor")
+    defaultTheme: str | None = Field(default=None, alias="defaultTheme")
 
     class Config:
         populate_by_name = True
 
     @field_validator("primaryColor", "secondaryColor")
     @classmethod
-    def validate_color(cls, v: Optional[str]) -> Optional[str]:
+    def validate_color(cls, v: str | None) -> str | None:
         """Accept ``#rgb`` or ``#rrggbb`` hex colors."""
         if v is None:
             return v
@@ -157,9 +157,9 @@ class BrandingConfig(BaseModel):
 class ReportsConfig(BaseModel):
     """PDF report header/footer options."""
 
-    headerText: Optional[str] = Field(default=None, alias="headerText")
-    footerText: Optional[str] = Field(default=None, alias="footerText")
-    includeSignature: Optional[bool] = Field(default=True, alias="includeSignature")
+    headerText: str | None = Field(default=None, alias="headerText")
+    footerText: str | None = Field(default=None, alias="footerText")
+    includeSignature: bool | None = Field(default=True, alias="includeSignature")
 
     class Config:
         populate_by_name = True
@@ -168,9 +168,9 @@ class ReportsConfig(BaseModel):
 class MarketingConfig(BaseModel):
     """Optional login-screen marketing copy."""
 
-    features: Optional[list[str]] = None
-    description: Optional[str] = None
-    trustIndicator: Optional[TrustIndicatorConfig] = Field(default=None, alias="trustIndicator")
+    features: list[str] | None = None
+    description: str | None = None
+    trustIndicator: TrustIndicatorConfig | None = Field(default=None, alias="trustIndicator")
 
     class Config:
         populate_by_name = True
@@ -184,8 +184,8 @@ class ClientConfigModel(BaseModel):
     terminology: dict[str, str] = Field(default_factory=dict)
     features: dict[str, bool] = Field(default_factory=dict)
     workflows: dict[str, bool] = Field(default_factory=dict)
-    reports: Optional[ReportsConfig] = None
-    marketing: Optional[MarketingConfig] = None
+    reports: ReportsConfig | None = None
+    marketing: MarketingConfig | None = None
 
     class Config:
         populate_by_name = True
@@ -210,7 +210,7 @@ class ClientConfig:
     """Loads and exposes the white-label JSON config as a process singleton."""
 
     def __init__(self) -> None:
-        self._config: Optional[ClientConfigModel] = None
+        self._config: ClientConfigModel | None = None
         self._raw_dict: dict[str, Any] = {}
         self._load_config()
 
@@ -259,13 +259,13 @@ class ClientConfig:
         return self._config.workflows if self._config else {}
 
     @property
-    def reports(self) -> Optional[dict[str, Any]]:
+    def reports(self) -> dict[str, Any] | None:
         if self._config and self._config.reports:
             return self._config.reports.model_dump(by_alias=True, exclude_none=False)
         return None
 
     @property
-    def marketing(self) -> Optional[dict[str, Any]]:
+    def marketing(self) -> dict[str, Any] | None:
         if self._config and self._config.marketing:
             return self._config.marketing.model_dump(by_alias=True, exclude_none=False)
         return None

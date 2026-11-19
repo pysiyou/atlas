@@ -11,8 +11,8 @@ from typing import TYPE_CHECKING, Any
 
 from app.domains.lab.specimen.accession import assign_accession_number
 from app.domains.lab.specimen.models import Sample
-from app.shared.generated.enums import PriorityLevel, SampleStatus, SampleType
 from app.shared.errors import LabOperationError
+from app.shared.generated.enums import PriorityLevel, SampleStatus, SampleType
 from app.shared.generated.lab_policy import MAX_RECOLLECTION_ATTEMPTS
 from sqlalchemy.orm import Session
 

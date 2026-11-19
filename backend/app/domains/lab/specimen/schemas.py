@@ -4,13 +4,7 @@ from __future__ import annotations
 import re
 from datetime import datetime
 
-from app.shared.generated.enums import (
-    ContainerTopColor,
-    ContainerType,
-    PriorityLevel,
-    SampleStatus,
-    SampleType,
-)
+from app.domains.lab.specimen.volume import SpecimenVolumeStatus, classify_specimen_volume
 from app.shared.clinical import (
     EMPLOYEE_NUMBER_PATTERN,
     FILLER_PATTERN,
@@ -18,7 +12,13 @@ from app.shared.clinical import (
     SAMPLE_ID_PATTERN,
     TEST_MNEMONIC_PATTERN,
 )
-from app.domains.lab.specimen.volume import SpecimenVolumeStatus, classify_specimen_volume
+from app.shared.generated.enums import (
+    ContainerTopColor,
+    ContainerType,
+    PriorityLevel,
+    SampleStatus,
+    SampleType,
+)
 from pydantic import BaseModel, Field, computed_field, field_validator
 
 _TEST_MNEMONIC_RE = re.compile(TEST_MNEMONIC_PATTERN)

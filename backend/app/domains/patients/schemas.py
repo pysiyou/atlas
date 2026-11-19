@@ -6,8 +6,8 @@ import re
 from calendar import monthrange
 from datetime import datetime
 
-from app.shared.generated.enums import AffiliationDuration, Gender, Relationship
 from app.shared.clinical import EMPLOYEE_NUMBER_PATTERN, MEMBER_ID_PATTERN, PATIENT_ID_PATTERN
+from app.shared.generated.enums import AffiliationDuration, Gender, Relationship
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 
@@ -202,8 +202,8 @@ class PatientUpdate(BaseModel):
     fullName: str | None = None
     dateOfBirth: str | None = None
     gender: Gender | None = None
-    phone: str | None = None
-    email: str | None = None
+    phone: str | None = Field(None, min_length=10, max_length=20)
+    email: str | None = Field(None, max_length=254)
     height: float | None = None
     weight: float | None = None
     address: Address | None = None
@@ -260,6 +260,19 @@ class PatientUpdate(BaseModel):
                         "duration": duration,
                     }
         return data
+
+    @field_validator("phone")
+    @classmethod
+    def validate_phone(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        validated = PatientBase.validate_phone(v)
+        return validated.strip()
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, v: str | None) -> str | None:
+        return PatientBase.validate_email(v)
 
 
 class PatientOrderSummary(BaseModel):

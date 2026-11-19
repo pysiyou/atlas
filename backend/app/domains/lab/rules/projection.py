@@ -29,7 +29,6 @@ from app.domains.lab.rules.schemas import (
     LabWorkItemProjection,
     LabWorklistAllowedActions,
     MonitorAttentionStage,
-    PipelineStage,
 )
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
