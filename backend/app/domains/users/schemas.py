@@ -3,7 +3,7 @@ Pydantic schemas for User
 """
 from datetime import datetime
 
-from app.platform.utils import EMPLOYEE_NUMBER_PATTERN
+from app.shared.identifiers import EMPLOYEE_NUMBER_PATTERN
 from app.shared.contracts.enums import UserRole
 from pydantic import BaseModel, ConfigDict, Field
 

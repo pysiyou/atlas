@@ -10,7 +10,7 @@ from app.shared.contracts.enums import (
     SampleStatus,
     SampleType,
 )
-from app.platform.utils import (
+from app.shared.identifiers import (
     EMPLOYEE_NUMBER_PATTERN,
     FILLER_PATTERN,
     LAB_ACTOR_USER_ID_PATTERN,

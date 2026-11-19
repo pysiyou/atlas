@@ -4,7 +4,7 @@ import logging
 from app.domains.audit.service import AuditEmitter
 from app.domains.users.models import User
 from app.domains.users.schemas import FirstAdminSetupRequest, UserCreate, UserUpdate
-from app.platform.utils import allocate_employee_number
+from app.shared.identifiers import allocate_employee_number
 from app.platform.security import get_password_hash
 from app.shared.contracts.enums import UserRole
 from fastapi import HTTPException, status

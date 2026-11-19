@@ -2,7 +2,7 @@
 from app.domains.catalog.models import OrderableTest
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
-from app.platform.utils import compact_identifier, looks_like_filler, looks_like_mrn
+from app.shared.identifiers import compact_identifier, looks_like_filler, looks_like_mrn
 from sqlalchemy import and_, exists, or_
 
 

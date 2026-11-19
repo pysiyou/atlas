@@ -6,7 +6,7 @@ without a circular import from those routers.
 """
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, TypeVar
 
 from app.domains.users.models import User
 from app.platform.database import get_db
@@ -39,6 +39,32 @@ def pagination_params(
 
 
 PaginationParams = Annotated[dict, Depends(pagination_params)]
+
+T = TypeVar("T")
+
+
+def parse_csv_values(raw: str | None) -> list[str]:
+    """Split a comma-separated query param into trimmed non-empty tokens."""
+    if not raw:
+        return []
+    return [token.strip() for token in raw.split(",") if token.strip()]
+
+
+def get_or_404(
+    db: Session,
+    model: type[T],
+    id_value: int | str,
+    id_field: str = "id",
+    detail: str | None = None,
+) -> T:
+    """Fetch an entity by id or raise 404."""
+    entity = db.query(model).filter(getattr(model, id_field) == id_value).first()
+    if not entity:
+        raise HTTPException(
+            status_code=404,
+            detail=detail or f"{model.__name__} not found",
+        )
+    return entity
 
 
 def get_current_user(

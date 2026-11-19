@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any
 
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.specimen.accession import assign_accession_number
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import PriorityLevel, SampleStatus, SampleType
 from app.shared.contracts.lab_contract import MAX_RECOLLECTION_ATTEMPTS
 from sqlalchemy.orm import Session

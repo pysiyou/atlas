@@ -13,7 +13,7 @@ from app.domains.patients.schemas import (
     PatientUpdate,
 )
 from app.platform.config import client_config
-from app.platform.utils import allocate_mrn, compact_identifier, looks_like_mrn
+from app.shared.identifiers import allocate_mrn, compact_identifier, looks_like_mrn
 from app.shared.contracts.enums import Gender, PaymentStatus
 from fastapi import HTTPException, status
 from sqlalchemy import and_, func, or_

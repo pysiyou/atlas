@@ -9,7 +9,7 @@ from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.users.models import User
-from app.platform.utils import (
+from app.shared.identifiers import (
     compact_identifier,
     looks_like_accession,
     looks_like_filler,

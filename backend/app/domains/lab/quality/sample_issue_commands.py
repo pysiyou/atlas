@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
 from app.domains.lab.schemas.lab import QualityIssueResult
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import (
     QualityDomain,
     QualityStage,

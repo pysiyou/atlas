@@ -1,7 +1,7 @@
 """Invoice services used by order create and order detail embeds."""
 from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Invoice
-from app.platform.utils import allocate_invoice_number
+from app.shared.identifiers import allocate_invoice_number
 from app.domains.orders.models import Order, OrderTest
 from app.shared.contracts.enums import TestStatus
 from fastapi import HTTPException

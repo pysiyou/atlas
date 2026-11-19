@@ -7,7 +7,7 @@
 
 /**
  * Regex contracts — canonical list in `contracts/entity-ids.json`;
- * keep in sync with `backend/app/platform/utils.py`.
+ * keep in sync with `backend/app/shared/identifiers.py`.
  */
 export const ID_PATTERNS = {
   mrn: /^3\d{7}$/,

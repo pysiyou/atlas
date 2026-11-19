@@ -8,8 +8,8 @@ from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
 from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine
 from app.domains.lab.schemas.lab import QualityIssueResult
 from app.domains.orders.models import OrderTest
-from app.platform.utils import is_specimen_rejection_reason
-from app.platform.utils import LabOperationError
+from app.shared.contracts.rejection_reasons import is_specimen_rejection_registry_value
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import (
     QualityDomain,
     QualityStage,
@@ -74,7 +74,7 @@ class TestIssueCommands:
             [order_test.testCode], reason, context="validation"
         )
         is_specimen = (
-            matched.domain == "specimen" if matched else is_specimen_rejection_reason(reason)
+            matched.domain == "specimen" if matched else is_specimen_rejection_registry_value(reason)
         )
         domain = QualityDomain.SPECIMEN if is_specimen else QualityDomain.ANALYTICAL
 

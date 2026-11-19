@@ -8,7 +8,7 @@ from app.domains.lab.models.quality_issue import QualityIssue
 from app.domains.lab.quality.rejection_criteria import RejectionCriteriaService
 from app.domains.lab.schemas.lab import QualityIssueOptions
 from app.domains.orders.models import OrderTest
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import (
     QualityIssueTargetType,
     QualityStage,

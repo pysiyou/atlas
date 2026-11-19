@@ -1,7 +1,7 @@
 """Referent doctor directory service."""
 from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.referent_doctors.schemas import ReferentDoctorCreate, ReferentDoctorResponse
-from app.platform.utils import allocate_referent_doctor_id
+from app.shared.identifiers import allocate_referent_doctor_id
 from fastapi import HTTPException, status
 from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError

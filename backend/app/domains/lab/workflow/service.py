@@ -23,7 +23,7 @@ from app.domains.lab.workflow.result_commands import ResultCommandHandler
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.service import apply_order_status_rollup
 from app.platform.cache import invalidate_lab_board_summary_cache
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import PaymentStatus, SampleStatus, TestStatus
 from pydantic import BaseModel
 from sqlalchemy.orm import Session

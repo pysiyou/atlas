@@ -4,7 +4,7 @@ from datetime import date
 from app.domains.reports.schemas import ReportableOrderItem
 from app.domains.reports.service import ReportService
 from app.domains.users.models import User
-from app.platform.clinical_ids import OrderIdPath
+from app.shared.schemas.clinical_ids import OrderIdPath
 from app.platform.database import get_db
 from app.platform.http import get_current_user
 from app.shared.schemas.pagination import PaginatedResponse

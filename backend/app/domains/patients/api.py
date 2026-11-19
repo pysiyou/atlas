@@ -4,10 +4,10 @@ Patient API Routes. All fields use camelCase. Delegates to PatientService.
 from app.domains.patients.schemas import PatientCreate, PatientResponse, PatientUpdate
 from app.domains.patients.service import PatientService
 from app.domains.users.models import User
-from app.platform.clinical_ids import MrnPath, MrnQuery
+from app.shared.schemas.clinical_ids import MrnPath, MrnQuery
 from app.platform.database import get_db
 from app.platform.http import PaginationParams, get_current_user
-from app.platform.utils import parse_csv_values
+from app.platform.http import parse_csv_values
 from app.shared.contracts.enums import Gender
 from app.shared.schemas.pagination import PaginatedResponse, create_paginated_response, skip_to_page
 from fastapi import APIRouter, Depends, Query

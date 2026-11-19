@@ -3,7 +3,7 @@ Pydantic schemas for Payment
 """
 from datetime import datetime
 
-from app.platform.utils import (
+from app.shared.identifiers import (
     EMPLOYEE_NUMBER_PATTERN,
     FILLER_PATTERN,
     INVOICE_NUMBER_PATTERN,

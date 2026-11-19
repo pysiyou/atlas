@@ -13,7 +13,7 @@ from app.shared.contracts.enums import (
     RemedyType,
     ValidationDecision,
 )
-from app.platform.utils import (
+from app.shared.identifiers import (
     FILLER_PATTERN,
     LAB_ACTOR_USER_ID_PATTERN,
     MRN_PATTERN,

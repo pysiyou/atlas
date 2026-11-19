@@ -11,7 +11,7 @@ from app.domains.catalog.models import (
     OrderableTest,
     OrderableTestAnalyte,
 )
-from app.platform.utils import IdSequence
+from app.shared.identifiers import IdSequence
 from app.domains.lab.models.analyzer_ingest_dedup import AnalyzerIngestDedup
 from app.domains.lab.models.escalation import EscalationTicket
 from app.domains.lab.models.quality_issue import QualityIssue

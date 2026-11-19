@@ -1,7 +1,7 @@
 """Analyzer integration API schemas."""
 from datetime import datetime
 
-from app.platform.utils import (
+from app.shared.identifiers import (
     ANALYZER_ID_PATTERN,
     SPECIMEN_INGEST_PATTERN,
     TEST_MNEMONIC_PATTERN,

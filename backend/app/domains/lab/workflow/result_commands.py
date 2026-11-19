@@ -12,8 +12,8 @@ from app.domains.lab.results.flags import ResultFlag
 from app.shared.catalog.reference_range import band_low_high, resolve_reference_band
 from app.domains.lab.results.reflex import ReflexEngine
 from app.domains.orders.models import Order, OrderTest
-from app.platform.utils import parse_numeric_result_value
-from app.platform.utils import LabOperationError
+from app.domains.lab.results.numeric import parse_numeric_result_value
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import (
     RemedyType,
     ResultStatus,

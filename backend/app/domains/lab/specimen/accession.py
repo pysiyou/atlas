@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from app.domains.lab.models.sample import Sample
-from app.platform.utils import allocate_accession_number, format_aliquot_accession
+from app.shared.identifiers import allocate_accession_number, format_aliquot_accession
 from sqlalchemy.orm import Session
 
 

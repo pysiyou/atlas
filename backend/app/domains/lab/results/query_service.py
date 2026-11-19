@@ -76,7 +76,7 @@ class ResultQueryService:
         """Accession/mnemonic of the superseded test, when this row is a retest."""
         from app.domains.lab.models.sample import Sample
         from app.domains.orders.models import OrderTest
-        from app.platform.utils import format_order_test_display
+        from app.domains.lab.order_test_display import format_order_test_display
 
         if not order_test.retestOfTestId:
             return None

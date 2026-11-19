@@ -15,7 +15,7 @@ from app.domains.lab.rules.test_status_sets import (
     COLLECTION_WORKLIST_LINKED_EXCLUDE,
 )
 from app.domains.orders.models import Order, OrderTest
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import (
     EscalationReasonCode,
     PaymentStatus,

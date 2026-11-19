@@ -8,7 +8,7 @@ from app.domains.catalog.service import BY_CODES_MAX, AffiliationPricingService,
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http import get_current_user
-from app.platform.utils import parse_csv_values
+from app.platform.http import parse_csv_values
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy.orm import Session
 

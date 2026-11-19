@@ -6,7 +6,7 @@ from collections.abc import Iterable
 
 from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import OrderTest
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import TestStatus
 from sqlalchemy.orm import Session
 

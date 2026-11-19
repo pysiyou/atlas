@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from app.platform.utils import FILLER_PATTERN, MRN_PATTERN, SAMPLE_ID_PATTERN
+from app.shared.identifiers import FILLER_PATTERN, MRN_PATTERN, SAMPLE_ID_PATTERN
 from app.shared.contracts.audit_events import EventType
 from pydantic import BaseModel, Field
 

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.domains.orders.models import Order, OrderTest
-from app.platform.utils import parse_numeric_result_value
+from app.domains.lab.results.numeric import parse_numeric_result_value
 from app.shared.contracts.enums import TestStatus
 from sqlalchemy.orm import Session
 

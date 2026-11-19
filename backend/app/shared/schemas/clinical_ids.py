@@ -1,13 +1,13 @@
 """
 FastAPI Annotated path/query types for clinical identifiers.
 
-Patterns are defined in ``app.platform.utils`` and mirrored in ``entity-ids.json``.
+Patterns are defined in ``app.shared.identifiers`` and mirrored in ``entity-ids.json``.
 """
 from __future__ import annotations
 
 from typing import Annotated
 
-from app.platform.utils import (
+from app.shared.identifiers import (
     EMPLOYEE_NUMBER_PATTERN,
     FILLER_PATTERN,
     LAB_ACTOR_USER_ID_PATTERN,
@@ -19,7 +19,6 @@ from app.platform.utils import (
 )
 from fastapi import Path, Query
 
-# Path parameters
 MrnPath = Annotated[str, Path(pattern=MRN_PATTERN, min_length=8, max_length=8)]
 OrderIdPath = Annotated[str, Path(pattern=FILLER_PATTERN, min_length=13, max_length=13)]
 SampleIdPath = Annotated[str, Path(pattern=SAMPLE_ID_PATTERN, min_length=8, max_length=20)]
@@ -30,7 +29,6 @@ TestCodePath = Annotated[str, Path(pattern=TEST_MNEMONIC_PATTERN, min_length=2, 
 OrderTestIdPath = Annotated[int, Path(gt=0)]
 ReceiptIdPath = Annotated[str, Path(pattern=RECEIPT_NUMBER_PATTERN, min_length=8, max_length=8)]
 
-# Optional query filters
 MrnQuery = Annotated[str | None, Query(pattern=MRN_PATTERN, min_length=8, max_length=8)]
 OrderIdQuery = Annotated[str | None, Query(pattern=FILLER_PATTERN, min_length=13, max_length=13)]
 SampleIdQuery = Annotated[

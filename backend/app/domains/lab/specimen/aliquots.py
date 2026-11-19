@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from app.domains.audit.service import AuditEmitter
 from app.domains.lab.models.sample import Sample
 from app.domains.lab.specimen.accession import assign_accession_number
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import SampleStatus
 from sqlalchemy.orm import Session
 

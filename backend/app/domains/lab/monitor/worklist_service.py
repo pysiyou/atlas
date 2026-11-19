@@ -34,14 +34,16 @@ from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.referent_doctors.display import referent_doctor_projection
 from app.platform.cache import CacheKeys, cache_get, cache_set
-from app.platform.utils import (
-    compact_identifier,
+from app.domains.lab.order_test_display import (
     format_order_test_display,
+    parse_order_test_display_search,
+)
+from app.shared.identifiers import (
+    compact_identifier,
     looks_like_accession,
     looks_like_filler,
     looks_like_mnemonic,
     looks_like_mrn,
-    parse_order_test_display_search,
 )
 from app.shared.contracts.enums import PriorityLevel, SampleStatus, TestStatus
 from sqlalchemy import and_, case, desc, exists, func, or_

@@ -1,7 +1,7 @@
 """Billing schemas — invoices embedded on order detail."""
 from datetime import datetime
 
-from app.platform.utils import FILLER_PATTERN, INVOICE_NUMBER_PATTERN, MRN_PATTERN
+from app.shared.identifiers import FILLER_PATTERN, INVOICE_NUMBER_PATTERN, MRN_PATTERN
 from app.shared.contracts.enums import PaymentStatus
 from pydantic import BaseModel, Field
 

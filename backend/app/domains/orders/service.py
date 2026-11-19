@@ -27,13 +27,13 @@ from app.domains.orders.schemas import (
 )
 from app.domains.orders.search import order_search_filter
 from app.domains.patients.models import Patient
-from app.platform.utils import allocate_filler_number
+from app.shared.identifiers import allocate_filler_number
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
 from app.domains.payments.service import enrich_payment
 from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
-from app.platform.utils import get_or_404
+from app.platform.http import get_or_404
 from app.shared.contracts.enums import (
     OrderStatus,
     PaymentMethod,

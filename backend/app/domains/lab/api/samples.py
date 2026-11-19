@@ -18,7 +18,7 @@ from app.domains.lab.specimen import SpecimenQueryService
 from app.domains.lab.specimen.aliquots import create_aliquots
 from app.domains.lab.workflow.service import LabOperationsService
 from app.domains.users.models import User
-from app.platform.clinical_ids import OrderIdQuery, SampleIdPath
+from app.shared.schemas.clinical_ids import OrderIdQuery, SampleIdPath
 from app.platform.database import get_db
 from app.platform.http import (
     PaginationParams,

@@ -6,7 +6,7 @@ import re
 from calendar import monthrange
 from datetime import datetime
 
-from app.platform.utils import EMPLOYEE_NUMBER_PATTERN, MEMBER_ID_PATTERN, MRN_PATTERN
+from app.shared.identifiers import EMPLOYEE_NUMBER_PATTERN, MEMBER_ID_PATTERN, MRN_PATTERN
 from app.shared.contracts.enums import AffiliationDuration, Gender, Relationship
 from pydantic import BaseModel, Field, field_validator, model_validator
 

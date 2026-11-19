@@ -24,7 +24,7 @@ from app.domains.lab.quality.test_issue_commands import TestIssueCommands
 from app.domains.lab.schemas.lab import QualityIssueOptions, QualityIssueResult
 from app.domains.lab.specimen import SampleCollectionService
 from app.domains.orders.models import OrderTest
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import (
     QualityDomain,
     QualityIssueTargetType,

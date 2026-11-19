@@ -17,7 +17,7 @@ from app.domains.lab.schemas.critical_values import (
 )
 from app.domains.lab.models.sample import Sample
 from app.domains.orders.models import Order, OrderTest
-from app.platform.utils import LabOperationError
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import ResultStatus
 from sqlalchemy.orm import Session
 

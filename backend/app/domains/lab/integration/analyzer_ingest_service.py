@@ -24,8 +24,8 @@ from app.domains.lab.schemas.analyzer import (
 from app.domains.lab.constants import ANALYZER_USER_ID
 from app.domains.lab.workflow.service import LabOperationsService
 from app.platform.config import settings
-from app.platform.utils import looks_like_accession, looks_like_filler
-from app.platform.utils import LabOperationError
+from app.shared.identifiers import looks_like_accession, looks_like_filler
+from app.domains.lab.errors import LabOperationError
 from app.shared.contracts.enums import TestStatus
 from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError

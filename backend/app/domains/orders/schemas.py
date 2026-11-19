@@ -11,12 +11,11 @@ if TYPE_CHECKING:
 
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
-from app.platform.utils import (
+from app.shared.identifiers import (
     EMPLOYEE_NUMBER_PATTERN,
     FILLER_PATTERN,
     LAB_ACTOR_USER_ID_PATTERN,
     MRN_PATTERN,
-    PLACER_PATTERN,
     RECEIPT_NUMBER_PATTERN,
     REFERENT_DOCTOR_ID_PATTERN,
     SAMPLE_ID_PATTERN,
@@ -156,7 +155,7 @@ class OrderSummaryResponse(BaseModel):
     """Lightweight order projection for lists, dashboards, and aggregates."""
 
     orderId: str = Field(..., pattern=FILLER_PATTERN)
-    placerNumber: str | None = Field(None, pattern=PLACER_PATTERN)
+    placerNumber: str | None = Field(None, pattern=FILLER_PATTERN)
     patientId: str = Field(..., pattern=MRN_PATTERN)
     patientName: str
     patientDob: str | None = None
@@ -190,7 +189,7 @@ class OrderSummaryResponse(BaseModel):
 
 class OrderResponse(BaseModel):
     orderId: str = Field(..., pattern=FILLER_PATTERN)
-    placerNumber: str | None = Field(None, pattern=PLACER_PATTERN)
+    placerNumber: str | None = Field(None, pattern=FILLER_PATTERN)
     patientId: str = Field(..., pattern=MRN_PATTERN)
     patientName: str  # From relationship
     patientDob: str | None = None
