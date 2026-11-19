@@ -32,11 +32,11 @@ target-version = "py311"
 line-length = 100
 src = ["app"]
 extend-exclude = [
-    "app/shared/contracts/lab_contract.py",
-    "app/shared/contracts/enums.py",
-    "app/shared/contracts/audit_events.py",
-    "app/shared/contracts/audit_taxonomy.py",
-    "app/shared/contracts/rejection_reasons.py",
+    "app/shared/lab_contract.py",
+    "app/shared/enums.py",
+    "app/shared/audit_events.py",
+    "app/shared/audit_taxonomy.py",
+    "app/shared/rejection_reasons.py",
 ]
 
 [tool.ruff.lint]

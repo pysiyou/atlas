@@ -9,7 +9,7 @@ from app.shared.identifiers import (
     INVOICE_NUMBER_PATTERN,
     RECEIPT_NUMBER_PATTERN,
 )
-from app.shared.contracts.enums import PaymentMethod, PaymentStatus
+from app.shared.enums import PaymentMethod, PaymentStatus
 from pydantic import BaseModel, Field
 
 

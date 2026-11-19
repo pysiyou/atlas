@@ -1,7 +1,7 @@
 """
 Audit event log — persist rows, query for the API, and emit domain events.
 
-Dot-notation types match ``EventType`` in ``app.shared.contracts.audit_events`` (from contracts/audit-events.json). Rows store target
+Dot-notation types match ``EventType`` in ``app.shared.audit_events`` (from contracts/audit-events.json). Rows store target
 (entity type + id), optional context (orderId, patientId, testId), metadata
 (e.g. ``test_code`` vs ``test_codes``), and actor snapshot (user or system).
 """
@@ -13,6 +13,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from app.domains.audit.kinds import (
+    ACCESS_EVENT_TYPES,
     kinds_to_prefixes,
     stored_event_scope_for_type,
 )
@@ -30,15 +31,18 @@ from app.domains.audit.schemas import (
     EventTarget,
     EventType,
 )
-from app.domains.audit.search import (
-    access_event_types_to_hide,
-    apply_unified_search,
-    classify_search_term,
-)
+from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.users.models import User
-from sqlalchemy import and_, false, func, or_, tuple_
+from app.shared.identifiers import (
+    compact_identifier,
+    looks_like_accession,
+    looks_like_filler,
+    looks_like_mnemonic,
+    looks_like_mrn,
+)
+from sqlalchemy import and_, exists, false, func, or_, tuple_
 from sqlalchemy.orm import Session
 
 # ── Persist ──────────────────────────────────────────────────────────────
@@ -59,7 +63,7 @@ def build_actor_snapshot(
     acting_user_id: str | None = None,
 ) -> tuple[str | None, dict[str, Any]]:
     """Return (actor_id, actor_snapshot) for DB insert. Snapshot uses snake_case keys in JSONB."""
-    from app.domains.lab.constants import ANALYZER_USER_ID, is_analyzer_user_id
+    from app.domains.lab.workflow.service import ANALYZER_USER_ID, is_analyzer_user_id
 
     if user is not None:
         snapshot: dict[str, Any] = {
@@ -273,6 +277,159 @@ def audit_event_to_response(
     )
 
 
+# ── Unified search (clinical ids + text) ─────────────────────────────────
+
+
+def classify_search_term(term: str) -> dict[str, Any]:
+    trimmed = term.strip()
+    if not trimmed:
+        return {"mode": "empty", "textTerm": None, "dimensions": [], "parsedIds": None}
+
+    compact = compact_identifier(trimmed)
+
+    if looks_like_mnemonic(trimmed):
+        return {
+            "mode": "record_test",
+            "textTerm": None,
+            "dimensions": [],
+            "parsedIds": None,
+            "displayToken": trimmed.strip().upper(),
+        }
+    if looks_like_filler(trimmed):
+        return {
+            "mode": "record_order",
+            "textTerm": None,
+            "dimensions": [],
+            "parsedIds": None,
+            "displayToken": compact,
+        }
+    if looks_like_accession(trimmed):
+        return {
+            "mode": "record_sample",
+            "textTerm": None,
+            "dimensions": [],
+            "parsedIds": None,
+            "displayToken": trimmed.strip(),
+        }
+    if looks_like_mrn(trimmed):
+        return {
+            "mode": "record_patient",
+            "textTerm": None,
+            "dimensions": [],
+            "parsedIds": None,
+            "displayToken": compact,
+        }
+
+    return {
+        "mode": "text",
+        "textTerm": trimmed,
+        "dimensions": ["patientName", "actorName", "username"],
+        "parsedIds": None,
+    }
+
+
+def access_event_types_to_hide(
+    *,
+    scope: str,
+    kinds: list[str] | None,
+    include_access: bool,
+) -> frozenset[str]:
+    if include_access:
+        return frozenset()
+    if scope not in ("stream", "patient"):
+        return frozenset()
+
+    hidden = set(ACCESS_EVENT_TYPES)
+    if scope == "patient":
+        hidden.discard("patient.view")
+
+    if kinds:
+        roots = {key.split(":")[0] for key in kinds}
+        if "patient" in roots:
+            hidden.discard("patient.view")
+        if "reporting" in roots:
+            hidden.discard("reporting.download")
+
+    return frozenset(hidden)
+
+
+def _record_id_clauses(term: str) -> list:
+    trimmed = term.strip()
+    compact = compact_identifier(trimmed)
+    clauses: list = []
+
+    if looks_like_mnemonic(trimmed):
+        code = trimmed.upper()
+        clauses.append(
+            exists().where(and_(OrderTest.testCode == code, AuditEvent.testId == OrderTest.id))
+        )
+    elif looks_like_filler(trimmed):
+        clauses.extend(
+            [
+                exists().where(
+                    and_(Order.orderId == compact, AuditEvent.orderId == Order.orderId)
+                ),
+                exists().where(
+                    and_(Order.placerNumber == compact, AuditEvent.orderId == Order.orderId)
+                ),
+            ]
+        )
+    elif looks_like_accession(trimmed):
+        clauses.append(
+            exists().where(
+                and_(
+                    Sample.sampleId == trimmed,
+                    AuditEvent.targetType == "sample",
+                    AuditEvent.targetId == Sample.sampleId,
+                )
+            )
+        )
+    elif looks_like_mrn(trimmed):
+        clauses.extend(
+            [
+                exists().where(and_(Patient.id == compact, AuditEvent.patientId == Patient.id)),
+                exists().where(
+                    and_(
+                        Patient.id == compact,
+                        AuditEvent.targetType == "patient",
+                        AuditEvent.targetId == Patient.id,
+                    )
+                ),
+            ]
+        )
+
+    return clauses
+
+
+def apply_unified_search(query, term: str, *, scope: str = "stream"):
+    trimmed = term.strip()
+    if not trimmed:
+        return query
+
+    record_clauses = _record_id_clauses(trimmed)
+    if record_clauses and scope != "system":
+        return query.filter(or_(*record_clauses))
+
+    pattern = f"%{trimmed}%"
+    text_clauses = [
+        AuditEvent.actorSnapshot["name"].astext.ilike(pattern),
+        User.username.ilike(pattern),
+        Patient.id.ilike(pattern),
+        Order.orderId.ilike(pattern),
+        Sample.sampleId.ilike(pattern),
+    ]
+    if scope != "system":
+        text_clauses.append(Patient.fullName.ilike(pattern))
+
+    return (
+        query.outerjoin(User, User.id == AuditEvent.actorId)
+        .outerjoin(Patient, Patient.id == AuditEvent.patientId)
+        .outerjoin(Order, Order.orderId == AuditEvent.orderId)
+        .outerjoin(Sample, Sample.sampleId == AuditEvent.targetId)
+        .filter(or_(*text_clauses))
+    )
+
+
 class AuditEventQueryService:
     def __init__(self, db: Session):
         self.db = db
@@ -428,7 +585,7 @@ class AuditEventQueryService:
             query = query.filter(AuditEvent.eventScope == event_scope)
 
         if actor_id is not None:
-            from app.domains.lab.constants import is_analyzer_user_id
+            from app.domains.lab.workflow.service import is_analyzer_user_id
 
             if is_analyzer_user_id(actor_id):
                 query = query.filter(

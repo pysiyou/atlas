@@ -2,7 +2,7 @@
 Billing Models - Invoice, Payment - All fields use camelCase
 """
 from app.platform.database import Base, contract_enum
-from app.shared.contracts.enums import PaymentMethod, PaymentStatus
+from app.shared.enums import PaymentMethod, PaymentStatus
 from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func

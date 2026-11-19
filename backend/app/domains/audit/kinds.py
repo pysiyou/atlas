@@ -4,7 +4,7 @@ Kinds are domain roots plus laboratory subcategory keys (see contracts/audit-eve
 """
 from __future__ import annotations
 
-from app.shared.contracts.audit_taxonomy import (
+from app.shared.audit_taxonomy import (
     ACCESS_EVENT_TYPES,
     DEFAULT_STORED_EVENT_SCOPE,
     DOMAIN_KIND_IDS,
@@ -12,7 +12,7 @@ from app.shared.contracts.audit_taxonomy import (
     STORED_EVENT_SCOPES,
     STORED_SCOPE_BY_PREFIX,
 )
-from app.shared.contracts.enums import UserRole
+from app.shared.enums import UserRole
 
 __all__ = [
     "ACCESS_EVENT_TYPES",

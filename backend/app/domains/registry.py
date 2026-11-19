@@ -12,10 +12,10 @@ from app.domains.catalog.models import (
     OrderableTestAnalyte,
 )
 from app.shared.identifiers import IdSequence
-from app.domains.lab.models.analyzer_ingest_dedup import AnalyzerIngestDedup
-from app.domains.lab.models.escalation import EscalationTicket
-from app.domains.lab.models.quality_issue import QualityIssue
-from app.domains.lab.models.sample import Sample
+from app.domains.lab.integration.models import AnalyzerIngestDedup
+from app.domains.lab.quality.models import EscalationTicket
+from app.domains.lab.quality.models import QualityIssue
+from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.referent_doctors.models import ReferentDoctor

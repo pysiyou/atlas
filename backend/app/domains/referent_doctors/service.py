@@ -1,4 +1,8 @@
 """Referent doctor directory service."""
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.referent_doctors.schemas import ReferentDoctorCreate, ReferentDoctorResponse
 from app.shared.identifiers import allocate_referent_doctor_id
@@ -6,6 +10,30 @@ from fastapi import HTTPException, status
 from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
+if TYPE_CHECKING:
+    from app.domains.orders.models import Order
+
+
+def referent_doctor_projection(order: Order | None) -> dict[str, int | str | None]:
+    if order is None:
+        return {
+            "referentDoctorId": None,
+            "referentDoctorName": None,
+            "referentDoctorEmail": None,
+            "referentDoctorPhone": None,
+            "referentDoctorHospital": None,
+            "referentDoctorUsername": None,
+        }
+    record = order.referentDoctor
+    return {
+        "referentDoctorId": order.referentDoctorId,
+        "referentDoctorName": record.fullName if record else None,
+        "referentDoctorEmail": record.email if record else None,
+        "referentDoctorPhone": record.phone if record else None,
+        "referentDoctorHospital": record.hospitalName if record else None,
+        "referentDoctorUsername": record.username if record else None,
+    }
 
 
 def normalize_full_name(full_name: str) -> str:

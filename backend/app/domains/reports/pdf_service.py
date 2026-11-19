@@ -12,7 +12,7 @@ from app.domains.orders.models import Order
 from app.domains.reports.models import ReportDocument
 from app.platform.config import client_config
 from app.platform.config import settings
-from app.shared.contracts.enums import TestStatus
+from app.shared.enums import TestStatus
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet

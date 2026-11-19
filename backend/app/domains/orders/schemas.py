@@ -22,7 +22,7 @@ from app.shared.identifiers import (
     TEST_MNEMONIC_PATTERN,
 )
 from app.domains.payments.schemas import PaymentResponse
-from app.shared.contracts.enums import (
+from app.shared.enums import (
     Gender,
     OrderStatus,
     PaymentMethod,
@@ -30,7 +30,7 @@ from app.shared.contracts.enums import (
     PriorityLevel,
     TestStatus,
 )
-from app.shared.schemas.status_presentation import StatusPresentation
+from app.shared.http import StatusPresentation
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 

@@ -1,1 +1,0 @@
-"""Shared catalog helpers (reference ranges, etc.)."""

@@ -12,12 +12,12 @@ from app.domains.orders.schemas import (
 )
 from app.domains.orders.service import OrderService
 from app.domains.users.models import User
-from app.shared.schemas.clinical_ids import MrnQuery, OrderIdPath, OrderIdQuery
+from app.shared.http import MrnQuery, OrderIdPath, OrderIdQuery
 from app.platform.database import get_db
 from app.platform.http import PaginationParams, get_current_user
 from app.platform.http import parse_csv_values
-from app.shared.contracts.enums import OrderStatus, PaymentMethod, PaymentStatus
-from app.shared.schemas.pagination import PaginatedResponse
+from app.shared.enums import OrderStatus, PaymentMethod, PaymentStatus
+from app.shared.http import PaginatedResponse
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 

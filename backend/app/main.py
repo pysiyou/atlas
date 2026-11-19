@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
     Base.metadata.create_all(bind=engine)
-    from app.platform.schema_sync import sync_missing_columns
+    from app.platform.database import sync_missing_columns
 
     sync_missing_columns()
     try:

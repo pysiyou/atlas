@@ -59,7 +59,7 @@ jobs:
         run: |
           git diff --exit-code -- \
             ../frontend/src/types/generated \
-            ../backend/app/shared/contracts/enums.py \
+            ../backend/app/shared/enums.py \
             ../contracts/openapi.json
       - run: npm run check:openapi
       - run: npm run typecheck

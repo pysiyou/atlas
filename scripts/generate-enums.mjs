@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const enumsPath = path.join(root, 'contracts', 'enums.json');
 const tsOut = path.join(root, 'frontend', 'src', 'types', 'generated', 'enums.ts');
-const pyOut = path.join(root, 'backend', 'app', 'shared', 'contracts', 'enums.py');
+const pyOut = path.join(root, 'backend', 'app', 'shared', 'enums.py');
 
 const doc = JSON.parse(fs.readFileSync(enumsPath, 'utf8'));
 const containers = doc.containers;

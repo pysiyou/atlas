@@ -11,7 +11,7 @@ from app.domains.orders.service import (
     _test_names_for_codes,
 )
 from app.domains.patients.models import Patient
-from app.shared.contracts.enums import OrderStatus
+from app.shared.enums import OrderStatus
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 

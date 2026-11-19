@@ -14,7 +14,7 @@ from app.domains.patients.schemas import (
 )
 from app.platform.config import client_config
 from app.shared.identifiers import allocate_mrn, compact_identifier, looks_like_mrn
-from app.shared.contracts.enums import Gender, PaymentStatus
+from app.shared.enums import Gender, PaymentStatus
 from fastapi import HTTPException, status
 from sqlalchemy import and_, func, or_
 from sqlalchemy.inspection import inspect

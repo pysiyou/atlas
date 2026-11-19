@@ -5,11 +5,31 @@ from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Invoice, Payment
 from app.domains.orders.models import Order
 from app.domains.payments.schemas import PaymentCreate
-from app.domains.payments.status import derive_payment_status, money, remaining_balance
+from app.shared.enums import PaymentStatus
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.shared.identifiers import allocate_receipt_number
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload
+
+
+def money(value: float | int | None) -> float:
+    if value is None:
+        return 0.0
+    return round(float(value), 2)
+
+
+def remaining_balance(order_total: float, total_paid: float) -> float:
+    return max(0.0, money(order_total) - money(total_paid))
+
+
+def derive_payment_status(total_paid: float, order_total: float) -> PaymentStatus:
+    paid = money(total_paid)
+    total = money(order_total)
+    if paid <= 0:
+        return PaymentStatus.UNPAID
+    if paid >= total:
+        return PaymentStatus.PAID
+    return PaymentStatus.PARTIAL
 
 
 def enrich_payment(payment: Payment, order: Order | None) -> dict:

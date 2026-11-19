@@ -3,7 +3,7 @@
 from app.domains.users.models import User
 from app.domains.users.schemas import UserCreate, UserLookupResponse, UserResponse, UserUpdate
 from app.domains.users.service import UserService
-from app.shared.schemas.clinical_ids import EmployeeIdPath
+from app.shared.http import EmployeeIdPath
 from app.platform.database import get_db
 from app.platform.http import get_current_user, require_admin
 from fastapi import APIRouter, Depends, status

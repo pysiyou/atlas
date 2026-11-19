@@ -9,14 +9,10 @@ import re
 from datetime import UTC, datetime
 
 from app.platform.database import Base
+from app.shared.exceptions import IdentifierError
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
-
-
-class IdentifierError(ValueError):
-    """Raised when a generated or supplied clinical identifier is invalid."""
-
 
 class IdSequence(Base):
     """

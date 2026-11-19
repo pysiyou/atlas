@@ -1,10 +1,9 @@
-"""FastAPI dependencies for lab domain services."""
-
+"""FastAPI dependencies for lab services."""
 from __future__ import annotations
 
-from app.domains.lab.monitor.worklist_service import LabWorklistService
-from app.domains.lab.results import ResultQueryService
-from app.domains.lab.specimen import SpecimenQueryService
+from app.domains.lab.monitor.service import LabWorklistService
+from app.domains.lab.results.service import ResultQueryService
+from app.domains.lab.specimen.service import SpecimenQueryService
 from app.domains.lab.workflow.service import LabOperationsService
 from app.platform.database import get_db
 from fastapi import Depends

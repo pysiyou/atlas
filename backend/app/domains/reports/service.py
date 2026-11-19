@@ -1,23 +1,49 @@
 """Per-order lab report listing."""
+from collections.abc import Iterable
 from datetime import UTC, date, datetime, time
+from typing import Protocol
 
 from app.domains.audit.service import AuditEmitter
 from app.domains.lab.public import resolve_order_presentation
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import OrderResponse
-from app.domains.orders.search import reportable_order_search_filter
+from app.domains.orders.service import reportable_order_search_filter
 from app.domains.patients.models import Patient
-from app.domains.reports.eligibility import (
-    INACTIVE_TEST_STATUSES,
-    active_order_tests,
-    is_reportable_order,
-)
 from app.domains.reports.pdf_service import ReportPdfService
 from app.domains.reports.schemas import ReportableOrderItem
-from app.shared.contracts.enums import OrderStatus, TestStatus
-from app.shared.schemas.pagination import create_paginated_response, skip_to_page
+from app.shared.enums import OrderStatus, TestStatus
+from app.shared.http import create_paginated_response, skip_to_page
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload, selectinload
+
+from app.shared.lab_contract import INACTIVE_TEST_STATUSES_FOR_ROLLUP
+
+INACTIVE_TEST_STATUSES = INACTIVE_TEST_STATUSES_FOR_ROLLUP
+
+
+class _OrderTestLike(Protocol):
+    status: TestStatus
+    testCode: str
+
+
+class _OrderLike(Protocol):
+    overallStatus: OrderStatus
+    tests: Iterable[_OrderTestLike] | None
+
+
+def is_active_test(status: TestStatus) -> bool:
+    return status.value not in INACTIVE_TEST_STATUSES
+
+
+def active_order_tests(order: _OrderLike) -> list[_OrderTestLike]:
+    tests = list(order.tests or [])
+    return [test for test in tests if is_active_test(test.status)]
+
+
+def is_reportable_order(order: _OrderLike) -> bool:
+    if order.overallStatus == OrderStatus.CANCELLED:
+        return False
+    return len(active_order_tests(order)) > 0
 
 
 def _order_load_options():

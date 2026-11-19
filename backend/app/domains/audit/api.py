@@ -12,7 +12,7 @@ from app.domains.audit.kinds import (
 from app.domains.audit.schemas import AuditEventResponse, AuditSearchPreviewResponse
 from app.domains.audit.service import AuditEventQueryService
 from app.domains.users.models import User
-from app.shared.schemas.clinical_ids import (
+from app.shared.http import (
     LabActorIdQuery,
     MrnQuery,
     OrderIdQuery,

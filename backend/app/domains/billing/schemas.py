@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from app.shared.identifiers import FILLER_PATTERN, INVOICE_NUMBER_PATTERN, MRN_PATTERN
-from app.shared.contracts.enums import PaymentStatus
+from app.shared.enums import PaymentStatus
 from pydantic import BaseModel, Field
 
 

@@ -3,7 +3,7 @@ from app.domains.audit.service import AuditEmitter
 from app.domains.billing.models import Invoice
 from app.shared.identifiers import allocate_invoice_number
 from app.domains.orders.models import Order, OrderTest
-from app.shared.contracts.enums import TestStatus
+from app.shared.enums import TestStatus
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 

@@ -25,7 +25,7 @@ from app.platform.security import (
     decode_token,
     verify_password,
 )
-from app.shared.schemas.error import MessageResponse
+from app.shared.http import MessageResponse
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session

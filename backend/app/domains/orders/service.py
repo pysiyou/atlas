@@ -8,7 +8,7 @@ from app.domains.billing.models import Payment
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.billing.service import BillingService
 from app.domains.catalog.models import OrderableTest, Workup, WorkupTest
-from app.domains.lab.models.sample import Sample
+from app.domains.lab.specimen.models import Sample
 from app.domains.lab.public import (
     generate_samples_for_order,
     lab_projections_for_order,
@@ -25,30 +25,68 @@ from app.domains.orders.schemas import (
     OrderSummaryResponse,
     OrderUpdate,
 )
-from app.domains.orders.search import order_search_filter
 from app.domains.patients.models import Patient
-from app.shared.identifiers import allocate_filler_number
+from app.shared.identifiers import allocate_filler_number, compact_identifier, looks_like_filler, looks_like_mrn
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
 from app.domains.payments.service import enrich_payment
 from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.platform.http import get_or_404
-from app.shared.contracts.enums import (
+from app.shared.enums import (
     OrderStatus,
     PaymentMethod,
     PaymentStatus,
     SampleStatus,
     TestStatus,
 )
-from app.shared.contracts.lab_contract import INACTIVE_TEST_STATUSES_FOR_BILLING
-from app.shared.schemas.pagination import create_paginated_response, skip_to_page
+from app.shared.lab_contract import INACTIVE_TEST_STATUSES_FOR_BILLING
+from app.shared.http import create_paginated_response, skip_to_page
 from fastapi import HTTPException, status
-from sqlalchemy import func
+from sqlalchemy import and_, exists, func, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, joinedload, selectinload
 
 logger = logging.getLogger(__name__)
+
+
+def order_search_filter(search_term: str):
+    """Match filler/placer numbers, MRN, or patient name."""
+    term = search_term.strip()
+    compact = compact_identifier(term)
+    predicates = [
+        Patient.fullName.ilike(f"%{term}%"),
+        Order.orderId.ilike(f"%{term}%"),
+        Order.placerNumber.ilike(f"%{term}%"),
+        Patient.id.ilike(f"%{term}%"),
+    ]
+    if looks_like_filler(term):
+        predicates.append(Order.orderId == compact)
+        predicates.append(Order.placerNumber == compact)
+    if looks_like_mrn(term):
+        predicates.append(Patient.id == compact)
+    return or_(*predicates)
+
+
+def reportable_order_search_filter(search_term: str):
+    """Order/patient search plus test code and catalog names (EXISTS, no relationship load)."""
+    term = search_term.strip()
+    catalog_name_match = exists().where(
+        and_(
+            OrderableTest.code == OrderTest.testCode,
+            or_(
+                OrderableTest.displayName.ilike(f"%{term}%"),
+                OrderableTest.name.ilike(f"%{term}%"),
+            ),
+        )
+    )
+    test_match = exists().where(
+        and_(
+            OrderTest.orderId == Order.orderId,
+            or_(OrderTest.testCode.ilike(f"%{term}%"), catalog_name_match),
+        )
+    )
+    return or_(order_search_filter(term), test_match)
 
 
 _STARTED_STATUSES = {
