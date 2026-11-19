@@ -36,7 +36,7 @@ def verify_analyzer_auth(x_analyzer_key: str = Header(None)) -> bool:
     return True
 
 
-router.post("/analyzer/hl7", response_model=AnalyzerResultResponse)
+@router.post("/analyzer/hl7", response_model=AnalyzerResultResponse)
 async def receive_hl7_result(
     request: HL7MessageRequest,
     db: Session = Depends(get_db),
@@ -45,7 +45,7 @@ async def receive_hl7_result(
     return AnalyzerIngestService(db).ingest_hl7(request)
 
 
-router.post("/analyzer/json", response_model=AnalyzerResultResponse)
+@router.post("/analyzer/json", response_model=AnalyzerResultResponse)
 async def receive_json_result(
     request: AnalyzerResultRequest,
     db: Session = Depends(get_db),
@@ -54,7 +54,7 @@ async def receive_json_result(
     return AnalyzerIngestService(db).ingest_json(request)
 
 
-router.get("/analyzer/pending/{analyzer_id}")
+@router.get("/analyzer/pending/{analyzer_id}")
 async def get_pending_samples(
     analyzer_id: str,
     db: Session = Depends(get_db),

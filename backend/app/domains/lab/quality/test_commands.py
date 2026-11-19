@@ -5,11 +5,10 @@ from typing import TYPE_CHECKING
 
 from app.domains.lab.quality.options import count_retests_in_chain
 from app.domains.lab.quality.rejection import RejectionCriteriaService
-from app.domains.lab.quality.remedy import validation_remedy_types
+from app.domains.lab.quality.remedy import SampleRejectionContext, validation_remedy_types
 
 if TYPE_CHECKING:
     from app.domains.lab.quality.issues import QualityIssueService
-    from app.domains.lab.quality.remedy import SampleRejectionContext
 
 from app.domains.lab.quality.schemas import QualityIssueResult
 from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMachine

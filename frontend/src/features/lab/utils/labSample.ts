@@ -167,19 +167,6 @@ export function aggregateTargetOptimalMl(
   return found ? max : 0;
 }
 
-/** @deprecated Use aggregateRequiredMinMl */
-export function sumMinVolumeMl(testCodes: string[], testCatalog: OrderableTest[]): number {
-  return aggregateRequiredMinMl(testCodes, testCatalog);
-}
-
-/** @deprecated Use aggregateRequiredMinMl */
-export function calculateTotalVolume(tests: OrderTest[], testCatalog: OrderableTest[]): number {
-  return aggregateRequiredMinMl(
-    tests.map(t => t.testCode),
-    testCatalog
-  );
-}
-
 export function classifySpecimenVolume(
   collectedMl: number,
   requiredMinMl: number,
@@ -196,6 +183,22 @@ export function defaultDrawVolumeMl(requiredMinMl: number, targetOptimalMl: numb
   if (targetOptimalMl > 0) return targetOptimalMl;
   if (requiredMinMl > 0) return requiredMinMl;
   return 0;
+}
+
+/** Consolidated draw volumes from worklist requirement or persisted sample row. */
+export function resolveConsolidatedDrawVolumes(input: {
+  requirement?: { totalVolume?: number; targetVolume?: number } | null;
+  sample?: { requiredVolume?: number; optimalVolume?: number | null } | null;
+}): { requiredMinMl: number; targetOptimalMl: number } {
+  const reqMin = input.requirement?.totalVolume ?? 0;
+  const reqTarget = input.requirement?.targetVolume ?? 0;
+  if (reqMin > 0 || reqTarget > 0) {
+    return { requiredMinMl: reqMin, targetOptimalMl: reqTarget };
+  }
+  return {
+    requiredMinMl: input.sample?.requiredVolume ?? 0,
+    targetOptimalMl: input.sample?.optimalVolume ?? 0,
+  };
 }
 
 export function formatDrawVolumeLine(requiredMinMl: number, targetOptimalMl: number): string | null {

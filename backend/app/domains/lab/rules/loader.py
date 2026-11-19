@@ -39,8 +39,15 @@ def lab_projections_for_orders(
 
     linked_by_sample: dict[str, list[OrderTest]] = defaultdict(list)
     for _, order_test in all_tests:
-        if order_test.sampleId is not None:
-            linked_by_sample[order_test.sampleId].append(order_test)
+        if order_test.sampleId is None:
+            continue
+        sample = samples_by_id.get(order_test.sampleId)
+        if sample is None:
+            continue
+        codes = sample.testCodes or []
+        if order_test.orderId != sample.orderId or order_test.testCode not in codes:
+            continue
+        linked_by_sample[order_test.sampleId].append(order_test)
 
     escalated_ids = [
         order_test.id for _, order_test in all_tests if order_test.status == TestStatus.ESCALATED

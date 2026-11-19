@@ -46,7 +46,7 @@ export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderV
           <Panel preset="panel.pageEmbed.visible" title={titles.orderDetail} loading />
           <Panel preset="panel.pageEmbed.visible" title={labCopy.entity.sample} loading />
         </div>
-        <Panel preset="panel.compact.standard" title={activityTitle} loading />
+        <Panel preset="panel.pageEmbed.visible" title={activityTitle} loading />
       </div>
     );
   }
@@ -54,11 +54,11 @@ export function LabModalPlaceholder({ variant }: { variant: LabModalPlaceholderV
   if (variant === 'escalation') {
     return (
       <div className={stackClass} aria-busy="true" aria-label={placeholderAriaLabel[variant]}>
-        <Panel preset="panel.compact.scrollAuto.maxH" title={labCopy.panels.recordedResults}>
+        <Panel preset="panel.pageEmbed.scrollAuto.maxH" title={labCopy.panels.recordedResults}>
           <LabResultsTableSkeleton />
         </Panel>
         <Panel
-          preset="panel.compact.standard"
+          preset="panel.pageEmbed.visible"
           title={labCopy.panels.resolution}
           loading
         />

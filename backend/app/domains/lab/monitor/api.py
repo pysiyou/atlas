@@ -143,7 +143,7 @@ def _stage_worklist_kwargs(
     }
 
 
-router.get("/worklists/collection", response_model=CollectionWorklistResponse)
+@router.get("/worklists/collection", response_model=CollectionWorklistResponse)
 def get_collection_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -175,7 +175,7 @@ def get_collection_worklist(
     )
 
 
-router.get("/worklists/entry", response_model=EntryWorklistResponse)
+@router.get("/worklists/entry", response_model=EntryWorklistResponse)
 def get_entry_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -207,7 +207,7 @@ def get_entry_worklist(
     )
 
 
-router.get("/worklists/validation", response_model=ValidationWorklistResponse)
+@router.get("/worklists/validation", response_model=ValidationWorklistResponse)
 def get_validation_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -239,7 +239,7 @@ def get_validation_worklist(
     )
 
 
-router.get("/worklists/dashboard-today", response_model=DashboardWorklistResponse)
+@router.get("/worklists/dashboard-today", response_model=DashboardWorklistResponse)
 def get_dashboard_worklist_today(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -258,7 +258,7 @@ def get_dashboard_worklist_today(
     return _worklist_response(items, result["pagination"])
 
 
-router.get("/worklists/all-tests", response_model=DashboardWorklistResponse)
+@router.get("/worklists/all-tests", response_model=DashboardWorklistResponse)
 def get_all_tests_worklist(
     page: int = Query(1, ge=1),
     pageSize: int = Query(50, ge=1, le=200),
@@ -298,7 +298,7 @@ def get_all_tests_worklist(
     return _worklist_response(items, result["pagination"])
 
 
-router.get("/board", response_model=LabBoardResponse)
+@router.get("/board", response_model=LabBoardResponse)
 def get_lab_board(
     detail: Literal["summary", "full"] = Query("full"),
     service: LabWorklistService = Depends(get_lab_worklist_service),
@@ -322,7 +322,7 @@ def get_lab_board(
     return payload
 
 
-router.get("/board/summary", response_model=LabBoardSummaryResponse)
+@router.get("/board/summary", response_model=LabBoardSummaryResponse)
 def get_lab_board_summary(
     service: LabWorklistService = Depends(get_lab_worklist_service),
     current_user: User = Depends(require_sample_collector),

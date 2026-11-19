@@ -17,10 +17,7 @@ from app.domains.lab.monitor.predicates import (
 from app.domains.lab.monitor.queries import collection_base_query, order_test_stage_query
 from app.domains.lab.monitor.tat import CatalogTatResolver, age_bucket, hours_since
 from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
-from app.domains.lab.specimen.volume import (
-    classify_specimen_volume,
-    effective_sample_volumes,
-)
+from app.domains.lab.specimen.volume import classify_specimen_volume
 from app.domains.lab.results.display import (
     format_order_test_display,
     parse_order_test_display_search,
@@ -37,7 +34,6 @@ from app.domains.lab.rules.projection import (
 )
 from app.domains.lab.rules.status_sets import COLLECTION_WORKLIST_LINKED_EXCLUDE
 from app.domains.lab.specimen.lookup import linked_order_tests_by_sample_ids
-from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.referent_doctors.service import referent_doctor_projection
@@ -203,19 +199,9 @@ class LabWorklistService:
         self.db = db
         self._tat = CatalogTatResolver(db)
         self._catalog_cache: dict[str, tuple[str | None, str | None]] = {}
-        self._catalog_tests_cache: dict[str, OrderableTest] = {}
 
     def _max_tat_for_codes(self, codes: list[str]) -> int:
         return self._tat.max_hours_for_codes(codes)
-
-    def _catalog_tests_by_codes(self, codes: list[str]) -> dict[str, OrderableTest]:
-        unique = list(dict.fromkeys(c for c in codes if c))
-        missing = [c for c in unique if c not in self._catalog_tests_cache]
-        if missing:
-            rows = self.db.query(OrderableTest).filter(OrderableTest.code.in_(missing)).all()
-            for row in rows:
-                self._catalog_tests_cache[row.code] = row
-        return {c: self._catalog_tests_cache[c] for c in unique if c in self._catalog_tests_cache}
 
     def _catalog_meta(self, code: str | None) -> tuple[str | None, str | None]:
         if not code:
@@ -341,13 +327,10 @@ class LabWorklistService:
         linked_tests: list[OrderTest],
         parents: dict[str, Sample] | None = None,
         include_queue_metrics: bool = True,
-        catalog_by_code: dict[str, OrderableTest] | None = None,
     ) -> dict[str, Any]:
         codes = sample.testCodes or []
-        catalog_tests = [
-            catalog_by_code[c] for c in codes if catalog_by_code and c in catalog_by_code
-        ]
-        required_volume, optimal_volume = effective_sample_volumes(sample, catalog_tests)
+        required_volume = float(sample.requiredVolume or 0)
+        optimal_volume = float(sample.optimalVolume or 0)
         projection = project_collection_sample(
             LabWorkItemContext(
                 order=order,
@@ -539,7 +522,6 @@ class LabWorklistService:
             all_codes.extend(sample.testCodes or [])
         if all_codes:
             self._tat.warmup(all_codes)
-        catalog_by_code = self._catalog_tests_by_codes(all_codes)
         sample_ids = [sample.sampleId for sample, _order, _patient in rows]
         linked_by_sample = linked_order_tests_by_sample_ids(
             self.db,
@@ -556,7 +538,6 @@ class LabWorklistService:
                     patient=patient,
                     linked_tests=linked_tests,
                     parents=parents,
-                    catalog_by_code=catalog_by_code,
                 )
             )
         return _worklist_result(items, total, page, page_size, rows_loaded=len(rows))
@@ -581,14 +562,12 @@ class LabWorklistService:
             exclude_statuses=COLLECTION_WORKLIST_LINKED_EXCLUDE,
         )
         linked_tests = self._linked_tests_for_collection_row(sample, order, linked_by_sample)
-        catalog_by_code = self._catalog_tests_by_codes(sample.testCodes or [])
         return self._build_collection_worklist_item(
             sample=sample,
             order=order,
             patient=patient,
             linked_tests=linked_tests,
             include_queue_metrics=False,
-            catalog_by_code=catalog_by_code,
         )
 
     def _order_test_in_active_worklist(self, order_test: OrderTest, sample: Sample | None) -> bool:
@@ -646,11 +625,6 @@ class LabWorklistService:
             [sample.originalSampleId for sample in samples_in_page if sample.originalSampleId]
         )
         prior_displays = self._prior_test_display_map([ot for ot, *_rest in rows])
-        entry_codes: list[str] = []
-        for _ot, _order, _patient, _test, sample in rows:
-            if sample and sample.testCodes:
-                entry_codes.extend(sample.testCodes)
-        entry_catalog = self._catalog_tests_by_codes(entry_codes)
         for ot, order, patient, test, sample in rows:
             since = sample.collectedAt if sample and sample.collectedAt else order.orderDate
             hours = hours_since(since)
@@ -658,13 +632,8 @@ class LabWorklistService:
                 LabWorkItemContext(order=order, order_test=ot, sample=sample)
             )
             work_item_fields = projection_to_worklist_fields(projection)
-            if sample:
-                sample_required, sample_optimal = effective_sample_volumes(
-                    sample,
-                    [entry_catalog[c] for c in (sample.testCodes or []) if c in entry_catalog],
-                )
-            else:
-                sample_required, sample_optimal = None, None
+            sample_required = float(sample.requiredVolume or 0) if sample else None
+            sample_optimal = float(sample.optimalVolume or 0) if sample else None
             items.append(
                 {
                     "orderTestId": ot.id,

@@ -26,6 +26,7 @@ import { useAuthStore } from '@/app/authStore';
 import type { SampleDetailModalProps } from '@/lib/context/modalTypes';
 import { worklistItemToQueueRow } from '../../utils/worklistMappers';
 import { useLabCopy } from '@/strings';
+import { resolveConsolidatedDrawVolumes } from '../../utils/labSample';
 
 export function SampleCollectionDetailModal({
   isOpen,
@@ -108,6 +109,32 @@ export function SampleCollectionDetailModal({
         return true;
       });
   }, [sample, fullByCode]);
+
+  const catalogRequirement = displayRow?.requirement ?? pendingSampleDisplay?.requirement;
+
+  const drawVolumes = useMemo(
+    () =>
+      resolveConsolidatedDrawVolumes({
+        requirement: catalogRequirement,
+        sample: sample ?? undefined,
+      }),
+    [catalogRequirement, sample]
+  );
+
+  const requirementForUi = useMemo(() => {
+    if (!catalogRequirement) return undefined;
+    return {
+      ...catalogRequirement,
+      totalVolume: drawVolumes.requiredMinMl,
+      targetVolume: drawVolumes.targetOptimalMl,
+    };
+  }, [catalogRequirement, drawVolumes]);
+
+  const pendingSampleDisplayResolved = useMemo(() => {
+    if (!pendingSampleDisplay) return undefined;
+    if (!requirementForUi) return pendingSampleDisplay;
+    return { ...pendingSampleDisplay, requirement: requirementForUi };
+  }, [pendingSampleDisplay, requirementForUi]);
 
   const openSampleDetail = useCallback(
     (id: string) => {
@@ -221,8 +248,9 @@ export function SampleCollectionDetailModal({
       isActive={isActive}
       sample={sample}
       order={order}
-      requirement={pendingSampleDisplay?.requirement}
-      pendingSampleDisplay={pendingSampleDisplay}
+      requirement={requirementForUi}
+      drawVolumes={drawVolumes}
+      pendingSampleDisplay={pendingSampleDisplayResolved}
       onCollect={readOnly ? undefined : onCollect}
       readOnly={readOnly}
       isPopoverSubmitting={isPopoverSubmitting}

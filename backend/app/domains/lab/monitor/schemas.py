@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Literal
 
-from app.domains.lab.rules.projection import LabWorklistAllowedActions, PipelineStage
+from app.domains.lab.rules.schemas import LabWorklistAllowedActions, PipelineStage
 from app.domains.orders.schemas import TestResultsDict
 from app.shared.generated.enums import (
     ContainerTopColor,

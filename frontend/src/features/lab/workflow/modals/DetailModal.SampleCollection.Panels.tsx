@@ -63,6 +63,7 @@ export function SampleCollectionDetailContent({
   containerColor,
   colorName,
   requirement,
+  drawVolumes,
   showBarcode = false,
 }: {
   sample: Sample;
@@ -86,6 +87,7 @@ export function SampleCollectionDetailContent({
     containerTypes: ContainerType[];
     containerTopColors: string[];
   };
+  drawVolumes: { requiredMinMl: number; targetOptimalMl: number };
   showBarcode?: boolean;
 }) {
   const labCopy = useLabCopy();
@@ -160,6 +162,7 @@ export function SampleCollectionDetailContent({
         containerColor={containerColor}
         colorName={colorName}
         requirement={requirement}
+        drawVolumes={drawVolumes}
         getUserName={getUserName}
       />
     </>
@@ -178,6 +181,7 @@ export function SampleCollectionDetailFooter({
   onClose,
   onPopoverSubmittingChange,
   collectedAt,
+  drawVolumes,
 }: {
   sample: Sample;
   order: Order | undefined;
@@ -198,6 +202,7 @@ export function SampleCollectionDetailFooter({
   ) => void;
   onClose: () => void;
   onPopoverSubmittingChange?: (submitting: boolean) => void;
+  drawVolumes: { requiredMinMl: number; targetOptimalMl: number };
 }) {
   const labCopy = useLabCopy();
   const createAliquots = useCreateAliquots();
@@ -262,8 +267,8 @@ export function SampleCollectionDetailFooter({
           sampleType={sample.sampleType}
           patientName={patientName}
           isRecollection={sample.isRecollection || false}
-          requiredVolumeMl={sample.requiredVolume}
-          targetVolumeMl={sample.optimalVolume ?? 0}
+          requiredVolumeMl={drawVolumes.requiredMinMl}
+          targetVolumeMl={drawVolumes.targetOptimalMl}
           qualityIssues={'qualityIssues' in sample ? sample.qualityIssues : undefined}
           onSuccess={onClose}
           trigger={

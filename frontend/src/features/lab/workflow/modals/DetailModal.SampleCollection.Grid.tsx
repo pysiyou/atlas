@@ -24,6 +24,7 @@ export function CollectionDetailGrid({
   containerColor,
   colorName,
   requirement,
+  drawVolumes,
   getUserName,
 }: {
   sample: Sample;
@@ -41,6 +42,7 @@ export function CollectionDetailGrid({
     containerTypes: ContainerType[];
     containerTopColors: string[];
   };
+  drawVolumes: { requiredMinMl: number; targetOptimalMl: number };
   getUserName: (userId: string) => string;
 }) {
   const sections: DetailGridSectionConfig[] = [];
@@ -71,15 +73,12 @@ export function CollectionDetailGrid({
     });
   }
 
-  const drawLine = formatDrawVolumeLine(sample.requiredVolume, sample.optimalVolume ?? 0);
+  const { requiredMinMl, targetOptimalMl } = drawVolumes;
+  const drawLine = formatDrawVolumeLine(requiredMinMl, targetOptimalMl);
   const receivedVolume = sample.receivedVolumeMl;
   const volumeStatus =
     receivedVolume != null
-      ? classifySpecimenVolume(
-          receivedVolume,
-          sample.requiredVolume,
-          sample.optimalVolume ?? 0
-        )
+      ? classifySpecimenVolume(receivedVolume, requiredMinMl, targetOptimalMl)
       : sample.volumeStatus ?? null;
   sections.push({
     preset: 'panel.compact.standard', title: 'Volume Tracking',
@@ -109,7 +108,7 @@ export function CollectionDetailGrid({
           remainingVolume !== undefined ? (
             <span
               className={
-                sample.requiredVolume > 0 && remainingVolume < sample.requiredVolume * 0.2
+                requiredMinMl > 0 && remainingVolume < requiredMinMl * 0.2
                   ? TONE.danger.fg
                   : ''
               }

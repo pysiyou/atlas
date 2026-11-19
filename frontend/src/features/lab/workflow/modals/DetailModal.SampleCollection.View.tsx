@@ -26,6 +26,7 @@ export function SampleCollectionDetailModalView({
   sample,
   order,
   requirement,
+  drawVolumes,
   pendingSampleDisplay,
   onCollect,
   readOnly,
@@ -43,6 +44,7 @@ export function SampleCollectionDetailModalView({
   sample: Sample;
   order: Order | undefined;
   requirement?: SampleCollectionQueueItem['requirement'];
+  drawVolumes: { requiredMinMl: number; targetOptimalMl: number };
   pendingSampleDisplay?: SampleCollectionQueueItem;
   onCollect?: (
     display: SampleCollectionQueueItem,
@@ -103,8 +105,8 @@ export function SampleCollectionDetailModalView({
       isCollected={isCollected}
       isRejected={isRejected}
       rejectedSample={rejectedSample}
-      requiredVolume={sample.requiredVolume}
-      targetVolume={sample.optimalVolume}
+      requiredVolume={drawVolumes.requiredMinMl}
+      targetVolume={drawVolumes.targetOptimalMl}
       collectedVolume={collectedVolume}
       effectiveContainerType={effectiveContainerType}
       containerColor={containerColor}
@@ -135,6 +137,7 @@ export function SampleCollectionDetailModalView({
       onClose={onClose}
       onPopoverSubmittingChange={onPopoverSubmittingChange}
       collectedAt={collectedAt}
+      drawVolumes={drawVolumes}
     />
   ) : undefined;
 
@@ -175,6 +178,7 @@ export function SampleCollectionDetailModalView({
         containerColor={containerColor}
         colorName={colorName}
         requirement={requirement}
+        drawVolumes={drawVolumes}
         showBarcode={sample.sampleId != null}
       />
       <LabRelatedSamplesPanel sample={sample} isOpen={isOpen} onOpenSample={openSampleDetail} />

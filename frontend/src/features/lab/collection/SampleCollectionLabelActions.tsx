@@ -4,6 +4,7 @@ import { SAMPLE_TYPE_CONFIG, type SampleType } from '@/types/generated/enums';
 import { displayId } from '@/utils';
 import { formatDateTime } from '@/utils/date';
 import { feedbackTitle } from '@/feedback';
+import { formatDrawVolumeLine, resolveConsolidatedDrawVolumes } from '../utils/labSample';
 
 const LABEL_PAGE_WIDTH_IN = '1.42in';
 const LABEL_PAGE_HEIGHT_IN = '0.68in';
@@ -137,16 +138,9 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
 
   const safeDateTime = escapeHtml(dateTime);
   const safeAccession = escapeHtml(accessionDisplay);
-  const vol =
-    sample.optimalVolume != null &&
-    sample.optimalVolume > 0 &&
-    sample.requiredVolume > 0
-      ? `Vol: ${sample.optimalVolume} mL (min ${sample.requiredVolume})`
-      : sample.requiredVolume > 0
-        ? `Min: ${sample.requiredVolume} mL`
-        : sample.optimalVolume != null && sample.optimalVolume > 0
-          ? `Vol: ${sample.optimalVolume} mL`
-          : '';
+  const { requiredMinMl, targetOptimalMl } = resolveConsolidatedDrawVolumes({ sample });
+  const drawLine = formatDrawVolumeLine(requiredMinMl, targetOptimalMl);
+  const vol = drawLine ? `Vol: ${drawLine}` : '';
   const nameTypeLine = escapeHtml(`${patientName.trim() || 'Unknown'} - ${sampleType}`);
   const volLine = vol ? escapeHtml(vol) : '';
   const barcodeValue = escapeJsString(accessionDisplay);
@@ -199,7 +193,7 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
 export const printCollectionLabel = (input: SampleLabelPrintInput): void => {
   try {
     const htmlContent = generatePrintLabelHTML(input);
-    const printWindow = window.open('', '', 'width=260,height=120');
+    const printWindow = window.open('about:blank', '_blank', 'width=260,height=120');
 
     if (!printWindow) {
       throw new Error(feedbackTitle('lab.collection.printLabel.popupBlocked'));

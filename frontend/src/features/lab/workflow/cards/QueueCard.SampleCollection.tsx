@@ -29,6 +29,7 @@ import {
 } from '../shared/QueueCardLeftColumn';
 import { getSampleCollectionViewModel } from './queueCard.sampleCollection.viewModel';
 import { useLabCopy } from '@/strings';
+import { resolveConsolidatedDrawVolumes } from '../../utils/labSample';
 
 export type { SampleCollectionCardLeftColumnProps };
 
@@ -50,6 +51,7 @@ export interface SampleCollectionCardSharedData {
   testNames: string[];
   handleCardClick: (e?: React.MouseEvent) => void;
   isCollecting: boolean;
+  drawVolumes: ReturnType<typeof resolveConsolidatedDrawVolumes>;
 }
 
 export interface SampleCollectionCardProps {
@@ -69,14 +71,14 @@ export interface SampleCollectionCardProps {
 
 function SampleCollectionCardLeftColumnFromVm({
   sample,
-  requirement,
   patientName,
   vm,
+  drawVolumes,
 }: {
   sample: SampleCollectionCardSharedData['sample'];
-  requirement: SampleCollectionCardSharedData['requirement'];
   patientName: string;
   vm: ReturnType<typeof getSampleCollectionViewModel>;
+  drawVolumes: ReturnType<typeof resolveConsolidatedDrawVolumes>;
 }) {
   return (
     <SampleCollectionCardLeftColumn
@@ -89,16 +91,8 @@ function SampleCollectionCardLeftColumnFromVm({
       isCollected={vm.isCollected}
       isRejected={vm.isRejected}
       rejectedSample={vm.rejectedSample}
-      requiredVolume={
-        requirement.totalVolume > 0
-          ? requirement.totalVolume
-          : sample.requiredVolume > 0
-            ? sample.requiredVolume
-            : undefined
-      }
-      targetVolume={
-        requirement.targetVolume > 0 ? requirement.targetVolume : sample.optimalVolume
-      }
+      requiredVolume={drawVolumes.requiredMinMl > 0 ? drawVolumes.requiredMinMl : undefined}
+      targetVolume={drawVolumes.targetOptimalMl > 0 ? drawVolumes.targetOptimalMl : undefined}
       collectedVolume={vm.collectedVolume}
       effectiveContainerType={vm.effectiveContainerType}
       containerColor={vm.containerColor}
@@ -118,6 +112,7 @@ export function SampleCollectionCardDesktop({
   patientName,
   testNames,
   handleCardClick,
+  drawVolumes,
 }: SampleCollectionCardSharedData) {
   const labCopy = useLabCopy();
   const vm = getSampleCollectionViewModel(display, sample);
@@ -125,9 +120,9 @@ export function SampleCollectionCardDesktop({
   const leftColumn = (
     <SampleCollectionCardLeftColumnFromVm
       sample={sample}
-      requirement={requirement}
       patientName={patientName}
       vm={vm}
+      drawVolumes={drawVolumes}
     />
   );
 
@@ -169,8 +164,8 @@ export function SampleCollectionCardDesktop({
               sampleType={sample.sampleType}
               patientName={patientName}
               isRecollection={vm.isRecollection}
-              requiredVolumeMl={requirement.totalVolume}
-              targetVolumeMl={requirement.targetVolume ?? sample.optimalVolume ?? 0}
+              requiredVolumeMl={drawVolumes.requiredMinMl}
+              targetVolumeMl={drawVolumes.targetOptimalMl}
               qualityIssues={isCollectedSample(sample) ? sample.qualityIssues : undefined}
             />
           ) : null}
@@ -195,6 +190,7 @@ export function SampleCollectionCardMobile({
   testNames,
   handleCardClick,
   isCollecting,
+  drawVolumes,
 }: SampleCollectionCardSharedData) {
   const labCopy = useLabCopy();
   const vm = getSampleCollectionViewModel(display, sample);
@@ -202,9 +198,9 @@ export function SampleCollectionCardMobile({
   const leftColumn = (
     <SampleCollectionCardLeftColumnFromVm
       sample={sample}
-      requirement={requirement}
       patientName={patientName}
       vm={vm}
+      drawVolumes={drawVolumes}
     />
   );
 
@@ -287,15 +283,29 @@ export function useSampleCollectionCardData(
   const patientName = display.patientName || '—';
   const testNames = requirement.testCodes ? getTestNames(requirement.testCodes, tests) : [];
 
+  const drawVolumes = useMemo(
+    () => resolveConsolidatedDrawVolumes({ requirement, sample }),
+    [requirement, sample]
+  );
+  const requirementForUi = useMemo(
+    () => ({
+      ...requirement,
+      totalVolume: drawVolumes.requiredMinMl,
+      targetVolume: drawVolumes.targetOptimalMl,
+    }),
+    [requirement, drawVolumes]
+  );
+
   return {
-    display,
+    display: { ...display, requirement: requirementForUi },
     sample,
-    requirement,
+    requirement: requirementForUi,
     onCollect,
     patientName,
     testNames,
     handleCardClick,
     isCollecting,
+    drawVolumes,
   };
 }
 

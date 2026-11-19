@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
+from app.domains.lab.rules.schemas import LabWorkItemProjection, LabWorklistAllowedActions
 from app.domains.orders.schemas import TestResultsDict
 from app.shared.generated.enums import RemedyType, ValidationDecision
 from app.shared.clinical import (
@@ -14,9 +15,6 @@ from app.shared.clinical import (
     SAMPLE_ID_PATTERN,
 )
 from pydantic import BaseModel, Field, model_validator
-
-if TYPE_CHECKING:
-    from app.domains.lab.rules.projection import LabWorkItemProjection, LabWorklistAllowedActions
 
 
 class ResultEntryRequest(BaseModel):

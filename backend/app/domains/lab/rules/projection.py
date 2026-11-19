@@ -9,7 +9,7 @@ Semantics:
 
 
 from dataclasses import dataclass, field
-from typing import Any, Literal
+from typing import Any
 
 from app.domains.lab.rules.eligibility import (
     action_flags_for_collection,
@@ -24,45 +24,17 @@ from app.domains.lab.rules.presentation import (
     resolve_sample_presentation,
     resolve_test_presentation,
 )
+from app.domains.lab.rules.schemas import (
+    EscalationActionFlags,
+    LabWorkItemProjection,
+    LabWorklistAllowedActions,
+    MonitorAttentionStage,
+    PipelineStage,
+)
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.shared.generated.enums import TestStatus
-from app.shared.api import StatusPresentation
 from app.shared.generated.lab_policy import ATTENTION_LABELS, reason_blocks_progress
-from pydantic import BaseModel, Field
-
-MonitorAttentionStage = Literal["collection", "entry", "validation", "escalation"]
-
-PipelineStage = Literal["collection", "entry", "validation", "completed", "cancelled"]
-
-
-class LabWorklistAllowedActions(BaseModel):
-    """Shared allowed-action flags for lab worklists and order test projections."""
-
-    model_config = {"populate_by_name": True}
-
-    collect: bool = False
-    enterResults: bool = False
-    can_validate: bool = Field(default=False, alias="validate")
-    reject: bool = False
-
-
-class EscalationActionFlags(BaseModel):
-    criticalNotificationSent: bool = False
-    allowForceValidate: bool = True
-
-
-class LabWorkItemProjection(BaseModel):
-    model_config = {"populate_by_name": True}
-
-    pipelineStage: PipelineStage
-    attentionReason: str | None = None
-    attentionLabel: str | None = None
-    denyReason: str | None = None
-    denyMessage: str | None = None
-    allowedActions: LabWorklistAllowedActions = Field(default_factory=LabWorklistAllowedActions)
-    escalation: EscalationActionFlags | None = None
-    statusPresentation: StatusPresentation | None = None
 
 
 @dataclass

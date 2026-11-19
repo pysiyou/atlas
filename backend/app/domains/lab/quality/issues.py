@@ -22,6 +22,7 @@ from app.domains.lab.quality.sample_commands import SampleIssueCommands
 from app.domains.lab.quality.schemas import QualityIssueOptions, QualityIssueResult
 from app.domains.lab.quality.test_commands import TestIssueCommands
 from app.domains.lab.specimen.collection import SampleCollectionService
+from app.domains.lab.specimen.lookup import get_sample_or_error, linked_order_tests_for_sample
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import OrderTest
 from app.shared.generated.enums import (
@@ -64,15 +65,11 @@ class QualityIssueService:
     # ── lookups (public for commands / escalation) ─────────────────────────
 
     def get_sample(self, sample_id: str, *, for_update: bool = False) -> Sample:
-        from app.domains.lab.specimen.generation import get_sample_or_error
-
         return get_sample_or_error(self.db, sample_id, for_update=for_update)
 
     def linked_tests(
         self, sample: Sample, *, exclude: list[TestStatus] | None = None
     ) -> list[OrderTest]:
-        from app.domains.lab.specimen.generation import linked_order_tests_for_sample
-
         return linked_order_tests_for_sample(self.db, sample, exclude_statuses=exclude)
 
     # ── remedy delegation (public for escalation) ──────────────────────────

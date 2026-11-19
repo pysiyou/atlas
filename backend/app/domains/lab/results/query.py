@@ -104,7 +104,7 @@ class ResultQueryService:
         test_def = t.test
         ticket = tickets_by_test.get(t.id) if tickets_by_test else None
         reason_code = ticket.reasonCode.value if ticket and ticket.reasonCode else None
-        from app.domains.lab.rules.presentation import escalation_action_flags
+        from app.domains.lab.rules.eligibility import escalation_action_flags
 
         flags = escalation_action_flags(t, reason_code=reason_code)
         if order is None or not order.orderId:

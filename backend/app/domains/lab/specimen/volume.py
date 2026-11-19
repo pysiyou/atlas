@@ -5,6 +5,8 @@ from enum import StrEnum
 from typing import Iterable
 
 from app.domains.catalog.models import OrderableTest
+
+
 class SpecimenVolumeStatus(StrEnum):
     NO_REQUIREMENT = "no_requirement"
     INSUFFICIENT = "insufficient"
@@ -26,21 +28,6 @@ def aggregate_target_optimal_ml(tests: Iterable[OrderableTest]) -> float:
     """Maximum optimal_volume_ml across tests on the same tube (nulls ignored)."""
     optimals = [float(t.optimalVolumeMl) for t in tests if t.optimalVolumeMl is not None]
     return max(optimals) if optimals else 0.0
-
-
-def effective_sample_volumes(
-    sample,
-    catalog_tests: Iterable[OrderableTest],
-) -> tuple[float, float]:
-    """Persisted sample volumes, or catalog max aggregation when stored values are zero."""
-    min_v = float(getattr(sample, "requiredVolume", 0) or 0)
-    opt_v = float(getattr(sample, "optimalVolume", 0) or 0)
-    if min_v > 0 or opt_v > 0:
-        return min_v, opt_v
-    tests = list(catalog_tests)
-    if not tests:
-        return min_v, opt_v
-    return aggregate_required_min_ml(tests), aggregate_target_optimal_ml(tests)
 
 
 def classify_specimen_volume(

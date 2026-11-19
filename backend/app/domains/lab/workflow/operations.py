@@ -19,6 +19,7 @@ from app.domains.lab.results.flags import FlagCalculatorService
 from app.domains.lab.results.validator import ResultValidatorService
 from app.domains.lab.rules.eligibility import active_linked_tests_for_collection, assert_can_collect
 from app.domains.lab.rules.state_machines import TestStateMachine
+from app.domains.lab.specimen.lookup import get_sample_or_error, linked_order_tests_for_sample
 from app.domains.lab.specimen.models import Sample
 from app.domains.lab.specimen.volume import apply_received_volume_quality_issues
 from app.domains.lab.workflow.result_commands import ResultCommandHandler
@@ -143,8 +144,6 @@ class LabOperationsService:
         self._results = ResultCommandHandler(self)
 
     def _get_sample(self, sample_id: str, for_update: bool = False) -> Sample:
-        from app.domains.lab.specimen.generation import get_sample_or_error
-
         return get_sample_or_error(self.db, sample_id, for_update=for_update)
 
     def _get_order_test(
@@ -273,8 +272,6 @@ class LabOperationsService:
         *,
         exclude_statuses: list[TestStatus] | None = None,
     ) -> list[OrderTest]:
-        from app.domains.lab.specimen.generation import linked_order_tests_for_sample
-
         return linked_order_tests_for_sample(self.db, sample, exclude_statuses=exclude_statuses)
 
     def _invalidate_lab_monitor_cache(self) -> None:

@@ -4,11 +4,9 @@ Pydantic schemas for Order
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Literal
+from typing import Any, Literal
 
-if TYPE_CHECKING:
-    from app.domains.lab.public import LabWorkItemProjection
-
+from app.domains.lab.rules.schemas import LabWorkItemProjection
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
@@ -237,14 +235,3 @@ class OrderReportResponse(BaseModel):
     orderId: str = Field(..., pattern=FILLER_PATTERN)
     status: str
     message: str
-
-
-def _rebuild_order_test_lab_schema() -> None:
-    from app.domains.lab.public import LabWorkItemProjection
-
-    OrderTestResponse.model_rebuild(
-        _types_namespace={"LabWorkItemProjection": LabWorkItemProjection}
-    )
-
-
-_rebuild_order_test_lab_schema()

@@ -5,11 +5,14 @@ from typing import TYPE_CHECKING
 
 from app.domains.lab.quality.options import sample_options
 from app.domains.lab.quality.rejection import RejectionCriteriaService
-from app.domains.lab.quality.remedy import sample_unfinished_remedy_types
+from app.domains.lab.quality.remedy import (
+    ResultedRejectionOutcome,
+    SampleRejectionContext,
+    sample_unfinished_remedy_types,
+)
 
 if TYPE_CHECKING:
     from app.domains.lab.quality.issues import QualityIssueService
-    from app.domains.lab.quality.remedy import ResultedRejectionOutcome, SampleRejectionContext
 
 from app.domains.lab.quality.schemas import QualityIssueResult
 from app.shared.generated.enums import (

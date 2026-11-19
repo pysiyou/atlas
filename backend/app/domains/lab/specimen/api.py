@@ -45,7 +45,7 @@ def _sample_response(db: Session, sample: Sample) -> SampleResponse:
     return SampleResponse(**data)
 
 
-router.get(
+@router.get(
     "/samples",
     response_model=list[SampleResponse] | PaginatedResponse[SampleResponse],
 )
@@ -62,7 +62,7 @@ def get_samples(
     )
 
 
-router.get("/samples/{sampleId}/work-context", response_model=CollectionWorklistItem)
+@router.get("/samples/{sampleId}/work-context", response_model=CollectionWorklistItem)
 def get_sample_work_context(
     sampleId: SampleIdPath,
     worklist: LabWorklistService = Depends(get_lab_worklist_service),
@@ -72,7 +72,7 @@ def get_sample_work_context(
     return worklist.get_sample_work_context(sampleId)
 
 
-router.get("/samples/{sampleId}", response_model=SampleResponse)
+@router.get("/samples/{sampleId}", response_model=SampleResponse)
 def get_sample(
     sampleId: SampleIdPath,
     db: Session = Depends(get_db),
@@ -83,7 +83,7 @@ def get_sample(
     return _sample_response(db, sample)
 
 
-router.patch("/samples/{sampleId}/collect", response_model=SampleResponse)
+@router.patch("/samples/{sampleId}/collect", response_model=SampleResponse)
 def collect_sample(
     sampleId: SampleIdPath,
     collect_data: SampleCollectRequest,
@@ -102,7 +102,7 @@ def collect_sample(
     return _sample_response(db, sample)
 
 
-router.patch("/samples/{sampleId}/receive", response_model=SampleResponse)
+@router.patch("/samples/{sampleId}/receive", response_model=SampleResponse)
 def receive_sample(
     sampleId: SampleIdPath,
     receive_data: SampleReceiveRequest,
@@ -119,7 +119,7 @@ def receive_sample(
     return _sample_response(db, sample)
 
 
-router.post("/samples/{sampleId}/aliquots", response_model=list[SampleResponse])
+@router.post("/samples/{sampleId}/aliquots", response_model=list[SampleResponse])
 def create_sample_aliquots(
     sampleId: SampleIdPath,
     payload: SampleAliquotCreateRequest,
