@@ -13,10 +13,12 @@ import type {
 
 function buildRequirement(item: CollectionWorklistItem): SampleRequirement {
   const requiredVolume = item.requiredVolume ?? 0;
+  const targetVolume = item.optimalVolume ?? 0;
   return {
     sampleType: item.sampleType as SampleType,
     testCodes: item.testCodes,
     totalVolume: requiredVolume,
+    targetVolume,
     containerTypes: (item.requiredContainerTypes ?? []) as ContainerType[],
     containerTopColors: (item.requiredContainerColors ?? []) as ContainerTopColor[],
     priority: item.priority,
@@ -35,6 +37,7 @@ export function worklistItemToQueueRow(item: CollectionWorklistItem): Collection
     status: item.status,
     testCodes: item.testCodes,
     requiredVolume,
+    optimalVolume: item.optimalVolume ?? 0,
     priority: item.priority,
     requiredContainerTypes: (item.requiredContainerTypes ?? []) as ContainerType[],
     requiredContainerColors: (item.requiredContainerColors ?? []) as ContainerTopColor[],

@@ -79,6 +79,8 @@ class OrderableTestBase(BaseModel):
 class OrderableTestSummaryResponse(OrderableTestBase):
     synonyms: list[str] | None = None
     loincCode: str | None = None
+    minVolumeMl: float | None = None
+    optimalVolumeMl: float | None = None
     fastingRequired: bool | None = None
     workups: list[str] = Field(default_factory=list)
     createdAt: datetime

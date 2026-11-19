@@ -34,6 +34,7 @@ import {
   getTestOrderObsLabel,
 } from '../utils/testDisplay';
 import { getCategoryLabel } from '../constants/catalogConfig';
+import { formatDrawVolumeLine } from '@/features/lab/utils/labSample';
 
 /** Visible row budget for scroll-capped catalog panels when balancing columns. */
 const CATALOG_SCROLL_PANEL_BALANCE_ROWS = 12;
@@ -127,7 +128,7 @@ function buildCatalogDetailTables(test: OrderableTest): TableInput[] {
     {
       key: 'sample',
       preset: 'panel.pageEmbed.visible',
-      title: 'Sample Requirements',
+      title: 'Specimen & Collection',
       rows: [
         { label: 'Sample Type', value: capitalize(test.sampleType) },
         { label: 'Container', value: test.containerDescription || '-' },
@@ -135,12 +136,9 @@ function buildCatalogDetailTables(test: OrderableTest): TableInput[] {
         { label: 'Container Colors', value: formatArrayWithFallback(test.containerTopColors, '-') },
         { label: 'Sample Volume', value: test.sampleVolume },
         {
-          label: 'Min volume (mL)',
-          value: test.minVolumeMl != null ? `${test.minVolumeMl} mL` : '-',
-        },
-        {
-          label: 'Optimal volume (mL)',
-          value: test.optimalVolumeMl != null ? `${test.optimalVolumeMl} mL` : '-',
+          label: 'Draw volume',
+          value:
+            formatDrawVolumeLine(test.minVolumeMl ?? 0, test.optimalVolumeMl ?? 0) ?? '-',
         },
         { label: 'Fasting Required', value: formatBoolean(test.fastingRequired) },
         { label: 'Collection Notes', value: test.collectionNotes || '-' },

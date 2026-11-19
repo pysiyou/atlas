@@ -16,6 +16,7 @@ from app.domains.lab.specimen.queries import SpecimenQueryService
 from app.domains.lab.specimen.schemas import (
     SampleAliquotCreateRequest,
     SampleCollectRequest,
+    SampleReceiveRequest,
     SampleResponse,
 )
 from app.domains.lab.workflow.operations import LabOperationsService
@@ -86,10 +87,11 @@ router.patch("/samples/{sampleId}/collect", response_model=SampleResponse)
 def collect_sample(
     sampleId: SampleIdPath,
     collect_data: SampleCollectRequest,
+    db: Session = Depends(get_db),
     service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_sample_collector),
 ):
-    return service.collect_sample(
+    sample = service.collect_sample(
         sample_id=sampleId,
         user_id=current_user.id,
         collected_volume=collect_data.collectedVolume,
@@ -97,6 +99,24 @@ def collect_sample(
         container_color=collect_data.actualContainerColor.value,
         collection_notes=collect_data.collectionNotes,
     )
+    return _sample_response(db, sample)
+
+
+router.patch("/samples/{sampleId}/receive", response_model=SampleResponse)
+def receive_sample(
+    sampleId: SampleIdPath,
+    receive_data: SampleReceiveRequest,
+    db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
+    current_user: User = Depends(get_current_user),
+):
+    sample = service.receive_sample(
+        sample_id=sampleId,
+        user_id=current_user.id,
+        received_volume_ml=receive_data.receivedVolumeMl,
+        notes=receive_data.notes,
+    )
+    return _sample_response(db, sample)
 
 
 router.post("/samples/{sampleId}/aliquots", response_model=list[SampleResponse])

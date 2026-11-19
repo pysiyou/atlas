@@ -23,6 +23,7 @@ import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,
   getCollectionTopColorBg,
+  defaultDrawVolumeMl,
   hasMinVolumeRequirement,
   isCollectedVolumeValid,
 } from '../utils';
@@ -68,8 +69,10 @@ function CollectionPopoverContent({
   isSubmitting = false,
 }: CollectionPopoverContentProps) {
   const requiredMinVolumeMl = requirement.totalVolume;
+  const targetVolumeMl = requirement.targetVolume ?? 0;
   const hasMinRequirement = hasMinVolumeRequirement(requiredMinVolumeMl);
-  const [volume, setVolume] = useState<number>(hasMinRequirement ? requiredMinVolumeMl : 0);
+  const initialVolume = defaultDrawVolumeMl(requiredMinVolumeMl, targetVolumeMl);
+  const [volume, setVolume] = useState<number>(initialVolume);
   const [notes, setNotes] = useState('');
   const defaultContainerType = useMemo(
     () => getEffectiveContainerType(undefined, requirement.sampleType),
@@ -160,10 +163,14 @@ function CollectionPopoverContent({
           <label className={FORM_FIELD_LABEL}>
             Required Quantity <span className={TONE.danger.fg}>*</span>
           </label>
-          {hasMinRequirement && (
+          {(hasMinRequirement || targetVolumeMl > 0) && (
             <div className={cn(`${text({ role: 'caption' })} px-space-2 py-space-0-5 ${RADIUS.field} flex items-center gap-space-1`, TONE.warning.well, TONE.warning.fg)}>
               <Icon iconKey={IconKeys.actions.alertCircle} className="w-3 h-3" />
-              Min: {requiredMinVolumeMl} mL
+              {targetVolumeMl > 0 && hasMinRequirement
+                ? `Target ${targetVolumeMl} mL (Min ${requiredMinVolumeMl} mL)`
+                : targetVolumeMl > 0
+                  ? `Target ${targetVolumeMl} mL`
+                  : `Min ${requiredMinVolumeMl} mL`}
             </div>
           )}
         </div>

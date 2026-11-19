@@ -32,7 +32,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -119,8 +121,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -207,8 +209,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -295,8 +297,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -383,8 +385,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -494,8 +496,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -581,8 +583,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 5.0,
-        "optimal_volume_ml": 10.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -669,8 +671,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -756,8 +758,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -842,8 +844,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -928,7 +930,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1013,8 +1017,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1099,8 +1103,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1186,8 +1190,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1273,8 +1277,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1361,8 +1365,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1449,8 +1453,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1537,8 +1541,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1625,8 +1629,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1713,8 +1717,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1800,7 +1804,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1892,8 +1898,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1979,8 +1985,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.4,
-        "optimal_volume_ml": 2.7
+        "min_volume_ml": 2.7,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2067,8 +2073,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2155,8 +2161,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2243,8 +2249,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2343,8 +2349,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2431,8 +2437,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2518,8 +2524,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2606,8 +2612,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2692,7 +2698,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2779,8 +2787,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2866,8 +2874,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2954,8 +2962,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3042,8 +3050,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3130,8 +3138,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3218,8 +3226,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3306,8 +3314,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3394,8 +3402,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3482,8 +3490,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3569,7 +3577,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3656,8 +3666,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3744,8 +3754,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3832,8 +3842,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3920,8 +3930,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4008,8 +4018,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4096,8 +4106,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4184,8 +4194,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4272,8 +4282,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4360,8 +4370,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4447,7 +4457,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4534,8 +4546,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4622,8 +4634,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4710,8 +4722,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4798,8 +4810,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4886,8 +4898,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4974,8 +4986,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5062,8 +5074,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5150,8 +5162,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5238,8 +5250,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5324,7 +5336,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5410,8 +5424,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5505,8 +5519,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5592,8 +5606,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5679,8 +5693,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5767,8 +5781,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5855,8 +5869,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5942,8 +5956,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6030,8 +6044,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6118,8 +6132,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6205,7 +6219,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6293,8 +6309,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6385,8 +6401,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6491,7 +6507,7 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
+        "min_volume_ml": 1.0,
         "optimal_volume_ml": 3.0
       },
       "validation": {
@@ -6578,7 +6594,7 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
+        "min_volume_ml": 1.0,
         "optimal_volume_ml": 3.0
       },
       "validation": {
@@ -6665,8 +6681,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6751,8 +6767,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 2.5
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6840,8 +6856,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6927,8 +6943,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7036,8 +7052,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7122,7 +7138,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7208,8 +7226,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7296,8 +7314,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7397,8 +7415,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7485,8 +7503,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7573,7 +7591,7 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
+        "min_volume_ml": 1.0,
         "optimal_volume_ml": 3.0
       },
       "validation": {
@@ -7661,8 +7679,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7735,6 +7753,8 @@
         ],
         "volume_description": "0.5ml",
         "container_description": "Swab + buffer (kit)",
+        "min_volume_ml": 0.5,
+        "optimal_volume_ml": 0.5,
         "fasting_required": false,
         "collection_notes": "Specimen: Nasopharyngeal or oropharyngeal swab. Results in 10-30 minutes",
         "rejection_criteria": [
@@ -7747,9 +7767,7 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ],
-        "min_volume_ml": 0.5,
-        "optimal_volume_ml": 0.5
+        ]
       },
       "validation": {
         "rejection_criteria": [
@@ -7835,8 +7853,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7924,8 +7942,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8010,7 +8028,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8097,8 +8117,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 1.5,
-        "optimal_volume_ml": 2.0
+        "min_volume_ml": 1.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8184,8 +8204,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8272,8 +8292,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 2.0
+        "min_volume_ml": 2.7,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8345,6 +8365,8 @@
         ],
         "volume_description": "As required",
         "container_description": "N/A",
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0,
         "fasting_required": false,
         "collection_notes": "Specimen: Derived from serum creatinine.",
         "rejection_criteria": [
@@ -8357,9 +8379,7 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 2.5
+        ]
       },
       "validation": {
         "rejection_criteria": [
@@ -8449,8 +8469,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8536,8 +8556,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8623,8 +8643,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8709,8 +8729,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.4,
-        "optimal_volume_ml": 2.4
+        "min_volume_ml": 2.7,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8796,8 +8816,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8882,7 +8902,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8968,8 +8990,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9056,8 +9078,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9143,7 +9165,7 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
+        "min_volume_ml": 1.0,
         "optimal_volume_ml": 3.0
       },
       "validation": {
@@ -9230,8 +9252,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9317,8 +9339,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9405,8 +9427,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9493,8 +9515,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9581,8 +9603,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9669,8 +9691,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9760,7 +9782,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9848,8 +9872,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9940,8 +9964,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10028,7 +10052,7 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
+        "min_volume_ml": 1.0,
         "optimal_volume_ml": 3.0
       },
       "validation": {
@@ -10115,8 +10139,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10201,8 +10225,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10295,7 +10319,7 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
+        "min_volume_ml": 1.0,
         "optimal_volume_ml": 3.0
       },
       "validation": {
@@ -10382,8 +10406,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10471,8 +10495,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10567,8 +10591,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10662,7 +10686,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10765,8 +10791,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10864,8 +10890,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10951,8 +10977,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11039,8 +11065,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11126,8 +11152,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11214,8 +11240,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11303,8 +11329,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11392,8 +11418,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11480,8 +11506,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11575,7 +11601,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11661,8 +11689,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11748,8 +11776,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11835,8 +11863,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11922,8 +11950,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -12009,8 +12037,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [
@@ -12096,8 +12124,8 @@
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
         ],
-        "min_volume_ml": 2.0,
-        "optimal_volume_ml": 3.0
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
       },
       "validation": {
         "rejection_criteria": [

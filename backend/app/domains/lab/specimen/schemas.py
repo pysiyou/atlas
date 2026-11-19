@@ -18,7 +18,8 @@ from app.shared.clinical import (
     SAMPLE_ID_PATTERN,
     TEST_MNEMONIC_PATTERN,
 )
-from pydantic import BaseModel, Field, field_validator
+from app.domains.lab.specimen.volume import SpecimenVolumeStatus, classify_specimen_volume
+from pydantic import BaseModel, Field, computed_field, field_validator
 
 _TEST_MNEMONIC_RE = re.compile(TEST_MNEMONIC_PATTERN)
 
@@ -28,6 +29,7 @@ class SampleBase(BaseModel):
     status: SampleStatus
     testCodes: list[str]
     requiredVolume: float
+    optimalVolume: float = 0
     priority: PriorityLevel
     requiredContainerTypes: list[ContainerType]
     requiredContainerColors: list[ContainerTopColor]
@@ -38,6 +40,11 @@ class SampleCollectRequest(BaseModel):
     actualContainerType: ContainerType
     actualContainerColor: ContainerTopColor
     collectionNotes: str | None = None
+
+
+class SampleReceiveRequest(BaseModel):
+    receivedVolumeMl: float = Field(..., ge=0)
+    notes: str | None = None
 
 
 class SampleAliquotCreateRequest(BaseModel):
@@ -70,6 +77,7 @@ class SampleResponse(SampleBase):
     collectedAt: datetime | None = None
     collectedBy: str | None = Field(None, pattern=LAB_ACTOR_USER_ID_PATTERN)
     collectedVolume: float | None = None
+    receivedVolumeMl: float | None = None
     actualContainerType: ContainerType | None = None
     actualContainerColor: ContainerTopColor | None = None
     collectionNotes: str | None = None
@@ -95,6 +103,18 @@ class SampleResponse(SampleBase):
     createdBy: str = Field(..., pattern=EMPLOYEE_NUMBER_PATTERN)
     updatedAt: datetime
     updatedBy: str = Field(..., pattern=EMPLOYEE_NUMBER_PATTERN)
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def volumeStatus(self) -> SpecimenVolumeStatus | None:
+        measured = self.receivedVolumeMl if self.receivedVolumeMl is not None else None
+        if measured is None:
+            return None
+        return classify_specimen_volume(
+            float(measured),
+            float(self.requiredVolume),
+            float(self.optimalVolume),
+        )
 
     class Config:
         from_attributes = True

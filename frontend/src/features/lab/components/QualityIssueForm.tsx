@@ -21,6 +21,7 @@ import {
   buildSampleRemedyOptions,
   resolveSuggestedRemedy,
 } from '../constants/qualityIssuePopoverCopy';
+import { INSUFFICIENT_VOLUME_REJECTION } from '../utils/labSample';
 
 type CollectionFormCopy = {
   alert: { message: string } | null;
@@ -65,6 +66,8 @@ export interface QualityIssueFormProps {
   reason: string;
   notes: string;
   onOptionsLoaded?: (options: QualityIssueOptions | undefined) => void;
+  /** Consolidated tube draw reference for volume-related rejection reasons. */
+  volumeReferenceLine?: string | null;
 }
 
 type QualityIssueFormContentProps = Omit<
@@ -88,6 +91,7 @@ function QualityIssueFormLoaded({
   options,
   isLoading,
   labCopy,
+  volumeReferenceLine,
 }: Omit<QualityIssueFormContentProps, 'subtitle' | 'isSubmitting'>) {
   const collectionCopy =
     targetType === 'sample' && options ? getCollectionFormCopy(options) : null;
@@ -125,6 +129,12 @@ function QualityIssueFormLoaded({
 
       {collectionCopy?.alert ? (
         <QualityIssueInlineWarning message={collectionCopy.alert.message} />
+      ) : null}
+
+      {targetType === 'sample' && volumeReferenceLine && reason === INSUFFICIENT_VOLUME_REJECTION ? (
+        <p className={text({ role: 'body', intent: 'muted' })}>
+          Required draw: {volumeReferenceLine}
+        </p>
       ) : null}
 
       <CatalogRejectionCriteriaFields
@@ -193,6 +203,7 @@ export function QualityIssueForm({
   reason,
   notes,
   onOptionsLoaded,
+  volumeReferenceLine,
 }: QualityIssueFormProps) {
   const labCopy = useLabCopy();
   const { data: options, isLoading } = useQualityIssueOptions(targetType, targetId);
@@ -216,6 +227,7 @@ export function QualityIssueForm({
       options={options}
       isLoading={isLoading}
       labCopy={labCopy}
+      volumeReferenceLine={volumeReferenceLine}
     />
   );
 }

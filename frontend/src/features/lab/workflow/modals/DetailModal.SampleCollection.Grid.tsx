@@ -4,6 +4,8 @@
 
 import type { ContainerType, Sample } from '@/types';
 import { CONTAINER_TOP_COLOR_OPTIONS, CONTAINER_TYPE_CONFIG } from '@/types';
+import { SpecimenVolumeStatusBadge } from '../../components/SpecimenVolumeStatusBadge';
+import { classifySpecimenVolume, formatDrawVolumeLine } from '../../utils/labSample';
 import { formatVolumeMl } from '@/utils/presentation';
 import { TONE } from '@/theme/recipes';
 import { DetailGrid, type DetailGridSectionConfig } from '../shared/DetailModalLayout';
@@ -69,16 +71,37 @@ export function CollectionDetailGrid({
     });
   }
 
-  const showRequiredVolume = sample.requiredVolume > 0;
+  const drawLine = formatDrawVolumeLine(sample.requiredVolume, sample.optimalVolume ?? 0);
+  const receivedVolume = sample.receivedVolumeMl;
+  const volumeStatus =
+    receivedVolume != null
+      ? classifySpecimenVolume(
+          receivedVolume,
+          sample.requiredVolume,
+          sample.optimalVolume ?? 0
+        )
+      : sample.volumeStatus ?? null;
   sections.push({
     preset: 'panel.compact.standard', title: 'Volume Tracking',
     fields: [
-      ...(showRequiredVolume
-        ? [{ label: 'Required', value: formatVolumeMl(sample.requiredVolume) }]
+      ...(drawLine ? [{ label: 'Draw volume', value: drawLine }] : []),
+      ...(volumeStatus && volumeStatus !== 'no_requirement'
+        ? [
+            {
+              label: 'Volume status',
+              value: <SpecimenVolumeStatusBadge status={volumeStatus} />,
+            },
+          ]
         : []),
       {
         label: 'Collected',
         value: collectedVolume !== undefined ? formatVolumeMl(collectedVolume) : undefined,
+      },
+      {
+        label: 'Received (lab)',
+        value: receivedVolume !== undefined && receivedVolume !== null
+          ? formatVolumeMl(receivedVolume)
+          : undefined,
       },
       {
         label: 'Remaining',
@@ -86,7 +109,7 @@ export function CollectionDetailGrid({
           remainingVolume !== undefined ? (
             <span
               className={
-                showRequiredVolume && remainingVolume < sample.requiredVolume * 0.2
+                sample.requiredVolume > 0 && remainingVolume < sample.requiredVolume * 0.2
                   ? TONE.danger.fg
                   : ''
               }

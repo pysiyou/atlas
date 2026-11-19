@@ -6,6 +6,7 @@ import { BADGE, PRICE_DISPLAY, text } from '@/theme/recipes';
 import { formatCurrency, formatTurnaroundTime } from '@/utils';
 import { formatSynonymsPreview } from '@/utils/presentation';
 import { getTestClinicalCategory } from '../utils/testDisplay';
+import { formatDrawVolumeLine } from '@/features/lab/utils/labSample';
 
 /**
  * CatalogCard Component
@@ -44,8 +45,11 @@ export function CatalogCard({ item: test, onClick }: CardComponentProps<Orderabl
 
       {/* Bottom section: Turnaround time (left) + Category + Sample Type badges (right) */}
       <div className="flex justify-between items-center mt-auto pt-space-3">
-        <div className={text({ role: 'body', intent: 'muted' })}>
+        <div className={`${text({ role: 'body', intent: 'muted' })} min-w-0`}>
           TAT: {formatTurnaroundTime(test.turnaroundTimeHours)}
+          {formatDrawVolumeLine(test.minVolumeMl ?? 0, test.optimalVolumeMl ?? 0) ? (
+            <> · {formatDrawVolumeLine(test.minVolumeMl ?? 0, test.optimalVolumeMl ?? 0)}</>
+          ) : null}
         </div>
         <div className="flex items-center gap-space-2">
           <StatusValueBadge

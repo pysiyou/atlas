@@ -14,6 +14,7 @@ import {
 import type { QualityIssueOptions } from '@/types';
 import { useLabCopy } from '@/strings';
 import type { RemedyType } from '@/types';
+import { formatDrawVolumeLine, INSUFFICIENT_VOLUME_REJECTION } from '../utils/labSample';
 
 function useQualityIssueFormState() {
   const [reason, setReason] = useState('');
@@ -37,6 +38,9 @@ interface CollectionRejectionPopoverContentProps {
   sampleType?: string;
   patientName?: string;
   isRecollection?: boolean;
+  requiredVolumeMl?: number;
+  targetVolumeMl?: number;
+  qualityIssues?: string[] | null;
 }
 
 function CollectionRejectionPopoverContent({
@@ -47,6 +51,9 @@ function CollectionRejectionPopoverContent({
   sampleType,
   patientName,
   isRecollection = false,
+  requiredVolumeMl = 0,
+  targetVolumeMl = 0,
+  qualityIssues,
 }: CollectionRejectionPopoverContentProps) {
   const labCopy = useLabCopy();
   const {
@@ -60,6 +67,13 @@ function CollectionRejectionPopoverContent({
   } = useQualityIssueFormState();
   const { reportIssue, isSubmitting } = useSubmitQualityIssue({ onSuccess });
   const [options, setOptions] = React.useState<QualityIssueOptions | undefined>();
+  const volumeReferenceLine = formatDrawVolumeLine(requiredVolumeMl, targetVolumeMl);
+
+  React.useEffect(() => {
+    if (qualityIssues?.includes(INSUFFICIENT_VOLUME_REJECTION)) {
+      setReason(INSUFFICIENT_VOLUME_REJECTION);
+    }
+  }, [qualityIssues, setReason]);
 
   const unfinishedCount = options?.unfinishedTestsCount ?? 0;
   const requiresUnfinishedChoice = unfinishedCount > 0;
@@ -127,6 +141,7 @@ function CollectionRejectionPopoverContent({
           onPreferredRemedyChange={setPreferredRemedy}
           isSubmitting={isSubmitting}
           onOptionsLoaded={setOptions}
+          volumeReferenceLine={volumeReferenceLine}
         />
       ) : null}
     </LabFormPopoverChrome>
@@ -139,6 +154,9 @@ interface CollectionRejectionPopoverProps {
   sampleType?: string;
   patientName?: string;
   isRecollection?: boolean;
+  requiredVolumeMl?: number;
+  targetVolumeMl?: number;
+  qualityIssues?: string[] | null;
   onSuccess?: () => void;
   trigger?: React.ReactNode;
 }
@@ -149,6 +167,9 @@ export function SampleRejectionPopover({
   sampleType,
   patientName,
   isRecollection,
+  requiredVolumeMl,
+  targetVolumeMl,
+  qualityIssues,
   onSuccess,
   trigger,
 }: CollectionRejectionPopoverProps) {
@@ -170,6 +191,9 @@ export function SampleRejectionPopover({
           sampleType={sampleType}
           patientName={patientName}
           isRecollection={isRecollection}
+          requiredVolumeMl={requiredVolumeMl}
+          targetVolumeMl={targetVolumeMl}
+          qualityIssues={qualityIssues}
           onCancel={close}
           onSuccess={() => {
             onSuccess?.();

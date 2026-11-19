@@ -96,7 +96,6 @@ const lines = [
   `MAX_RECOLLECTION_ATTEMPTS = ${limits.MAX_RECOLLECTION_ATTEMPTS}`,
   `QUEUE_AGE_WARNING_HOURS = ${limits.QUEUE_AGE_WARNING_HOURS}`,
   `QUEUE_AGE_CRITICAL_HOURS = ${limits.QUEUE_AGE_CRITICAL_HOURS}`,
-  `SPECIMEN_DEAD_VOLUME_ML = ${limits.SPECIMEN_DEAD_VOLUME_ML}`,
   '',
   '# ── Blockers ────────────────────────────────────────────────────────────',
   '',

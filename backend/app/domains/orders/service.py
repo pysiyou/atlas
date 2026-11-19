@@ -15,6 +15,7 @@ from app.domains.lab.public import (
     resolve_order_presentation,
 )
 from app.domains.lab.specimen.models import Sample
+from app.domains.lab.specimen.collection import sample_type_matches
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import (
     LatestPaymentSnippet,

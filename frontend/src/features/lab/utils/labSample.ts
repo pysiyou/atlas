@@ -11,7 +11,6 @@ import {
 import type { SampleCollectionQueueItem } from '@/types';
 import type { Sample } from '@/types';
 import { FG } from '@/theme/recipes';
-
 export interface SampleDefinition {
   sampleType: SampleType;
   code: string;
@@ -134,22 +133,78 @@ export function groupTestsBySample(
   return grouped;
 }
 
-/** Sum catalog `minVolumeMl` for tests that define it; omit tests with no value. */
-export function sumMinVolumeMl(testCodes: string[], testCatalog: OrderableTest[]): number {
-  return testCodes.reduce((total, code) => {
-    const testDef = testCatalog.find(t => t.code === code);
-    const min = testDef?.minVolumeMl;
-    if (min == null) return total;
-    return total + min;
-  }, 0);
+export type SpecimenVolumeStatus = 'no_requirement' | 'insufficient' | 'short_sample' | 'optimal';
+
+export const SHORT_SAMPLE_VOLUME_ISSUE = 'short_sample_volume';
+export const INSUFFICIENT_VOLUME_REJECTION = 'insufficient_volume';
+
+/** Max `minVolumeMl` across tests on the same tube (nulls ignored). */
+export function aggregateRequiredMinMl(testCodes: string[], testCatalog: OrderableTest[]): number {
+  let max = 0;
+  let found = false;
+  for (const code of testCodes) {
+    const min = testCatalog.find(t => t.code === code)?.minVolumeMl;
+    if (min == null) continue;
+    found = true;
+    max = Math.max(max, min);
+  }
+  return found ? max : 0;
 }
 
-/** @deprecated Use sumMinVolumeMl */
+/** Max `optimalVolumeMl` across tests on the same tube (nulls ignored). */
+export function aggregateTargetOptimalMl(
+  testCodes: string[],
+  testCatalog: OrderableTest[]
+): number {
+  let max = 0;
+  let found = false;
+  for (const code of testCodes) {
+    const optimal = testCatalog.find(t => t.code === code)?.optimalVolumeMl;
+    if (optimal == null) continue;
+    found = true;
+    max = Math.max(max, optimal);
+  }
+  return found ? max : 0;
+}
+
+/** @deprecated Use aggregateRequiredMinMl */
+export function sumMinVolumeMl(testCodes: string[], testCatalog: OrderableTest[]): number {
+  return aggregateRequiredMinMl(testCodes, testCatalog);
+}
+
+/** @deprecated Use aggregateRequiredMinMl */
 export function calculateTotalVolume(tests: OrderTest[], testCatalog: OrderableTest[]): number {
-  return sumMinVolumeMl(
+  return aggregateRequiredMinMl(
     tests.map(t => t.testCode),
     testCatalog
   );
+}
+
+export function classifySpecimenVolume(
+  collectedMl: number,
+  requiredMinMl: number,
+  optimalMl: number
+): SpecimenVolumeStatus {
+  if (requiredMinMl <= 0 && optimalMl <= 0) return 'no_requirement';
+  if (requiredMinMl > 0 && collectedMl < requiredMinMl) return 'insufficient';
+  if (optimalMl > 0 && collectedMl < optimalMl) return 'short_sample';
+  if (optimalMl > 0 && collectedMl >= optimalMl) return 'optimal';
+  return 'no_requirement';
+}
+
+export function defaultDrawVolumeMl(requiredMinMl: number, targetOptimalMl: number): number {
+  if (targetOptimalMl > 0) return targetOptimalMl;
+  if (requiredMinMl > 0) return requiredMinMl;
+  return 0;
+}
+
+export function formatDrawVolumeLine(requiredMinMl: number, targetOptimalMl: number): string | null {
+  if (requiredMinMl <= 0 && targetOptimalMl <= 0) return null;
+  if (targetOptimalMl > 0 && requiredMinMl > 0) {
+    return `Target ${targetOptimalMl.toFixed(1)} mL (Min ${requiredMinMl.toFixed(1)} mL)`;
+  }
+  if (targetOptimalMl > 0) return `Target ${targetOptimalMl.toFixed(1)} mL`;
+  return `Min ${requiredMinMl.toFixed(1)} mL`;
 }
 
 export function hasMinVolumeRequirement(requiredVolumeMl: number): boolean {

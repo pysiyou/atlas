@@ -597,6 +597,26 @@ export interface paths {
         patch: operations["collect_sample_api_v1_lab_samples__sampleId__collect_patch"];
         trace?: never;
     };
+    "/api/v1/lab/samples/{sampleId}/receive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Receive Sample
+         * @description Record optional received volume at lab check-in.
+         */
+        patch: operations["receive_sample_api_v1_lab_samples__sampleId__receive_patch"];
+        trace?: never;
+    };
     "/api/v1/lab/samples/{sampleId}/aliquots": {
         parameters: {
             query?: never;
@@ -1381,6 +1401,13 @@ export interface components {
              * @default 0
              */
             requiredVolume: number;
+            /**
+             * Optimalvolume
+             * @default 0
+             */
+            optimalVolume: number;
+            /** Volumestatus */
+            volumeStatus?: ("no_requirement" | "insufficient" | "short_sample" | "optimal") | null;
             /** Requiredcontainertypes */
             requiredContainerTypes?: components["schemas"]["ContainerType"][];
             /** Requiredcontainercolors */
@@ -1650,6 +1677,14 @@ export interface components {
             queueAgeBand?: ("fresh" | "onTrack" | "warning" | "critical") | null;
             /** Priorityrank */
             priorityRank?: number | null;
+            /** Collectedvolume */
+            collectedVolume?: number | null;
+            /** Samplerequiredvolume */
+            sampleRequiredVolume?: number | null;
+            /** Sampleoptimalvolume */
+            sampleOptimalVolume?: number | null;
+            /** Volumestatus */
+            volumeStatus?: ("no_requirement" | "insufficient" | "short_sample" | "optimal") | null;
         };
         /** EntryWorklistResponse */
         EntryWorklistResponse: {
@@ -2399,6 +2434,10 @@ export interface components {
             synonyms?: string[] | null;
             /** Loinccode */
             loincCode?: string | null;
+            /** Minvolumeml */
+            minVolumeMl?: number | null;
+            /** Optimalvolumeml */
+            optimalVolumeMl?: number | null;
             /** Fastingrequired */
             fastingRequired?: boolean | null;
             /** Workups */
@@ -3140,6 +3179,13 @@ export interface components {
             /** Collectionnotes */
             collectionNotes?: string | null;
         };
+        /** SampleReceiveRequest */
+        SampleReceiveRequest: {
+            /** Receivedvolumeml */
+            receivedVolumeMl: number;
+            /** Notes */
+            notes?: string | null;
+        };
         /** SampleResponse */
         SampleResponse: {
             sampleType: components["schemas"]["SampleType"];
@@ -3148,11 +3194,18 @@ export interface components {
             testCodes: string[];
             /** Requiredvolume */
             requiredVolume: number;
+            /**
+             * Optimalvolume
+             * @default 0
+             */
+            optimalVolume: number;
             priority: components["schemas"]["PriorityLevel"];
             /** Requiredcontainertypes */
             requiredContainerTypes: components["schemas"]["ContainerType"][];
             /** Requiredcontainercolors */
             requiredContainerColors: components["schemas"]["ContainerTopColor"][];
+            /** Volumestatus */
+            readonly volumeStatus?: ("no_requirement" | "insufficient" | "short_sample" | "optimal") | null;
             /** Sampleid */
             sampleId: string;
             /** Orderid */
@@ -3163,6 +3216,8 @@ export interface components {
             collectedBy?: string | null;
             /** Collectedvolume */
             collectedVolume?: number | null;
+            /** Receivedvolumeml */
+            receivedVolumeMl?: number | null;
             actualContainerType?: components["schemas"]["ContainerType"] | null;
             actualContainerColor?: components["schemas"]["ContainerTopColor"] | null;
             /** Collectionnotes */
@@ -4723,6 +4778,41 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["SampleCollectRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    receive_sample_api_v1_lab_samples__sampleId__receive_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sampleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SampleReceiveRequest"];
             };
         };
         responses: {

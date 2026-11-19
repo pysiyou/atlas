@@ -137,7 +137,18 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
 
   const safeDateTime = escapeHtml(dateTime);
   const safeAccession = escapeHtml(accessionDisplay);
+  const vol =
+    sample.optimalVolume != null &&
+    sample.optimalVolume > 0 &&
+    sample.requiredVolume > 0
+      ? `Vol: ${sample.optimalVolume} mL (min ${sample.requiredVolume})`
+      : sample.requiredVolume > 0
+        ? `Min: ${sample.requiredVolume} mL`
+        : sample.optimalVolume != null && sample.optimalVolume > 0
+          ? `Vol: ${sample.optimalVolume} mL`
+          : '';
   const nameTypeLine = escapeHtml(`${patientName.trim() || 'Unknown'} - ${sampleType}`);
+  const volLine = vol ? escapeHtml(vol) : '';
   const barcodeValue = escapeJsString(accessionDisplay);
 
   return `
@@ -152,6 +163,7 @@ export const generatePrintLabelHTML = ({ patientName, sample, eventAt }: SampleL
       <body>
         <div class="label">
           <p class="label-line label-name-type">${nameTypeLine}</p>
+          ${volLine ? `<p class="label-line label-date">${volLine}</p>` : ''}
           <p class="label-line label-date">${safeDateTime}</p>
           <div class="label-barcode">
             <svg id="barcode" role="img" aria-label="Barcode"></svg>

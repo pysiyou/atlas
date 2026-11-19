@@ -5,9 +5,6 @@ from enum import StrEnum
 from typing import Iterable
 
 from app.domains.catalog.models import OrderableTest
-from app.shared.generated.lab_policy import SPECIMEN_DEAD_VOLUME_ML
-
-
 class SpecimenVolumeStatus(StrEnum):
     NO_REQUIREMENT = "no_requirement"
     INSUFFICIENT = "insufficient"
@@ -25,40 +22,61 @@ def aggregate_required_min_ml(tests: Iterable[OrderableTest]) -> float:
     return max(mins) if mins else 0.0
 
 
-def aggregate_target_optimal_ml(
-    tests: Iterable[OrderableTest],
-    *,
-    dead_volume_ml: float | None = None,
-) -> float:
-    """Maximum optimal_volume_ml plus analyzer dead volume (when any optimal is defined)."""
-    dead = SPECIMEN_DEAD_VOLUME_ML if dead_volume_ml is None else dead_volume_ml
+def aggregate_target_optimal_ml(tests: Iterable[OrderableTest]) -> float:
+    """Maximum optimal_volume_ml across tests on the same tube (nulls ignored)."""
     optimals = [float(t.optimalVolumeMl) for t in tests if t.optimalVolumeMl is not None]
-    if not optimals:
-        return 0.0
-    return max(optimals) + dead
+    return max(optimals) if optimals else 0.0
+
+
+def effective_sample_volumes(
+    sample,
+    catalog_tests: Iterable[OrderableTest],
+) -> tuple[float, float]:
+    """Persisted sample volumes, or catalog max aggregation when stored values are zero."""
+    min_v = float(getattr(sample, "requiredVolume", 0) or 0)
+    opt_v = float(getattr(sample, "optimalVolume", 0) or 0)
+    if min_v > 0 or opt_v > 0:
+        return min_v, opt_v
+    tests = list(catalog_tests)
+    if not tests:
+        return min_v, opt_v
+    return aggregate_required_min_ml(tests), aggregate_target_optimal_ml(tests)
 
 
 def classify_specimen_volume(
-    collected_ml: float,
+    measured_ml: float,
     required_min_ml: float,
     optimal_ml: float,
 ) -> SpecimenVolumeStatus:
-    """Traffic-light classification using phlebotomy collected volume."""
+    """Traffic-light classification for a measured volume (e.g. lab receive check-in)."""
     if required_min_ml <= 0 and optimal_ml <= 0:
         return SpecimenVolumeStatus.NO_REQUIREMENT
-    if required_min_ml > 0 and collected_ml < required_min_ml:
+    if required_min_ml > 0 and measured_ml < required_min_ml:
         return SpecimenVolumeStatus.INSUFFICIENT
-    if optimal_ml > 0 and collected_ml < optimal_ml:
+    if optimal_ml > 0 and measured_ml < optimal_ml:
         return SpecimenVolumeStatus.SHORT_SAMPLE
-    if optimal_ml > 0 and collected_ml >= optimal_ml:
+    if optimal_ml > 0 and measured_ml >= optimal_ml:
         return SpecimenVolumeStatus.OPTIMAL
     return SpecimenVolumeStatus.NO_REQUIREMENT
 
 
-def available_volume_ml(sample) -> float:
-    """Volume left for add-ons / reflex (prefer remaining, else collected)."""
-    remaining = getattr(sample, "remainingVolume", None)
-    if remaining is not None:
-        return float(remaining)
-    collected = getattr(sample, "collectedVolume", None)
-    return float(collected) if collected is not None else 0.0
+VOLUME_QUALITY_FLAGS = frozenset({SHORT_SAMPLE_VOLUME_ISSUE, INSUFFICIENT_VOLUME_REJECTION})
+
+
+def apply_received_volume_quality_issues(
+    sample,
+    received_ml: float,
+) -> SpecimenVolumeStatus:
+    """Update sample qualityIssues from receive check-in volume only."""
+    status = classify_specimen_volume(
+        float(received_ml),
+        float(sample.requiredVolume or 0),
+        float(sample.optimalVolume or 0),
+    )
+    issues = [i for i in (sample.qualityIssues or []) if i not in VOLUME_QUALITY_FLAGS]
+    if status == SpecimenVolumeStatus.INSUFFICIENT:
+        issues.append(INSUFFICIENT_VOLUME_REJECTION)
+    elif status == SpecimenVolumeStatus.SHORT_SAMPLE:
+        issues.append(SHORT_SAMPLE_VOLUME_ISSUE)
+    sample.qualityIssues = issues or None
+    return status

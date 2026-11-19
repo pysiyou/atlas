@@ -262,6 +262,9 @@ export function SampleCollectionDetailFooter({
           sampleType={sample.sampleType}
           patientName={patientName}
           isRecollection={sample.isRecollection || false}
+          requiredVolumeMl={sample.requiredVolume}
+          targetVolumeMl={sample.optimalVolume ?? 0}
+          qualityIssues={'qualityIssues' in sample ? sample.qualityIssues : undefined}
           onSuccess={onClose}
           trigger={
             <Button {...actionButtonPreset('reject')} size="sm">

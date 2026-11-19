@@ -12,6 +12,10 @@ from app.domains.lab.specimen.collection import (
     sample_type_matches,
 )
 from app.domains.lab.specimen.models import Sample
+from app.domains.lab.specimen.volume import (
+    aggregate_required_min_ml,
+    aggregate_target_optimal_ml,
+)
 from app.domains.orders.models import Order, OrderTest
 from app.shared.generated.enums import PriorityLevel, SampleStatus, TestStatus
 from sqlalchemy.orm import Session
@@ -69,14 +73,14 @@ def generate_samples_for_order(
     collection = SampleCollectionService(db)
     samples: list[Sample] = []
     for sample_type_key, test_list in sample_groups.items():
-        total_volume = 0.0
+        test_defs = [test for _order_test, test in test_list]
+        required_min = aggregate_required_min_ml(test_defs)
+        target_optimal = aggregate_target_optimal_ml(test_defs)
         test_codes: list[str] = []
         container_types_set: set = set()
         container_colors_set: set = set()
         for _order_test, test in test_list:
             test_codes.append(test.code)
-            if test.minVolumeMl is not None:
-                total_volume += test.minVolumeMl
             if test.containerTypes:
                 container_types_set.update(test.containerTypes)
             if test.containerTopColors:
@@ -90,7 +94,8 @@ def generate_samples_for_order(
             _update_sample(
                 active,
                 test_codes=test_codes,
-                required_volume=total_volume,
+                required_volume=required_min,
+                optimal_volume=target_optimal,
                 container_types=list(container_types_set),
                 container_colors=list(container_colors_set),
                 priority=order.priority,
@@ -105,7 +110,8 @@ def generate_samples_for_order(
                 _update_sample(
                     pending_recollection,
                     test_codes=test_codes,
-                    required_volume=total_volume,
+                    required_volume=required_min,
+                    optimal_volume=target_optimal,
                     container_types=list(container_types_set),
                     container_colors=list(container_colors_set),
                     priority=order.priority,
@@ -118,7 +124,8 @@ def generate_samples_for_order(
                     order_id=orderId,
                     sample_type=sample_type_enum,
                     test_codes=test_codes,
-                    required_volume=total_volume,
+                    required_volume=required_min,
+                    optimal_volume=target_optimal,
                     priority=order.priority,
                     required_container_types=list(container_types_set),
                     required_container_colors=list(container_colors_set),
@@ -149,6 +156,7 @@ def _update_sample(
     *,
     test_codes: list[str],
     required_volume: float,
+    optimal_volume: float,
     container_types: list[Any],
     container_colors: list[Any],
     priority: PriorityLevel,
@@ -156,6 +164,7 @@ def _update_sample(
 ) -> None:
     sample.testCodes = test_codes
     sample.requiredVolume = required_volume
+    sample.optimalVolume = optimal_volume
     sample.requiredContainerTypes = container_types
     sample.requiredContainerColors = container_colors
     sample.priority = priority

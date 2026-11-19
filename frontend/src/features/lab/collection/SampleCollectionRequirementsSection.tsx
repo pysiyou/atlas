@@ -12,6 +12,7 @@ import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { Text } from '@/components/layout/Text';
 import { formatArray } from '@/utils';
 import { formatRejectionCriteriaList } from '../utils/catalogRejectionCriteria';
+import { formatDrawVolumeLine } from '../utils/labSample';
 import { useLabCopy } from '@/strings';
 
 /** Test detail for requirements display */
@@ -124,19 +125,14 @@ export function SampleCollectionRequirementsSection({
           </div>
         )}
 
-        {activeTest.minVolumeMl != null && (
+        {formatDrawVolumeLine(activeTest.minVolumeMl ?? 0, activeTest.optimalVolumeMl ?? 0) ? (
           <div className="flex items-center gap-space-2">
-            <Text role="label" className="font-normal">Min volume:</Text>
-            <Text role="body">{activeTest.minVolumeMl} mL</Text>
+            <Text role="label" className="font-normal">Draw volume:</Text>
+            <Text role="body">
+              {formatDrawVolumeLine(activeTest.minVolumeMl ?? 0, activeTest.optimalVolumeMl ?? 0)}
+            </Text>
           </div>
-        )}
-
-        {activeTest.optimalVolumeMl != null && (
-          <div className="flex items-center gap-space-2">
-            <Text role="label" className="font-normal">Optimal volume:</Text>
-            <Text role="body">{activeTest.optimalVolumeMl} mL</Text>
-          </div>
-        )}
+        ) : null}
       </div>
     </Panel>
   );

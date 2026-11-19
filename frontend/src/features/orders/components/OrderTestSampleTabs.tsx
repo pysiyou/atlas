@@ -13,6 +13,7 @@ import { buildSampleCollectionDescriptionItems } from '@/utils/presentation';
 import { SegmentedControl } from '@/components/inputs/SegmentedControl';
 import { text, INLINE_LINK_BUTTON } from '@/theme/recipes';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
+import { formatDrawVolumeLine } from '@/features/lab/utils/labSample';
 import { displayId } from '@/utils';
 import { usePanelCopy } from '@/strings';
 
@@ -39,11 +40,17 @@ function CatalogSampleRequirements({ catalogTest }: { catalogTest: OrderableTest
     <div className={`${text({ role: 'body', intent: 'muted' })} space-y-space-2`}>
       <p>Expected sample type: {formatStatusBadgeLabel(catalogTest.sampleType)}</p>
       {catalogTest.sampleVolume ? <p>Volume: {catalogTest.sampleVolume}</p> : null}
-      {catalogTest.minVolumeMl != null ? (
-        <p>Min volume: {catalogTest.minVolumeMl} mL</p>
-      ) : null}
-      {catalogTest.optimalVolumeMl != null ? (
-        <p>Optimal volume: {catalogTest.optimalVolumeMl} mL</p>
+      {formatDrawVolumeLine(
+        catalogTest.minVolumeMl ?? 0,
+        catalogTest.optimalVolumeMl ?? 0
+      ) ? (
+        <p>
+          Draw:{' '}
+          {formatDrawVolumeLine(
+            catalogTest.minVolumeMl ?? 0,
+            catalogTest.optimalVolumeMl ?? 0
+          )}
+        </p>
       ) : null}
       {catalogTest.fastingRequired ? <p>Fasting required</p> : null}
       {catalogTest.collectionNotes ? <p>{catalogTest.collectionNotes}</p> : null}

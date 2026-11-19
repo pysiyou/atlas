@@ -185,7 +185,7 @@ def project_order_test_entry(ctx: LabWorkItemContext) -> LabWorkItemProjection:
         sample_status=_sample_status_value(ctx.sample),
         escalation_reason_code=ctx.escalation_reason_code,
     )
-    allowed, deny_reason = action_flags_for_entry(order_test=order_test)
+    allowed, deny_reason = action_flags_for_entry(order_test=order_test, sample=ctx.sample)
     enter_allowed = bool(allowed.get("enterResults"))
     effective_deny = effective_deny_reason(
         deny_reason=deny_reason,

@@ -305,6 +305,9 @@ interface BaseSample {
   sampleType: SampleType;
   testCodes: string[];
   requiredVolume: number;
+  optimalVolume?: number;
+  receivedVolumeMl?: number | null;
+  volumeStatus?: 'no_requirement' | 'insufficient' | 'short_sample' | 'optimal' | null;
   priority: PriorityLevel;
   requiredContainerTypes: ContainerType[];
   requiredContainerColors: ContainerTopColor[];

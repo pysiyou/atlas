@@ -30,6 +30,7 @@ export interface SampleCollectionCardLeftColumnProps {
   isRejected: boolean;
   rejectedSample?: RejectedSample | null;
   requiredVolume?: number;
+  targetVolume?: number;
   collectedVolume?: number;
   effectiveContainerType?: ContainerType;
   containerColor?: ContainerTopColor | string;
@@ -117,6 +118,7 @@ function SampleCollectionOperationsRow(
     | 'rejectedSample'
     | 'orderDate'
     | 'requiredVolume'
+    | 'targetVolume'
     | 'collectedVolume'
     | 'effectiveContainerType'
     | 'containerColor'

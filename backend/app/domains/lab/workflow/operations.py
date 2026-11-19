@@ -20,6 +20,7 @@ from app.domains.lab.results.validator import ResultValidatorService
 from app.domains.lab.rules.eligibility import active_linked_tests_for_collection, assert_can_collect
 from app.domains.lab.rules.state_machines import TestStateMachine
 from app.domains.lab.specimen.models import Sample
+from app.domains.lab.specimen.volume import apply_received_volume_quality_issues
 from app.domains.lab.workflow.result_commands import ResultCommandHandler
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.service import apply_order_status_rollup
@@ -99,6 +100,27 @@ class CollectionCommandHandler:
             after_state,
             metadata={"test_codes": sample.testCodes},
         )
+        return sample
+
+    def receive_sample(
+        self,
+        sample_id: str,
+        user_id: str,
+        received_volume_ml: float,
+        notes: str | None = None,
+    ) -> Sample:
+        sample = self._svc._get_sample(sample_id, for_update=True)
+        if sample.status != SampleStatus.COLLECTED:
+            raise LabOperationError(
+                "Received volume can only be recorded for collected samples.",
+                status_code=400,
+            )
+        sample.receivedVolumeMl = float(received_volume_ml)
+        if notes:
+            existing = sample.qualityNotes or ""
+            sample.qualityNotes = f"{existing}\n{notes}".strip() if existing else notes
+        apply_received_volume_quality_issues(sample, float(received_volume_ml))
+        sample.updatedBy = str(user_id)
         return sample
 
 
@@ -264,6 +286,15 @@ class LabOperationsService:
         order_id = row.orderId if row else None
         return self.run_lab_mutation(
             lambda: self._collection.collect_sample(**kwargs),
+            order_id=order_id,
+        )
+
+    def receive_sample(self, **kwargs) -> Sample:
+        sample_id = kwargs["sample_id"]
+        row = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
+        order_id = row.orderId if row else None
+        return self.run_lab_mutation(
+            lambda: self._collection.receive_sample(**kwargs),
             order_id=order_id,
         )
 

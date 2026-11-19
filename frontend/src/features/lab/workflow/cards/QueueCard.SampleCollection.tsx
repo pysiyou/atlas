@@ -15,6 +15,7 @@ import type {
   SampleRequirement,
   OrderableTestSummary,
 } from '@/types';
+import { isCollectedSample } from '@/types';
 import { MOBILE_LIST_CARD } from '@/theme/recipes';
 import { CollectionHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleCollectionPopover } from '../../collection/SampleCollectionPopover';
@@ -95,6 +96,9 @@ function SampleCollectionCardLeftColumnFromVm({
             ? sample.requiredVolume
             : undefined
       }
+      targetVolume={
+        requirement.targetVolume > 0 ? requirement.targetVolume : sample.optimalVolume
+      }
       collectedVolume={vm.collectedVolume}
       effectiveContainerType={vm.effectiveContainerType}
       containerColor={vm.containerColor}
@@ -165,6 +169,9 @@ export function SampleCollectionCardDesktop({
               sampleType={sample.sampleType}
               patientName={patientName}
               isRecollection={vm.isRecollection}
+              requiredVolumeMl={requirement.totalVolume}
+              targetVolumeMl={requirement.targetVolume ?? sample.optimalVolume ?? 0}
+              qualityIssues={isCollectedSample(sample) ? sample.qualityIssues : undefined}
             />
           ) : null}
         </div>

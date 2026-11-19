@@ -28,7 +28,10 @@ export interface SampleCollectionRequirement {
   sampleType: SampleType;
   testCodes: string[];
   testNames?: string[];
+  /** Consolidated minimum (max min_volume_ml) for the tube. */
   totalVolume: number;
+  /** Target draw (max optimal_volume_ml for the tube). */
+  targetVolume: number;
   containerTypes: ContainerType[];
   containerTopColors: ContainerTopColor[];
   priority: PriorityLevel;

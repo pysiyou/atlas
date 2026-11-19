@@ -2599,6 +2599,62 @@
         }
       }
     },
+    "/api/v1/lab/samples/{sampleId}/receive": {
+      "patch": {
+        "tags": [
+          "lab-samples"
+        ],
+        "summary": "Receive Sample",
+        "description": "Record optional received volume at lab check-in.",
+        "operationId": "receive_sample_api_v1_lab_samples__sampleId__receive_patch",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 20,
+              "pattern": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$",
+              "title": "Sampleid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SampleReceiveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/lab/samples/{sampleId}/aliquots": {
       "post": {
         "tags": [
@@ -5583,6 +5639,21 @@
             "title": "Requiredvolume",
             "default": 0
           },
+          "optimalVolume": {
+            "type": "number",
+            "title": "Optimalvolume",
+            "default": 0
+          },
+          "volumeStatus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["no_requirement", "insufficient", "short_sample", "optimal"]
+              },
+              { "type": "null" }
+            ],
+            "title": "Volumestatus"
+          },
           "requiredContainerTypes": {
             "items": {
               "$ref": "#/components/schemas/ContainerType"
@@ -6561,6 +6632,28 @@
               }
             ],
             "title": "Priorityrank"
+          },
+          "collectedVolume": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Collectedvolume"
+          },
+          "sampleRequiredVolume": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Samplerequiredvolume"
+          },
+          "sampleOptimalVolume": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Sampleoptimalvolume"
+          },
+          "volumeStatus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["no_requirement", "insufficient", "short_sample", "optimal"]
+              },
+              { "type": "null" }
+            ],
+            "title": "Volumestatus"
           }
         },
         "type": "object",
@@ -8945,6 +9038,30 @@
             ],
             "title": "Loinccode"
           },
+          "minVolumeMl": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minvolumeml"
+          },
+          "optimalVolumeMl": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Optimalvolumeml"
+          },
           "fastingRequired": {
             "anyOf": [
               {
@@ -11118,6 +11235,31 @@
         ],
         "title": "SampleCollectRequest"
       },
+      "SampleReceiveRequest": {
+        "properties": {
+          "receivedVolumeMl": {
+            "type": "number",
+            "minimum": 0,
+            "title": "Receivedvolumeml"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "receivedVolumeMl"
+        ],
+        "title": "SampleReceiveRequest"
+      },
       "SampleResponse": {
         "properties": {
           "sampleType": {
@@ -11137,6 +11279,11 @@
             "type": "number",
             "title": "Requiredvolume"
           },
+          "optimalVolume": {
+            "type": "number",
+            "title": "Optimalvolume",
+            "default": 0
+          },
           "priority": {
             "$ref": "#/components/schemas/PriorityLevel"
           },
@@ -11153,6 +11300,17 @@
             },
             "type": "array",
             "title": "Requiredcontainercolors"
+          },
+          "volumeStatus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["no_requirement", "insufficient", "short_sample", "optimal"]
+              },
+              { "type": "null" }
+            ],
+            "title": "Volumestatus",
+            "readOnly": true
           },
           "sampleId": {
             "type": "string",
@@ -11198,6 +11356,18 @@
               }
             ],
             "title": "Collectedvolume"
+          },
+          "receivedVolumeMl": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Receivedvolumeml"
           },
           "actualContainerType": {
             "anyOf": [

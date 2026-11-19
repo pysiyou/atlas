@@ -25,6 +25,7 @@ class Sample(Base):
     # What this sample is for
     testCodes = Column("test_codes", JSON, nullable=False)  # Array of test codes
     requiredVolume = Column("required_volume", Float, nullable=False)
+    optimalVolume = Column("optimal_volume", Float, nullable=False, default=0.0)
     priority = Column(contract_enum(PriorityLevel), nullable=False)
 
     # Required specs
@@ -39,6 +40,7 @@ class Sample(Base):
     collectedAt = Column("collected_at", DateTime(timezone=True), nullable=True)
     collectedBy = Column("collected_by", String, nullable=True)
     collectedVolume = Column("collected_volume", Float, nullable=True)
+    receivedVolumeMl = Column("received_volume_ml", Float, nullable=True)
 
     # Actual container used (only when collected)
     actualContainerType = Column(

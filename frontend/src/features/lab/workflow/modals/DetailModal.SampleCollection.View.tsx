@@ -104,6 +104,7 @@ export function SampleCollectionDetailModalView({
       isRejected={isRejected}
       rejectedSample={rejectedSample}
       requiredVolume={sample.requiredVolume}
+      targetVolume={sample.optimalVolume}
       collectedVolume={collectedVolume}
       effectiveContainerType={effectiveContainerType}
       containerColor={containerColor}

@@ -5,7 +5,12 @@
 import type { ContainerType, ContainerTopColor, RejectedSample, Sample } from '@/types';
 import { CONTAINER_TYPE_CONFIG } from '@/types';
 import { LAB_CONFIG } from '../constants';
-import { formatVolume, getCollectionRequirements, hasMinVolumeRequirement } from './labSample';
+import {
+  formatDrawVolumeLine,
+  formatVolume,
+  getCollectionRequirements,
+  hasMinVolumeRequirement,
+} from './labSample';
 
 export type CollectionOperationalMetaItem =
   | { type: 'queue-age'; since: string }
@@ -20,6 +25,7 @@ export interface BuildCollectionOperationalMetaItemsInput {
   rejectedSample?: RejectedSample | null;
   orderDate?: string;
   requiredVolume?: number;
+  targetVolume?: number;
   collectedVolume?: number;
   effectiveContainerType?: ContainerType;
   containerColor?: ContainerTopColor | string;
@@ -34,10 +40,14 @@ function appendPendingMetaItems(
     return;
   }
   const required = input.requiredVolume ?? input.sample.requiredVolume;
+  const target = input.targetVolume ?? input.sample.optimalVolume ?? 0;
   if (input.orderDate) {
     items.push({ type: 'queue-age', since: input.orderDate });
   }
-  if (required != null && hasMinVolumeRequirement(required)) {
+  const drawLine = formatDrawVolumeLine(required, target);
+  if (drawLine) {
+    items.push({ type: 'text', text: `Draw — ${drawLine}` });
+  } else if (required != null && hasMinVolumeRequirement(required)) {
     items.push({ type: 'text', text: `${formatVolume(required)} required` });
   }
 }

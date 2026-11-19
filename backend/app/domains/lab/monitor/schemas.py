@@ -62,6 +62,8 @@ class CollectionWorklistItem(BaseModel):
     collectedBy: str | None = None
     collectedVolume: float | None = None
     requiredVolume: float = 0
+    optimalVolume: float = 0
+    volumeStatus: Literal["no_requirement", "insufficient", "short_sample", "optimal"] | None = None
     requiredContainerTypes: list[ContainerType] = Field(default_factory=list)
     requiredContainerColors: list[ContainerTopColor] = Field(default_factory=list)
     referentDoctorId: str | None = None
@@ -114,6 +116,10 @@ class EntryWorklistItem(BaseModel):
     statusPresentation: StatusPresentation | None = None
     queueAgeBand: Literal["fresh", "onTrack", "warning", "critical"] | None = None
     priorityRank: int | None = None
+    collectedVolume: float | None = None
+    sampleRequiredVolume: float | None = None
+    sampleOptimalVolume: float | None = None
+    volumeStatus: Literal["no_requirement", "insufficient", "short_sample", "optimal"] | None = None
 
 
 class DashboardWorklistItem(BaseModel):

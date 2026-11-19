@@ -111,12 +111,17 @@ function useResultEntryCardHeader(
     [chromeRow, patientName, testDef.turnaroundTimeHours, filledCount, analyteCount]
   );
 
-  const badges = <TestHeaderBadges row={chromeRow} variant="entry" showStatus />;
+  const badges = (
+    <>
+      <TestHeaderBadges row={chromeRow} variant="entry" showStatus />
+    </>
+  );
 
   return { leftColumn, badges };
 }
 
 function ResultEntryCardDesktop({
+  row: _row,
   chromeRow,
   testDef,
   results,
@@ -172,6 +177,7 @@ function ResultEntryCardDesktop({
 }
 
 function ResultEntryCardMobile({
+  row: _row,
   chromeRow,
   testDef,
   patientName,
@@ -183,7 +189,7 @@ function ResultEntryCardMobile({
   denyTooltipLabel,
 }: ResultEntryCardSharedData) {
   const { showAttemptIndicator } = rejection;
-  const { leftColumn } = useResultEntryCardHeader(
+  const { leftColumn, badges } = useResultEntryCardHeader(
     chromeRow,
     patientName,
     testDef,
@@ -204,7 +210,7 @@ function ResultEntryCardMobile({
     >
       <QueueCardMobile
         leftColumn={leftColumn}
-        badges={<TestHeaderBadges row={chromeRow} variant="entry" size="xs" showStatus />}
+        badges={badges}
         actionsPlacement="header"
         actions={
           <IconButton

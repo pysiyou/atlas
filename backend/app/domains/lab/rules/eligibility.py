@@ -205,8 +205,11 @@ def action_flags_for_collection(
     return actions, None
 
 
-def action_flags_for_entry(*, order_test: OrderTest) -> tuple[WorklistAllowedActions, str | None]:
+def action_flags_for_entry(
+    *, order_test: OrderTest, sample: Sample | None = None
+) -> tuple[WorklistAllowedActions, str | None]:
     """Entry worklist actions — retest rows use the same rules as primary tests once collected."""
+    del sample
     actions = _empty_actions()
     can_enter, _ = TestStateMachine.can_enter_results(order_test.status)
     actions["enterResults"] = can_enter
