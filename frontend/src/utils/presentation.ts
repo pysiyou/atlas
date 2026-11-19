@@ -691,7 +691,9 @@ export function getSampleCollectionFieldDescriptors(sample: Sample): FieldDescri
       label: 'Priority',
       value: sample.priority ? formatStatusBadgeLabel(sample.priority) : undefined,
     },
-    { id: 'required', label: 'Required', value: formatVolumeMl(sample.requiredVolume) },
+    ...(sample.requiredVolume > 0
+      ? [{ id: 'required', label: 'Required', value: formatVolumeMl(sample.requiredVolume) }]
+      : []),
   ];
 
   appendPendingContainerDescriptors(descriptors, sample);

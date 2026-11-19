@@ -131,7 +131,8 @@
           "type": "array",
           "items": { "type": "string" }
         },
-        "volume_ml_min": { "type": "number" },
+        "min_volume_ml": { "type": "number" },
+        "optimal_volume_ml": { "type": "number" },
         "volume_description": { "type": "string" },
         "container_description": { "type": "string" },
         "fasting_required": { "type": "boolean" },

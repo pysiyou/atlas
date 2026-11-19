@@ -22,7 +22,10 @@ import { FIELD_ERROR_CAPTION, RADIUS, SHADOW, TONE } from '@/theme/recipes';
 import {
   getDefaultCollectionTopColor,
   getEffectiveContainerType,
-  getCollectionTopColorBg } from '../utils';
+  getCollectionTopColorBg,
+  hasMinVolumeRequirement,
+  isCollectedVolumeValid,
+} from '../utils';
 
 /** Container type choices for collection: tube or cup only */
 const COLLECTION_CONTAINER_OPTIONS: { value: ContainerType; label: string }[] = [
@@ -64,8 +67,9 @@ function CollectionPopoverContent({
   onCancel,
   isSubmitting = false,
 }: CollectionPopoverContentProps) {
-  const minimumVolume = requirement.totalVolume;
-  const [volume, setVolume] = useState<number>(minimumVolume);
+  const requiredMinVolumeMl = requirement.totalVolume;
+  const hasMinRequirement = hasMinVolumeRequirement(requiredMinVolumeMl);
+  const [volume, setVolume] = useState<number>(hasMinRequirement ? requiredMinVolumeMl : 0);
   const [notes, setNotes] = useState('');
   const defaultContainerType = useMemo(
     () => getEffectiveContainerType(undefined, requirement.sampleType),
@@ -83,7 +87,9 @@ function CollectionPopoverContent({
   const [selectedContainerType, setSelectedContainerType] =
     useState<ContainerType>(defaultContainerType);
 
-  const isValid = Boolean(selectedColor && selectedContainerType) && volume >= minimumVolume;
+  const isValid =
+    Boolean(selectedColor && selectedContainerType) &&
+    isCollectedVolumeValid(volume, requiredMinVolumeMl);
 
   const handleSubmit = useCallback(async () => {
     if (!selectedColor) {
@@ -94,14 +100,14 @@ function CollectionPopoverContent({
       notify.show('lab.collection.popover.containerRequired');
       return;
     }
-    if (volume < minimumVolume) {
+    if (!isCollectedVolumeValid(volume, requiredMinVolumeMl)) {
       setShowVolumeError(true);
       return;
     }
     await Promise.resolve(
       onConfirm(volume, notes || undefined, selectedColor, selectedContainerType)
     );
-  }, [selectedColor, selectedContainerType, volume, notes, minimumVolume, onConfirm]);
+  }, [selectedColor, selectedContainerType, volume, notes, requiredMinVolumeMl, onConfirm]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -154,10 +160,10 @@ function CollectionPopoverContent({
           <label className={FORM_FIELD_LABEL}>
             Required Quantity <span className={TONE.danger.fg}>*</span>
           </label>
-          {minimumVolume > 0 && (
+          {hasMinRequirement && (
             <div className={cn(`${text({ role: 'caption' })} px-space-2 py-space-0-5 ${RADIUS.field} flex items-center gap-space-1`, TONE.warning.well, TONE.warning.fg)}>
               <Icon iconKey={IconKeys.actions.alertCircle} className="w-3 h-3" />
-              Min: {minimumVolume} mL
+              Min: {requiredMinVolumeMl} mL
             </div>
           )}
         </div>
@@ -168,21 +174,27 @@ function CollectionPopoverContent({
             value={volume}
             onChange={e => {
               const v = Number(e.target.value);
-              setVolume(Number.isNaN(v) ? minimumVolume : v);
-              if (showVolumeError && v >= minimumVolume) {
+              setVolume(Number.isNaN(v) ? (hasMinRequirement ? requiredMinVolumeMl : 0) : v);
+              if (showVolumeError && isCollectedVolumeValid(v, requiredMinVolumeMl)) {
                 setShowVolumeError(false);
               }
             }}
-            className={cn(inputBase, 'pr-space-8', volume < minimumVolume && inputError)}
+            className={cn(
+              inputBase,
+              'pr-space-8',
+              showVolumeError && !isCollectedVolumeValid(volume, requiredMinVolumeMl) && inputError
+            )}
             placeholder="0.0"
           />
           <span className={`absolute right-space-3 top-1/2 -translate-y-1/2 ${text({ role: 'body', intent: 'muted' })} pointer-events-none select-none`}>
             mL
           </span>
         </div>
-        {showVolumeError && volume < minimumVolume && (
+        {showVolumeError && !isCollectedVolumeValid(volume, requiredMinVolumeMl) && (
           <p className={`${FIELD_ERROR_CAPTION} mt-space-1`}>
-            Volume must be at least {minimumVolume} mL
+            {hasMinRequirement
+              ? `Volume must be at least ${requiredMinVolumeMl} mL`
+              : 'Enter a collected volume greater than 0 mL'}
           </p>
         )}
       </div>

@@ -473,7 +473,8 @@ export type RejectionReasonId = string;
 export interface SampleRequirements {
   sample_type: SampleType;
   container: string;
-  minimum_volume_ml: number;
+  min_volume_ml?: number;
+  optimal_volume_ml?: number;
   fasting_required: boolean;
   collection_notes?: string;
   rejection_criteria?: RejectionReasonId[];

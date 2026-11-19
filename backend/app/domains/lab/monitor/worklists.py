@@ -360,6 +360,9 @@ class LabWorklistService:
             "collectedAt": sample.collectedAt,
             "collectedBy": sample.collectedBy,
             "collectedVolume": sample.collectedVolume,
+            "requiredVolume": float(sample.requiredVolume or 0),
+            "requiredContainerTypes": list(sample.requiredContainerTypes or []),
+            "requiredContainerColors": list(sample.requiredContainerColors or []),
         }
         if include_queue_metrics:
             item["queueAgeBand"] = age_bucket(hours, tat)

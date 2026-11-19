@@ -134,7 +134,14 @@ function buildCatalogDetailTables(test: OrderableTest): TableInput[] {
         { label: 'Container Types', value: formatArrayWithFallback(test.containerTypes, '-') },
         { label: 'Container Colors', value: formatArrayWithFallback(test.containerTopColors, '-') },
         { label: 'Sample Volume', value: test.sampleVolume },
-        { label: 'Minimum Volume', value: test.minimumVolume ? `${test.minimumVolume} mL` : '-' },
+        {
+          label: 'Min volume (mL)',
+          value: test.minVolumeMl != null ? `${test.minVolumeMl} mL` : '-',
+        },
+        {
+          label: 'Optimal volume (mL)',
+          value: test.optimalVolumeMl != null ? `${test.optimalVolumeMl} mL` : '-',
+        },
         { label: 'Fasting Required', value: formatBoolean(test.fastingRequired) },
         { label: 'Collection Notes', value: test.collectionNotes || '-' },
         { label: 'Special Requirements', value: test.specialRequirements || '-' },

@@ -75,8 +75,8 @@ def generate_samples_for_order(
         container_colors_set: set = set()
         for _order_test, test in test_list:
             test_codes.append(test.code)
-            if test.minimumVolume:
-                total_volume += test.minimumVolume
+            if test.minVolumeMl is not None:
+                total_volume += test.minVolumeMl
             if test.containerTypes:
                 container_types_set.update(test.containerTypes)
             if test.containerTopColors:

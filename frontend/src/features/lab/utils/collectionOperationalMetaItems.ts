@@ -5,7 +5,7 @@
 import type { ContainerType, ContainerTopColor, RejectedSample, Sample } from '@/types';
 import { CONTAINER_TYPE_CONFIG } from '@/types';
 import { LAB_CONFIG } from '../constants';
-import { formatVolume, getCollectionRequirements } from './labSample';
+import { formatVolume, getCollectionRequirements, hasMinVolumeRequirement } from './labSample';
 
 export type CollectionOperationalMetaItem =
   | { type: 'queue-age'; since: string }
@@ -37,7 +37,7 @@ function appendPendingMetaItems(
   if (input.orderDate) {
     items.push({ type: 'queue-age', since: input.orderDate });
   }
-  if (required != null) {
+  if (required != null && hasMinVolumeRequirement(required)) {
     items.push({ type: 'text', text: `${formatVolume(required)} required` });
   }
 }
@@ -55,7 +55,7 @@ function appendCollectedVolumeMetaItems(
     const suffix = isRejected ? 'was collected' : 'collected';
     items.push({ type: 'text', text: `${formatVolume(collectedVolume)} ${suffix}` });
   }
-  if (required != null) {
+  if (required != null && hasMinVolumeRequirement(required)) {
     items.push({ type: 'text', text: `${formatVolume(required)} required` });
   }
 }

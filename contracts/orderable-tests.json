@@ -18,7 +18,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap) or serum, 3 mL",
         "fasting_required": false,
@@ -105,7 +104,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -120,7 +118,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -192,7 +192,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -207,7 +206,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -279,7 +280,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -294,7 +294,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -366,7 +368,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -381,7 +382,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -476,7 +479,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -491,7 +493,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -562,7 +566,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 5,
         "volume_description": "10mL",
         "container_description": "Sterile cup, 5-10 mL",
         "fasting_required": false,
@@ -577,7 +580,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 5.0,
+        "optimal_volume_ml": 10.0
       },
       "validation": {
         "rejection_criteria": [
@@ -649,7 +654,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -664,7 +668,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -735,7 +741,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -750,7 +755,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -820,7 +827,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -835,7 +841,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -906,7 +914,6 @@
           "purple",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or EDTA, 3 mL",
         "fasting_required": false,
@@ -991,7 +998,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -1006,7 +1012,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1076,7 +1084,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -1091,7 +1098,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1162,7 +1171,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -1177,7 +1185,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1248,7 +1258,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -1263,7 +1272,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1335,7 +1346,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -1350,7 +1360,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1422,7 +1434,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -1437,7 +1448,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1509,7 +1522,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -1524,7 +1536,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1596,7 +1610,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -1611,7 +1624,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1683,7 +1698,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -1698,7 +1712,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1770,7 +1786,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -1862,7 +1877,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -1877,7 +1891,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -1948,7 +1964,6 @@
         "container_top_colors": [
           "blue"
         ],
-        "volume_ml_min": 2.4,
         "volume_description": "2.7mL",
         "container_description": "Blue-cap tube, 2.7 mL (correct fill critical)",
         "fasting_required": false,
@@ -1963,7 +1978,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.4,
+        "optimal_volume_ml": 2.7
       },
       "validation": {
         "rejection_criteria": [
@@ -2035,7 +2052,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -2050,7 +2066,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2122,7 +2140,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -2137,7 +2154,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2209,7 +2228,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -2224,7 +2242,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2308,7 +2328,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -2323,7 +2342,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2395,7 +2416,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -2410,7 +2430,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2481,7 +2503,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -2496,7 +2517,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2568,7 +2591,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -2583,7 +2605,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2654,7 +2678,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -2741,7 +2764,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -2756,7 +2778,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2827,7 +2851,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -2842,7 +2865,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -2914,7 +2939,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -2929,7 +2953,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3001,7 +3027,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3016,7 +3041,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3088,7 +3115,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3103,7 +3129,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3175,7 +3203,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3190,7 +3217,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3262,7 +3291,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3277,7 +3305,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3349,7 +3379,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3364,7 +3393,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3436,7 +3467,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3451,7 +3481,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3523,7 +3555,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3610,7 +3641,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3625,7 +3655,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3697,7 +3729,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3712,7 +3743,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3784,7 +3817,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3799,7 +3831,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3871,7 +3905,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3886,7 +3919,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -3958,7 +3993,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -3973,7 +4007,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4045,7 +4081,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4060,7 +4095,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4132,7 +4169,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4147,7 +4183,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4219,7 +4257,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4234,7 +4271,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4306,7 +4345,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4321,7 +4359,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4393,7 +4433,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4480,7 +4519,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4495,7 +4533,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4567,7 +4607,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4582,7 +4621,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4654,7 +4695,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4669,7 +4709,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4741,7 +4783,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4756,7 +4797,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4828,7 +4871,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4843,7 +4885,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -4915,7 +4959,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -4930,7 +4973,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5002,7 +5047,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -5017,7 +5061,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5089,7 +5135,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -5104,7 +5149,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5176,7 +5223,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -5191,7 +5237,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5262,7 +5310,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 10,
         "volume_description": "10mL",
         "container_description": "Blood culture bottles (aerobic + anaerobic), 5-10 mL each",
         "fasting_required": false,
@@ -5348,7 +5395,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -5363,7 +5409,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5442,7 +5490,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -5457,7 +5504,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5528,7 +5577,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -5543,7 +5591,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5614,7 +5664,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -5629,7 +5678,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5701,7 +5752,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -5716,7 +5766,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5788,7 +5840,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -5803,7 +5854,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5874,7 +5927,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -5889,7 +5941,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -5961,7 +6015,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -5976,7 +6029,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6048,7 +6103,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -6063,7 +6117,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6135,7 +6191,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -6223,7 +6278,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -6238,7 +6292,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6314,7 +6370,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -6329,7 +6384,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6419,7 +6476,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -6434,7 +6490,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6505,7 +6563,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -6520,7 +6577,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6573,7 +6632,7 @@
         "CD4 Count"
       ],
       "confidence": "HIGH",
-      "notes": "HIV staging and ART monitoring; WHO threshold often 200–350 cells/µL"
+      "notes": "HIV staging and ART monitoring; WHO threshold often 200\u2013350 cells/\u00b5L"
     },
     {
       "test_code": "CEA",
@@ -6591,7 +6650,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -6606,7 +6664,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6676,9 +6736,8 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
-        "volume_description": "5μL",
-        "container_description": "SST or capillary drop, 2-5 μL",
+        "volume_description": "5\u03bcL",
+        "container_description": "SST or capillary drop, 2-5 \u03bcL",
         "fasting_required": false,
         "collection_notes": "Specimen: Serum or whole blood.",
         "rejection_criteria": [
@@ -6691,7 +6750,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 2.5
       },
       "validation": {
         "rejection_criteria": [
@@ -6764,7 +6825,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -6779,7 +6839,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6850,7 +6912,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": true,
@@ -6865,7 +6926,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -6958,7 +7021,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -6973,7 +7035,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7044,7 +7108,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -7130,7 +7193,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -7145,7 +7207,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7217,7 +7281,6 @@
           "green",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or lithium heparin, 3 mL",
         "fasting_required": false,
@@ -7232,7 +7295,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7317,7 +7382,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -7332,7 +7396,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7404,7 +7470,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -7419,7 +7484,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7491,7 +7558,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -7506,7 +7572,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7578,7 +7646,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -7593,7 +7660,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7664,7 +7733,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 0.5,
         "volume_description": "0.5ml",
         "container_description": "Swab + buffer (kit)",
         "fasting_required": false,
@@ -7679,7 +7747,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 0.5,
+        "optimal_volume_ml": 0.5
       },
       "validation": {
         "rejection_criteria": [
@@ -7750,7 +7820,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -7765,7 +7834,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7838,7 +7909,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -7853,7 +7923,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -7924,7 +7996,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -8011,7 +8082,6 @@
           "purple",
           "red"
         ],
-        "volume_ml_min": 1.5,
         "volume_description": "2mL",
         "container_description": "SST or EDTA, 2 mL",
         "fasting_required": false,
@@ -8026,7 +8096,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 2.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8097,7 +8169,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST (protect from light), 3 mL",
         "fasting_required": false,
@@ -8112,7 +8183,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8184,7 +8257,6 @@
           "purple",
           "blue"
         ],
-        "volume_ml_min": 2,
         "volume_description": "2ml",
         "container_description": "Blue-cap or purple-cap tube",
         "fasting_required": false,
@@ -8199,7 +8271,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 2.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8269,7 +8343,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 0,
         "volume_description": "As required",
         "container_description": "N/A",
         "fasting_required": false,
@@ -8284,7 +8357,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 2.5
       },
       "validation": {
         "rejection_criteria": [
@@ -8359,7 +8434,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -8374,7 +8448,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8445,7 +8521,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST (iron-free), 3 mL",
         "fasting_required": true,
@@ -8460,7 +8535,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8531,7 +8608,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -8546,7 +8622,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8616,7 +8694,6 @@
         "container_top_colors": [
           "blue"
         ],
-        "volume_ml_min": 2.4,
         "volume_description": "2.4ml",
         "container_description": "Blue-cap tube, correct fill",
         "fasting_required": false,
@@ -8631,7 +8708,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.4,
+        "optimal_volume_ml": 2.4
       },
       "validation": {
         "rejection_criteria": [
@@ -8702,7 +8781,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -8717,7 +8795,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8788,7 +8868,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -8874,7 +8953,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -8889,7 +8967,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -8961,7 +9041,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -8976,7 +9055,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9047,7 +9128,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -9062,7 +9142,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9133,7 +9215,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -9148,7 +9229,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9219,7 +9302,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -9234,7 +9316,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9306,7 +9390,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -9321,7 +9404,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9393,7 +9478,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -9408,7 +9492,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9480,7 +9566,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -9495,7 +9580,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9567,7 +9654,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -9582,7 +9668,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9658,7 +9746,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -9746,7 +9833,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -9761,7 +9847,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9837,7 +9925,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -9852,7 +9939,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -9924,7 +10013,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -9939,7 +10027,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10010,7 +10100,6 @@
         "container_top_colors": [
           "green"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "Heparin tube (green cap), 3 mL",
         "fasting_required": false,
@@ -10025,7 +10114,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10095,7 +10186,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": true,
@@ -10110,7 +10200,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10188,7 +10280,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -10203,7 +10294,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10274,7 +10367,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -10289,7 +10381,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10362,7 +10456,6 @@
         "container_top_colors": [
           "purple"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "EDTA tube (purple cap), 3 mL",
         "fasting_required": false,
@@ -10377,7 +10470,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10457,7 +10552,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -10472,7 +10566,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10552,7 +10648,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -10655,7 +10750,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -10670,7 +10764,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10753,7 +10849,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -10768,7 +10863,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10839,7 +10936,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -10854,7 +10950,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -10926,7 +11024,6 @@
           "green",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or lithium heparin, 3 mL",
         "fasting_required": false,
@@ -10941,7 +11038,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11012,7 +11111,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": true,
@@ -11027,7 +11125,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11099,7 +11199,6 @@
           "green",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or lithium heparin, 3 mL",
         "fasting_required": false,
@@ -11114,7 +11213,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11187,7 +11288,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -11202,7 +11302,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11275,7 +11377,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride/potassium oxalate, 3 mL",
         "fasting_required": true,
@@ -11290,7 +11391,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11362,7 +11465,6 @@
           "gray",
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST or fluoride tube, 3 mL",
         "fasting_required": false,
@@ -11377,7 +11479,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11457,7 +11561,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -11543,7 +11646,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -11558,7 +11660,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11629,7 +11733,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST (protect from light), 3 mL",
         "fasting_required": false,
@@ -11644,7 +11747,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11715,7 +11820,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": true,
@@ -11730,7 +11834,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11801,7 +11907,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": true,
@@ -11816,7 +11921,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11887,7 +11994,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -11902,7 +12008,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [
@@ -11973,7 +12081,6 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_ml_min": 2,
         "volume_description": "3mL",
         "container_description": "SST, 3 mL",
         "fasting_required": false,
@@ -11988,7 +12095,9 @@
           "other",
           "phvs_specimen_reject",
           "hl7v2_specimen_condition"
-        ]
+        ],
+        "min_volume_ml": 2.0,
+        "optimal_volume_ml": 3.0
       },
       "validation": {
         "rejection_criteria": [

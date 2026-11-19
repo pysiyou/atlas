@@ -134,11 +134,36 @@ export function groupTestsBySample(
   return grouped;
 }
 
-export function calculateTotalVolume(tests: OrderTest[], testCatalog: OrderableTest[]): number {
-  return tests.reduce((total, orderTest) => {
-    const testDef = testCatalog.find(t => t.code === orderTest.testCode);
-    return total + (testDef?.minimumVolume ?? 0);
+/** Sum catalog `minVolumeMl` for tests that define it; omit tests with no value. */
+export function sumMinVolumeMl(testCodes: string[], testCatalog: OrderableTest[]): number {
+  return testCodes.reduce((total, code) => {
+    const testDef = testCatalog.find(t => t.code === code);
+    const min = testDef?.minVolumeMl;
+    if (min == null) return total;
+    return total + min;
   }, 0);
+}
+
+/** @deprecated Use sumMinVolumeMl */
+export function calculateTotalVolume(tests: OrderTest[], testCatalog: OrderableTest[]): number {
+  return sumMinVolumeMl(
+    tests.map(t => t.testCode),
+    testCatalog
+  );
+}
+
+export function hasMinVolumeRequirement(requiredVolumeMl: number): boolean {
+  return requiredVolumeMl > 0;
+}
+
+export function isCollectedVolumeValid(
+  collectedVolumeMl: number,
+  requiredVolumeMl: number
+): boolean {
+  if (!hasMinVolumeRequirement(requiredVolumeMl)) {
+    return collectedVolumeMl > 0;
+  }
+  return collectedVolumeMl >= requiredVolumeMl;
 }
 
 export function formatVolume(volumeInMl: number): string {

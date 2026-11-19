@@ -204,7 +204,7 @@ export interface paths {
         };
         /**
          * Search Patients
-         * @description Search patients by name, patient ID, numeric id, or phone.
+         * @description Search patients by name, patient id, numeric id, or phone.
          */
         get: operations["search_patients_api_v1_patients_search_get"];
         put?: never;
@@ -1376,6 +1376,15 @@ export interface components {
             collectedBy?: string | null;
             /** Collectedvolume */
             collectedVolume?: number | null;
+            /**
+             * Requiredvolume
+             * @default 0
+             */
+            requiredVolume: number;
+            /** Requiredcontainertypes */
+            requiredContainerTypes?: components["schemas"]["ContainerType"][];
+            /** Requiredcontainercolors */
+            requiredContainerColors?: components["schemas"]["ContainerTopColor"][];
             /** Referentdoctorid */
             referentDoctorId?: string | null;
             /** Referentdoctorname */
@@ -2314,10 +2323,10 @@ export interface components {
             synonyms?: string[] | null;
             /** Samplevolume */
             sampleVolume?: string | null;
-            /** Minimumvolume */
-            minimumVolume?: number | null;
-            /** Optimalvolume */
-            optimalVolume?: number | null;
+            /** Minvolumeml */
+            minVolumeMl?: number | null;
+            /** Optimalvolumeml */
+            optimalVolumeMl?: number | null;
             /** Numberofcontainers */
             numberOfContainers?: number | null;
             /** Containerdescription */
@@ -3795,7 +3804,7 @@ export interface operations {
                 actorRoles?: string | null;
                 /** @description Partial match on actor display name (snapshot) or account username */
                 actorSearch?: string | null;
-                /** @description Unified stream search: patient ID, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username */
+                /** @description Unified stream search: patient id, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username */
                 search?: string | null;
                 limit?: number;
             };

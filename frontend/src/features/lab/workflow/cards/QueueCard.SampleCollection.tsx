@@ -88,7 +88,13 @@ function SampleCollectionCardLeftColumnFromVm({
       isCollected={vm.isCollected}
       isRejected={vm.isRejected}
       rejectedSample={vm.rejectedSample}
-      requiredVolume={requirement.totalVolume}
+      requiredVolume={
+        requirement.totalVolume > 0
+          ? requirement.totalVolume
+          : sample.requiredVolume > 0
+            ? sample.requiredVolume
+            : undefined
+      }
       collectedVolume={vm.collectedVolume}
       effectiveContainerType={vm.effectiveContainerType}
       containerColor={vm.containerColor}

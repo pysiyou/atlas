@@ -69,10 +69,13 @@ export function CollectionDetailGrid({
     });
   }
 
+  const showRequiredVolume = sample.requiredVolume > 0;
   sections.push({
     preset: 'panel.compact.standard', title: 'Volume Tracking',
     fields: [
-      { label: 'Required', value: formatVolumeMl(sample.requiredVolume) },
+      ...(showRequiredVolume
+        ? [{ label: 'Required', value: formatVolumeMl(sample.requiredVolume) }]
+        : []),
       {
         label: 'Collected',
         value: collectedVolume !== undefined ? formatVolumeMl(collectedVolume) : undefined,
@@ -81,7 +84,13 @@ export function CollectionDetailGrid({
         label: 'Remaining',
         value:
           remainingVolume !== undefined ? (
-            <span className={remainingVolume < sample.requiredVolume * 0.2 ? TONE.danger.fg : ''}>
+            <span
+              className={
+                showRequiredVolume && remainingVolume < sample.requiredVolume * 0.2
+                  ? TONE.danger.fg
+                  : ''
+              }
+            >
               {formatVolumeMl(remainingVolume)}
             </span>
           ) : undefined,

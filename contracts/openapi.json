@@ -5578,6 +5578,25 @@
             ],
             "title": "Collectedvolume"
           },
+          "requiredVolume": {
+            "type": "number",
+            "title": "Requiredvolume",
+            "default": 0
+          },
+          "requiredContainerTypes": {
+            "items": {
+              "$ref": "#/components/schemas/ContainerType"
+            },
+            "type": "array",
+            "title": "Requiredcontainertypes"
+          },
+          "requiredContainerColors": {
+            "items": {
+              "$ref": "#/components/schemas/ContainerTopColor"
+            },
+            "type": "array",
+            "title": "Requiredcontainercolors"
+          },
           "referentDoctorId": {
             "anyOf": [
               {
@@ -8629,7 +8648,7 @@
             ],
             "title": "Samplevolume"
           },
-          "minimumVolume": {
+          "minVolumeMl": {
             "anyOf": [
               {
                 "type": "number"
@@ -8638,9 +8657,9 @@
                 "type": "null"
               }
             ],
-            "title": "Minimumvolume"
+            "title": "Minvolumeml"
           },
-          "optimalVolume": {
+          "optimalVolumeMl": {
             "anyOf": [
               {
                 "type": "number"
@@ -8649,7 +8668,7 @@
                 "type": "null"
               }
             ],
-            "title": "Optimalvolume"
+            "title": "Optimalvolumeml"
           },
           "numberOfContainers": {
             "anyOf": [

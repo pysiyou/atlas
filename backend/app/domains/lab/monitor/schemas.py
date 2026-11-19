@@ -61,6 +61,9 @@ class CollectionWorklistItem(BaseModel):
     collectedAt: datetime | None = None
     collectedBy: str | None = None
     collectedVolume: float | None = None
+    requiredVolume: float = 0
+    requiredContainerTypes: list[ContainerType] = Field(default_factory=list)
+    requiredContainerColors: list[ContainerTopColor] = Field(default_factory=list)
     referentDoctorId: str | None = None
     referentDoctorName: str | None = None
     referentDoctorEmail: str | None = None

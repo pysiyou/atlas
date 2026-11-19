@@ -23,7 +23,8 @@ export interface TestDetail {
   rejectionCriteria?:
     | Array<string | { reason: string; domain?: string; label?: string }>
     | null;
-  minimumVolume?: number | null;
+  minVolumeMl?: number | null;
+  optimalVolumeMl?: number | null;
 }
 
 interface CollectionRequirementsSectionProps {
@@ -123,10 +124,17 @@ export function SampleCollectionRequirementsSection({
           </div>
         )}
 
-        {activeTest.minimumVolume && (
+        {activeTest.minVolumeMl != null && (
           <div className="flex items-center gap-space-2">
-            <Text role="label" className="font-normal">Minimum Volume:</Text>
-            <Text role="body">{activeTest.minimumVolume} mL</Text>
+            <Text role="label" className="font-normal">Min volume:</Text>
+            <Text role="body">{activeTest.minVolumeMl} mL</Text>
+          </div>
+        )}
+
+        {activeTest.optimalVolumeMl != null && (
+          <div className="flex items-center gap-space-2">
+            <Text role="label" className="font-normal">Optimal volume:</Text>
+            <Text role="body">{activeTest.optimalVolumeMl} mL</Text>
           </div>
         )}
       </div>

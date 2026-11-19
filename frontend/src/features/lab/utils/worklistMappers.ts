@@ -3,7 +3,7 @@
  * For display-only UI, use `@/features/shared` and `@/hooks`.
  */
 import type { SampleRequirement } from './labSample';
-import type { Sample, SampleType } from '@/types';
+import type { Sample, SampleType, ContainerType, ContainerTopColor } from '@/types';
 import type { CollectionQueueRow } from '../types/queues';
 import type {
   CollectionWorklistItem,
@@ -11,19 +11,33 @@ import type {
   ValidationWorklistItem,
 } from '../api/worklists';
 
+function buildRequirement(item: CollectionWorklistItem): SampleRequirement {
+  const requiredVolume = item.requiredVolume ?? 0;
+  return {
+    sampleType: item.sampleType as SampleType,
+    testCodes: item.testCodes,
+    totalVolume: requiredVolume,
+    containerTypes: (item.requiredContainerTypes ?? []) as ContainerType[],
+    containerTopColors: (item.requiredContainerColors ?? []) as ContainerTopColor[],
+    priority: item.priority,
+    orderId: item.orderId,
+  };
+}
+
 /** Map a collection worklist API row to a queue card/modal row (no synthetic Order/Patient). */
 export function worklistItemToQueueRow(item: CollectionWorklistItem): CollectionQueueRow {
   const isCollectedLike = item.status === 'collected' || item.status === 'rejected';
+  const requiredVolume = item.requiredVolume ?? 0;
   const sample = {
     sampleId: item.sampleId,
     orderId: item.orderId,
     sampleType: item.sampleType as SampleType,
     status: item.status,
     testCodes: item.testCodes,
-    requiredVolume: 0,
+    requiredVolume,
     priority: item.priority,
-    requiredContainerTypes: [],
-    requiredContainerColors: [],
+    requiredContainerTypes: (item.requiredContainerTypes ?? []) as ContainerType[],
+    requiredContainerColors: (item.requiredContainerColors ?? []) as ContainerTopColor[],
     isRecollection: item.isRecollection,
     originalSampleId: item.originalSampleId ?? undefined,
     originalSampleCollectedAt: item.originalSampleCollectedAt ?? undefined,
@@ -47,15 +61,7 @@ export function worklistItemToQueueRow(item: CollectionWorklistItem): Collection
       : {}),
   } as Sample;
 
-  const requirement: SampleRequirement = {
-    sampleType: item.sampleType as SampleType,
-    testCodes: item.testCodes,
-    totalVolume: 0,
-    containerTypes: [],
-    containerTopColors: [],
-    priority: item.priority,
-    orderId: item.orderId,
-  };
+  const requirement = buildRequirement(item);
 
   return {
     sample,
@@ -86,4 +92,3 @@ export function worklistItemToEntryRow(item: EntryWorklistItem): EntryWorklistIt
 export function worklistItemToValidationRow(item: ValidationWorklistItem): ValidationWorklistItem {
   return item;
 }
-

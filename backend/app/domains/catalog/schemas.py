@@ -90,8 +90,8 @@ class OrderableTestSummaryResponse(OrderableTestBase):
 class OrderableTestResponse(OrderableTestBase):
     synonyms: list[str] | None = None
     sampleVolume: str | None = None
-    minimumVolume: float | None = None
-    optimalVolume: float | None = None
+    minVolumeMl: float | None = None
+    optimalVolumeMl: float | None = None
     numberOfContainers: int | None = None
     containerDescription: str | None = None
     specialRequirements: str | None = None

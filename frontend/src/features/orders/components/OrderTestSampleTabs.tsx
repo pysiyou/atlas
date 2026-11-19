@@ -39,6 +39,12 @@ function CatalogSampleRequirements({ catalogTest }: { catalogTest: OrderableTest
     <div className={`${text({ role: 'body', intent: 'muted' })} space-y-space-2`}>
       <p>Expected sample type: {formatStatusBadgeLabel(catalogTest.sampleType)}</p>
       {catalogTest.sampleVolume ? <p>Volume: {catalogTest.sampleVolume}</p> : null}
+      {catalogTest.minVolumeMl != null ? (
+        <p>Min volume: {catalogTest.minVolumeMl} mL</p>
+      ) : null}
+      {catalogTest.optimalVolumeMl != null ? (
+        <p>Optimal volume: {catalogTest.optimalVolumeMl} mL</p>
+      ) : null}
       {catalogTest.fastingRequired ? <p>Fasting required</p> : null}
       {catalogTest.collectionNotes ? <p>{catalogTest.collectionNotes}</p> : null}
     </div>

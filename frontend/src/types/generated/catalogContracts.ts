@@ -54,7 +54,8 @@ export interface CatalogCollectionBlock {
   sample_type: string;
   container_types?: string[];
   container_top_colors?: string[];
-  volume_ml_min?: number;
+  min_volume_ml?: number;
+  optimal_volume_ml?: number;
   volume_description?: string;
   container_description?: string;
   fasting_required?: boolean;
