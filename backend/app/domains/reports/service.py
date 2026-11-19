@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from datetime import UTC, date, datetime, time
 from typing import Protocol
 
-from app.domains.audit.service import AuditEmitter
+from app.domains.audit.emitter import AuditEmitter
 from app.domains.lab.public import resolve_order_presentation
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import OrderResponse
@@ -11,12 +11,11 @@ from app.domains.orders.service import reportable_order_search_filter
 from app.domains.patients.models import Patient
 from app.domains.reports.pdf_service import ReportPdfService
 from app.domains.reports.schemas import ReportableOrderItem
-from app.shared.enums import OrderStatus, TestStatus
-from app.shared.http import create_paginated_response, skip_to_page
+from app.shared.generated.enums import OrderStatus, TestStatus
+from app.shared.api import create_paginated_response, skip_to_page
+from app.shared.generated.lab_policy import INACTIVE_TEST_STATUSES_FOR_ROLLUP
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload, selectinload
-
-from app.shared.lab_contract import INACTIVE_TEST_STATUSES_FOR_ROLLUP
 
 INACTIVE_TEST_STATUSES = INACTIVE_TEST_STATUSES_FOR_ROLLUP
 
@@ -66,7 +65,7 @@ class ReportService:
         if not order.orderId:
             raise HTTPException(
                 status_code=500,
-                detail=f"Order is missing an order id",
+                detail="Order is missing an order id",
             )
         if not patient or not patient.id:
             raise HTTPException(
@@ -187,7 +186,7 @@ class ReportService:
         if not order.orderId:
             raise HTTPException(
                 status_code=500,
-                detail=f"Order is missing an order id",
+                detail="Order is missing an order id",
             )
         pdf_bytes, _document = ReportPdfService(self.db).generate_and_store(order, user_id)
         AuditEmitter(self.db).reporting_generated(order.orderId, user_id)

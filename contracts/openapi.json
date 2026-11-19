@@ -613,10 +613,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Unified stream search: MRN, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username",
+              "description": "Unified stream search: patient id, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username",
               "title": "Search"
             },
-            "description": "Unified stream search: MRN, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username"
+            "description": "Unified stream search: patient id, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username"
           },
           {
             "name": "limit",
@@ -665,7 +665,7 @@
           "patients"
         ],
         "summary": "Search Patients",
-        "description": "Search patients by name, MRN, numeric id, or phone.",
+        "description": "Search patients by name, patient id, numeric id, or phone.",
         "operationId": "search_patients_api_v1_patients_search_get",
         "security": [
           {

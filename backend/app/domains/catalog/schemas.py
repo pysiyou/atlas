@@ -6,7 +6,6 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-
 # --- Analytes (contracts/analytes.json wire shape) ---
 
 

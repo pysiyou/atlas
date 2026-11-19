@@ -204,7 +204,7 @@ export interface paths {
         };
         /**
          * Search Patients
-         * @description Search patients by name, MRN, numeric id, or phone.
+         * @description Search patients by name, patient ID, numeric id, or phone.
          */
         get: operations["search_patients_api_v1_patients_search_get"];
         put?: never;
@@ -3795,7 +3795,7 @@ export interface operations {
                 actorRoles?: string | null;
                 /** @description Partial match on actor display name (snapshot) or account username */
                 actorSearch?: string | null;
-                /** @description Unified stream search: MRN, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username */
+                /** @description Unified stream search: patient ID, filler number, accession, test mnemonic, numeric ids, patient name, actor name, or username */
                 search?: string | null;
                 limit?: number;
             };

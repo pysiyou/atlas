@@ -1,11 +1,17 @@
+"""Quality issue and escalation ticket ORM models."""
 from __future__ import annotations
 
-"""
-Quality Issue Model — unified record of lab quality problems and remedies.
-"""
 from app.platform.database import Base, contract_enum
-from app.shared.enums import QualityDomain, QualityStage, RemedyType
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
+from app.shared.generated.enums import (
+    EscalationReasonCode,
+    EscalationResolutionAction,
+    EscalationSeverity,
+    EscalationTicketStatus,
+    QualityDomain,
+    QualityStage,
+    RemedyType,
+)
+from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.sql import func
 
 
@@ -43,19 +49,6 @@ class QualityIssue(Base):
     createdAt = Column(
         "created_at", DateTime(timezone=True), server_default=func.now(), nullable=False
     )
-
-"""
-EscalationTicket Model - Tracks LIS escalation events and supervisor resolutions.
-"""
-from app.platform.database import Base, contract_enum
-from app.shared.enums import (
-    EscalationReasonCode,
-    EscalationResolutionAction,
-    EscalationSeverity,
-    EscalationTicketStatus,
-)
-from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String, Text
-from sqlalchemy.sql import func
 
 
 class EscalationTicket(Base):

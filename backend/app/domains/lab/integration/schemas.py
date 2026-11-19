@@ -1,9 +1,9 @@
+"""Analyzer integration API schemas."""
 from __future__ import annotations
 
-"""Analyzer integration API schemas."""
 from datetime import datetime
 
-from app.shared.identifiers import (
+from app.shared.clinical import (
     ANALYZER_ID_PATTERN,
     SPECIMEN_INGEST_PATTERN,
     TEST_MNEMONIC_PATTERN,

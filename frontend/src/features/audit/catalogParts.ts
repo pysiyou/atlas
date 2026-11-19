@@ -247,10 +247,10 @@ export function patientRecordPhrase(
   label = 'patient ',
 ): EventLogHeadlinePart {
   const lookedUp = context.getPatientName(patientId);
-  const mrnText = eventLogId.patient(patientId);
+  const patientIdText = eventLogId.patient(patientId);
   const nameLooksLikeId =
-    !lookedUp || lookedUp === String(patientId) || lookedUp === mrnText;
-  return recordPhrase(label, nameLooksLikeId ? mrnText : lookedUp);
+    !lookedUp || lookedUp === String(patientId) || lookedUp === patientIdText;
+  return recordPhrase(label, nameLooksLikeId ? patientIdText : lookedUp);
 }
 
 export function orderRecordPhrase(

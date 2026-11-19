@@ -12,7 +12,7 @@ const root = path.resolve(__dirname, '..');
 const contractsDir = path.join(root, 'contracts');
 const samplePath = path.join(contractsDir, 'rejection-specimen.json');
 const resultPath = path.join(contractsDir, 'rejection-analytical.json');
-const pyOut = path.join(root, 'backend', 'app', 'shared', 'rejection_reasons.py');
+const pyOut = path.join(root, 'backend', 'app', 'shared', 'generated', 'rejections.py');
 const tsOut = path.join(root, 'frontend', 'src', 'types', 'generated', 'rejectionReasons.ts');
 
 function readJson(p) {

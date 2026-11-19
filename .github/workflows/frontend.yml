@@ -9,7 +9,7 @@ on:
       - 'config/client-config.json'
       - 'config/client-config.schema.json'
       - 'contracts/**'
-      - 'backend/app/shared/identifiers.py'
+      - 'backend/app/shared/clinical.py'
       - 'backend/app/domains/**/schemas.py'
       - 'backend/app/domains/**/api.py'
       - 'backend/app/domains/catalog/**'
@@ -23,7 +23,7 @@ on:
       - 'config/client-config.json'
       - 'config/client-config.schema.json'
       - 'contracts/**'
-      - 'backend/app/shared/identifiers.py'
+      - 'backend/app/shared/clinical.py'
       - 'backend/app/domains/**/schemas.py'
       - 'backend/app/domains/**/api.py'
       - 'backend/app/domains/catalog/**'
@@ -59,7 +59,7 @@ jobs:
         run: |
           git diff --exit-code -- \
             ../frontend/src/types/generated \
-            ../backend/app/shared/enums.py \
+            ../backend/app/shared/generated/enums.py \
             ../contracts/openapi.json
       - run: npm run check:openapi
       - run: npm run typecheck

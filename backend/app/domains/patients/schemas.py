@@ -6,8 +6,8 @@ import re
 from calendar import monthrange
 from datetime import datetime
 
-from app.shared.identifiers import EMPLOYEE_NUMBER_PATTERN, MEMBER_ID_PATTERN, MRN_PATTERN
-from app.shared.enums import AffiliationDuration, Gender, Relationship
+from app.shared.generated.enums import AffiliationDuration, Gender, Relationship
+from app.shared.clinical import EMPLOYEE_NUMBER_PATTERN, MEMBER_ID_PATTERN, PATIENT_ID_PATTERN
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 
@@ -285,7 +285,7 @@ class PatientResponse(PatientBase):
     phone: str = Field(..., min_length=1, max_length=20)
     emergencyContact: EmergencyContactResponse
     affiliation: AffiliationResponse | None = None
-    id: str = Field(..., min_length=8, max_length=8, pattern=MRN_PATTERN)
+    id: str = Field(..., min_length=8, max_length=8, pattern=PATIENT_ID_PATTERN)
     registrationDate: datetime
     createdBy: str = Field(..., pattern=EMPLOYEE_NUMBER_PATTERN)
     createdAt: datetime

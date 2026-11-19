@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Sync ID regex patterns from contracts/entity-ids.json to frontend id.ts and backend utils.py.
+ * Sync ID regex patterns from contracts/entity-ids.json to frontend id.ts and backend clinical.py.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const entityPath = path.join(root, 'contracts', 'entity-ids.json');
 const tsIdPath = path.join(root, 'frontend', 'src', 'utils', 'id.ts');
-const pyUtilsPath = path.join(root, 'backend', 'app', 'platform', 'utils.py');
+const pyClinicalPath = path.join(root, 'backend', 'app', 'shared', 'clinical.py');
 
 const doc = JSON.parse(fs.readFileSync(entityPath, 'utf8'));
 const patterns = doc.patterns ?? {};
@@ -30,7 +30,7 @@ const updatedIdTs = idTs.replace(
 );
 fs.writeFileSync(tsIdPath, updatedIdTs);
 
-let py = fs.readFileSync(pyUtilsPath, 'utf8');
+let py = fs.readFileSync(pyClinicalPath, 'utf8');
 for (const [pyName, val] of Object.entries(patterns)) {
   const regexPy = val.regex.replace(/\\/g, '\\');
   const re = new RegExp(`${pyName} = r"[^"]*"`);
@@ -38,5 +38,5 @@ for (const [pyName, val] of Object.entries(patterns)) {
     py = py.replace(re, `${pyName} = r"${regexPy}"`);
   }
 }
-fs.writeFileSync(pyUtilsPath, py);
-console.log('Synced entity id patterns (id.ts + utils.py)');
+fs.writeFileSync(pyClinicalPath, py);
+console.log('Synced entity id patterns (id.ts + clinical.py)');

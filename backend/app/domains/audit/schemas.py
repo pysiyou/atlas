@@ -5,8 +5,8 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from app.shared.identifiers import FILLER_PATTERN, MRN_PATTERN, SAMPLE_ID_PATTERN
-from app.shared.audit_events import EventType
+from app.shared.generated.audit import EventType
+from app.shared.clinical import FILLER_PATTERN, PATIENT_ID_PATTERN, SAMPLE_ID_PATTERN
 from pydantic import BaseModel, Field
 
 __all__ = [
@@ -30,7 +30,7 @@ class EventTarget(BaseModel):
 
 
 class EventContext(BaseModel):
-    patientId: str | None = Field(None, pattern=MRN_PATTERN)
+    patientId: str | None = Field(None, pattern=PATIENT_ID_PATTERN)
     orderId: str | None = Field(None, pattern=FILLER_PATTERN)
     testId: int | None = Field(None, gt=0)
 
@@ -52,7 +52,7 @@ class AuditSearchParsedIds(BaseModel):
     orderId: str | None = Field(None, pattern=FILLER_PATTERN)
     testId: int | None = Field(None, gt=0)
     sampleId: str | None = Field(None, pattern=SAMPLE_ID_PATTERN)
-    patientId: str | None = Field(None, pattern=MRN_PATTERN)
+    patientId: str | None = Field(None, pattern=PATIENT_ID_PATTERN)
 
 
 class AuditSearchIntent(BaseModel):

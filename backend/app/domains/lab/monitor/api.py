@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Lab worklist and monitor board routes."""
+
+from __future__ import annotations
 
 import logging
 import time
@@ -10,7 +10,6 @@ from datetime import date
 from typing import Any, Literal, TypeVar
 
 from app.domains.lab.deps import get_lab_worklist_service
-from app.domains.lab.monitor.service import LabWorklistService, resolve_worklist_priorities
 from app.domains.lab.monitor.schemas import (
     CollectionWorklistItem,
     CollectionWorklistResponse,
@@ -25,10 +24,10 @@ from app.domains.lab.monitor.schemas import (
     WorklistPagination,
     WorklistResponse,
 )
+from app.domains.lab.monitor.worklists import LabWorklistService, resolve_worklist_priorities
 from app.domains.users.models import User
-from app.platform.http import require_lab_tech, require_sample_collector
-from app.platform.http import parse_csv_values
-from app.shared.enums import PriorityLevel, TestStatus, UserRole
+from app.platform.http import parse_csv_values, require_lab_tech, require_sample_collector
+from app.shared.generated.enums import PriorityLevel, TestStatus, UserRole
 from fastapi import APIRouter, Depends, Query
 
 router = APIRouter()

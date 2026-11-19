@@ -1,0 +1,1 @@
+"""Contract-generated Python modules. Regenerate via ``node scripts/codegen-contracts.mjs``."""

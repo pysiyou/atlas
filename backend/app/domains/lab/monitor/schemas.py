@@ -1,12 +1,12 @@
+"""Lab worklist API schemas."""
 from __future__ import annotations
 
-"""Lab worklist API schemas."""
 from datetime import datetime
 from typing import Literal
 
-from app.domains.lab.rules.service import LabWorklistAllowedActions, PipelineStage
+from app.domains.lab.rules.projection import LabWorklistAllowedActions, PipelineStage
 from app.domains.orders.schemas import TestResultsDict
-from app.shared.enums import (
+from app.shared.generated.enums import (
     ContainerTopColor,
     ContainerType,
     Gender,
@@ -15,7 +15,7 @@ from app.shared.enums import (
     SampleStatus,
     TestStatus,
 )
-from app.shared.http import StatusPresentation
+from app.shared.api import StatusPresentation
 from pydantic import BaseModel, Field
 
 

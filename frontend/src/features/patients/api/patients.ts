@@ -4,7 +4,7 @@
  */
 import { apiClient, isApiError } from '@/lib/api';
 import { clinicalPath } from '@/lib/api/clinicalPath';
-import { mrnSchema } from '@/types/zod';
+import { patientIdSchema } from '@/types/zod';
 import { withPaginatedParams } from '@/lib/api';
 import { WORKFLOW_QUERY_LIMIT, DEFAULT_LIST_PAGE_SIZE } from '@/lib/api';
 import type { Gender, Patient, PatientContext } from '@/types';
@@ -72,7 +72,7 @@ export const patientAPI = {
   },
 
   async getById(id: string): Promise<Patient | null> {
-    const data = await apiClient.get<Patient>(clinicalPath('/patients', id, mrnSchema));
+    const data = await apiClient.get<Patient>(clinicalPath('/patients', id, patientIdSchema));
     return parseApiResponse(patientSchema, data, 'patient detail') as Patient;
   },
 
@@ -82,11 +82,11 @@ export const patientAPI = {
   },
 
   async update(id: string, updates: Partial<Patient>): Promise<Patient> {
-    return apiClient.put<Patient>(clinicalPath('/patients', id, mrnSchema), updates);
+    return apiClient.put<Patient>(clinicalPath('/patients', id, patientIdSchema), updates);
   },
 
   async delete(id: string): Promise<void> {
-    return apiClient.delete<void>(clinicalPath('/patients', id, mrnSchema));
+    return apiClient.delete<void>(clinicalPath('/patients', id, patientIdSchema));
   },
 
   async search(query: string): Promise<Patient[]> {
@@ -400,7 +400,7 @@ export function usePatientNames() {
  * @example
  * ```tsx
  * const { getPatientName } = usePatientNameLookup();
- * const name = getPatientName(1); // "John Doe" (internal PK; display uses MRN)
+ * const name = getPatientName(1); // "John Doe" (internal PK; display uses patient ID)
  * ```
  */
 export function usePatientNameLookup() {

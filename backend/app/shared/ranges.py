@@ -79,6 +79,6 @@ def band_low_high(band: ResolvedBand) -> tuple[float | None, float | None]:
     low = band.get("low")
     high = band.get("high")
     return (
-        float(low) if isinstance(low, (int, float)) else None,
-        float(high) if isinstance(high, (int, float)) else None,
+        float(low) if isinstance(low, int | float) else None,
+        float(high) if isinstance(high, int | float) else None,
     )

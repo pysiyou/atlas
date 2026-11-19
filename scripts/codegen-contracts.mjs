@@ -19,6 +19,7 @@ const steps = [
   ['node', ['generate-policies-categories.mjs']],
   ['node', ['generate-feedback-catalog.mjs']],
   ['node', ['generate-audit-catalog.mjs']],
+  ['node', ['generate-lab-policy.mjs']],
   ['node', ['generate-entity-ids.mjs']],
 ];
 

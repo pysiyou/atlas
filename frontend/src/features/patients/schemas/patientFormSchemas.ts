@@ -6,7 +6,7 @@ import {
   emailSchema,
   dateStringSchema,
   postalCodeSchema,
-  mrnSchema,
+  patientIdSchema,
   employeeNumberSchema,
 } from '@/types/zod';
 import { AFFILIATION_DURATION_VALUES, GENDER_VALUES, RELATIONSHIP_VALUES } from '@/types/generated/enums';
@@ -137,7 +137,7 @@ export const medicalHistorySchema = z.object({
 });
 
 export const patientSchema = z.object({
-  id: mrnSchema,
+  id: patientIdSchema,
   fullName: nameSchema,
   dateOfBirth: dateStringSchema,
   gender: zEnumFromValues(GENDER_VALUES),

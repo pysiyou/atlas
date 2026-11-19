@@ -6,11 +6,11 @@ from __future__ import annotations
 from math import ceil
 from typing import Annotated, Generic, TypeVar
 
-from app.shared.identifiers import (
+from app.shared.clinical import (
     EMPLOYEE_NUMBER_PATTERN,
     FILLER_PATTERN,
     LAB_ACTOR_USER_ID_PATTERN,
-    MRN_PATTERN,
+    PATIENT_ID_PATTERN,
     RECEIPT_NUMBER_PATTERN,
     REFERENT_DOCTOR_ID_PATTERN,
     SAMPLE_ID_PATTERN,
@@ -19,7 +19,7 @@ from app.shared.identifiers import (
 from fastapi import Path, Query
 from pydantic import BaseModel, Field
 
-MrnPath = Annotated[str, Path(pattern=MRN_PATTERN, min_length=8, max_length=8)]
+PatientIdPath = Annotated[str, Path(pattern=PATIENT_ID_PATTERN, min_length=8, max_length=8)]
 OrderIdPath = Annotated[str, Path(pattern=FILLER_PATTERN, min_length=13, max_length=13)]
 SampleIdPath = Annotated[str, Path(pattern=SAMPLE_ID_PATTERN, min_length=8, max_length=20)]
 EmployeeIdPath = Annotated[
@@ -29,7 +29,7 @@ TestCodePath = Annotated[str, Path(pattern=TEST_MNEMONIC_PATTERN, min_length=2, 
 OrderTestIdPath = Annotated[int, Path(gt=0)]
 ReceiptIdPath = Annotated[str, Path(pattern=RECEIPT_NUMBER_PATTERN, min_length=8, max_length=8)]
 
-MrnQuery = Annotated[str | None, Query(pattern=MRN_PATTERN, min_length=8, max_length=8)]
+PatientIdQuery = Annotated[str | None, Query(pattern=PATIENT_ID_PATTERN, min_length=8, max_length=8)]
 OrderIdQuery = Annotated[str | None, Query(pattern=FILLER_PATTERN, min_length=13, max_length=13)]
 SampleIdQuery = Annotated[
     str | None,

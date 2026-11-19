@@ -10,6 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const contractPath = path.join(root, 'contracts', 'audit-events.json');
 const outPath = path.join(root, 'frontend', 'src', 'types', 'generated', 'audit.ts');
+const pyAuditPath = path.join(root, 'backend', 'app', 'shared', 'generated', 'audit.py');
 
 const data = JSON.parse(fs.readFileSync(contractPath, 'utf-8'));
 const events = data.events;
@@ -124,3 +125,62 @@ export const AUDIT_EVENT_WIRES = ${wiresArray};
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, output, 'utf-8');
 console.log(`Wrote ${path.relative(root, outPath)} (${wires.length} wires)`);
+
+function pyQuote(v) {
+  return JSON.stringify(v);
+}
+
+function pyFrozenset(values) {
+  const body = values.map(v => `        ${pyQuote(v)},`).join('\n');
+  return `frozenset(\n    {\n${body}\n    }\n)`;
+}
+
+const prefixEntries = (query.storedScopeByEventPrefix ?? [])
+  .map(row => `    (${pyQuote(row.prefix)}, ${pyQuote(row.scope)}),`)
+  .join('\n');
+const allKindIds = [...domainKinds.map(k => k.id), ...laboratorySubkinds.map(k => k.id)];
+
+const pyAuditLines = [
+  '"""',
+  'Audit event catalog — GENERATED from contracts/audit-events.json. DO NOT EDIT.',
+  '"""',
+  'from __future__ import annotations',
+  '',
+  'import enum',
+  '',
+  '',
+  'class EventType(str, enum.Enum):',
+  '    """Dot-notation event taxonomy for LIS audit trail."""',
+  '',
+];
+for (const event of events) {
+  pyAuditLines.push(`    ${event.member} = ${pyQuote(event.wire)}`);
+}
+pyAuditLines.push(
+  '',
+  '# ── Query taxonomy ──────────────────────────────────────────────────────',
+  '',
+  `DOMAIN_KIND_IDS: frozenset[str] = ${pyFrozenset(domainKinds.map(k => k.id))}`,
+  '',
+  `LABORATORY_SUBKIND_PREFIXES: dict[str, str] = {`,
+  ...laboratorySubkinds.map(
+    k => `    ${pyQuote(k.id)}: ${pyQuote(k.eventTypePrefix)},`
+  ),
+  '}',
+  '',
+  `ACCESS_EVENT_TYPES: frozenset[str] = ${pyFrozenset(accessEventTypes)}`,
+  '',
+  `STORED_EVENT_SCOPES: frozenset[str] = ${pyFrozenset(storedEventScopes)}`,
+  '',
+  'STORED_SCOPE_BY_PREFIX: tuple[tuple[str, str], ...] = (',
+  prefixEntries,
+  ')',
+  '',
+  `DEFAULT_STORED_EVENT_SCOPE: str = ${pyQuote(defaultStoredEventScope)}`,
+  '',
+  `ALL_KIND_IDS: frozenset[str] = ${pyFrozenset(allKindIds)}`,
+  '',
+);
+fs.mkdirSync(path.dirname(pyAuditPath), { recursive: true });
+fs.writeFileSync(pyAuditPath, pyAuditLines.join('\n'), 'utf-8');
+console.log(`Wrote ${path.relative(root, pyAuditPath)}`);

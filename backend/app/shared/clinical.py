@@ -2,6 +2,9 @@
 Clinical identifier patterns, formatting, matching, and DB-backed allocation.
 
 Mirrored in ``contracts/entity-ids.json``. Integer primary keys stay internal.
+
+For FastAPI path/query types, pagination helpers, and API error shapes, import
+``app.shared.api`` instead of this module.
 """
 from __future__ import annotations
 
@@ -9,16 +12,17 @@ import re
 from datetime import UTC, datetime
 
 from app.platform.database import Base
-from app.shared.exceptions import IdentifierError
+from app.shared.errors import IdentifierError
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
+
 
 class IdSequence(Base):
     """
     One row per ``(kind, period)``; ``last_seq`` is incremented under a row lock.
 
-    ``period`` is empty for global sequences (MRN, employee, receipt) and a
+    ``period`` is empty for global sequences (patient id, employee, receipt) and a
     date key for resetting counters (``YYYYMMDD`` for orders/invoices, ``YYYY``
     for yearly accessions).
     """
@@ -30,7 +34,7 @@ class IdSequence(Base):
     lastSeq = Column("last_seq", Integer, nullable=False, default=0)
 
 
-MRN_PATTERN = r"^3\d{7}$"
+PATIENT_ID_PATTERN = r"^3\d{7}$"
 FILLER_PATTERN = r"^\d{13}$"
 ACCESSION_PATTERN = r"^\d{2}-\d{5}$"
 ALIQUOT_ACCESSION_PATTERN = r"^\d{2}-\d{5}\.\d{1,2}$"
@@ -45,7 +49,7 @@ SAMPLE_ID_PATTERN = r"^\d{2}-\d{5}(\.\d{1,2})?$"
 LAB_ACTOR_USER_ID_PATTERN = r"^(?:100000|1\d{7})$"
 SPECIMEN_INGEST_PATTERN = r"^(?:\d{13}|\d{2}-\d{5}(?:\.\d{1,2})?)$"
 
-MRN_RE = re.compile(MRN_PATTERN)
+PATIENT_ID_RE = re.compile(PATIENT_ID_PATTERN)
 FILLER_RE = re.compile(FILLER_PATTERN)
 ACCESSION_RE = re.compile(ACCESSION_PATTERN)
 ALIQUOT_ACCESSION_RE = re.compile(ALIQUOT_ACCESSION_PATTERN)
@@ -57,7 +61,7 @@ RECEIPT_NUMBER_RE = re.compile(RECEIPT_NUMBER_PATTERN)
 MEMBER_ID_RE = re.compile(MEMBER_ID_PATTERN)
 ANALYZER_ID_RE = re.compile(ANALYZER_ID_PATTERN)
 
-KIND_MRN = "mrn"
+KIND_PATIENT_ID = "patient_id"
 KIND_ORDER = "order"
 KIND_ACCESSION = "accession"
 KIND_INVOICE = "invoice"
@@ -103,10 +107,10 @@ def _require_match(value: str, pattern: re.Pattern[str], label: str) -> str:
     return value
 
 
-def format_mrn(seq: int) -> str:
+def format_patient_id(seq: int) -> str:
     if seq < 1:
-        raise IdentifierError("MRN sequence must be positive")
-    return _require_match(f"{PATIENT_ID_BASE + seq:08d}", MRN_RE, "MRN")
+        raise IdentifierError("Patient id sequence must be positive")
+    return _require_match(f"{PATIENT_ID_BASE + seq:08d}", PATIENT_ID_RE, "patient id")
 
 
 def format_filler_number(day: datetime, seq: int) -> str:
@@ -162,8 +166,8 @@ def format_referent_doctor_id(seq: int) -> str:
     )
 
 
-def allocate_mrn(db: Session) -> str:
-    return format_mrn(assign_next(db, KIND_MRN))
+def allocate_patient_id(db: Session) -> str:
+    return format_patient_id(assign_next(db, KIND_PATIENT_ID))
 
 
 def allocate_filler_number(db: Session, when: datetime | None = None) -> str:
@@ -201,8 +205,8 @@ def compact_identifier(term: str) -> str:
     return re.sub(r"[\s-]", "", term.strip()).upper()
 
 
-def looks_like_mrn(term: str) -> bool:
-    return bool(MRN_RE.fullmatch(compact_identifier(term)))
+def looks_like_patient_id(term: str) -> bool:
+    return bool(PATIENT_ID_RE.fullmatch(compact_identifier(term)))
 
 
 def looks_like_filler(term: str) -> bool:

@@ -1,0 +1,255 @@
+"""Lab action eligibility — shared by mutations and worklist DTOs."""
+
+
+from typing import Any, TypedDict
+
+from app.domains.lab.rules.state_machines import (
+    SampleStateMachine,
+    StateTransitionError,
+    TestStateMachine,
+)
+from app.domains.lab.rules.status_sets import (
+    COLLECTION_TRANSITION_SKIP_STATUSES,
+    COLLECTION_WORKLIST_LINKED_EXCLUDE,
+)
+from app.domains.lab.specimen.models import Sample
+from app.domains.orders.models import Order, OrderTest
+from app.shared.generated.enums import (
+    EscalationReasonCode,
+    PaymentStatus,
+    SampleStatus,
+    TestStatus,
+)
+from app.shared.errors import LabOperationError
+from app.shared.generated.lab_policy import ATTENTION_LABELS, reason_blocks_progress
+
+
+class WorklistAllowedActions(TypedDict):
+    collect: bool
+    enterResults: bool
+    validate: bool
+    reject: bool
+
+
+def _empty_actions() -> WorklistAllowedActions:
+    return {
+        "collect": False,
+        "enterResults": False,
+        "validate": False,
+        "reject": False,
+    }
+
+
+def deny_message(reason: str | None) -> str | None:
+    if not reason:
+        return None
+    return ATTENTION_LABELS.get(reason)
+
+
+def attention_reason_for_work_item(
+    *,
+    status: str,
+    payment_status: str | None = None,
+    sample_status: str | None = None,
+    escalation_reason_code: str | None = None,
+) -> str | None:
+    """Canonical attention-reason key for a pipeline work item (not lineage)."""
+    outstanding = {PaymentStatus.UNPAID.value, PaymentStatus.PARTIAL.value}
+    if payment_status in outstanding and status in (
+        TestStatus.PENDING.value,
+        "pending",
+    ):
+        return "payment_unpaid"
+    if status == TestStatus.ESCALATED.value:
+        if escalation_reason_code == EscalationReasonCode.CRIT_VAL.value:
+            return "critical_value"
+        if escalation_reason_code == EscalationReasonCode.AMEND_RES.value:
+            return "amendment_pending"
+        if escalation_reason_code == EscalationReasonCode.LIMIT_HIT.value:
+            return "retry_limit"
+        if escalation_reason_code == EscalationReasonCode.REJ_SAMP.value:
+            return "recollection_limit"
+        if escalation_reason_code == EscalationReasonCode.VAL_REJ.value:
+            return "validation_rejected"
+        return "supervisor_review"
+    if sample_status == SampleStatus.REJECTED.value:
+        return "sample_rejected"
+    return None
+
+
+def active_linked_tests_for_collection(order_tests: list[OrderTest]) -> list[OrderTest]:
+    """Linked tests that should transition when a sample is collected."""
+    return [ot for ot in order_tests if ot.status not in COLLECTION_WORKLIST_LINKED_EXCLUDE]
+
+
+def _tests_must_transition_on_collect(order_tests: list[OrderTest]) -> tuple[bool, str | None]:
+    """Ensure every active linked test can move to SAMPLE_COLLECTED (or is already past that)."""
+    for order_test in order_tests:
+        if order_test.status in COLLECTION_TRANSITION_SKIP_STATUSES:
+            continue
+        if order_test.status == TestStatus.CANCELLED:
+            return (
+                False,
+                f"Test {order_test.testCode} cannot be marked collected (status cancelled)",
+            )
+        if TestStateMachine.can_transition(order_test.status, TestStatus.SAMPLE_COLLECTED):
+            continue
+        if order_test.status in (
+            TestStatus.SAMPLE_COLLECTED,
+            TestStatus.RESULTED,
+            TestStatus.ESCALATED,
+        ):
+            continue
+        status_val = order_test.status.value if order_test.status else str(order_test.status)
+        return (
+            False,
+            f"Test {order_test.testCode} cannot be marked collected (status {status_val})",
+        )
+    return True, None
+
+
+def assert_can_collect(sample: Sample, order: Order, order_tests: list[OrderTest]) -> None:
+    # Check workflow requirements based on configuration
+    from app.platform.config import client_config
+    
+    # Workflow: requirePaymentBeforeCollection
+    require_payment = client_config.workflows.get("requirePaymentBeforeCollection", True)
+    if require_payment and order.paymentStatus != PaymentStatus.PAID:
+        raise LabOperationError(
+            "Sample collection requires payment. Mark the order as paid before collecting.",
+            status_code=402,
+            error_code="PAYMENT_REQUIRED",
+        )
+    
+    # Workflow: requireDoctorApproval
+    require_doctor_approval = client_config.workflows.get("requireDoctorApproval", False)
+    if require_doctor_approval and not order.doctorApprovedBy:
+        raise LabOperationError(
+            "Sample collection requires doctor approval. Order must be approved before collecting.",
+            status_code=403,
+            error_code="DOCTOR_APPROVAL_REQUIRED",
+        )
+    
+    try:
+        SampleStateMachine.validate_transition(sample.status, SampleStatus.COLLECTED)
+    except StateTransitionError as exc:
+        raise LabOperationError(
+            exc.message, status_code=400, error_code="INVALID_TRANSITION"
+        ) from exc
+
+    ok, message = _tests_must_transition_on_collect(order_tests)
+    if not ok:
+        raise LabOperationError(
+            message or "Invalid test state for collection",
+            status_code=400,
+            error_code="INVALID_TRANSITION",
+        )
+
+
+def assert_can_enter_results(order_test: OrderTest) -> None:
+    can_enter, reason = TestStateMachine.can_enter_results(order_test.status)
+    if not can_enter:
+        raise LabOperationError(reason, status_code=400, error_code="INVALID_TRANSITION")
+
+
+def assert_can_validate(order_test: OrderTest, validator_id: str | None = None) -> None:
+    """
+    Check if result can be validated.
+    If requireDualValidation is enabled, ensures second validator is different from first.
+    """
+    from app.platform.config import client_config
+    
+    can_validate, reason = TestStateMachine.can_validate(order_test.status)
+    if not can_validate:
+        raise LabOperationError(reason, status_code=400, error_code="INVALID_TRANSITION")
+    
+    # Workflow: requireDualValidation — second sign-off must be a different user
+    require_dual = client_config.workflows.get("requireDualValidation", False)
+    if require_dual and order_test.validatedBy and not order_test.secondValidatorId:
+        if validator_id and order_test.validatedBy == validator_id:
+            raise LabOperationError(
+                "Dual validation requires a different validator for the second validation.",
+                status_code=403,
+                error_code="DUAL_VALIDATION_REQUIRED",
+            )
+
+
+def action_flags_for_collection(
+    *,
+    sample: Sample,
+    order: Order,
+    order_tests: list[OrderTest],
+) -> tuple[WorklistAllowedActions, str | None]:
+    payment_status = order.paymentStatus.value if order.paymentStatus else None
+    attention = attention_reason_for_work_item(
+        status=TestStatus.PENDING.value,
+        payment_status=payment_status,
+    )
+    actions = _empty_actions()
+    if sample.status != SampleStatus.PENDING:
+        return actions, None
+
+    if attention == "payment_unpaid":
+        return actions, attention
+
+    try:
+        SampleStateMachine.validate_transition(sample.status, SampleStatus.COLLECTED)
+    except StateTransitionError:
+        return actions, attention or "supervisor_review"
+
+    ok, _ = _tests_must_transition_on_collect(order_tests)
+    if not ok:
+        return actions, attention or "supervisor_review"
+
+    actions["collect"] = True
+    return actions, None
+
+
+def action_flags_for_entry(*, order_test: OrderTest) -> tuple[WorklistAllowedActions, str | None]:
+    """Entry worklist actions — retest rows use the same rules as primary tests once collected."""
+    actions = _empty_actions()
+    can_enter, _ = TestStateMachine.can_enter_results(order_test.status)
+    actions["enterResults"] = can_enter
+    return actions, None
+
+
+def action_flags_for_validation(
+    *, order_test: OrderTest
+) -> tuple[WorklistAllowedActions, str | None]:
+    actions = _empty_actions()
+    can_validate, _ = TestStateMachine.can_validate(order_test.status)
+    actions["validate"] = can_validate
+    actions["reject"] = order_test.status == TestStatus.RESULTED
+    return actions, None
+
+
+def escalation_force_validate_allowed(order_test: OrderTest, *, reason_code: str | None) -> bool:
+    """Supervisor force-validate requires critical notify when escalation is CRIT-VAL."""
+    if reason_code != EscalationReasonCode.CRIT_VAL.value:
+        return True
+    return bool(order_test.criticalNotificationSent)
+
+
+def escalation_action_flags(order_test: OrderTest, *, reason_code: str | None) -> dict[str, Any]:
+    return {
+        "criticalNotificationSent": bool(order_test.criticalNotificationSent),
+        "allowForceValidate": escalation_force_validate_allowed(
+            order_test, reason_code=reason_code
+        ),
+    }
+
+
+def effective_deny_reason(
+    *,
+    deny_reason: str | None,
+    attention_reason: str | None,
+    primary_action_allowed: bool,
+) -> str | None:
+    """Deny only when the queue action is disabled or attention blocks progress."""
+    if primary_action_allowed:
+        return None
+    if deny_reason:
+        return deny_reason
+    if attention_reason and reason_blocks_progress(attention_reason):
+        return attention_reason
+    return deny_reason

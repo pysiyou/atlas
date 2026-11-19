@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.referent_doctors.schemas import ReferentDoctorCreate, ReferentDoctorResponse
-from app.shared.identifiers import allocate_referent_doctor_id
+from app.shared.clinical import allocate_referent_doctor_id
 from fastapi import HTTPException, status
 from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError

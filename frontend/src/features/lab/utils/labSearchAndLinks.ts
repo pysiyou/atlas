@@ -24,7 +24,7 @@ type LabQueueSearchIntent =
   | { kind: 'empty' }
   | { kind: 'filler'; orderId: string }
   | { kind: 'accession'; sampleId: string }
-  | { kind: 'mrn'; mrn: string }
+  | { kind: 'patientId'; patientId: string }
   | { kind: 'mnemonic'; testCode: string }
   | { kind: 'orderTest'; accession: string; testCode: string }
   | { kind: 'text'; term: string };
@@ -45,7 +45,9 @@ function parseLabQueueSearchIntent(query: string): LabQueueSearchIntent {
   const classified = classifyClinicalSearch(trimmed);
   if (classified === 'filler') return { kind: 'filler', orderId: trimmed.replace(/[\s-]/g, '') };
   if (classified === 'accession') return { kind: 'accession', sampleId: trimmed };
-  if (classified === 'mrn') return { kind: 'mrn', mrn: trimmed.replace(/[\s-]/g, '').toUpperCase() };
+  if (classified === 'patientId') {
+    return { kind: 'patientId', patientId: trimmed.replace(/[\s-]/g, '').toUpperCase() };
+  }
   if (classified === 'mnemonic') return { kind: 'mnemonic', testCode: trimmed.toUpperCase() };
   return { kind: 'text', term: trimmed };
 }
@@ -68,7 +70,7 @@ export function labQueueSearchTextFields(
   return fields;
 }
 
-/** Client-side lab queue search: filler/accession/MRN/mnemonic or free text. */
+/** Client-side lab queue search: filler/accession/patient ID/mnemonic or free text. */
 export function matchLabQueueSearchQuery(
   ids: LabQueueSearchableIds,
   textFields: string[],
@@ -82,8 +84,8 @@ export function matchLabQueueSearchQuery(
   if (intent.kind === 'accession') {
     return Boolean(ids.sampleId && ids.sampleId === intent.sampleId);
   }
-  if (intent.kind === 'mrn') {
-    return Boolean(ids.patientId && ids.patientId === intent.mrn);
+  if (intent.kind === 'patientId') {
+    return Boolean(ids.patientId && ids.patientId === intent.patientId);
   }
   if (intent.kind === 'mnemonic') {
     return Boolean(ids.testCode && ids.testCode.toUpperCase() === intent.testCode);

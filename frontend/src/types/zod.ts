@@ -48,7 +48,7 @@ export const nullableApiDatetimeSchema = z.preprocess(
 
 export const dateSchema = z.coerce.date();
 export const positiveIntSchema = z.number().int().positive();
-export const mrnSchema = z.string().regex(ID_PATTERNS.mrn, 'Invalid patient id');
+export const patientIdSchema = z.string().regex(ID_PATTERNS.patientId, 'Invalid patient id');
 export const orderIdSchema = z.string().regex(ID_PATTERNS.filler, 'Invalid order id');
 export const sampleIdSchema = z
   .string()

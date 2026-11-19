@@ -2,7 +2,7 @@
 import re
 from datetime import datetime
 
-from app.shared.identifiers import REFERENT_DOCTOR_ID_PATTERN
+from app.shared.clinical import REFERENT_DOCTOR_ID_PATTERN
 from pydantic import BaseModel, Field, field_validator
 
 _EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")

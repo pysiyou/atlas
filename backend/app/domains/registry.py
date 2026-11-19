@@ -6,21 +6,20 @@ from app.domains.billing.models import Invoice, Payment
 from app.domains.catalog.models import (
     AffiliationPricing,
     CatalogAnalyte,
-    Workup,
-    WorkupTest,
     OrderableTest,
     OrderableTestAnalyte,
+    Workup,
+    WorkupTest,
 )
-from app.shared.identifiers import IdSequence
 from app.domains.lab.integration.models import AnalyzerIngestDedup
-from app.domains.lab.quality.models import EscalationTicket
-from app.domains.lab.quality.models import QualityIssue
+from app.domains.lab.quality.models import EscalationTicket, QualityIssue
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.patients.models import Patient
 from app.domains.referent_doctors.models import ReferentDoctor
 from app.domains.reports.models import ReportDocument
 from app.domains.users.models import User
+from app.shared.clinical import IdSequence
 
 __all__ = [
     "User",

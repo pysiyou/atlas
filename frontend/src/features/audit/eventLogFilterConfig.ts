@@ -32,10 +32,10 @@ export interface EventLogKindOption {
 export const EVENT_LOG_FILTER_PLACEHOLDERS = {
   dateRange: 'Filter by date range',
   kind: 'Event domain',
-  recordId: 'MRN, filler, accession…',
+  recordId: 'patient ID, filler, accession…',
   includeAccess: 'Include views & downloads',
   verbosity: 'Detail level',
   actorRole: 'Actor role',
   actorSearch: 'Username or name…',
-  search: 'MRN, filler, accession, name…',
+  search: 'patient ID, filler, accession, name…',
 } as const;

@@ -414,8 +414,8 @@ export function renderOrderDateCell(date: string | Date | null | undefined): Rea
   return renderDateTimeCell(date);
 }
 
-export function renderPatientId(mrn: string | null | undefined): ReactNode {
-  return <RecordId type="patient" value={mrn} emphasis="block" />;
+export function renderPatientId(patientId: string | null | undefined): ReactNode {
+  return <RecordId type="patient" value={patientId} emphasis="block" />;
 }
 
 export function renderPatientOrdersSummary(

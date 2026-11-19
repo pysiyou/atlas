@@ -8,8 +8,8 @@ import logging
 from collections.abc import Callable
 
 from app.platform.config import settings
-from app.shared.exceptions import IdentifierError, LabOperationError
-from app.shared.http import ErrorDetail, ErrorResponse
+from app.shared.errors import IdentifierError, LabOperationError
+from app.shared.api import ErrorDetail, ErrorResponse
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse

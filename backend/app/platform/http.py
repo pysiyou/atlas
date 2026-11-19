@@ -11,7 +11,7 @@ from typing import Annotated, TypeVar
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.security import TokenType, decode_token
-from app.shared.enums import QualityIssueTargetType, UserRole
+from app.shared.generated.enums import QualityIssueTargetType, UserRole
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session

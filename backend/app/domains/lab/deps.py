@@ -1,10 +1,10 @@
 """FastAPI dependencies for lab services."""
 from __future__ import annotations
 
-from app.domains.lab.monitor.service import LabWorklistService
-from app.domains.lab.results.service import ResultQueryService
-from app.domains.lab.specimen.service import SpecimenQueryService
-from app.domains.lab.workflow.service import LabOperationsService
+from app.domains.lab.monitor.worklists import LabWorklistService
+from app.domains.lab.results.query import ResultQueryService
+from app.domains.lab.specimen.queries import SpecimenQueryService
+from app.domains.lab.workflow.operations import LabOperationsService
 from app.platform.database import get_db
 from fastapi import Depends
 from sqlalchemy.orm import Session

@@ -1,8 +1,8 @@
-from __future__ import annotations
-
 """Lab analyzer integration routes."""
 
-from app.domains.lab.integration.service import AnalyzerIngestService
+from __future__ import annotations
+
+from app.domains.lab.integration.ingest import AnalyzerIngestService
 from app.domains.lab.integration.schemas import (
     AnalyzerResultRequest,
     AnalyzerResultResponse,

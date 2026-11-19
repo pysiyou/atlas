@@ -3,18 +3,18 @@ import logging
 from datetime import UTC, date, datetime, time
 from typing import Literal
 
-from app.domains.audit.service import AuditEmitter
+from app.domains.audit.emitter import AuditEmitter
 from app.domains.billing.models import Payment
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.billing.service import BillingService
 from app.domains.catalog.models import OrderableTest, Workup, WorkupTest
-from app.domains.lab.specimen.models import Sample
 from app.domains.lab.public import (
     generate_samples_for_order,
     lab_projections_for_order,
     lab_projections_for_orders,
     resolve_order_presentation,
 )
+from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.schemas import (
     LatestPaymentSnippet,
@@ -26,22 +26,27 @@ from app.domains.orders.schemas import (
     OrderUpdate,
 )
 from app.domains.patients.models import Patient
-from app.shared.identifiers import allocate_filler_number, compact_identifier, looks_like_filler, looks_like_mrn
 from app.domains.patients.schemas import PatientResponse
 from app.domains.payments.schemas import PaymentResponse
 from app.domains.payments.service import enrich_payment
 from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.platform.http import get_or_404
-from app.shared.enums import (
+from app.shared.generated.enums import (
     OrderStatus,
     PaymentMethod,
     PaymentStatus,
     SampleStatus,
     TestStatus,
 )
-from app.shared.lab_contract import INACTIVE_TEST_STATUSES_FOR_BILLING
-from app.shared.http import create_paginated_response, skip_to_page
+from app.shared.api import create_paginated_response, skip_to_page
+from app.shared.clinical import (
+    allocate_filler_number,
+    compact_identifier,
+    looks_like_filler,
+    looks_like_patient_id,
+)
+from app.shared.generated.lab_policy import INACTIVE_TEST_STATUSES_FOR_BILLING
 from fastapi import HTTPException, status
 from sqlalchemy import and_, exists, func, or_
 from sqlalchemy.exc import SQLAlchemyError
@@ -51,7 +56,7 @@ logger = logging.getLogger(__name__)
 
 
 def order_search_filter(search_term: str):
-    """Match filler/placer numbers, MRN, or patient name."""
+    """Match filler/placer numbers, patient id, or patient name."""
     term = search_term.strip()
     compact = compact_identifier(term)
     predicates = [
@@ -63,7 +68,7 @@ def order_search_filter(search_term: str):
     if looks_like_filler(term):
         predicates.append(Order.orderId == compact)
         predicates.append(Order.placerNumber == compact)
-    if looks_like_mrn(term):
+    if looks_like_patient_id(term):
         predicates.append(Patient.id == compact)
     return or_(*predicates)
 
@@ -186,13 +191,6 @@ def apply_order_status_rollup(db: Session, order_id: str) -> bool:
     )
     logger.info("Order %s status changed from %s to %s", order_id, old_status, new_status)
     return True
-
-
-def update_order_status(db: Session, order_id: str, *, commit: bool = True) -> None:
-    """Lab legacy entry: rollup and optionally commit (prefer facade run_lab_mutation)."""
-    changed = apply_order_status_rollup(db, order_id)
-    if commit and changed:
-        db.commit()
 
 
 def _parse_include(include: str | None) -> set[str]:

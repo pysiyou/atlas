@@ -1,13 +1,13 @@
 """Payment business logic."""
 from datetime import UTC, datetime
 
-from app.domains.audit.service import AuditEmitter
+from app.domains.audit.emitter import AuditEmitter
 from app.domains.billing.models import Invoice, Payment
 from app.domains.orders.models import Order
 from app.domains.payments.schemas import PaymentCreate
-from app.shared.enums import PaymentStatus
 from app.platform.cache import invalidate_lab_board_summary_cache
-from app.shared.identifiers import allocate_receipt_number
+from app.shared.generated.enums import PaymentStatus
+from app.shared.clinical import allocate_receipt_number
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 

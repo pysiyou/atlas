@@ -1,16 +1,16 @@
 /**
  * Clinical LIS identifier display, parsing, and validation.
  *
- * Row ids use these formats: patient id = MRN, order id = filler number,
+ * Row ids use these formats: patient id (8-digit), order id = filler number,
  * sample id = accession, user id = employee number, invoice id, payment id.
  */
 
 /**
  * Regex contracts — canonical list in `contracts/entity-ids.json`;
- * keep in sync with `backend/app/shared/identifiers.py`.
+ * keep in sync with `backend/app/shared/clinical.py`.
  */
 export const ID_PATTERNS = {
-  mrn: /^3\d{7}$/,
+  patientId: /^3\d{7}$/,
   filler: /^\d{13}$/,
   accession: /^\d{2}-\d{5}$/,
   aliquotAccession: /^\d{2}-\d{5}\.\d{1,2}$/,
@@ -37,7 +37,7 @@ export type EntityType =
   | 'audit';
 
 export type ClinicalSearchKind =
-  | 'mrn'
+  | 'patientId'
   | 'filler'
   | 'accession'
   | 'mnemonic'
@@ -75,8 +75,8 @@ export function compactIdentifier(input: string): string {
   return input.trim().replace(/[\s-]/g, '').toUpperCase();
 }
 
-export function looksLikeMrn(input: string): boolean {
-  return ID_PATTERNS.mrn.test(compactIdentifier(input));
+export function looksLikePatientId(input: string): boolean {
+  return ID_PATTERNS.patientId.test(compactIdentifier(input));
 }
 
 export function looksLikeFiller(input: string): boolean {
@@ -102,7 +102,7 @@ export function classifyClinicalSearch(input: string): ClinicalSearchKind {
   if (looksLikeMnemonic(trimmed)) return 'mnemonic';
   if (looksLikeFiller(trimmed)) return 'filler';
   if (looksLikeAccession(trimmed)) return 'accession';
-  if (looksLikeMrn(trimmed)) return 'mrn';
+  if (looksLikePatientId(trimmed)) return 'patientId';
   return 'text';
 }
 

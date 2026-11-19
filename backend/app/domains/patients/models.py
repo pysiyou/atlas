@@ -2,7 +2,7 @@
 Patient Model
 """
 from app.platform.database import Base, contract_enum
-from app.shared.enums import Gender
+from app.shared.generated.enums import Gender
 from sqlalchemy import JSON, Column, DateTime, Float, String
 from sqlalchemy.sql import func
 

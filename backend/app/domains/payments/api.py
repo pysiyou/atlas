@@ -3,9 +3,9 @@
 from app.domains.payments.schemas import PaymentCreate, PaymentResponse
 from app.domains.payments.service import PaymentService
 from app.domains.users.models import User
-from app.shared.http import OrderIdPath
 from app.platform.database import get_db
 from app.platform.http import get_current_user
+from app.shared.api import OrderIdPath
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 

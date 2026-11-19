@@ -12,12 +12,10 @@ from app.domains.orders.schemas import (
 )
 from app.domains.orders.service import OrderService
 from app.domains.users.models import User
-from app.shared.http import MrnQuery, OrderIdPath, OrderIdQuery
 from app.platform.database import get_db
-from app.platform.http import PaginationParams, get_current_user
-from app.platform.http import parse_csv_values
-from app.shared.enums import OrderStatus, PaymentMethod, PaymentStatus
-from app.shared.http import PaginatedResponse
+from app.platform.http import PaginationParams, get_current_user, parse_csv_values
+from app.shared.generated.enums import OrderStatus, PaymentMethod, PaymentStatus
+from app.shared.api import PatientIdQuery, OrderIdPath, OrderIdQuery, PaginatedResponse
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
@@ -38,7 +36,7 @@ def _parse_enums(raw: str | None, enum_cls: type):
 @router.get("/orders", response_model=OrderListUnion)
 def get_orders(
     pagination: PaginationParams,
-    patientId: MrnQuery = None,
+    patientId: PatientIdQuery = None,
     orderId: OrderIdQuery = None,
     order_status: str | None = Query(None, alias="status"),
     paymentStatus: str | None = Query(None, alias="paymentStatus"),

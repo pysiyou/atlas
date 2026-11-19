@@ -16,13 +16,13 @@ import { SmallScreenLayout, MediumScreenLayout, LargeScreenLayout } from '../com
 import { feedbackTitle } from '@/feedback';
 import { useModuleListTitles } from '@/hooks';
 import { useClinicalRouteParam } from '@/hooks/useClinicalRouteParam';
-import { mrnSchema } from '@/types/zod';
+import { patientIdSchema } from '@/types/zod';
 
 export function PatientDetail() {
   const patientLabel = useModuleListTitles().patientDetail;
   const navigate = useNavigate();
   const { id: rawId } = useParams<{ id: string }>();
-  const id = useClinicalRouteParam(rawId, mrnSchema, '/patients');
+  const id = useClinicalRouteParam(rawId, patientIdSchema, '/patients');
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const { isSmall, isMedium, isLarge } = useResponsiveLayout();
   const { openModal } = useModal();

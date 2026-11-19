@@ -1,5 +1,5 @@
 """
-Laboratory policy contract — GENERATED from contracts/lab-policy.json. DO NOT EDIT.
+Laboratory policy — GENERATED from contracts/lab-policy.json. DO NOT EDIT.
 """
 from __future__ import annotations
 
@@ -36,10 +36,12 @@ BLOCKS_PROGRESS_REASONS: frozenset[str] = frozenset(
     }
 )
 
+
 def reason_blocks_progress(reason: str | None) -> bool:
     if not reason:
         return False
     return reason in BLOCKS_PROGRESS_REASONS
+
 
 ATTENTION_LABELS: dict[str, str] = {
     "payment_unpaid": "Payment required",
@@ -200,3 +202,4 @@ SAMPLE_UNFINISHED_REMEDIES: tuple[str, ...] = (
     "request_recollection",
     "cancel",
 )
+

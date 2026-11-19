@@ -13,7 +13,7 @@ export type RecordIdEmphasis = CodeTextEmphasis;
 export interface RecordIdProps {
   /** Entity kind for navigation; not used to prefix the displayed value. */
   type?: EntityType;
-  /** Stored clinical identifier (MRN, filler, accession, mnemonic, etc.). */
+  /** Stored clinical identifier (patient ID, filler, accession, mnemonic, etc.). */
   value?: string | null | undefined;
   children?: ReactNode;
   emphasis?: RecordIdEmphasis;

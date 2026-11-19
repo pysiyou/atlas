@@ -3,7 +3,7 @@ import {
   accessionSchema,
   dateStringSchema,
   orderIdSchema,
-  mrnSchema,
+  patientIdSchema,
   referentDoctorIdSchema,
   nullableApiDatetimeSchema,
   employeeNumberSchema,
@@ -56,7 +56,7 @@ export const orderTestSchema = z.object({
 export const orderSchema = z.object({
   orderId: orderIdSchema,
   placerNumber: z.string().nullable().optional(),
-  patientId: mrnSchema,
+  patientId: patientIdSchema,
   patientName: z.string(), // From backend relationship
   patientDob: dateStringSchema.optional(),
   patientGender: zEnumFromValues(GENDER_VALUES).optional(),
@@ -87,7 +87,7 @@ export type OrderTest = z.infer<typeof orderTestSchema>;
 export const orderSummaryBoundarySchema = z
   .object({
     orderId: orderIdSchema,
-    patientId: mrnSchema,
+    patientId: patientIdSchema,
     createdBy: employeeNumberSchema.optional(),
   })
   .passthrough();
@@ -96,7 +96,7 @@ export const orderSummaryListSchema = z.array(orderSummaryBoundarySchema);
 
 // Form schema for CREATE (all required fields enforced)
 export const orderCreateSchema = z.object({
-  patientId: mrnSchema,
+  patientId: patientIdSchema,
   referentDoctorId: referentDoctorIdSchema.nullable().optional(),
   priority: zEnumFromValues(PRIORITY_LEVEL_VALUES),
   clinicalNotes: z.string().optional(),

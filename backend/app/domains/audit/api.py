@@ -10,16 +10,16 @@ from app.domains.audit.kinds import (
     validate_actor_roles,
 )
 from app.domains.audit.schemas import AuditEventResponse, AuditSearchPreviewResponse
-from app.domains.audit.service import AuditEventQueryService
+from app.domains.audit.query import AuditEventQueryService
 from app.domains.users.models import User
-from app.shared.http import (
+from app.platform.database import get_db
+from app.platform.http import get_current_user
+from app.shared.api import (
     LabActorIdQuery,
-    MrnQuery,
+    PatientIdQuery,
     OrderIdQuery,
     SampleIdQuery,
 )
-from app.platform.database import get_db
-from app.platform.http import get_current_user
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
@@ -52,7 +52,7 @@ def list_audit_events(
         description="Containment lens: order, lab, patient, system, or stream",
     ),
     orderId: OrderIdQuery = None,
-    patientId: MrnQuery = None,
+    patientId: PatientIdQuery = None,
     testId: int | None = Query(None, alias="testId", gt=0),
     sampleId: SampleIdQuery = None,
     hours: float | None = Query(
@@ -106,7 +106,7 @@ def list_audit_events(
         None,
         max_length=100,
         description=(
-            "Unified stream search: MRN, filler number, accession, test mnemonic, "
+            "Unified stream search: patient id, filler number, accession, test mnemonic, "
             "numeric ids, patient name, actor name, or username"
         ),
     ),

@@ -1,8 +1,9 @@
-from __future__ import annotations
-
 """Critical values and quality issue routes."""
 
+from __future__ import annotations
+
 from app.domains.lab.deps import get_lab_operations_service
+from app.domains.lab.quality.critical import CriticalNotificationService
 from app.domains.lab.quality.schemas import (
     AcknowledgeRequest,
     CriticalValueResponse,
@@ -11,12 +12,11 @@ from app.domains.lab.quality.schemas import (
     QualityIssueResult,
     ReportQualityIssueRequest,
 )
-from app.domains.lab.quality.service import CriticalNotificationService
-from app.domains.lab.workflow.service import LabOperationsService
+from app.domains.lab.workflow.operations import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http import assert_quality_issue_target_access, get_current_user, require_lab_tech
-from app.shared.enums import QualityIssueTargetType
+from app.shared.generated.enums import QualityIssueTargetType
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 

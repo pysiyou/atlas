@@ -1,10 +1,7 @@
+"""Sample Model - All fields use camelCase."""
 from __future__ import annotations
-
-"""
-Sample Model - All fields use camelCase
-"""
 from app.platform.database import Base, contract_enum
-from app.shared.enums import (
+from app.shared.generated.enums import (
     ContainerTopColor,
     ContainerType,
     PriorityLevel,

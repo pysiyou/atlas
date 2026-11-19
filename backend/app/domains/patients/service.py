@@ -3,7 +3,7 @@ Patient business logic. Router delegates list/get/search/create/update to this s
 """
 from datetime import UTC, datetime
 
-from app.domains.audit.service import AuditEmitter
+from app.domains.audit.emitter import AuditEmitter
 from app.domains.orders.models import Order
 from app.domains.patients.models import Patient
 from app.domains.patients.schemas import (
@@ -13,8 +13,8 @@ from app.domains.patients.schemas import (
     PatientUpdate,
 )
 from app.platform.config import client_config
-from app.shared.identifiers import allocate_mrn, compact_identifier, looks_like_mrn
-from app.shared.enums import Gender, PaymentStatus
+from app.shared.generated.enums import Gender, PaymentStatus
+from app.shared.clinical import allocate_patient_id, compact_identifier, looks_like_patient_id
 from fastapi import HTTPException, status
 from sqlalchemy import and_, func, or_
 from sqlalchemy.inspection import inspect
@@ -42,7 +42,7 @@ def serialize_patient_full(patient: Patient) -> dict:
 
 
 def _patient_search_filter(search_term: str):
-    """Match MRN, name, or phone."""
+    """Match patient id, name, or phone."""
     term = search_term.strip()
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
@@ -50,7 +50,7 @@ def _patient_search_filter(search_term: str):
         Patient.id.ilike(f"%{term}%"),
     ]
     compact = compact_identifier(term)
-    if looks_like_mrn(term):
+    if looks_like_patient_id(term):
         predicates.append(Patient.id == compact)
     return or_(*predicates)
 
@@ -243,7 +243,7 @@ class PatientService:
             else MedicalHistory().model_dump()
         )
         patient = Patient(
-            id=allocate_mrn(self.db),
+            id=allocate_patient_id(self.db),
             fullName=patient_data.fullName,
             dateOfBirth=patient_data.dateOfBirth,
             gender=patient_data.gender,

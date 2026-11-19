@@ -1,18 +1,17 @@
+"""Pydantic schemas for Sample."""
 from __future__ import annotations
 
-"""
-Pydantic schemas for Sample
-"""
+import re
 from datetime import datetime
 
-from app.shared.enums import (
+from app.shared.generated.enums import (
     ContainerTopColor,
     ContainerType,
     PriorityLevel,
     SampleStatus,
     SampleType,
 )
-from app.shared.identifiers import (
+from app.shared.clinical import (
     EMPLOYEE_NUMBER_PATTERN,
     FILLER_PATTERN,
     LAB_ACTOR_USER_ID_PATTERN,
@@ -20,7 +19,6 @@ from app.shared.identifiers import (
     TEST_MNEMONIC_PATTERN,
 )
 from pydantic import BaseModel, Field, field_validator
-import re
 
 _TEST_MNEMONIC_RE = re.compile(TEST_MNEMONIC_PATTERN)
 

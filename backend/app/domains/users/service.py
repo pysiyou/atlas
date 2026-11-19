@@ -1,12 +1,12 @@
 """User management business logic."""
 import logging
 
-from app.domains.audit.service import AuditEmitter
+from app.domains.audit.emitter import AuditEmitter
 from app.domains.users.models import User
 from app.domains.users.schemas import FirstAdminSetupRequest, UserCreate, UserUpdate
-from app.shared.identifiers import allocate_employee_number
 from app.platform.security import get_password_hash
-from app.shared.enums import UserRole
+from app.shared.generated.enums import UserRole
+from app.shared.clinical import allocate_employee_number
 from fastapi import HTTPException, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session

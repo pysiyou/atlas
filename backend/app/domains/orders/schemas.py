@@ -11,18 +11,8 @@ if TYPE_CHECKING:
 
 from app.domains.billing.schemas import InvoiceResponse
 from app.domains.patients.schemas import PatientResponse
-from app.shared.identifiers import (
-    EMPLOYEE_NUMBER_PATTERN,
-    FILLER_PATTERN,
-    LAB_ACTOR_USER_ID_PATTERN,
-    MRN_PATTERN,
-    RECEIPT_NUMBER_PATTERN,
-    REFERENT_DOCTOR_ID_PATTERN,
-    SAMPLE_ID_PATTERN,
-    TEST_MNEMONIC_PATTERN,
-)
 from app.domains.payments.schemas import PaymentResponse
-from app.shared.enums import (
+from app.shared.generated.enums import (
     Gender,
     OrderStatus,
     PaymentMethod,
@@ -30,7 +20,17 @@ from app.shared.enums import (
     PriorityLevel,
     TestStatus,
 )
-from app.shared.http import StatusPresentation
+from app.shared.api import StatusPresentation
+from app.shared.clinical import (
+    EMPLOYEE_NUMBER_PATTERN,
+    FILLER_PATTERN,
+    LAB_ACTOR_USER_ID_PATTERN,
+    PATIENT_ID_PATTERN,
+    RECEIPT_NUMBER_PATTERN,
+    REFERENT_DOCTOR_ID_PATTERN,
+    SAMPLE_ID_PATTERN,
+    TEST_MNEMONIC_PATTERN,
+)
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 
@@ -105,7 +105,7 @@ class OrderTestResponse(BaseModel):
 class OrderCreate(BaseModel):
     """Schema for creating a new order."""
 
-    patientId: str = Field(..., min_length=8, max_length=8, pattern=MRN_PATTERN)
+    patientId: str = Field(..., min_length=8, max_length=8, pattern=PATIENT_ID_PATTERN)
     tests: list[OrderTestCreate] = Field(
         default_factory=list, description="Explicit catalog tests"
     )
@@ -156,7 +156,7 @@ class OrderSummaryResponse(BaseModel):
 
     orderId: str = Field(..., pattern=FILLER_PATTERN)
     placerNumber: str | None = Field(None, pattern=FILLER_PATTERN)
-    patientId: str = Field(..., pattern=MRN_PATTERN)
+    patientId: str = Field(..., pattern=PATIENT_ID_PATTERN)
     patientName: str
     patientDob: str | None = None
     patientGender: Gender | None = None
@@ -190,7 +190,7 @@ class OrderSummaryResponse(BaseModel):
 class OrderResponse(BaseModel):
     orderId: str = Field(..., pattern=FILLER_PATTERN)
     placerNumber: str | None = Field(None, pattern=FILLER_PATTERN)
-    patientId: str = Field(..., pattern=MRN_PATTERN)
+    patientId: str = Field(..., pattern=PATIENT_ID_PATTERN)
     patientName: str  # From relationship
     patientDob: str | None = None
     patientGender: Gender | None = None

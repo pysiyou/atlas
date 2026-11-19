@@ -1,5 +1,5 @@
 """
-Audit event wire taxonomy — GENERATED from contracts/audit-events.json. DO NOT EDIT.
+Audit event catalog — GENERATED from contracts/audit-events.json. DO NOT EDIT.
 """
 from __future__ import annotations
 
@@ -24,11 +24,11 @@ class EventType(str, enum.Enum):
     ORDER_TEST_RETEST = "order.test.retest"
     ORDER_TEST_REFLEX = "order.test.reflex"
     LABORATORY_SAMPLE_CREATE = "laboratory.sample.create"
-    LABORATORY_SAMPLE_ALIQUOT = "laboratory.sample.aliquot"
     LABORATORY_SAMPLE_COLLECT = "laboratory.sample.collect"
     LABORATORY_SAMPLE_REJECT = "laboratory.sample.reject"
     LABORATORY_SAMPLE_RECOLLECT_REQUEST = "laboratory.sample.recollect_request"
     LABORATORY_SAMPLE_RECOLLECT_APPROVE = "laboratory.sample.recollect_approve"
+    LABORATORY_SAMPLE_ALIQUOT = "laboratory.sample.aliquot"
     LABORATORY_SAMPLE_RECOLLECT_DENY = "laboratory.sample.recollect_deny"
     LABORATORY_ANALYZER_DUPLICATE_INGEST = "laboratory.analyzer.duplicate_ingest"
     LABORATORY_ANALYZER_INGEST_REJECTED = "laboratory.analyzer.ingest_rejected"
@@ -54,3 +54,64 @@ class EventType(str, enum.Enum):
     SYSTEM_USER_UPDATE = "system.user.update"
     SYSTEM_CATALOG_CREATE = "system.catalog.create"
     SYSTEM_CATALOG_UPDATE = "system.catalog.update"
+
+# ── Query taxonomy ──────────────────────────────────────────────────────
+
+DOMAIN_KIND_IDS: frozenset[str] = frozenset(
+    {
+        "patient",
+        "order",
+        "laboratory",
+        "billing",
+        "reporting",
+        "system",
+    }
+)
+
+LABORATORY_SUBKIND_PREFIXES: dict[str, str] = {
+    "laboratory:sample": "laboratory.sample.",
+    "laboratory:result": "laboratory.result.",
+    "laboratory:validation": "laboratory.validation.",
+    "laboratory:escalation": "laboratory.escalation.",
+    "laboratory:analyzer": "laboratory.analyzer.",
+}
+
+ACCESS_EVENT_TYPES: frozenset[str] = frozenset(
+    {
+        "patient.view",
+        "reporting.download",
+    }
+)
+
+STORED_EVENT_SCOPES: frozenset[str] = frozenset(
+    {
+        "order",
+        "lab",
+        "patient",
+        "system",
+    }
+)
+
+STORED_SCOPE_BY_PREFIX: tuple[tuple[str, str], ...] = (
+    ("patient.", "patient"),
+    ("system.", "system"),
+    ("laboratory.", "lab"),
+)
+
+DEFAULT_STORED_EVENT_SCOPE: str = "order"
+
+ALL_KIND_IDS: frozenset[str] = frozenset(
+    {
+        "patient",
+        "order",
+        "laboratory",
+        "billing",
+        "reporting",
+        "system",
+        "laboratory:sample",
+        "laboratory:result",
+        "laboratory:validation",
+        "laboratory:escalation",
+        "laboratory:analyzer",
+    }
+)

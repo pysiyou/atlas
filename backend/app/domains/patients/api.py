@@ -4,12 +4,16 @@ Patient API Routes. All fields use camelCase. Delegates to PatientService.
 from app.domains.patients.schemas import PatientCreate, PatientResponse, PatientUpdate
 from app.domains.patients.service import PatientService
 from app.domains.users.models import User
-from app.shared.http import MrnPath, MrnQuery
 from app.platform.database import get_db
-from app.platform.http import PaginationParams, get_current_user
-from app.platform.http import parse_csv_values
-from app.shared.enums import Gender
-from app.shared.http import PaginatedResponse, create_paginated_response, skip_to_page
+from app.platform.http import PaginationParams, get_current_user, parse_csv_values
+from app.shared.generated.enums import Gender
+from app.shared.api import (
+    PatientIdPath,
+    PatientIdQuery,
+    PaginatedResponse,
+    create_paginated_response,
+    skip_to_page,
+)
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
@@ -23,7 +27,7 @@ def search_patients(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Search patients by name, MRN, numeric id, or phone."""
+    """Search patients by name, patient id, numeric id, or phone."""
     return PatientService(db).search(q, limit=limit)
 
 
@@ -34,7 +38,7 @@ def search_patients(
 def get_patients(
     pagination: PaginationParams,
     search: str | None = Query(None, max_length=100),
-    patientId: MrnQuery = None,
+    patientId: PatientIdQuery = None,
     gender: str | None = Query(None),
     affiliationStatus: str | None = Query(None),
     ageMin: int | None = Query(None, ge=0, le=150),
@@ -69,7 +73,7 @@ def get_patients(
 
 @router.get("/patients/{patientId}", response_model=PatientResponse)
 def get_patient(
-    patientId: MrnPath,
+    patientId: PatientIdPath,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -92,7 +96,7 @@ def create_patient(
 
 @router.put("/patients/{patientId}")
 def update_patient(
-    patientId: MrnPath,
+    patientId: PatientIdPath,
     patient_data: PatientUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

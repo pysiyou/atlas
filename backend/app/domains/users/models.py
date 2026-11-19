@@ -2,7 +2,7 @@
 User Model - All fields use camelCase
 """
 from app.platform.database import Base, contract_enum
-from app.shared.enums import UserRole
+from app.shared.generated.enums import UserRole
 from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.sql import func
 

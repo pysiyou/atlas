@@ -7,7 +7,7 @@ import {
   looksLikeAccession,
   looksLikeFiller,
   looksLikeMnemonic,
-  looksLikeMrn,
+  looksLikePatientId,
   parseOrderTestDisplaySearch,
 } from '@/utils/id';
 import type { IconKey } from '@/icons';
@@ -67,13 +67,13 @@ export function classifyEventLogSearchIntent(term: string): EventLogSearchIntent
       classified = 'record_order';
     } else if (looksLikeAccession(token)) {
       classified = 'record_sample';
-    } else if (looksLikeMrn(token)) {
+    } else if (looksLikePatientId(token)) {
       classified = 'record_patient';
     } else {
       const kind = classifyClinicalSearch(compactIdentifier(token));
       if (kind === 'filler') classified = 'record_order';
       else if (kind === 'accession') classified = 'record_sample';
-      else if (kind === 'mrn') classified = 'record_patient';
+      else if (kind === 'patientId') classified = 'record_patient';
       else if (kind === 'mnemonic') classified = 'record_test';
     }
     return {

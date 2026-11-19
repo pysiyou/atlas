@@ -6,7 +6,7 @@ Uses JWT tokens with distinct access/refresh types for security.
 """
 from datetime import UTC, datetime
 
-from app.domains.audit.service import AuditEmitter
+from app.domains.audit.emitter import AuditEmitter
 from app.domains.users.models import User
 from app.domains.users.schemas import (
     FirstAdminSetupRequest,
@@ -25,7 +25,7 @@ from app.platform.security import (
     decode_token,
     verify_password,
 )
-from app.shared.http import MessageResponse
+from app.shared.api import MessageResponse
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session

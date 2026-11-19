@@ -2,14 +2,14 @@
   "version": 1,
   "analyzerUserId": "100000",
   "bases": {
-    "patientMrn": 30000000,
+    "patientId": 30000000,
     "userEmployee": 10000000,
     "referentDoctor": 20000000
   },
   "patterns": {
-    "MRN_PATTERN": {
+    "PATIENT_ID_PATTERN": {
       "regex": "^3\\d{7}$",
-      "idTs": "mrn"
+      "idTs": "patientId"
     },
     "FILLER_PATTERN": {
       "regex": "^\\d{13}$",

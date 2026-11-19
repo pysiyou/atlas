@@ -1,0 +1,338 @@
+"""Unified Lab Operations Service — composition root for lab workflow mutations.
+
+Transaction policy: every user-facing lab mutation runs through run_lab_mutation():
+domain code mutates the shared Session only (no commit); rollup via apply_order_status_rollup;
+one db.commit(); then board cache invalidation once.
+"""
+from __future__ import annotations
+
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any, TypeVar
+
+from app.domains.audit.emitter import AuditEmitter
+from app.domains.lab.quality.critical import CriticalNotificationService
+from app.domains.lab.quality.issues import QualityIssueService
+from app.domains.lab.quality.recollection import RecollectionExecutionService
+from app.domains.lab.quality.schemas import AcknowledgeRequest, NotifyRequest
+from app.domains.lab.results.flags import FlagCalculatorService
+from app.domains.lab.results.validator import ResultValidatorService
+from app.domains.lab.rules.eligibility import active_linked_tests_for_collection, assert_can_collect
+from app.domains.lab.rules.state_machines import TestStateMachine
+from app.domains.lab.specimen.models import Sample
+from app.domains.lab.workflow.result_commands import ResultCommandHandler
+from app.domains.orders.models import Order, OrderTest
+from app.domains.orders.service import apply_order_status_rollup
+from app.platform.cache import invalidate_lab_board_summary_cache
+from app.shared.generated.enums import PaymentStatus, SampleStatus, TestStatus
+from app.shared.errors import LabOperationError
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+T = TypeVar("T")
+
+__all__ = ["LabOperationsService", "LabOperationError"]
+
+
+class CollectionCommandHandler:
+    """Sample collection mutation used by LabOperationsService."""
+
+    def __init__(self, svc: LabOperationsService):
+        self._svc = svc
+
+    @property
+    def db(self):
+        return self._svc.db
+
+    def collect_sample(
+        self,
+        sample_id: str,
+        user_id: str,
+        collected_volume: float,
+        container_type: str,
+        container_color: str,
+        collection_notes: str | None = None,
+    ) -> Sample:
+        sample = self._svc._get_sample(sample_id, for_update=True)
+        order = self.db.query(Order).filter(Order.orderId == sample.orderId).first()
+        if not order:
+            raise LabOperationError(f"Order {sample.orderId} not found", status_code=404)
+        order_tests_all = self._svc._linked_order_tests(sample)
+        assert_can_collect(sample, order, order_tests_all)
+        order_tests = active_linked_tests_for_collection(order_tests_all)
+        before_state = self._svc._serialize_sample_state(sample)
+
+        sample.status = SampleStatus.COLLECTED
+        sample.collectedAt = datetime.now(UTC)
+        sample.collectedBy = str(user_id)
+        sample.collectedVolume = collected_volume
+        sample.actualContainerType = container_type
+        sample.actualContainerColor = container_color
+        sample.collectionNotes = collection_notes
+        sample.remainingVolume = collected_volume
+        sample.updatedBy = str(user_id)
+
+        for order_test in order_tests:
+            if TestStateMachine.can_transition(order_test.status, TestStatus.SAMPLE_COLLECTED):
+                order_test.status = TestStatus.SAMPLE_COLLECTED
+                order_test.sampleId = sample_id
+            elif order_test.status not in (
+                TestStatus.SAMPLE_COLLECTED,
+                TestStatus.RESULTED,
+                TestStatus.ESCALATED,
+            ):
+                status_val = (
+                    order_test.status.value if order_test.status else str(order_test.status)
+                )
+                raise LabOperationError(
+                    f"Test {order_test.testCode} cannot be marked collected (status {status_val})",
+                    status_code=400,
+                    error_code="INVALID_TRANSITION",
+                )
+
+        after_state = self._svc._serialize_sample_state(sample)
+        self._svc.emitter.sample_collected(
+            sample_id,
+            sample.orderId,
+            user_id,
+            before_state,
+            after_state,
+            metadata={"test_codes": sample.testCodes},
+        )
+        return sample
+
+
+class LabOperationsService:
+    """Composition root for lab workflow mutations."""
+
+    def __init__(self, db: Session):
+        self.db = db
+        self.emitter = AuditEmitter(db)
+        self.recollection = RecollectionExecutionService(db, quality_service=None)
+        self.quality = QualityIssueService(
+            db,
+            self.emitter,
+            recollection_execution=self.recollection,
+        )
+        self.recollection.quality = self.quality
+        self.result_validator = ResultValidatorService()
+        self.flag_calculator = FlagCalculatorService()
+        self._collection = CollectionCommandHandler(self)
+        self._results = ResultCommandHandler(self)
+
+    def _get_sample(self, sample_id: str, for_update: bool = False) -> Sample:
+        from app.domains.lab.specimen.generation import get_sample_or_error
+
+        return get_sample_or_error(self.db, sample_id, for_update=for_update)
+
+    def _get_order_test(
+        self,
+        order_test_id: int,
+        status: TestStatus | None = None,
+        for_update: bool = False,
+    ) -> OrderTest:
+        query = self.db.query(OrderTest).filter(OrderTest.id == order_test_id)
+        if status:
+            query = query.filter(OrderTest.status == status)
+        if for_update:
+            query = query.with_for_update()
+        order_test = query.first()
+        if not order_test:
+            status_msg = f" with status '{status.value}'" if status else ""
+            raise LabOperationError(
+                f"Order test {order_test_id} not found{status_msg}",
+                status_code=404,
+            )
+        return order_test
+
+    def _order_id_for_order_test(self, order_test_id: int | str | None) -> str | None:
+        """Resolve order_id without raising so missing tests skip cache targeting."""
+        if order_test_id is None or order_test_id == "":
+            return None
+        try:
+            parsed = int(order_test_id)
+        except (TypeError, ValueError):
+            return None
+        ot = self.db.query(OrderTest).filter(OrderTest.id == parsed).first()
+        return ot.orderId if ot else None
+
+    def _assert_order_paid_for_collection(self, order_id: str) -> None:
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        if not order:
+            raise LabOperationError(f"Order {order_id} not found", status_code=404)
+        sample = (
+            self.db.query(Sample)
+            .filter(Sample.orderId == order_id, Sample.status == SampleStatus.PENDING)
+            .first()
+        )
+        if sample:
+            order_tests = self._linked_order_tests(sample)
+            assert_can_collect(sample, order, order_tests)
+        elif order.paymentStatus != PaymentStatus.PAID:
+            raise LabOperationError(
+                "Sample collection requires payment. Mark the order as paid before collecting.",
+                status_code=402,
+                error_code="PAYMENT_REQUIRED",
+            )
+
+    @staticmethod
+    def _resolve_order_id(result: Any, explicit: str | None) -> str | None:
+        if explicit:
+            return explicit
+        if result is None:
+            return None
+        if isinstance(result, dict):
+            oid = result.get("orderId") or result.get("order_id")
+            return str(oid) if oid is not None else None
+        for attr in ("orderId", "order_id"):
+            if hasattr(result, attr):
+                val = getattr(result, attr)
+                if val is not None:
+                    return str(val)
+        if hasattr(result, "sampleId"):
+            return None
+        return None
+
+    def _refresh_mutation_result(self, result: Any) -> None:
+        if isinstance(result, Sample | OrderTest):
+            self.db.refresh(result)
+
+    def run_lab_mutation(
+        self,
+        fn: Callable[[], T],
+        *,
+        order_id: str | None = None,
+    ) -> T:
+        """Single commit, in-session order rollup, cache invalidate. fn must not commit."""
+        try:
+            with self.db.begin_nested():
+                result = fn()
+                resolved_order_id = self._resolve_order_id(result, order_id)
+                if resolved_order_id is not None:
+                    apply_order_status_rollup(self.db, resolved_order_id)
+            self.db.commit()
+            self._refresh_mutation_result(result)
+            self._invalidate_lab_monitor_cache()
+            return result
+        except LabOperationError:
+            raise
+        except Exception:
+            self.db.rollback()
+            raise
+
+    def _serialize_sample_state(self, sample: Sample) -> dict[str, Any]:
+        return {
+            "sampleId": sample.sampleId,
+            "status": sample.status.value if sample.status else None,
+            "collectedAt": sample.collectedAt.isoformat() if sample.collectedAt else None,
+            "rejectedAt": sample.rejectedAt.isoformat() if sample.rejectedAt else None,
+            "recollectionAttempt": sample.recollectionAttempt,
+        }
+
+    @staticmethod
+    def _results_to_json_serializable(results: dict[str, Any]) -> dict[str, Any]:
+        out: dict[str, Any] = {}
+        for k, v in results.items():
+            if v is None or isinstance(v, str | int | float | bool):
+                out[k] = v
+            elif isinstance(v, BaseModel):
+                out[k] = v.model_dump()
+            elif isinstance(v, dict):
+                out[k] = LabOperationsService._results_to_json_serializable(v)
+            elif isinstance(v, list):
+                out[k] = [item.model_dump() if isinstance(item, BaseModel) else item for item in v]
+            else:
+                out[k] = v
+        return out
+
+    def _linked_order_tests(
+        self,
+        sample: Sample,
+        *,
+        exclude_statuses: list[TestStatus] | None = None,
+    ) -> list[OrderTest]:
+        from app.domains.lab.specimen.generation import linked_order_tests_for_sample
+
+        return linked_order_tests_for_sample(self.db, sample, exclude_statuses=exclude_statuses)
+
+    def _invalidate_lab_monitor_cache(self) -> None:
+        invalidate_lab_board_summary_cache()
+
+    def collect_sample(self, **kwargs) -> Sample:
+        sample_id = kwargs["sample_id"]
+        row = self.db.query(Sample).filter(Sample.sampleId == sample_id).first()
+        order_id = row.orderId if row else None
+        return self.run_lab_mutation(
+            lambda: self._collection.collect_sample(**kwargs),
+            order_id=order_id,
+        )
+
+    def enter_results(self, **kwargs) -> OrderTest:
+        return self.run_lab_mutation(
+            lambda: self._results.enter_results(**kwargs),
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
+        )
+
+    def validate_results(self, **kwargs) -> OrderTest:
+        from app.domains.orders.service import OrderService
+        from app.shared.generated.enums import OrderStatus
+
+        def _mutate() -> OrderTest:
+            return self._results.validate_results(**kwargs)
+
+        order_test = self.run_lab_mutation(
+            _mutate,
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
+        )
+        order = self.db.query(Order).filter(Order.orderId == order_test.orderId).first()
+        if order and order.overallStatus == OrderStatus.COMPLETED:
+            import logging
+
+            logger = logging.getLogger(__name__)
+            try:
+                OrderService(self.db).mark_as_reported(
+                    order_test.orderId, kwargs["user_id"]
+                )
+            except Exception as exc:
+                logger.error(
+                    "mark_as_reported failed after validation for order %s: %s",
+                    order_test.orderId,
+                    exc,
+                    exc_info=True,
+                )
+        return order_test
+
+    def reject_results(self, **kwargs):
+        return self.run_lab_mutation(
+            lambda: self._results.reject_results(**kwargs),
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
+        )
+
+    def report_quality_issue(self, **kwargs):
+        from app.shared.generated.enums import QualityIssueTargetType
+
+        target_id = kwargs.get("target_id")
+        target_type = kwargs.get("target_type")
+        if target_type == QualityIssueTargetType.SAMPLE:
+            sample = self.db.query(Sample).filter(Sample.sampleId == target_id).first()
+            order_id = sample.orderId if sample else None
+        else:
+            order_id = self._order_id_for_order_test(target_id)
+        return self.run_lab_mutation(
+            lambda: self.quality.report_issue(**kwargs),
+            order_id=order_id,
+        )
+
+    def notify_critical_value(self, test_id: int, request: NotifyRequest, user_id: str) -> dict:
+        return self.run_lab_mutation(
+            lambda: CriticalNotificationService(self.db).notify(test_id, request, user_id),
+            order_id=self._order_id_for_order_test(test_id),
+        )
+
+    def acknowledge_critical_value(
+        self, test_id: int, request: AcknowledgeRequest, user_id: str
+    ) -> dict:
+        return self.run_lab_mutation(
+            lambda: CriticalNotificationService(self.db).acknowledge(test_id, request, user_id),
+            order_id=self._order_id_for_order_test(test_id),
+        )
