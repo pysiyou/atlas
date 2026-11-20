@@ -6648,7 +6648,7 @@
         "CD4 Count"
       ],
       "confidence": "HIGH",
-      "notes": "HIV staging and ART monitoring; WHO threshold often 200\u2013350 cells/\u00b5L"
+      "notes": "HIV staging and ART monitoring; WHO threshold often 200–350 cells/µL"
     },
     {
       "test_code": "CEA",
@@ -6752,8 +6752,8 @@
         "container_top_colors": [
           "red"
         ],
-        "volume_description": "5\u03bcL",
-        "container_description": "SST or capillary drop, 2-5 \u03bcL",
+        "volume_description": "5μL",
+        "container_description": "SST or capillary drop, 2-5 μL",
         "fasting_required": false,
         "collection_notes": "Specimen: Serum or whole blood.",
         "rejection_criteria": [
@@ -12179,6 +12179,429 @@
       ],
       "confidence": "HIGH",
       "notes": "VALIDATE LOCALLY with African reference ranges"
+    },
+    {
+      "test_code": "HBEAG",
+      "name": "HBeAg (Hepatitis B e Antigen)",
+      "category_slug": "serology",
+      "category_label": "Serology",
+      "analytes": [
+        "HBEAG"
+      ],
+      "collection": {
+        "sample_type": "blood",
+        "container_types": [
+          "tube"
+        ],
+        "container_top_colors": [
+          "red"
+        ],
+        "volume_description": "3mL",
+        "container_description": "SST, 3 mL",
+        "fasting_required": false,
+        "collection_notes": "Specimen: Serum.",
+        "rejection_criteria": [
+          "patient_refused",
+          "physical_limitation",
+          "participant_ill",
+          "supplies_failed",
+          "language_issue",
+          "no_time",
+          "other",
+          "phvs_specimen_reject",
+          "hl7v2_specimen_condition"
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
+      },
+      "validation": {
+        "rejection_criteria": [
+          "steroid_treatment",
+          "supplemental_oxygen",
+          "anticoagulant_therapy",
+          "ivig_past_month",
+          "platelet_transfusion_3d",
+          "qc_failure",
+          "qc_not_in_control",
+          "qc_overdue",
+          "instrument_error",
+          "analytical_range_failed",
+          "failed_feasible_range",
+          "off_scale_low",
+          "off_scale_high",
+          "delta_check_failed",
+          "significant_change_up",
+          "significant_change_down",
+          "critical_high",
+          "critical_low",
+          "critical_abnormal",
+          "panic_value",
+          "abnormal",
+          "high",
+          "low",
+          "significantly_high",
+          "significantly_low",
+          "reference_range_failed",
+          "review_range_failed",
+          "indeterminate",
+          "equivocal",
+          "interference",
+          "consistency_failed",
+          "duplicate_assay",
+          "previous_result",
+          "associated_order_unverified",
+          "medical_review_hold",
+          "review_required",
+          "other_analytical"
+        ]
+      },
+      "loinc_code": "5192-0",
+      "turnaround_time_hours": 2,
+      "price": 50.0,
+      "methodology": "ELISA",
+      "confidence": "HIGH"
+    },
+    {
+      "test_code": "UA",
+      "name": "Urinalysis Complete Panel",
+      "category_slug": "urinalysis",
+      "category_label": "Urinalysis",
+      "analytes": [
+        "UA_COLOR",
+        "UA_APPEAR",
+        "UA_GRAVITY",
+        "UA_PH",
+        "UA_PROTEIN",
+        "UA_GLUCOSE",
+        "UA_KETONES",
+        "UA_BILIRUBIN",
+        "UA_UROBILIN",
+        "UA_NITRITE",
+        "UA_LEUK",
+        "UA_BLOOD",
+        "UA_WBC",
+        "UA_RBC",
+        "UA_EPITHEL",
+        "UA_CASTS",
+        "UA_CRYSTALS",
+        "UA_BACTERIA"
+      ],
+      "collection": {
+        "sample_type": "urine",
+        "container_types": [
+          "cup"
+        ],
+        "container_top_colors": [
+          "red"
+        ],
+        "volume_description": "50mL",
+        "container_description": "Sterile/clean cup, 30-50 mL",
+        "fasting_required": false,
+        "collection_notes": "Specimen: Urine (random or mid-stream clean-catch). Mid-stream clean-catch preferred; analyze within 2 hours",
+        "rejection_criteria": [
+          "patient_refused",
+          "physical_limitation",
+          "participant_ill",
+          "supplies_failed",
+          "language_issue",
+          "no_time",
+          "other",
+          "phvs_specimen_reject",
+          "hl7v2_specimen_condition"
+        ],
+        "min_volume_ml": 10.0,
+        "optimal_volume_ml": 20.0
+      },
+      "validation": {
+        "rejection_criteria": [
+          "steroid_treatment",
+          "supplemental_oxygen",
+          "anticoagulant_therapy",
+          "ivig_past_month",
+          "platelet_transfusion_3d",
+          "qc_failure",
+          "qc_not_in_control",
+          "qc_overdue",
+          "instrument_error",
+          "analytical_range_failed",
+          "failed_feasible_range",
+          "off_scale_low",
+          "off_scale_high",
+          "delta_check_failed",
+          "significant_change_up",
+          "significant_change_down",
+          "critical_high",
+          "critical_low",
+          "critical_abnormal",
+          "panic_value",
+          "abnormal",
+          "high",
+          "low",
+          "significantly_high",
+          "significantly_low",
+          "reference_range_failed",
+          "review_range_failed",
+          "indeterminate",
+          "equivocal",
+          "interference",
+          "consistency_failed",
+          "duplicate_assay",
+          "previous_result",
+          "associated_order_unverified",
+          "medical_review_hold",
+          "review_required",
+          "other_analytical"
+        ]
+      },
+      "loinc_code": "24356-8",
+      "turnaround_time_hours": 2,
+      "price": 20.0,
+      "methodology": "Dipstick + microscopy",
+      "confidence": "HIGH"
+    },
+    {
+      "test_code": "UALB",
+      "name": "Urine Microalbumin",
+      "category_slug": "biochemistry",
+      "category_label": "Biochemistry",
+      "analytes": [
+        "MICROALB"
+      ],
+      "collection": {
+        "sample_type": "urine",
+        "container_types": [
+          "cup"
+        ],
+        "container_top_colors": [
+          "red"
+        ],
+        "volume_description": "20mL",
+        "container_description": "Urine cup, 20 mL",
+        "fasting_required": false,
+        "collection_notes": "Specimen: Urine (random).",
+        "rejection_criteria": [
+          "patient_refused",
+          "physical_limitation",
+          "participant_ill",
+          "supplies_failed",
+          "language_issue",
+          "no_time",
+          "other",
+          "phvs_specimen_reject",
+          "hl7v2_specimen_condition"
+        ],
+        "min_volume_ml": 10.0,
+        "optimal_volume_ml": 20.0
+      },
+      "validation": {
+        "rejection_criteria": [
+          "steroid_treatment",
+          "supplemental_oxygen",
+          "anticoagulant_therapy",
+          "ivig_past_month",
+          "platelet_transfusion_3d",
+          "qc_failure",
+          "qc_not_in_control",
+          "qc_overdue",
+          "instrument_error",
+          "analytical_range_failed",
+          "failed_feasible_range",
+          "off_scale_low",
+          "off_scale_high",
+          "delta_check_failed",
+          "significant_change_up",
+          "significant_change_down",
+          "critical_high",
+          "critical_low",
+          "critical_abnormal",
+          "panic_value",
+          "abnormal",
+          "high",
+          "low",
+          "significantly_high",
+          "significantly_low",
+          "reference_range_failed",
+          "review_range_failed",
+          "indeterminate",
+          "equivocal",
+          "interference",
+          "consistency_failed",
+          "duplicate_assay",
+          "previous_result",
+          "associated_order_unverified",
+          "medical_review_hold",
+          "review_required",
+          "other_analytical"
+        ]
+      },
+      "loinc_code": "14957-5",
+      "turnaround_time_hours": 4,
+      "price": 35.0,
+      "methodology": "Immunoturbidimetry",
+      "confidence": "HIGH"
+    },
+    {
+      "test_code": "UHCG",
+      "name": "Pregnancy Test (Urine hCG)",
+      "category_slug": "urinalysis",
+      "category_label": "Urinalysis",
+      "analytes": [
+        "URINE_HCG"
+      ],
+      "collection": {
+        "sample_type": "urine",
+        "container_types": [
+          "cup"
+        ],
+        "container_top_colors": [
+          "red"
+        ],
+        "volume_description": "30mL",
+        "container_description": "Clean/sterile cup, 20-30 mL",
+        "fasting_required": false,
+        "collection_notes": "Specimen: Urine (first morning preferred). First morning urine has highest hCG",
+        "rejection_criteria": [
+          "patient_refused",
+          "physical_limitation",
+          "participant_ill",
+          "supplies_failed",
+          "language_issue",
+          "no_time",
+          "other",
+          "phvs_specimen_reject",
+          "hl7v2_specimen_condition"
+        ],
+        "min_volume_ml": 10.0,
+        "optimal_volume_ml": 20.0
+      },
+      "validation": {
+        "rejection_criteria": [
+          "steroid_treatment",
+          "supplemental_oxygen",
+          "anticoagulant_therapy",
+          "ivig_past_month",
+          "platelet_transfusion_3d",
+          "qc_failure",
+          "qc_not_in_control",
+          "qc_overdue",
+          "instrument_error",
+          "analytical_range_failed",
+          "failed_feasible_range",
+          "off_scale_low",
+          "off_scale_high",
+          "delta_check_failed",
+          "significant_change_up",
+          "significant_change_down",
+          "critical_high",
+          "critical_low",
+          "critical_abnormal",
+          "panic_value",
+          "abnormal",
+          "high",
+          "low",
+          "significantly_high",
+          "significantly_low",
+          "reference_range_failed",
+          "review_range_failed",
+          "indeterminate",
+          "equivocal",
+          "interference",
+          "consistency_failed",
+          "duplicate_assay",
+          "previous_result",
+          "associated_order_unverified",
+          "medical_review_hold",
+          "review_required",
+          "other_analytical"
+        ]
+      },
+      "loinc_code": "2106-3",
+      "turnaround_time_hours": 0,
+      "price": 20.0,
+      "methodology": "Immunochromatographic rapid test",
+      "confidence": "HIGH"
+    },
+    {
+      "test_code": "UACR",
+      "name": "Albumin/Creatinine in Urine",
+      "category_slug": "biochemistry",
+      "category_label": "Biochemistry",
+      "analytes": [
+        "UALB_CR"
+      ],
+      "collection": {
+        "sample_type": "urine",
+        "container_types": [
+          "tube"
+        ],
+        "container_top_colors": [
+          "gray",
+          "red"
+        ],
+        "volume_description": "3mL",
+        "container_description": "SST or fluoride/potassium oxalate, 3 mL",
+        "fasting_required": true,
+        "collection_notes": "Specimen: Serum or Plasma (fluoride tube). 8-12 hours fasting required",
+        "rejection_criteria": [
+          "patient_refused",
+          "physical_limitation",
+          "participant_ill",
+          "supplies_failed",
+          "language_issue",
+          "no_time",
+          "other",
+          "phvs_specimen_reject",
+          "hl7v2_specimen_condition"
+        ],
+        "min_volume_ml": 1.5,
+        "optimal_volume_ml": 5.0
+      },
+      "validation": {
+        "rejection_criteria": [
+          "steroid_treatment",
+          "supplemental_oxygen",
+          "anticoagulant_therapy",
+          "ivig_past_month",
+          "platelet_transfusion_3d",
+          "qc_failure",
+          "qc_not_in_control",
+          "qc_overdue",
+          "instrument_error",
+          "analytical_range_failed",
+          "failed_feasible_range",
+          "off_scale_low",
+          "off_scale_high",
+          "delta_check_failed",
+          "significant_change_up",
+          "significant_change_down",
+          "critical_high",
+          "critical_low",
+          "critical_abnormal",
+          "panic_value",
+          "abnormal",
+          "high",
+          "low",
+          "significantly_high",
+          "significantly_low",
+          "reference_range_failed",
+          "review_range_failed",
+          "indeterminate",
+          "equivocal",
+          "interference",
+          "consistency_failed",
+          "duplicate_assay",
+          "previous_result",
+          "associated_order_unverified",
+          "medical_review_hold",
+          "review_required",
+          "other_analytical"
+        ]
+      },
+      "loinc_code": "9318-7",
+      "turnaround_time_hours": 1,
+      "price": 30.0,
+      "methodology": "Hexokinase enzymatic method",
+      "confidence": "HIGH"
     }
   ]
 }

@@ -19,15 +19,19 @@ INSUFFICIENT_VOLUME_REJECTION = "insufficient_volume"
 
 
 def aggregate_required_min_ml(tests: Iterable[OrderableTest]) -> float:
-    """Maximum min_volume_ml across tests on the same tube (nulls ignored)."""
-    mins = [float(t.minVolumeMl) for t in tests if t.minVolumeMl is not None]
-    return max(mins) if mins else 0.0
+    """Maximum min_volume_ml across tests on the same tube."""
+    items = list(tests)
+    if not items:
+        return 0.0
+    return max(float(t.minVolumeMl) for t in items)
 
 
 def aggregate_target_optimal_ml(tests: Iterable[OrderableTest]) -> float:
-    """Maximum optimal_volume_ml across tests on the same tube (nulls ignored)."""
-    optimals = [float(t.optimalVolumeMl) for t in tests if t.optimalVolumeMl is not None]
-    return max(optimals) if optimals else 0.0
+    """Maximum optimal_volume_ml across tests on the same tube."""
+    items = list(tests)
+    if not items:
+        return 0.0
+    return max(float(t.optimalVolumeMl) for t in items)
 
 
 def classify_specimen_volume(

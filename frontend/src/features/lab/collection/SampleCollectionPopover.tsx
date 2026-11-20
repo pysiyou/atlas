@@ -25,7 +25,6 @@ import {
   getCollectionTopColorBg,
   defaultDrawVolumeMl,
   formatDrawVolumeLine,
-  hasMinVolumeRequirement,
   isCollectedVolumeValid,
 } from '../utils';
 
@@ -71,7 +70,6 @@ function CollectionPopoverContent({
 }: CollectionPopoverContentProps) {
   const requiredMinVolumeMl = requirement.totalVolume;
   const targetVolumeMl = requirement.targetVolume ?? 0;
-  const hasMinRequirement = hasMinVolumeRequirement(requiredMinVolumeMl);
   const drawVolumeHint = formatDrawVolumeLine(requiredMinVolumeMl, targetVolumeMl);
   const initialVolume = defaultDrawVolumeMl(requiredMinVolumeMl, targetVolumeMl);
   const [volume, setVolume] = useState<number>(initialVolume);
@@ -179,7 +177,7 @@ function CollectionPopoverContent({
             value={volume}
             onChange={e => {
               const v = Number(e.target.value);
-              setVolume(Number.isNaN(v) ? (hasMinRequirement ? requiredMinVolumeMl : 0) : v);
+              setVolume(Number.isNaN(v) ? initialVolume : v);
               if (showVolumeError && isCollectedVolumeValid(v, requiredMinVolumeMl)) {
                 setShowVolumeError(false);
               }
@@ -197,9 +195,7 @@ function CollectionPopoverContent({
         </div>
         {showVolumeError && !isCollectedVolumeValid(volume, requiredMinVolumeMl) && (
           <p className={`${FIELD_ERROR_CAPTION} mt-space-1`}>
-            {hasMinRequirement
-              ? `Volume must be at least ${requiredMinVolumeMl} mL`
-              : 'Enter a collected volume greater than 0 mL'}
+            {`Volume must be at least ${requiredMinVolumeMl} mL`}
           </p>
         )}
       </div>

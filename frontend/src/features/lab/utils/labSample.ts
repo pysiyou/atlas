@@ -138,33 +138,29 @@ export type SpecimenVolumeStatus = 'no_requirement' | 'insufficient' | 'short_sa
 export const SHORT_SAMPLE_VOLUME_ISSUE = 'short_sample_volume';
 export const INSUFFICIENT_VOLUME_REJECTION = 'insufficient_volume';
 
-/** Max `minVolumeMl` across tests on the same tube (nulls ignored). */
+/** Max `minVolumeMl` across tests on the same tube. */
 export function aggregateRequiredMinMl(testCodes: string[], testCatalog: OrderableTest[]): number {
   let max = 0;
-  let found = false;
   for (const code of testCodes) {
     const min = testCatalog.find(t => t.code === code)?.minVolumeMl;
     if (min == null) continue;
-    found = true;
     max = Math.max(max, min);
   }
-  return found ? max : 0;
+  return max;
 }
 
-/** Max `optimalVolumeMl` across tests on the same tube (nulls ignored). */
+/** Max `optimalVolumeMl` across tests on the same tube. */
 export function aggregateTargetOptimalMl(
   testCodes: string[],
   testCatalog: OrderableTest[]
 ): number {
   let max = 0;
-  let found = false;
   for (const code of testCodes) {
     const optimal = testCatalog.find(t => t.code === code)?.optimalVolumeMl;
     if (optimal == null) continue;
-    found = true;
     max = Math.max(max, optimal);
   }
-  return found ? max : 0;
+  return max;
 }
 
 export function classifySpecimenVolume(
@@ -180,9 +176,7 @@ export function classifySpecimenVolume(
 }
 
 export function defaultDrawVolumeMl(requiredMinMl: number, targetOptimalMl: number): number {
-  if (targetOptimalMl > 0) return targetOptimalMl;
-  if (requiredMinMl > 0) return requiredMinMl;
-  return 0;
+  return targetOptimalMl > 0 ? targetOptimalMl : requiredMinMl;
 }
 
 /** Consolidated draw volumes from worklist requirement or persisted sample row. */
@@ -190,14 +184,11 @@ export function resolveConsolidatedDrawVolumes(input: {
   requirement?: { totalVolume?: number; targetVolume?: number } | null;
   sample?: { requiredVolume?: number; optimalVolume?: number | null } | null;
 }): { requiredMinMl: number; targetOptimalMl: number } {
-  const reqMin = input.requirement?.totalVolume ?? 0;
-  const reqTarget = input.requirement?.targetVolume ?? 0;
-  if (reqMin > 0 || reqTarget > 0) {
-    return { requiredMinMl: reqMin, targetOptimalMl: reqTarget };
-  }
   return {
-    requiredMinMl: input.sample?.requiredVolume ?? 0,
-    targetOptimalMl: input.sample?.optimalVolume ?? 0,
+    requiredMinMl:
+      input.requirement?.totalVolume ?? input.sample?.requiredVolume ?? 0,
+    targetOptimalMl:
+      input.requirement?.targetVolume ?? input.sample?.optimalVolume ?? 0,
   };
 }
 
@@ -210,18 +201,11 @@ export function formatDrawVolumeLine(requiredMinMl: number, targetOptimalMl: num
   return `Min ${requiredMinMl.toFixed(1)} mL`;
 }
 
-export function hasMinVolumeRequirement(requiredVolumeMl: number): boolean {
-  return requiredVolumeMl > 0;
-}
-
 export function isCollectedVolumeValid(
   collectedVolumeMl: number,
   requiredVolumeMl: number
 ): boolean {
-  if (!hasMinVolumeRequirement(requiredVolumeMl)) {
-    return collectedVolumeMl > 0;
-  }
-  return collectedVolumeMl >= requiredVolumeMl;
+  return collectedVolumeMl >= requiredVolumeMl && requiredVolumeMl > 0;
 }
 
 export function formatVolume(volumeInMl: number): string {

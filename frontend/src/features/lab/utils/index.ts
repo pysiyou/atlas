@@ -20,7 +20,6 @@ export {
   SHORT_SAMPLE_VOLUME_ISSUE,
   INSUFFICIENT_VOLUME_REJECTION,
   type SpecimenVolumeStatus,
-  hasMinVolumeRequirement,
   isCollectedVolumeValid,
   formatVolume,
   getContainerIconColor,

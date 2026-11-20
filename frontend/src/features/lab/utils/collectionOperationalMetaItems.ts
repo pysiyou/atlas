@@ -9,7 +9,6 @@ import {
   formatDrawVolumeLine,
   formatVolume,
   getCollectionRequirements,
-  hasMinVolumeRequirement,
 } from './labSample';
 
 export type CollectionOperationalMetaItem =
@@ -47,8 +46,6 @@ function appendPendingMetaItems(
   const drawLine = formatDrawVolumeLine(required, target);
   if (drawLine) {
     items.push({ type: 'text', text: `Draw — ${drawLine}` });
-  } else if (required != null && hasMinVolumeRequirement(required)) {
-    items.push({ type: 'text', text: `${formatVolume(required)} required` });
   }
 }
 
@@ -65,7 +62,7 @@ function appendCollectedVolumeMetaItems(
     const suffix = isRejected ? 'was collected' : 'collected';
     items.push({ type: 'text', text: `${formatVolume(collectedVolume)} ${suffix}` });
   }
-  if (required != null && hasMinVolumeRequirement(required)) {
+  if (required != null && required > 0) {
     items.push({ type: 'text', text: `${formatVolume(required)} required` });
   }
 }

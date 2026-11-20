@@ -22,13 +22,6 @@ from app.domains.catalog.schemas import (
     WorkupResponse,
 )
 from app.domains.catalog.seed import copy_test_fields, validation_rejection_criteria
-from app.domains.lab.specimen.models import Sample
-from app.domains.lab.specimen.volume import (
-    aggregate_required_min_ml,
-    aggregate_target_optimal_ml,
-)
-from app.shared.generated.enums import SampleStatus
-from app.domains.orders.models import OrderTest
 from app.platform.cache import CacheKeys, cache_get, cache_set, generate_cache_key
 from app.platform.config import settings
 from fastapi import HTTPException, Response, status
@@ -429,54 +422,9 @@ class CatalogSeedService:
             self._replace_workup_tests(code, raw.get("test_codes") or [])
         self._delete_stale_rows(Workup, desired_workup_codes)
 
-        counts["pending_samples_volume_resync"] = self._resync_pending_sample_volumes()
-
         self.db.commit()
         logger.info("Catalog seed complete: %s", counts)
         return counts
-
-    def _resync_pending_sample_volumes(self) -> int:
-        """Refresh required/optimal volumes on pending samples from current catalog."""
-        pending = (
-            self.db.query(Sample)
-            .filter(
-                Sample.status == SampleStatus.PENDING,
-                Sample.collectedAt.is_(None),
-            )
-            .all()
-        )
-        if not pending:
-            return 0
-
-        all_codes: set[str] = set()
-        for sample in pending:
-            for code in sample.testCodes or []:
-                if isinstance(code, str) and code.strip():
-                    all_codes.add(code.strip())
-
-        tests_by_code: dict[str, OrderableTest] = {}
-        if all_codes:
-            for row in self.db.query(OrderableTest).filter(OrderableTest.code.in_(all_codes)).all():
-                tests_by_code[row.code] = row
-
-        updated = 0
-        for sample in pending:
-            codes = [c for c in (sample.testCodes or []) if isinstance(c, str) and c.strip()]
-            if not codes:
-                continue
-            test_defs = [tests_by_code[c] for c in codes if c in tests_by_code]
-            if not test_defs:
-                continue
-            required = aggregate_required_min_ml(test_defs)
-            optimal = aggregate_target_optimal_ml(test_defs)
-            prev_required = float(sample.requiredVolume or 0)
-            prev_optimal = float(sample.optimalVolume or 0)
-            if required == prev_required and optimal == prev_optimal:
-                continue
-            sample.requiredVolume = required
-            sample.optimalVolume = optimal
-            updated += 1
-        return updated
 
     def _replace_test_analytes(self, test_code: str, analyte_codes: list[Any]) -> None:
         self.db.query(OrderableTestAnalyte).filter(OrderableTestAnalyte.testCode == test_code).delete(
@@ -507,28 +455,4 @@ class CatalogSeedService:
             return
         stale = self.db.query(model).filter(model.code.notin_(desired_codes)).all()
         for row in stale:
-            code = getattr(row, "code", None)
-            if model is OrderableTest and code:
-                in_use = (
-                    self.db.query(OrderTest.id).filter(OrderTest.testCode == code).limit(1).first()
-                )
-                if in_use:
-                    logger.warning(
-                        "Keeping orderable test %s (referenced by order history; not in contracts)",
-                        code,
-                    )
-                    continue
-            if model is CatalogAnalyte and code:
-                linked = (
-                    self.db.query(OrderableTestAnalyte.id)
-                    .filter(OrderableTestAnalyte.analyteCode == code)
-                    .limit(1)
-                    .first()
-                )
-                if linked:
-                    logger.warning(
-                        "Keeping analyte %s (linked to an orderable test; not in contracts)",
-                        code,
-                    )
-                    continue
             self.db.delete(row)
