@@ -216,6 +216,15 @@ class PatientService:
     def create(
         self, patient_data: PatientCreate, user_id: str, *, force_create: bool = False
     ) -> dict:
+        from app.platform.debug_log import workflow_ok, workflow_start
+
+        workflow_start(
+            "patients",
+            action="create",
+            name=patient_data.fullName,
+            force=force_create,
+            user_id=user_id,
+        )
         # Check workflow: requireEmergencyContact
         require_emergency = client_config.workflows.get("requireEmergencyContact", True)
         if require_emergency:
@@ -271,6 +280,7 @@ class PatientService:
             self.emitter.patient_created(patient.id, user_id)
         self.db.commit()
         self.db.refresh(patient)
+        workflow_ok("patients", action="create", patient_id=patient.id)
         return serialize_patient_full(patient)
 
     def update(self, patient_id: str, patient_data: PatientUpdate, user_id: str) -> dict:

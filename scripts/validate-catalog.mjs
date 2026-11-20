@@ -184,6 +184,30 @@ export function runCatalogIntegrityChecks(docs) {
       console.error(`${code}: collection.sample_type is required`);
       errors += 1;
     }
+    if (collection && typeof collection === 'object') {
+      const minVol = collection.min_volume_ml;
+      const optVol = collection.optimal_volume_ml;
+      if (typeof minVol !== 'number' || !(minVol > 0)) {
+        console.error(`${code}: collection.min_volume_ml must be a number > 0`);
+        errors += 1;
+      }
+      if (typeof optVol !== 'number' || !(optVol > 0)) {
+        console.error(`${code}: collection.optimal_volume_ml must be a number > 0`);
+        errors += 1;
+      }
+      if (
+        typeof minVol === 'number' &&
+        typeof optVol === 'number' &&
+        minVol > 0 &&
+        optVol > 0 &&
+        optVol < minVol
+      ) {
+        console.error(
+          `${code}: collection.optimal_volume_ml (${optVol}) must be >= min_volume_ml (${minVol})`,
+        );
+        errors += 1;
+      }
+    }
     for (const legacy of ['sample', 'sample_type', 'test_category', 'category', 'method_common', 'sources']) {
       if (Object.prototype.hasOwnProperty.call(test, legacy)) {
         console.error(`${code}: obsolete field ${legacy}`);

@@ -26,6 +26,7 @@ from app.domains.lab.workflow.result_commands import ResultCommandHandler
 from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.service import apply_order_status_rollup
 from app.platform.cache import invalidate_lab_board_summary_cache
+from app.platform.debug_log import lab_mutation as debug_lab_mutation
 from app.shared.errors import LabOperationError
 from app.shared.generated.enums import SampleStatus, TestStatus
 from pydantic import BaseModel
@@ -231,8 +232,10 @@ class LabOperationsService:
         *,
         order_id: str | None = None,
         after_rollup: Callable[[str], None] | None = None,
+        action: str = "lab_mutation",
     ) -> T:
         """Single commit, in-session order rollup, cache invalidate. fn must not commit."""
+        debug_lab_mutation(action, "start", order_id=order_id)
         try:
             with self.db.begin_nested():
                 result = fn()
@@ -244,12 +247,21 @@ class LabOperationsService:
             self.db.commit()
             self._refresh_mutation_result(result)
             self._invalidate_lab_monitor_cache()
+            debug_lab_mutation(action, "ok", order_id=resolved_order_id or order_id)
             return result
-        except LabOperationError:
+        except LabOperationError as exc:
             self.db.rollback()
+            debug_lab_mutation(
+                action,
+                "rejected",
+                order_id=order_id,
+                code=exc.error_code,
+                message=exc.message,
+            )
             raise
-        except Exception:
+        except Exception as exc:
             self.db.rollback()
+            debug_lab_mutation(action, "failed", order_id=order_id, error=str(exc))
             raise
 
     def _serialize_sample_state(self, sample: Sample) -> dict[str, Any]:
@@ -295,6 +307,7 @@ class LabOperationsService:
         return self.run_lab_mutation(
             lambda: self._collection.collect_sample(**kwargs),
             order_id=order_id,
+            action="collect_sample",
         )
 
     def receive_sample(self, **kwargs) -> Sample:
@@ -304,6 +317,7 @@ class LabOperationsService:
         return self.run_lab_mutation(
             lambda: self._collection.receive_sample(**kwargs),
             order_id=order_id,
+            action="receive_sample",
         )
 
     def create_aliquots(
@@ -331,12 +345,13 @@ class LabOperationsService:
                 emitter=self.emitter,
             )
 
-        return self.run_lab_mutation(_mutate, order_id=order_id)
+        return self.run_lab_mutation(_mutate, order_id=order_id, action="create_aliquots")
 
     def enter_results(self, **kwargs) -> OrderTest:
         return self.run_lab_mutation(
             lambda: self._results.enter_results(**kwargs),
             order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
+            action="enter_results",
         )
 
     def validate_results(self, **kwargs) -> OrderTest:
@@ -357,12 +372,14 @@ class LabOperationsService:
             _mutate,
             order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
             after_rollup=_after_rollup,
+            action="validate_results",
         )
 
     def reject_results(self, **kwargs):
         return self.run_lab_mutation(
             lambda: self._results.reject_results(**kwargs),
             order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
+            action="reject_results",
         )
 
     def report_quality_issue(self, **kwargs):
@@ -378,12 +395,14 @@ class LabOperationsService:
         return self.run_lab_mutation(
             lambda: self.quality.report_issue(**kwargs),
             order_id=order_id,
+            action="report_quality_issue",
         )
 
     def notify_critical_value(self, test_id: int, request: NotifyRequest, user_id: str) -> dict:
         return self.run_lab_mutation(
             lambda: CriticalNotificationService(self.db).notify(test_id, request, user_id),
             order_id=self._order_id_for_order_test(test_id),
+            action="notify_critical_value",
         )
 
     def acknowledge_critical_value(
@@ -392,4 +411,5 @@ class LabOperationsService:
         return self.run_lab_mutation(
             lambda: CriticalNotificationService(self.db).acknowledge(test_id, request, user_id),
             order_id=self._order_id_for_order_test(test_id),
+            action="acknowledge_critical_value",
         )

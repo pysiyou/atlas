@@ -104,6 +104,15 @@ class PaymentService:
         return [enrich_payment(p, p.order) for p in payments]
 
     def create_payment(self, payment_data: PaymentCreate, user_id: str) -> dict:
+        from app.platform.debug_log import workflow_ok, workflow_start
+
+        workflow_start(
+            "payments",
+            action="create_payment",
+            order_id=payment_data.orderId,
+            amount=payment_data.amount,
+            user_id=user_id,
+        )
         order = (
             self.db.query(Order)
             .filter(Order.orderId == payment_data.orderId)
@@ -183,4 +192,11 @@ class PaymentService:
         self.db.commit()
         invalidate_lab_board_summary_cache()
         self.db.refresh(payment)
+        workflow_ok(
+            "payments",
+            action="create_payment",
+            order_id=order.orderId,
+            payment_id=payment.paymentId,
+            status=order.paymentStatus.value,
+        )
         return enrich_payment(payment, order)

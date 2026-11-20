@@ -17,6 +17,7 @@ from app.domains.users.schemas import (
 )
 from app.domains.users.service import UserService
 from app.platform.database import get_db
+from app.platform.debug_log import info as debug_info
 from app.platform.http import get_current_user
 from app.platform.security import (
     TokenType,
@@ -69,6 +70,7 @@ def create_first_administrator(
     administrator in User management.
     """
     user = UserService(db).create_first_administrator(payload)
+    debug_info("auth", "first administrator created", user_id=user.id)
     access_token, refresh_token = create_tokens(user.id)
     user.loggedInAt = datetime.now(UTC)
     AuditEmitter(db).user_login(user.id)
@@ -90,6 +92,7 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == credentials.username).first()
 
     if not user or not verify_password(credentials.password, user.hashedPassword):
+        debug_info("auth", "login failed", username=credentials.username, reason="invalid_credentials")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password",
@@ -97,6 +100,7 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
         )
 
     if not user.isActive:
+        debug_info("auth", "login failed", username=credentials.username, reason="disabled")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Account is disabled",
@@ -108,6 +112,7 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     user.loggedInAt = datetime.now(UTC)
     AuditEmitter(db).user_login(user.id)
     db.commit()
+    debug_info("auth", "login ok", user_id=user.id, role=user.role.value)
 
     return Token(
         access_token=access_token,
@@ -176,4 +181,5 @@ def logout(
     """
     AuditEmitter(db).user_logout(current_user.id)
     db.commit()
+    debug_info("auth", "logout", user_id=current_user.id)
     return MessageResponse(message="Logged out successfully")

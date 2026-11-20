@@ -189,6 +189,15 @@ def apply_order_status_rollup(db: Session, order_id: str) -> bool:
         metadata={"trigger": "automatic"},
     )
     logger.info("Order %s status changed from %s to %s", order_id, old_status, new_status)
+    from app.platform.debug_log import info as debug_info
+
+    debug_info(
+        "orders",
+        "status rollup",
+        order_id=order_id,
+        from_status=old_status.value if old_status else None,
+        to_status=new_status.value,
+    )
     return True
 
 
@@ -582,6 +591,15 @@ class OrderService:
         )
 
     def create_order(self, order_data: OrderCreate, user_id: str) -> OrderResponse:
+        from app.platform.debug_log import workflow_fail, workflow_ok, workflow_start
+
+        workflow_start(
+            "orders",
+            action="create_order",
+            patient_id=order_data.patientId,
+            test_count=len(order_data.tests or []),
+            user_id=user_id,
+        )
         patient = self.db.query(Patient).filter(Patient.id == order_data.patientId).first()
         if not patient:
             raise HTTPException(
@@ -629,10 +647,16 @@ class OrderService:
         except SQLAlchemyError:
             self.db.rollback()
             logger.exception("Failed to create order for patient %s", order_data.patientId)
+            workflow_fail(
+                "orders",
+                "create_order failed",
+                patient_id=order_data.patientId,
+            )
             raise HTTPException(status_code=500, detail="Failed to create order")
         invalidate_lab_board_summary_cache()
         self.db.refresh(order)
         order = self._order_with_relations(order.orderId)
+        workflow_ok("orders", action="create_order", order_id=order.orderId)
         return self._order_response_with_lab(order)
 
     def _order_with_relations(self, order_id: str) -> Order:
@@ -648,6 +672,9 @@ class OrderService:
         )
 
     def update_order(self, order_id: str, order_data: OrderUpdate, user_id: str) -> OrderResponse:
+        from app.platform.debug_log import workflow_ok, workflow_start
+
+        workflow_start("orders", action="update_order", order_id=order_id, user_id=user_id)
         order = (
             self.db.query(Order)
             .filter(Order.orderId == order_id)
@@ -750,4 +777,5 @@ class OrderService:
         self.db.commit()
         self.db.refresh(order)
         order = self._order_with_relations(order.orderId)
+        workflow_ok("orders", action="update_order", order_id=order_id)
         return self._order_response_with_lab(order)

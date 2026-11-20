@@ -119,7 +119,7 @@
     },
     "collectionBlock": {
       "type": "object",
-      "required": ["sample_type"],
+      "required": ["sample_type", "min_volume_ml", "optimal_volume_ml"],
       "additionalProperties": false,
       "properties": {
         "sample_type": { "$ref": "#/$defs/specimenType" },
@@ -131,8 +131,8 @@
           "type": "array",
           "items": { "type": "string" }
         },
-        "min_volume_ml": { "type": "number", "minimum": 0 },
-        "optimal_volume_ml": { "type": "number", "minimum": 0 },
+        "min_volume_ml": { "type": "number", "exclusiveMinimum": 0 },
+        "optimal_volume_ml": { "type": "number", "exclusiveMinimum": 0 },
         "volume_description": { "type": "string" },
         "container_description": { "type": "string" },
         "fasting_required": { "type": "boolean" },

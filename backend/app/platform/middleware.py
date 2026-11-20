@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 from collections.abc import Callable
 
 from app.platform.config import settings
@@ -18,6 +19,40 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 
 logger = logging.getLogger(__name__)
+
+
+class RequestLoggingMiddleware(BaseHTTPMiddleware):
+    """Light request/response console traces for API debugging."""
+
+    SKIP_PREFIXES = ("/docs", "/redoc", "/openapi.json")
+    SKIP_EXACT = frozenset({"/health"})
+
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        path = request.url.path
+        if path in self.SKIP_EXACT or any(path.startswith(p) for p in self.SKIP_PREFIXES):
+            return await call_next(request)
+        if not path.startswith(settings.API_V1_PREFIX):
+            return await call_next(request)
+
+        from app.platform.debug_log import http_request, http_response
+
+        method = request.method
+        client = request.client
+        client_addr = f"{client.host}:{client.port}" if client else "-"
+        query = request.url.query
+        full_path = f"{path}?{query}" if query else path
+        http_request(method, full_path, client_addr=client_addr)
+        started = time.perf_counter()
+        response = await call_next(request)
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        http_response(
+            method,
+            full_path,
+            response.status_code,
+            elapsed_ms,
+            client_addr=client_addr,
+        )
+        return response
 
 
 class CacheHeadersMiddleware(BaseHTTPMiddleware):
@@ -87,8 +122,18 @@ class DelayMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
-async def lab_operation_error_handler(_request: Request, exc: LabOperationError) -> JSONResponse:
+async def lab_operation_error_handler(request: Request, exc: LabOperationError) -> JSONResponse:
     """Map lab service errors onto the shared error schema."""
+    from app.platform.debug_log import warn
+
+    warn(
+        "lab",
+        exc.message,
+        code=exc.error_code,
+        status=exc.status_code,
+        path=request.url.path,
+        method=request.method,
+    )
     return JSONResponse(
         status_code=exc.status_code,
         content=ErrorResponse(error_code=exc.error_code, message=exc.message).model_dump(),
@@ -96,9 +141,18 @@ async def lab_operation_error_handler(_request: Request, exc: LabOperationError)
 
 
 async def request_validation_error_handler(
-    _request: Request, exc: RequestValidationError
+    request: Request, exc: RequestValidationError
 ) -> JSONResponse:
     """Flatten Pydantic request-validation errors."""
+    from app.platform.debug_log import warn
+
+    warn(
+        "http",
+        "request validation failed",
+        method=request.method,
+        path=request.url.path,
+        error_count=len(exc.errors()),
+    )
     details = []
     for error in exc.errors():
         field = ".".join(str(loc) for loc in error["loc"]) if error["loc"] else None
@@ -112,9 +166,16 @@ async def request_validation_error_handler(
     )
 
 
-async def sqlalchemy_error_handler(request: Request, _exc: SQLAlchemyError) -> JSONResponse:
+async def sqlalchemy_error_handler(request: Request, exc: SQLAlchemyError) -> JSONResponse:
     """Hide database internals; log the full exception."""
+    from app.platform.debug_log import exception as debug_exception
+
     logger.exception("Database error on %s %s", request.method, request.url.path)
+    debug_exception(
+        "db",
+        f"database error on {request.method} {request.url.path}",
+        exc=exc,
+    )
     return JSONResponse(
         status_code=500,
         content=ErrorResponse(
@@ -124,8 +185,19 @@ async def sqlalchemy_error_handler(request: Request, _exc: SQLAlchemyError) -> J
     )
 
 
-async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONResponse:
+async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
     """Normalize FastAPI HTTPException into ErrorResponse."""
+    if exc.status_code >= 400:
+        from app.platform.debug_log import warn
+
+        detail = exc.detail if isinstance(exc.detail, str) else str(exc.detail)
+        warn(
+            "http",
+            detail,
+            status=exc.status_code,
+            method=request.method,
+            path=request.url.path,
+        )
     error_code_map = {
         400: "BAD_REQUEST",
         401: "UNAUTHORIZED",
@@ -155,9 +227,12 @@ async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONR
     )
 
 
-async def identifier_error_handler(_request: Request, exc: IdentifierError) -> JSONResponse:
+async def identifier_error_handler(request: Request, exc: IdentifierError) -> JSONResponse:
     """Sequence cap or invalid generated identifier — client should retry later or contact ops."""
+    from app.platform.debug_log import warn
+
     logger.warning("Identifier allocation failed: %s", exc)
+    warn("orders", str(exc), method=request.method, path=request.url.path)
     return JSONResponse(
         status_code=503,
         content=ErrorResponse(
@@ -167,9 +242,16 @@ async def identifier_error_handler(_request: Request, exc: IdentifierError) -> J
     )
 
 
-async def generic_exception_handler(request: Request, _exc: Exception) -> JSONResponse:
+async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
     """Catch-all: log internally, return a generic 500."""
+    from app.platform.debug_log import exception as debug_exception
+
     logger.exception("Unhandled exception on %s %s", request.method, request.url.path)
+    debug_exception(
+        "http",
+        f"unhandled exception on {request.method} {request.url.path}",
+        exc=exc,
+    )
     return JSONResponse(
         status_code=500,
         content=ErrorResponse(

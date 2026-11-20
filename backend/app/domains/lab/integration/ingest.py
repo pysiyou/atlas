@@ -21,6 +21,7 @@ from app.domains.lab.workflow.constants import ANALYZER_USER_ID
 from app.domains.lab.workflow.operations import LabOperationsService
 from app.domains.orders.models import Order, OrderTest
 from app.platform.config import settings
+from app.platform.debug_log import workflow_fail, workflow_ok, workflow_start
 from app.shared.clinical import looks_like_accession, looks_like_filler
 from app.shared.errors import LabOperationError
 from app.shared.generated.enums import TestStatus
@@ -86,6 +87,15 @@ class AnalyzerIngestService:
             metadata=metadata,
         )
         self.db.commit()
+        workflow_fail(
+            "lab.integration",
+            detail,
+            phase=phase,
+            status=status_code,
+            order_id=order_id,
+            test_code=test_code,
+            analyzer_id=analyzer_id,
+        )
         raise LabOperationError(detail, status_code=status_code, error_code="INGEST_REJECTED")
 
     @staticmethod
@@ -176,7 +186,11 @@ class AnalyzerIngestService:
             )
 
         try:
-            updated_test = service.run_lab_mutation(_mutate, order_id=sample.orderId)
+            updated_test = service.run_lab_mutation(
+                _mutate,
+                order_id=sample.orderId,
+                action="analyzer_enter_results",
+            )
         except LabOperationError as e:
             emitter = AuditEmitter(self.db)
             if e.error_code == "DUPLICATE_INGEST":
@@ -213,6 +227,11 @@ class AnalyzerIngestService:
         )
 
     def ingest_hl7(self, request: HL7MessageRequest) -> AnalyzerResultResponse:
+        workflow_start(
+            "lab.integration",
+            action="ingest_hl7",
+            analyzer_id=request.analyzer_id,
+        )
         warnings: list[str] = []
         analyzer_id = request.analyzer_id
         parser = HL7Parser()
@@ -269,7 +288,7 @@ class AnalyzerIngestService:
             f"{request.analyzer_id or analyzer_result.analyzer_id or 'unknown'}"
         )
         resolved_analyzer_id = analyzer_id or analyzer_result.analyzer_id or None
-        return self._enter_results(
+        result = self._enter_results(
             order_test,
             internal_results,
             notes,
@@ -279,8 +298,23 @@ class AnalyzerIngestService:
             idempotency_key=analyzer_result.message_id or None,
             analyzer_id=resolved_analyzer_id,
         )
+        workflow_ok(
+            "lab.integration",
+            action="ingest_hl7",
+            order_id=sample.orderId,
+            test_id=order_test.id,
+            test_code=test_code,
+        )
+        return result
 
     def ingest_json(self, request: AnalyzerResultRequest) -> AnalyzerResultResponse:
+        workflow_start(
+            "lab.integration",
+            action="ingest_json",
+            analyzer_id=request.analyzer_id,
+            specimen_id=request.specimen_id,
+            test_code=request.test_code,
+        )
         sample = self._resolve_sample(str(request.specimen_id))
         if not sample:
             raise LabOperationError(
@@ -314,7 +348,7 @@ class AnalyzerIngestService:
             self._validation_blocks_ingest(validation_errors)
             internal_results = adapter.to_internal_format(pseudo, analyte_defs)
         notes = f"Auto-entered from analyzer {request.analyzer_id or 'unknown'}"
-        return self._enter_results(
+        result = self._enter_results(
             order_test,
             internal_results,
             notes,
@@ -324,6 +358,14 @@ class AnalyzerIngestService:
             idempotency_key=idempotency_key,
             analyzer_id=request.analyzer_id,
         )
+        workflow_ok(
+            "lab.integration",
+            action="ingest_json",
+            order_id=sample.orderId,
+            test_id=order_test.id,
+            test_code=request.test_code,
+        )
+        return result
 
     def list_pending(self, analyzer_id: str) -> dict[str, Any]:
         pending_tests = (
