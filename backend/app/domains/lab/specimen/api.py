@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from app.domains.audit.emitter import AuditEmitter
 from app.domains.lab.deps import (
     get_lab_operations_service,
     get_lab_worklist_service,
@@ -10,7 +9,6 @@ from app.domains.lab.deps import (
 )
 from app.domains.lab.monitor.schemas import CollectionWorklistItem
 from app.domains.lab.monitor.worklists import LabWorklistService
-from app.domains.lab.specimen.aliquots import create_aliquots
 from app.domains.lab.specimen.models import Sample
 from app.domains.lab.specimen.queries import SpecimenQueryService
 from app.domains.lab.specimen.schemas import (
@@ -124,17 +122,15 @@ def create_sample_aliquots(
     sampleId: SampleIdPath,
     payload: SampleAliquotCreateRequest,
     db: Session = Depends(get_db),
+    service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_sample_collector),
 ):
     """Create child aliquot tubes from a collected parent sample."""
-    children = create_aliquots(
-        db,
+    children = service.create_aliquots(
         parent_id=sampleId,
         count=payload.count,
         aliquot_volume=payload.aliquotVolume,
         test_codes=payload.testCodes,
         user_id=current_user.id,
-        emitter=AuditEmitter(db),
     )
-    db.commit()
     return [_sample_response(db, child) for child in children]

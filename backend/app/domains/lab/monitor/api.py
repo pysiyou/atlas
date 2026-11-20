@@ -94,6 +94,7 @@ def _paginated_filterable_worklist(
     date_to: date | None,
     sample_type: str | None,
     category: str | None,
+    list_fn_extra: dict[str, Any] | None = None,
 ) -> WorklistResponse:
     with log_lab_read(log_name, page=page, page_size=page_size) as metrics:
         result = list_fn(
@@ -105,6 +106,7 @@ def _paginated_filterable_worklist(
             date_to=date_to,
             sample_types=parse_csv_values(sample_type) or None,
             category=category,
+            **(list_fn_extra or {}),
         )
         metrics["rows_loaded"] = result.get("rows_loaded")
         metrics["rows_returned"] = len(result["items"])
@@ -219,7 +221,7 @@ def get_validation_worklist(
     dateTo: date | None = Query(None),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
     service: LabWorklistService = Depends(get_lab_worklist_service),
-    _user: User = Depends(require_lab_tech),
+    current_user: User = Depends(require_lab_tech),
 ):
     return _paginated_filterable_worklist(
         log_name="lab.worklists.validation",
@@ -227,6 +229,7 @@ def get_validation_worklist(
         page_size=pageSize,
         list_fn=service.list_validation,
         item_model=ValidationWorklistItem,
+        list_fn_extra={"viewer_validator_id": current_user.id},
         **_stage_worklist_kwargs(
             search=search,
             priority=priority,

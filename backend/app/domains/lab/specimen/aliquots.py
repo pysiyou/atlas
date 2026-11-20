@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 def create_aliquots(
     db: Session,
     *,
-    parent_id: int,
+    parent_id: str,
     count: int,
     aliquot_volume: float,
     test_codes: list[str] | None,

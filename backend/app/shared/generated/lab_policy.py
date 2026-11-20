@@ -21,6 +21,7 @@ ATTENTION_REASON_KEYS: frozenset[str] = frozenset(
         "retry_limit",
         "recollection_limit",
         "supervisor_review",
+        "dual_validation_pending",
     }
 )
 
@@ -51,6 +52,7 @@ ATTENTION_LABELS: dict[str, str] = {
     "retry_limit": "Re-test limit reached",
     "recollection_limit": "Recollection limit reached",
     "supervisor_review": "Supervisor approval required",
+    "dual_validation_pending": "Awaiting second validator sign-off",
 }
 
 ATTENTION_TYPE_BY_REASON: dict[str, str] = {
@@ -61,6 +63,7 @@ ATTENTION_TYPE_BY_REASON: dict[str, str] = {
     "retry_limit": "escalation_retry_limit",
     "recollection_limit": "escalation_recollection_limit",
     "supervisor_review": "supervisor_approval",
+    "dual_validation_pending": "supervisor_approval",
 }
 
 ALLOWED_ACTION_KEYS: tuple[str, ...] = (

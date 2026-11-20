@@ -50,6 +50,11 @@
         "label": "Supervisor approval required",
         "attentionType": "supervisor_approval",
         "blocksProgress": true
+      },
+      "dual_validation_pending": {
+        "label": "Awaiting second validator sign-off",
+        "attentionType": "supervisor_approval",
+        "blocksProgress": false
       }
     },
     "attentionTypeSort": {

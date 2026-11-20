@@ -27,7 +27,7 @@ from app.domains.orders.models import Order, OrderTest
 from app.domains.orders.service import apply_order_status_rollup
 from app.platform.cache import invalidate_lab_board_summary_cache
 from app.shared.errors import LabOperationError
-from app.shared.generated.enums import PaymentStatus, SampleStatus, TestStatus
+from app.shared.generated.enums import SampleStatus, TestStatus
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -192,31 +192,6 @@ class LabOperationsService:
         ot = self.db.query(OrderTest).filter(OrderTest.id == parsed).first()
         return ot.orderId if ot else None
 
-    def _assert_order_paid_for_collection(self, order_id: str) -> None:
-        order = self.db.query(Order).filter(Order.orderId == order_id).first()
-        if not order:
-            raise LabOperationError(f"Order {order_id} not found", status_code=404)
-        pending_samples = (
-            self.db.query(Sample)
-            .filter(Sample.orderId == order_id, Sample.status == SampleStatus.PENDING)
-            .order_by(Sample.createdAt.asc(), Sample.sampleId.asc())
-            .all()
-        )
-        if pending_samples:
-            for sample in pending_samples:
-                order_tests = self._linked_order_tests(sample)
-                assert_can_collect(sample, order, order_tests, db=self.db)
-            return
-        from app.domains.payments.service import derive_payment_status, money, total_paid_for_order
-
-        paid = total_paid_for_order(self.db, order_id)
-        if derive_payment_status(paid, money(order.totalPrice)) != PaymentStatus.PAID:
-            raise LabOperationError(
-                "Sample collection requires payment. Mark the order as paid before collecting.",
-                status_code=402,
-                error_code="PAYMENT_REQUIRED",
-            )
-
     def _resolve_order_id(self, result: Any, explicit: str | None) -> str | None:
         if explicit:
             return explicit
@@ -255,6 +230,7 @@ class LabOperationsService:
         fn: Callable[[], T],
         *,
         order_id: str | None = None,
+        after_rollup: Callable[[str], None] | None = None,
     ) -> T:
         """Single commit, in-session order rollup, cache invalidate. fn must not commit."""
         try:
@@ -263,6 +239,8 @@ class LabOperationsService:
                 resolved_order_id = self._resolve_order_id(result, order_id)
                 if resolved_order_id is not None:
                     apply_order_status_rollup(self.db, resolved_order_id)
+                    if after_rollup is not None:
+                        after_rollup(resolved_order_id)
             self.db.commit()
             self._refresh_mutation_result(result)
             self._invalidate_lab_monitor_cache()
@@ -328,6 +306,33 @@ class LabOperationsService:
             order_id=order_id,
         )
 
+    def create_aliquots(
+        self,
+        *,
+        parent_id: str,
+        count: int,
+        aliquot_volume: float,
+        test_codes: list[str] | None,
+        user_id: str,
+    ) -> list[Sample]:
+        from app.domains.lab.specimen.aliquots import create_aliquots as create_aliquots_fn
+
+        row = self.db.query(Sample).filter(Sample.sampleId == parent_id).first()
+        order_id = row.orderId if row else None
+
+        def _mutate() -> list[Sample]:
+            return create_aliquots_fn(
+                self.db,
+                parent_id=parent_id,
+                count=count,
+                aliquot_volume=aliquot_volume,
+                test_codes=test_codes,
+                user_id=user_id,
+                emitter=self.emitter,
+            )
+
+        return self.run_lab_mutation(_mutate, order_id=order_id)
+
     def enter_results(self, **kwargs) -> OrderTest:
         return self.run_lab_mutation(
             lambda: self._results.enter_results(**kwargs),
@@ -338,32 +343,21 @@ class LabOperationsService:
         from app.domains.orders.service import OrderService
         from app.shared.generated.enums import OrderStatus
 
+        user_id = kwargs["user_id"]
+
+        def _after_rollup(resolved_order_id: str) -> None:
+            order = self.db.query(Order).filter(Order.orderId == resolved_order_id).first()
+            if order and order.overallStatus == OrderStatus.COMPLETED:
+                OrderService(self.db).record_reporting_generated(resolved_order_id, user_id)
+
         def _mutate() -> OrderTest:
             return self._results.validate_results(**kwargs)
 
-        order_test = self.run_lab_mutation(
+        return self.run_lab_mutation(
             _mutate,
             order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
+            after_rollup=_after_rollup,
         )
-        order = self.db.query(Order).filter(Order.orderId == order_test.orderId).first()
-        if order and order.overallStatus == OrderStatus.COMPLETED:
-            from fastapi import HTTPException
-
-            try:
-                OrderService(self.db).mark_as_reported(
-                    order_test.orderId, kwargs["user_id"]
-                )
-            except HTTPException as exc:
-                detail = exc.detail if isinstance(exc.detail, str) else str(exc.detail)
-                raise LabOperationError(detail, status_code=exc.status_code) from exc
-            except LabOperationError:
-                raise
-            except Exception as exc:
-                raise LabOperationError(
-                    f"mark_as_reported failed after validation: {exc}",
-                    status_code=500,
-                ) from exc
-        return order_test
 
     def reject_results(self, **kwargs):
         return self.run_lab_mutation(

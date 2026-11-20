@@ -1,7 +1,12 @@
 """Read/query operations for specimens."""
+import logging
+
 from app.domains.lab.specimen.models import Sample
 from app.shared.generated.enums import SampleStatus
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
+
+logger = logging.getLogger(__name__)
 
 
 class SpecimenQueryService:
@@ -53,14 +58,12 @@ class SpecimenQueryService:
                     parent_data = SampleResponse.model_validate(parent).model_dump(mode="json")
                     data["originalSampleCollectedAt"] = parent_data["collectedAt"]
                 serialized.append(data)
-        except Exception:
-            import logging
-
-            logging.getLogger(__name__).exception("Error serializing samples")
+        except ValidationError as exc:
+            logger.exception("Invalid sample data during serialization")
             raise HTTPException(
                 status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Error processing sample data",
-            )
+            ) from exc
         if paginated:
             return create_paginated_response(serialized, total, skip_to_page(skip, limit), limit)
         return serialized

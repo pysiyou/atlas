@@ -16,6 +16,7 @@ from app.domains.lab.workflow.operations import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
 from app.platform.http import assert_quality_issue_target_access, get_current_user, require_lab_tech
+from app.shared.api import OrderTestIdPath
 from app.shared.generated.enums import QualityIssueTargetType
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -33,7 +34,7 @@ def get_pending_critical_values(
 
 @router.post("/critical-values/{test_id}/notify")
 def notify_critical_value(
-    test_id: int,
+    test_id: OrderTestIdPath,
     request: NotifyRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),
@@ -43,7 +44,7 @@ def notify_critical_value(
 
 @router.post("/critical-values/{test_id}/acknowledge")
 def acknowledge_critical_value(
-    test_id: int,
+    test_id: OrderTestIdPath,
     request: AcknowledgeRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
     current_user: User = Depends(require_lab_tech),

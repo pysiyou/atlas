@@ -233,13 +233,29 @@ def action_flags_for_entry(
 
 
 def action_flags_for_validation(
-    *, order_test: OrderTest
+    *,
+    order_test: OrderTest,
+    validator_id: str | None = None,
 ) -> tuple[WorklistAllowedActions, str | None]:
+    from app.platform.config import client_config
+
     actions = _empty_actions()
     can_validate, _ = TestStateMachine.can_validate(order_test.status)
+    deny_reason: str | None = None
+    require_dual = client_config.workflows.get("requireDualValidation", False)
+    awaiting_second_signoff = (
+        require_dual
+        and order_test.status == TestStatus.RESULTED
+        and order_test.validatedBy
+        and not order_test.secondValidatorId
+    )
+    # First sign-off finished: only that user must not validate again; others may sign.
+    if awaiting_second_signoff and validator_id and order_test.validatedBy == str(validator_id):
+        can_validate = False
+        deny_reason = "dual_validation_pending"
     actions["validate"] = can_validate
     actions["reject"] = order_test.status == TestStatus.RESULTED
-    return actions, None
+    return actions, deny_reason
 
 
 def escalation_force_validate_allowed(order_test: OrderTest, *, reason_code: str | None) -> bool:

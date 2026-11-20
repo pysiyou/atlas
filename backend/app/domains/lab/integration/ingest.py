@@ -24,7 +24,7 @@ from app.platform.config import settings
 from app.shared.clinical import looks_like_accession, looks_like_filler
 from app.shared.errors import LabOperationError
 from app.shared.generated.enums import TestStatus
-from fastapi import HTTPException, status
+from fastapi import status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -63,7 +63,6 @@ class AnalyzerIngestService:
                 error_code="DUPLICATE_INGEST",
             ) from exc
 
-    @staticmethod
     def _http_reject_ingest(
         self,
         status_code: int,
@@ -76,6 +75,7 @@ class AnalyzerIngestService:
         analyzer_id: str | None = None,
         extra_metadata: dict[str, Any] | None = None,
     ) -> None:
+        """Record reject audit on its own commit, then fail the request."""
         metadata: dict[str, Any] = {"reason": detail, "phase": phase, **(extra_metadata or {})}
         if analyzer_id:
             metadata["analyzer_id"] = analyzer_id
@@ -86,7 +86,7 @@ class AnalyzerIngestService:
             metadata=metadata,
         )
         self.db.commit()
-        raise HTTPException(status_code=status_code, detail=detail)
+        raise LabOperationError(detail, status_code=status_code, error_code="INGEST_REJECTED")
 
     @staticmethod
     def _validation_blocks_ingest(validation_errors: list[str]) -> None:
@@ -136,13 +136,15 @@ class AnalyzerIngestService:
             .first()
         )
         if existing and existing.status in [TestStatus.RESULTED, TestStatus.VALIDATED]:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"OrderableTest {test_code} already has results",
+            raise LabOperationError(
+                f"OrderableTest {test_code} already has results",
+                status_code=409,
+                error_code="TEST_ALREADY_RESULTED",
             )
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No pending test {test_code} found for sample {sample.sampleId}",
+        raise LabOperationError(
+            f"No pending test {test_code} found for sample {sample.sampleId}",
+            status_code=404,
+            error_code="PENDING_TEST_NOT_FOUND",
         )
 
     def _enter_results(
@@ -200,7 +202,7 @@ class AnalyzerIngestService:
                     },
                 )
                 self.db.commit()
-            raise HTTPException(status_code=e.status_code, detail=e.message)
+            raise
         return AnalyzerResultResponse(
             success=True,
             message=f"Results entered for test {test_code}",
@@ -281,9 +283,10 @@ class AnalyzerIngestService:
     def ingest_json(self, request: AnalyzerResultRequest) -> AnalyzerResultResponse:
         sample = self._resolve_sample(str(request.specimen_id))
         if not sample:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Sample {request.specimen_id} not found",
+            raise LabOperationError(
+                f"Sample {request.specimen_id} not found",
+                status_code=404,
+                error_code="SPECIMEN_NOT_FOUND",
             )
         order_test = self._find_pending_test(sample, request.test_code)
         idempotency_key = (request.correlation_id or "").strip()

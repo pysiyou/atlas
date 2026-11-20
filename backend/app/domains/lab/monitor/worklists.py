@@ -680,6 +680,7 @@ class LabWorklistService:
         date_to: date | None = None,
         sample_types: list[str] | None = None,
         category: str | None = None,
+        viewer_validator_id: str | None = None,
     ) -> dict[str, Any]:
         query, _search_term = self._order_test_worklist_query(
             extra_filters=(awaiting_validation_predicate(),),
@@ -712,7 +713,12 @@ class LabWorklistService:
                 age_bucket(hours, test.turnaroundTimeHours) if test.turnaroundTimeHours else None
             )
             projection = project_order_test_validation(
-                LabWorkItemContext(order=order, order_test=ot, sample=sample)
+                LabWorkItemContext(
+                    order=order,
+                    order_test=ot,
+                    sample=sample,
+                    viewer_validator_id=viewer_validator_id,
+                )
             )
             work_item_fields = projection_to_worklist_fields(projection)
             items.append(

@@ -15,6 +15,7 @@ from app.domains.lab.quality.schemas import (
     NotifyRequest,
 )
 from app.domains.lab.results.flags import ResultFlag
+from app.domains.lab.results.numeric import parse_numeric_result_value
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
 from app.shared.errors import LabOperationError
@@ -177,31 +178,49 @@ class CriticalNotificationService:
             results.append(self._to_response(test, order))
         return results
 
+    _CRITICAL_STATUS_WIRES = frozenset(
+        {
+            ResultStatus.CRITICAL.value,
+            ResultStatus.CRITICAL_HIGH.value,
+            ResultStatus.CRITICAL_LOW.value,
+        }
+    )
+
     @staticmethod
     def _parse_critical_flags(test: OrderTest) -> list[ResultFlag]:
-        critical_flags = []
+        """Parse stored ``analyte:status`` flags; ignore DELTA and non-critical rows."""
+        critical_flags: list[ResultFlag] = []
         if not test.flags:
             return critical_flags
+        stored_results = test.results or {}
         for flag_str in test.flags:
-            parts = flag_str.split(":")
-            if len(parts) >= 2:
-                critical_flags.append(
-                    ResultFlag(
-                        analyte_code=parts[0],
-                        analyte_name=parts[0],
-                        value=float(parts[2]) if len(parts) > 2 else 0,
-                        status=(
-                            ResultStatus(parts[1])
-                            if parts[1] in [s.value for s in ResultStatus]
-                            else ResultStatus.CRITICAL
-                        ),
-                        reference_low=None,
-                        reference_high=None,
-                        critical_low=None,
-                        critical_high=None,
-                        unit=None,
-                    )
+            if not flag_str or flag_str.startswith("DELTA:"):
+                continue
+            if ":" not in flag_str:
+                continue
+            analyte_code, status_wire = flag_str.split(":", 1)
+            if status_wire not in CriticalNotificationService._CRITICAL_STATUS_WIRES:
+                continue
+            try:
+                flag_status = ResultStatus(status_wire)
+            except ValueError:
+                flag_status = ResultStatus.CRITICAL
+            raw = stored_results.get(analyte_code)
+            numeric = parse_numeric_result_value(raw) if raw is not None else None
+            unit = raw.get("unit") if isinstance(raw, dict) else None
+            critical_flags.append(
+                ResultFlag(
+                    analyte_code=analyte_code,
+                    analyte_name=analyte_code,
+                    value=numeric if numeric is not None else 0.0,
+                    status=flag_status,
+                    reference_low=None,
+                    reference_high=None,
+                    critical_low=None,
+                    critical_high=None,
+                    unit=unit,
                 )
+            )
         return critical_flags
 
     def notify(self, test_id: int, request: NotifyRequest, user_id: str) -> dict:

@@ -43,6 +43,7 @@ class LabWorkItemContext:
     sample: Sample | None = None
     linked_order_tests: list[OrderTest] = field(default_factory=list)
     escalation_reason_code: str | None = None
+    viewer_validator_id: str | None = None
 
 
 def _attention_label(reason: str | None) -> str | None:
@@ -189,7 +190,10 @@ def project_order_test_validation(ctx: LabWorkItemContext) -> LabWorkItemProject
         sample_status=_sample_status_value(ctx.sample),
         escalation_reason_code=ctx.escalation_reason_code,
     )
-    allowed, deny_reason = action_flags_for_validation(order_test=order_test)
+    allowed, deny_reason = action_flags_for_validation(
+        order_test=order_test,
+        validator_id=ctx.viewer_validator_id,
+    )
     validate_allowed = bool(allowed.get("validate"))
     effective_deny = effective_deny_reason(
         deny_reason=deny_reason,

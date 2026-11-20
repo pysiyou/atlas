@@ -4,9 +4,12 @@ HL7 Message Parser
 Parses HL7 v2.x messages (specifically ORU - Observation Result)
 from laboratory analyzers.
 """
+import logging
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -186,6 +189,7 @@ class HL7Parser:
                 status=status,
             )
         except Exception:
+            logger.warning("Failed to parse OBX segment", exc_info=True)
             return None
 
     def _get_segment(self, segment_type: str) -> list[str] | None:

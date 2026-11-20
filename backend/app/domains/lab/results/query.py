@@ -22,9 +22,10 @@ class ResultQueryService:
             }
         )
 
-    def get_order_test_context(self, order_test_id: int):
+    def get_order_test_context(
+        self, order_test_id: int, *, viewer_validator_id: str | None = None
+    ):
         from app.domains.lab.quality.models import EscalationTicket
-        from app.domains.lab.rules.loader import lab_projections_for_order
         from app.domains.lab.specimen.models import Sample
         from app.domains.orders.models import Order, OrderTest
         from app.shared.generated.enums import EscalationTicketStatus
@@ -69,7 +70,24 @@ class ResultQueryService:
         item = self._enrich_order_test(order_test, samples_by_id, tickets_by_test)
         projection = None
         if order_test.order is not None:
-            projection = lab_projections_for_order(self.db, order_test.order).get(order_test.id)
+            from app.domains.lab.rules.projection import (
+                LabWorkItemContext,
+                project_order_test_pipeline,
+            )
+
+            sample = samples_by_id.get(order_test.sampleId) if order_test.sampleId else None
+            ctx = LabWorkItemContext(
+                order=order_test.order,
+                order_test=order_test,
+                sample=sample,
+                viewer_validator_id=viewer_validator_id,
+                escalation_reason_code=(
+                    open_ticket.reasonCode.value
+                    if open_ticket and open_ticket.reasonCode
+                    else None
+                ),
+            )
+            projection = project_order_test_pipeline(ctx)
         return self._with_lab_projection(item, projection)
 
     def _prior_test_display(self, order_test, samples_by_id) -> str | None:

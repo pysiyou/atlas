@@ -31,7 +31,6 @@ from app.domains.payments.schemas import PaymentResponse
 from app.domains.payments.service import enrich_payment, sync_order_payment_status
 from app.domains.referent_doctors.service import ReferentDoctorService
 from app.platform.cache import invalidate_lab_board_summary_cache
-from app.platform.http import get_or_404
 from app.shared.api import create_paginated_response, skip_to_page
 from app.shared.clinical import (
     allocate_filler_number,
@@ -561,14 +560,22 @@ class OrderService:
             return OrderDetailResponse(**detail)
         return self._order_response_with_lab(order)
 
-    def mark_as_reported(self, order_id: str, user_id: str) -> OrderReportResponse:
-        order = get_or_404(self.db, Order, order_id, "orderId")
+    def record_reporting_generated(self, order_id: str, user_id: str) -> None:
+        """Emit reporting audit when order is complete; caller owns commit."""
+        from app.shared.errors import LabOperationError
+
+        order = self.db.query(Order).filter(Order.orderId == order_id).first()
+        if not order:
+            raise LabOperationError(f"Order {order_id} not found", status_code=404)
         if order.overallStatus != OrderStatus.COMPLETED:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Order must be COMPLETED before reporting. Current status: {order.overallStatus}",
+            raise LabOperationError(
+                f"Order must be COMPLETED before reporting. Current status: {order.overallStatus}",
+                status_code=400,
             )
         self.emitter.reporting_generated(order_id, user_id)
+
+    def mark_as_reported(self, order_id: str, user_id: str) -> OrderReportResponse:
+        self.record_reporting_generated(order_id, user_id)
         self.db.commit()
         return OrderReportResponse(
             orderId=order_id, status="completed", message="Order is complete"

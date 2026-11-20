@@ -27,7 +27,9 @@ def get_order_test_context(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return ResultQueryService(db).get_order_test_context(orderTestId)
+    return ResultQueryService(db).get_order_test_context(
+        orderTestId, viewer_validator_id=current_user.id
+    )
 
 
 @router.post("/results/order-tests/{orderTestId}")
