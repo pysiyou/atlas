@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    ATLAS DESIGN SYSTEM - SEMANTIC TOKENS (LIGHT MODE)
-   Tokens with meaning. Default light theme (studio-light).
+   Tokens with meaning. Base layer for all light palettes; studio-light overrides.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
