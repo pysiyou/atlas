@@ -692,7 +692,10 @@ class OrderService:
             self._resolve_referent_doctor_id(update_data["referentDoctorId"])
 
         if tests_to_update is not None:
-            existing_test_codes = {ot.testCode for ot in order.tests}
+            inactive = {TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED}
+            existing_test_codes = {
+                ot.testCode for ot in order.tests if ot.status not in inactive
+            }
             new_test_codes = {t["testCode"] for t in tests_to_update}
             omitted_codes = existing_test_codes - new_test_codes
             tests_to_add = new_test_codes - existing_test_codes
@@ -774,7 +777,9 @@ class OrderService:
                 synchronize_session="fetch",
             )
 
+        apply_order_status_rollup(self.db, order_id)
         self.db.commit()
+        invalidate_lab_board_summary_cache()
         self.db.refresh(order)
         order = self._order_with_relations(order.orderId)
         workflow_ok("orders", action="update_order", order_id=order_id)

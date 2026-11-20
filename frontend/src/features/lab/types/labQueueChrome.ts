@@ -45,6 +45,7 @@ export interface LabOrderTestQueueRow {
   sampleIsRecollection?: boolean;
   sampleRecollectionAttempt?: number | null;
   sampleOriginalSampleId?: string | null;
+  sampleRecollectionSampleId?: string | null;
   hasCriticalValues?: boolean;
   flags?: string[] | null;
   results?: Record<string, unknown> | null;
@@ -198,6 +199,10 @@ export function labModalWorkItemFromOrder(
     sampleOriginalSampleId: activeSample?.originalSampleId,
     sampleRecollectionReason: activeSample?.recollectionReason,
     sampleRecollectionAttempt: activeSample?.recollectionAttempt,
+    sampleRecollectionSampleId:
+      activeSample && 'recollectionSampleId' in activeSample
+        ? activeSample.recollectionSampleId
+        : undefined,
     priority: order.priority,
     status: orderTest.status,
     orderDate: order.orderDate,
@@ -236,11 +241,13 @@ export function mergeLabModalWorkItem(
   }
   return {
     ...base,
-    denyReason: base.denyReason ?? overlay.denyReason,
-    denyMessage: base.denyMessage ?? overlay.denyMessage,
-    lab: base.lab ?? overlay.lab,
-    statusPresentation: base.statusPresentation ?? overlay.statusPresentation ?? undefined,
-    allowedActions: base.allowedActions ?? overlay.allowedActions,
+    ...overlay,
+    denyReason: overlay.denyReason ?? base.denyReason,
+    denyMessage: overlay.denyMessage ?? base.denyMessage,
+    lab: overlay.lab ?? base.lab,
+    statusPresentation: overlay.statusPresentation ?? base.statusPresentation ?? undefined,
+    allowedActions: overlay.allowedActions ?? base.allowedActions,
+    hasCriticalValues: overlay.hasCriticalValues ?? base.hasCriticalValues,
   };
 }
 

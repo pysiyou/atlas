@@ -30,7 +30,7 @@ class Hl7ObservationRow:
 class HL7AnalyzerResult:
     """Represents parsed results from an HL7 ORU message"""
 
-    message_id: str
+    message_id: str | None
     patient_id: str | None = None
     specimen_id: str | None = None
     test_code: str | None = None
@@ -211,12 +211,15 @@ class HL7Parser:
 
         return field_value
 
-    def _get_message_id(self) -> str:
-        """Get the message control ID from MSH-10"""
+    def _get_message_id(self) -> str | None:
+        """Get the message control ID from MSH-10. Missing MSH-10 must not claim a global key."""
         msh = self._get_segment("MSH")
-        if msh:
-            return self._get_field(msh, 9) or "unknown"
-        return "unknown"
+        if not msh:
+            return None
+        value = self._get_field(msh, 9)
+        if not value or value.strip().lower() == "unknown":
+            return None
+        return value.strip()
 
     def _parse_datetime(self, dt_str: str) -> datetime | None:
         """Parse HL7 datetime format (YYYYMMDDHHMMSS)"""
@@ -257,6 +260,9 @@ class AnalyzerResultAdapter:
         test_code = self._test_code or analyzer_result.test_code
 
         for result_item in analyzer_result.results:
+            status = (result_item.status or "F").strip().upper()
+            if status == "P":
+                continue
             analyte_code: str | None = None
             if self._resolver is not None and test_code:
                 analyte_code = self._resolver.resolve_to_analyte_code(

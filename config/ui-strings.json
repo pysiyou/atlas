@@ -300,6 +300,13 @@
       "printSampleLabel": "Print Sample Label",
       "viewDetails": "View Details",
       "referenceInterval": "Reference interval"
+    },
+    "activity": {
+      "panelTitle": "Analyzer activity",
+      "markAllRead": "Mark all read",
+      "viewEventLog": "Open event log",
+      "openValidation": "Open validation",
+      "viewOrder": "View order"
     }
   },
   "nav": {

@@ -2,7 +2,7 @@
  * ResultValidationQueue — approve, reject (retest/recollect/cancel), or confirm criticals.
  */
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   LabWorkflowQueueMultiSectionLayout,
   QueueListPlaceholder,
@@ -26,7 +26,7 @@ import { useBreakpoint, isBreakpointAtMost } from '@/hooks';
 import type { ValidationQueueRow } from '../types/queues';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
-import { orderTestKey } from '../utils/labSearchAndLinks';
+import { filterLiveOrderTestQueueRows, orderTestKey } from '../utils/labSearchAndLinks';
 import { ResultValidationQueueView } from './ResultValidationQueueView';
 
 function getCommentKey(row: ValidationQueueRow) {
@@ -41,6 +41,7 @@ export function ResultValidationQueue() {
   const {
     validationRows,
     isLoading: dataLoading,
+    isFetching: dataFetching,
     isError: worklistError,
     error: worklistQueryError,
     refetch: refetchWorklist,
@@ -82,15 +83,25 @@ export function ResultValidationQueue() {
     [bar],
   );
 
+  const [dismissedIds, setDismissedIds] = useState<Set<number>>(() => new Set());
+
+  const liveValidationRows = useMemo(
+    () =>
+      filterLiveOrderTestQueueRows(validationRows).filter(
+        row => !dismissedIds.has(row.orderTestId)
+      ),
+    [validationRows, dismissedIds]
+  );
+
   const filteredValidationRows = useMemo(
     () =>
       applyLabQueueFiltersWithProfile(
-        validationRows,
+        liveValidationRows,
         filterState,
         bar,
         VALIDATION_REVIEW_WORKLIST_PROFILE,
       ),
-    [validationRows, filterState, bar],
+    [liveValidationRows, filterState, bar],
   );
 
   const hasNoWorklistData = validationRows.length === 0;
@@ -114,13 +125,16 @@ export function ResultValidationQueue() {
             validationRows={filteredValidationRows}
             comments={comments}
             pendingValidateKey={pendingValidateKey}
-            isValidatePending={validateMutation.isPending}
+            isValidatePending={validateMutation.isPending || dataFetching}
             getCommentKey={getCommentKey}
             onCommentsChange={handleCommentsChange}
             onApprove={(testId, orderId, criticalSeen) =>
               handleValidate(testId, orderId, true, undefined, criticalSeen)
             }
-            onReject={(row, result) => handleValidate(row.orderTestId, row.orderId, false, result)}
+            onReject={(row, result) => {
+              setDismissedIds(prev => new Set(prev).add(row.orderTestId));
+              void handleValidate(row.orderTestId, row.orderId, false, result);
+            }}
             onOpenValidation={openValidationModal}
           />
         )}

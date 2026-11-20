@@ -33,7 +33,7 @@ import {
   resolveTestDetailQueueSince,
   type TestDetailHeaderVariant,
 } from '../shared/testDetailHeader';
-import { labModalFooterDenyMessage } from '../../utils/queueDisplay';
+import { isLabActionAllowed, isTerminalTestStatus, labModalFooterDenyMessage } from '../../utils/queueDisplay';
 import { useLabCopy } from '@/strings';
 
 /** Left-column identity chrome for the test-detail modal header. */
@@ -131,7 +131,13 @@ export function TestDetailModalFooter({
   const navigate = useNavigate();
 
   if (isValidate) {
-    const approveDisabled = !hasResults || (hasCriticalValues && !criticalSeen);
+    const allowedActions =
+      orderTest?.lab?.allowedActions ?? displayWorkItem?.allowedActions;
+    const isTerminal = isTerminalTestStatus(orderTest?.status ?? displayWorkItem?.status);
+    const canValidate = isLabActionAllowed(allowedActions, 'validate') && !isTerminal;
+    const canReject = isLabActionAllowed(allowedActions, 'reject') && !isTerminal;
+    const liveOrderTestId = orderTest?.retestOrderTestId ?? orderTestId;
+    const approveDisabled = !canValidate || !hasResults || (hasCriticalValues && !criticalSeen);
     return (
       <ModalFooter>
         {hasCriticalValues && onCriticalSeenChange ? (
@@ -139,16 +145,22 @@ export function TestDetailModalFooter({
             id={`critical-seen-modal-${orderTestId}`}
             checked={criticalSeen}
             onChange={onCriticalSeenChange}
-            disabled={isApproving}
+            disabled={isApproving || !canValidate}
           />
         ) : null}
         <QualityIssuePopover
-          orderTestId={orderTestId}
+          orderTestId={liveOrderTestId}
           testCode={displayWorkItem?.testCode ?? orderTest?.testCode ?? ''}
           testName={displayWorkItem?.testName ?? orderTest?.testName ?? testDisplayName}
           patientName={patientName}
+          disabled={!canReject}
           trigger={
-            <Button {...actionButtonPreset('reject')} size="sm" layout="icon-text">
+            <Button
+              {...actionButtonPreset('reject')}
+              size="sm"
+              layout="icon-text"
+              disabled={!canReject}
+            >
               Reject
             </Button>
           }
@@ -244,6 +256,7 @@ export function TestDetailModalBody({
           <SampleRejectedBanner
             sampleId={sampleRejection.sampleId}
             sampleRejectionReason={sampleRejection.sampleRejectionReason}
+            successorSampleId={sampleRejection.successorSampleId}
           />
         </div>
       ) : null}
@@ -262,7 +275,13 @@ export function TestDetailModalBody({
           onApprove={isValidate ? onApprove : () => {}}
           readOnly={!isValidate}
           enableApproveShortcut={
-            isValidate && (!orderTest.hasCriticalValues || criticalSeen)
+            isValidate &&
+            isLabActionAllowed(
+              orderTest.lab?.allowedActions ?? undefined,
+              'validate'
+            ) &&
+            !isTerminalTestStatus(orderTest.status) &&
+            (!orderTest.hasCriticalValues || criticalSeen)
           }
         />
       ) : (

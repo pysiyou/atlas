@@ -261,6 +261,8 @@ export function SampleCollectionDetailFooter({
           </Button>
         ) : null}
         <SampleLabelPrintButton sample={sample} patientName={patientName} eventAt={collectedAt} />
+        {isLabActionAllowed(pendingSampleDisplay?.allowedActions, 'reject') &&
+        !sample.recollectionSampleId ? (
         <SampleRejectionPopover
           sampleId={sample.sampleId}
           testCodes={sample.testCodes ?? []}
@@ -277,6 +279,7 @@ export function SampleCollectionDetailFooter({
             </Button>
           }
         />
+        ) : null}
       </div>
     );
   }

@@ -86,7 +86,10 @@ export function SampleCollectionQueue() {
           <SampleCollectionCard
             display={display}
             onCollect={handleCollect}
-            isCollecting={collectSampleMutation.isPending}
+            isCollecting={
+              collectSampleMutation.isPending &&
+              collectSampleMutation.variables?.sampleId === display.sample?.sampleId
+            }
             isMobile={isMobile}
             tests={catalogTests}
           />

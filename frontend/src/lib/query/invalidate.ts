@@ -189,8 +189,7 @@ export function invalidateQualityIssueQueries(client: QueryClient): Promise<void
 export function invalidateCollectionQueries(client: QueryClient): Promise<void> {
   return settleInvalidations([
     client.invalidateQueries({ queryKey: queryKeys.samples.all }),
-    client.invalidateQueries({ queryKey: queryKeys.orders.lists() }),
-    client.invalidateQueries({ queryKey: [...queryKeys.orders.all, 'paginated'] }),
+    client.invalidateQueries({ queryKey: queryKeys.orders.all }),
     invalidateWorklistQueries(client),
     invalidateAuditEventQueries(client),
   ]);
@@ -215,6 +214,8 @@ export interface InvalidateAfterLabMutationOptions {
   kind: LabMutationInvalidationKind;
   orderId?: string;
   orderTestId?: number;
+  createdTestId?: number;
+  createdSampleId?: string;
 }
 
 /** Single entry point for lab workflow mutations — encodes worklist/monitor/order refresh matrix. */
@@ -222,7 +223,7 @@ export function invalidateAfterLabMutation(
   client: QueryClient,
   options: InvalidateAfterLabMutationOptions
 ): Promise<void> {
-  const { kind, orderId, orderTestId } = options;
+  const { kind, orderId, orderTestId, createdTestId, createdSampleId } = options;
 
   switch (kind) {
     case 'enterResults':
@@ -239,19 +240,37 @@ export function invalidateAfterLabMutation(
         samples: true,
         pendingEscalation: true,
       });
-    case 'qualityIssue':
-      if (orderId != null || orderTestId != null) {
-        return settleInvalidations([
-          invalidateQualityIssueQueries(client),
-          invalidateResultQueries(client, {
-            orderId,
-            orderTestId,
-            samples: true,
-            pendingEscalation: true,
-          }),
-        ]);
-      }
-      return invalidateQualityIssueQueries(client);
+    case 'qualityIssue': {
+      const resultIds = [orderTestId, createdTestId].filter(
+        (id): id is number => id != null
+      );
+      const uniqueResultIds = [...new Set(resultIds)];
+      const resultTasks =
+        uniqueResultIds.length > 0
+          ? uniqueResultIds.map(id =>
+              invalidateResultQueries(client, {
+                orderId,
+                orderTestId: id,
+                samples: true,
+                pendingEscalation: true,
+              })
+            )
+          : [
+              invalidateResultQueries(client, {
+                orderId,
+                samples: true,
+                pendingEscalation: true,
+              }),
+            ];
+      return settleInvalidations([
+        invalidateQualityIssueQueries(client),
+        client.invalidateQueries({ queryKey: queryKeys.results.all }),
+        createdSampleId
+          ? client.invalidateQueries({ queryKey: queryKeys.samples.byId(createdSampleId) })
+          : Promise.resolve(),
+        ...resultTasks,
+      ]);
+    }
     case 'criticalValue':
       return settleInvalidations([
         invalidateCriticalValueQueries(client, { orderId }),

@@ -168,6 +168,8 @@ function createWorklistQueryHook<TItem>(
         ? { ...pagination, page, pageSize, total: pagination.total }
         : { page, pageSize, total: 0, totalPages: 0, hasNext: false, hasPrev: false },
       isLoading: query.isLoading,
+      isFetching: query.isFetching,
+      isPlaceholderData: query.isPlaceholderData,
       isError: query.isError,
       error: query.error,
       refetch: query.refetch,

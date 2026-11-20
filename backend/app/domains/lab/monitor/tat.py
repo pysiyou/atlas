@@ -311,6 +311,9 @@ def assemble_board(
 
     for row in collection_rows:
         since = row.get("order_date")
+        if row.get("is_recollection"):
+            since = row.get("sample_created_at") or since
+            blockers["recollectionWaiting"] += 1
         priority = _priority_value(row.get("priority"))
         tat = row.get("turnaround_hours") or 24
         hours, status, _ = track_wait("collection", since, tat, priority)

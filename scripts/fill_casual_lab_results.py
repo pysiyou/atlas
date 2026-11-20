@@ -35,13 +35,18 @@ if str(BACKEND) not in sys.path:
 
 import app.domains.registry  # noqa: E402,F401 — register ORM models
 from app.domains.catalog.service import analyte_definitions_for_test  # noqa: E402
+from app.domains.lab.rules.state_machines import TestStateMachine  # noqa: E402
 from app.domains.lab.workflow.constants import ANALYZER_USER_ID  # noqa: E402
 from app.domains.lab.workflow.operations import LabOperationsService  # noqa: E402
 from app.domains.orders.models import Order, OrderTest  # noqa: E402
 from app.domains.patients.models import Patient  # noqa: E402
+from app.domains.lab.specimen.lookup import (
+    find_enterable_order_test,
+    latest_order_test_on_sample_chain,
+)
 from app.domains.lab.specimen.models import Sample  # noqa: E402
 from app.shared.errors import LabOperationError  # noqa: E402
-from app.shared.generated.enums import Gender, TestStatus  # noqa: E402
+from app.shared.generated.enums import Gender  # noqa: E402
 from app.shared.ranges import band_low_high, resolve_reference_band  # noqa: E402
 from app.platform.database import SessionLocal  # noqa: E402
 
@@ -316,68 +321,131 @@ GENERATORS: dict[str, TestGenerator] = {
 # ---------------------------------------------------------------------------
 
 
-def resolve_order_test(
+@dataclass
+class ResolveWorkContext:
+    """Resolved DB rows plus eligibility for result entry."""
+
+    sample: Sample | None
+    order: Order | None
+    order_test: OrderTest | None
+    warnings: list[str]
+
+    @property
+    def can_enter_results(self) -> bool:
+        if not self.order_test:
+            return False
+        ok, _reason = TestStateMachine.can_enter_results(self.order_test.status)
+        return ok
+
+
+def resolve_work_context(
     db,
     *,
     sample_id: str,
     test_code: str,
     patient_id: str,
-) -> tuple[Sample, Order, OrderTest]:
+    strict_eligibility: bool,
+) -> ResolveWorkContext:
+    """
+    Resolve sample / order / order-test line.
+
+    When ``strict_eligibility`` is False (dry-run), always returns the best-matching
+    order test if any exists and records warnings instead of exiting.
+    """
+    warnings: list[str] = []
     sample = db.query(Sample).filter(Sample.sampleId == sample_id).first()
     if not sample:
-        raise SystemExit(f"Sample not found: {sample_id}")
+        warnings.append(f"Sample not found: {sample_id}")
+        return ResolveWorkContext(sample=None, order=None, order_test=None, warnings=warnings)
 
     order = db.query(Order).filter(Order.orderId == sample.orderId).first()
     if not order:
-        raise SystemExit(f"Order not found for sample {sample_id}")
+        warnings.append(f"Order not found for sample {sample_id}")
+        return ResolveWorkContext(sample=sample, order=None, order_test=None, warnings=warnings)
+
     if order.patientId != patient_id:
-        raise SystemExit(
+        warnings.append(
             f"Patient mismatch: sample order belongs to {order.patientId}, not {patient_id}"
         )
 
-    order_test = (
-        db.query(OrderTest)
-        .filter(
-            OrderTest.orderId == sample.orderId,
-            OrderTest.testCode == test_code.upper(),
-            OrderTest.sampleId == sample_id,
-            OrderTest.status == TestStatus.SAMPLE_COLLECTED,
+    code = test_code.upper()
+    order_test = find_enterable_order_test(db, sample, code)
+    if order_test and order_test.sampleId and order_test.sampleId != sample_id:
+        successor = db.query(Sample).filter(Sample.sampleId == order_test.sampleId).first()
+        warnings.append(
+            f"Sample {sample_id} {code} lineage is superseded; using recollection "
+            f"sample {order_test.sampleId} (orderTestId={order_test.id})."
         )
-        .order_by(OrderTest.id.desc())
-        .first()
+        if successor:
+            sample = successor
+    if not order_test:
+        order_test = latest_order_test_on_sample_chain(db, sample, code)
+        if not order_test:
+            order_test = (
+                db.query(OrderTest)
+                .filter(
+                    OrderTest.orderId == sample.orderId,
+                    OrderTest.testCode == code,
+                )
+                .order_by(OrderTest.id.desc())
+                .first()
+            )
+            if order_test:
+                warnings.append(
+                    f"Order test {code} exists on order {order.orderId} but is not linked to "
+                    f"sample {sample_id} (using orderTestId={order_test.id})."
+                )
+            else:
+                warnings.append(
+                    f"No order test '{code}' on order {order.orderId} for sample {sample_id}."
+                )
+
+    ctx = ResolveWorkContext(
+        sample=sample, order=order, order_test=order_test, warnings=warnings
     )
     if order_test:
-        return sample, order, order_test
+        can_enter, reason = TestStateMachine.can_enter_results(order_test.status)
+        if not can_enter:
+            msg = (
+                f"Order test {code} (id={order_test.id}) is status "
+                f"'{order_test.status.value}' — cannot enter results"
+            )
+            if reason:
+                msg += f": {reason}"
+            warnings.append(msg)
+            if strict_eligibility:
+                raise SystemExit(msg)
 
-    any_line = (
-        db.query(OrderTest)
-        .filter(
-            OrderTest.orderId == sample.orderId,
-            OrderTest.testCode == test_code.upper(),
-            OrderTest.sampleId == sample_id,
-        )
-        .order_by(OrderTest.id.desc())
-        .first()
-    )
-    if any_line:
-        raise SystemExit(
-            f"Order test {test_code} on sample {sample_id} is status "
-            f"'{any_line.status.value}' (need 'sample-collected' to enter results)."
-        )
+    if strict_eligibility and not order_test:
+        detail = warnings[-1] if warnings else f"No eligible order test for {code}."
+        raise SystemExit(detail)
 
-    raise SystemExit(
-        f"No order test '{test_code}' linked to sample {sample_id} for patient {patient_id}."
-    )
+    return ctx
 
 
-def load_patient_context(db, patient_id: str) -> PatientContext:
+def load_patient_context(
+    db,
+    patient_id: str,
+    *,
+    allow_missing: bool = False,
+) -> tuple[PatientContext, list[str]]:
+    warnings: list[str] = []
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if not patient:
+        if allow_missing:
+            warnings.append(f"Patient not found: {patient_id} (using generic reference bands).")
+            return (
+                PatientContext(patient_id=patient_id, gender=None, age_years=None),
+                warnings,
+            )
         raise SystemExit(f"Patient not found: {patient_id}")
-    return PatientContext(
-        patient_id=patient_id,
-        gender=patient_gender_str(patient),
-        age_years=patient_age_years(patient.dateOfBirth),
+    return (
+        PatientContext(
+            patient_id=patient_id,
+            gender=patient_gender_str(patient),
+            age_years=patient_age_years(patient.dateOfBirth),
+        ),
+        warnings,
     )
 
 
@@ -418,7 +486,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Print generated results JSON only; do not commit",
+        help="Print preview JSON (generated results + warnings); never writes to DB",
     )
     parser.add_argument(
         "--list-supported",
@@ -442,15 +510,42 @@ def main(argv: list[str] | None = None) -> int:
 
     db = SessionLocal()
     try:
-        sample, order, order_test = resolve_order_test(
+        work = resolve_work_context(
             db,
             sample_id=args.sample_id.strip(),
             test_code=test_code,
             patient_id=args.patient_id.strip(),
+            strict_eligibility=not args.dry_run,
         )
-        ctx = load_patient_context(db, args.patient_id.strip())
+        ctx, patient_warnings = load_patient_context(
+            db,
+            args.patient_id.strip(),
+            allow_missing=args.dry_run,
+        )
+        preview_warnings = list(work.warnings) + patient_warnings
+
         definitions = analyte_definitions_for_test(db, test_code)
         if not definitions:
+            if args.dry_run:
+                preview_warnings.append(
+                    f"Test {test_code} has no analytes in DB catalog "
+                    "(sync orderable tests / analytes)."
+                )
+                print(
+                    json.dumps(
+                        {
+                            "dryRun": True,
+                            "canEnterResults": False,
+                            "warnings": preview_warnings,
+                            "sampleId": args.sample_id.strip(),
+                            "patientId": args.patient_id.strip(),
+                            "testCode": test_code,
+                            "results": None,
+                        },
+                        indent=2,
+                    )
+                )
+                return 0
             raise SystemExit(
                 f"Test {test_code} has no analytes in DB catalog "
                 "(sync orderable tests / analytes)."
@@ -458,11 +553,19 @@ def main(argv: list[str] | None = None) -> int:
 
         results = generate_results_for_test(test_code, definitions, ctx, rng)
 
-        payload = {
-            "orderTestId": order_test.id,
-            "orderId": order.orderId,
-            "sampleId": sample.sampleId,
-            "patientId": order.patientId,
+        order_test = work.order_test
+        order = work.order
+        sample = work.sample
+
+        payload: dict[str, Any] = {
+            "dryRun": args.dry_run,
+            "canEnterResults": work.can_enter_results,
+            "warnings": preview_warnings,
+            "orderTestId": order_test.id if order_test else None,
+            "orderTestStatus": order_test.status.value if order_test else None,
+            "orderId": order.orderId if order else None,
+            "sampleId": sample.sampleId if sample else args.sample_id.strip(),
+            "patientId": order.patientId if order else args.patient_id.strip(),
             "testCode": test_code,
             "patientContext": {
                 "gender": ctx.gender,
@@ -474,6 +577,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.dry_run:
             print(json.dumps(payload, indent=2))
             return 0
+
+        if not work.can_enter_results or not order_test:
+            detail = preview_warnings[-1] if preview_warnings else "Cannot enter results."
+            raise SystemExit(detail)
 
         service = LabOperationsService(db)
         try:

@@ -51,11 +51,17 @@ const COLLECTION_FILTER_CONFIG: LabQueueStageFilterConfig<SampleCollectionQueueI
     searchFilterFn: (item, query) => {
       const sampleId = item.sample?.sampleId;
       const orderId = item.orderId;
+      const originalSampleId = item.sample?.originalSampleId;
+      const recollectionSampleId =
+        item.sample && 'recollectionSampleId' in item.sample
+          ? item.sample.recollectionSampleId
+          : undefined;
+      const ids = { sampleId, orderId, originalSampleId, recollectionSampleId };
       const textFields = labQueueSearchTextFields(
-        { sampleId, orderId },
+        ids,
         [item.patientName || '', ...(item.requirement?.testCodes || [])].filter(Boolean) as string[],
       );
-      return matchLabQueueSearchQuery({ sampleId, orderId }, textFields, query);
+      return matchLabQueueSearchQuery(ids, textFields, query);
     },
   },
   defaultStatuses: ['pending'],

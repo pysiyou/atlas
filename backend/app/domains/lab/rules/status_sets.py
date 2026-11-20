@@ -29,13 +29,20 @@ COLLECTION_WORKLIST_LINKED_EXCLUDE: tuple[TestStatus, ...] = (
     TestStatus.CANCELLED,
 )
 
-# Tests ignored when validating collection transitions (not cancelled — handled separately).
+# Tests ignored when validating collection transitions.
 COLLECTION_TRANSITION_SKIP_STATUSES: frozenset[TestStatus] = frozenset(
     {
         TestStatus.SUPERSEDED,
         TestStatus.REMOVED,
         TestStatus.VALIDATED,
+        TestStatus.CANCELLED,
     }
+)
+
+# generate_samples_for_order: do not group cancelled/lineage-inactive tests onto a new tube.
+GENERATE_SAMPLES_EXCLUDE_STATUSES: tuple[TestStatus, ...] = (
+    *INACTIVE_LINEAGE_STATUSES,
+    TestStatus.CANCELLED,
 )
 
 # Monitor board: hide inactive lineage plus cancelled tests.

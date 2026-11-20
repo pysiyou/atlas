@@ -78,15 +78,17 @@ export function useTestDetailModalActions({
   });
 
   const handleReject = useCallback(
-    (_result: QualityIssueResult) => {
+    (result: QualityIssueResult) => {
       // Toast is already shown by useSubmitQualityIssue; close the modal first so the
       // full-screen scrim does not sit under the toast and swallow sidebar / route clicks.
       clearValidationComments(orderTestId);
       onClose();
       void invalidateAfterLabMutation(queryClient, {
         kind: 'qualityIssue',
-        orderId,
-        orderTestId,
+        orderId: result.orderId ?? orderId,
+        orderTestId: result.orderTestId ?? orderTestId,
+        createdTestId: result.createdTestId,
+        createdSampleId: result.createdSampleId,
       });
     },
     [orderId, queryClient, clearValidationComments, orderTestId, onClose]

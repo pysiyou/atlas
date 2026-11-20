@@ -49,6 +49,32 @@ export const orderTestSchema = z.object({
   retestOfTestId: z.number().int().positive().nullable().optional(), // Backend returns null
   retestNumber: z.number().int().nonnegative().optional(), // Backend returns 0 for original, allow 0
   retestOrderTestId: z.number().int().positive().nullable().optional(),
+  hasCriticalValues: z.boolean().optional(),
+  criticalNotificationSent: z.boolean().optional(),
+  criticalNotifiedAt: nullableApiDatetimeSchema,
+  criticalNotifiedTo: z.string().nullable().optional(),
+  criticalAcknowledgedAt: nullableApiDatetimeSchema,
+  lab: z
+    .object({
+      pipelineStage: z.enum(['collection', 'entry', 'validation', 'completed', 'cancelled']),
+      attentionReason: z.string().nullable().optional(),
+      attentionLabel: z.string().nullable().optional(),
+      denyReason: z.string().nullable().optional(),
+      denyMessage: z.string().nullable().optional(),
+      allowedActions: z
+        .object({
+          collect: z.boolean().optional(),
+          enterResults: z.boolean().optional(),
+          validate: z.boolean().optional(),
+          reject: z.boolean().optional(),
+        })
+        .optional(),
+      statusPresentation: z.unknown().nullable().optional(),
+      escalation: z.unknown().nullable().optional(),
+    })
+    .passthrough()
+    .nullable()
+    .optional(),
   createdAt: dateStringSchema,
   updatedAt: dateStringSchema,
 });

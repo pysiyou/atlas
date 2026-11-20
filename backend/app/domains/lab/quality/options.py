@@ -53,12 +53,16 @@ def collect_chain_test_ids(db: Session, order_test: OrderTest) -> set[int]:
 
 
 def count_retests_in_chain(db: Session, order_test: OrderTest) -> int:
-    """Count prior RETRY_SAME_SAMPLE quality issues across the retest chain."""
-    chain_ids = collect_chain_test_ids(db, order_test)
+    """Count RETRY_SAME_SAMPLE issues on the current tube.
+
+    Recollection is a new specimen — the analytical retry budget resets with sampleId.
+    """
+    if not order_test.sampleId:
+        return 0
     return (
         db.query(QualityIssue)
         .filter(
-            QualityIssue.orderTestId.in_(chain_ids),
+            QualityIssue.sampleId == order_test.sampleId,
             QualityIssue.remedy == RemedyType.RETRY_SAME_SAMPLE,
         )
         .count()
@@ -75,7 +79,11 @@ def sample_options(svc: QualityIssueService, sample_id: str) -> QualityIssueOpti
     )
     resulted = sum(1 for t in linked if t.status == TestStatus.RESULTED)
     validated = sum(1 for t in linked if t.status == TestStatus.VALIDATED)
-    unfinished = sum(1 for t in linked if t.status in SAMPLE_RESET_STATUSES)
+    unfinished = sum(
+        1
+        for t in linked
+        if t.status in SAMPLE_RESET_STATUSES or t.status == TestStatus.ESCALATED
+    )
     awaiting_recollection = sum(
         1 for t in linked if t.status == TestStatus.PENDING and t.sampleId == sample_id
     )
@@ -152,10 +160,13 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
     has_analytical = any(item.domain == "analytical" for item in criteria_items)
 
     allowed = list(validation_remedy_types())
-    if sample_rejected or retest_remaining <= 0:
+    if sample_rejected:
         allowed = [r for r in allowed if r != RemedyType.RETRY_SAME_SAMPLE]
-    if recollection_remaining <= 0 or not order_test.sampleId:
+    if not order_test.sampleId:
         allowed = [r for r in allowed if r != RemedyType.REQUEST_RECOLLECTION]
+    will_escalate = (not sample_rejected and retest_remaining <= 0) or (
+        bool(order_test.sampleId) and recollection_remaining <= 0
+    )
 
     if sample_rejected and RemedyType.REQUEST_RECOLLECTION in allowed:
         suggested = RemedyType.REQUEST_RECOLLECTION
@@ -174,9 +185,11 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
             "Linked sample is already rejected — retest on the same sample is not available."
         )
     if retest_remaining <= 0:
-        message_parts.append("Re-test limit reached — recollect or cancel.")
+        message_parts.append("Re-test limit reached — submitting retest escalates for supervisor approval.")
     if recollection_remaining <= 0:
-        message_parts.append("Recollection limit reached — retest or cancel.")
+        message_parts.append(
+            "Recollection limit reached — submitting recollection escalates for supervisor approval."
+        )
     if not message_parts:
         message_parts.append(
             "Choose retest on the same sample, recollection, or cancel this test."
@@ -195,7 +208,7 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
         retestAttemptsUsed=retest_used,
         retestAttemptsRemaining=retest_remaining,
         recollectionAttemptsRemaining=recollection_remaining,
-        willEscalate=False,
+        willEscalate=will_escalate,
         previewRemedy=suggested,
         previewMessage=" ".join(message_parts),
         hasSpecimenCriteria=has_specimen,

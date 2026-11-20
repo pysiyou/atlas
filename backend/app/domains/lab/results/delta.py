@@ -72,9 +72,8 @@ class DeltaCheckService:
             if current is None or prior is None:
                 continue
             if prior == 0:
-                pct = float("inf") if current != 0 else 0.0
-            else:
-                pct = abs((current - prior) / prior) * 100.0
+                continue
+            pct = abs((current - prior) / prior) * 100.0
             if pct >= delta_percent:
                 meta = prior_meta[analyte_code]
                 warnings.append(

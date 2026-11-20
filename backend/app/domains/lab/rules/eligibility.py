@@ -87,11 +87,6 @@ def _tests_must_transition_on_collect(order_tests: list[OrderTest]) -> tuple[boo
     for order_test in order_tests:
         if order_test.status in COLLECTION_TRANSITION_SKIP_STATUSES:
             continue
-        if order_test.status == TestStatus.CANCELLED:
-            return (
-                False,
-                f"Test {order_test.testCode} cannot be marked collected (status cancelled)",
-            )
         if TestStateMachine.can_transition(order_test.status, TestStatus.SAMPLE_COLLECTED):
             continue
         if order_test.status in (
@@ -159,10 +154,16 @@ def assert_can_collect(
         )
 
 
-def assert_can_enter_results(order_test: OrderTest) -> None:
+def assert_can_enter_results(order_test: OrderTest, sample: Sample | None = None) -> None:
     can_enter, reason = TestStateMachine.can_enter_results(order_test.status)
     if not can_enter:
         raise LabOperationError(reason, status_code=400, error_code="INVALID_TRANSITION")
+    if sample is None or sample.status != SampleStatus.COLLECTED:
+        raise LabOperationError(
+            "Sample must be collected before results can be entered",
+            status_code=400,
+            error_code="INVALID_TRANSITION",
+        )
 
 
 def assert_can_validate(order_test: OrderTest, validator_id: str | None = None) -> None:
@@ -224,12 +225,15 @@ def action_flags_for_collection(
 def action_flags_for_entry(
     *, order_test: OrderTest, sample: Sample | None = None
 ) -> tuple[WorklistAllowedActions, str | None]:
-    """Entry worklist actions — retest rows use the same rules as primary tests once collected."""
-    del sample
+    """Entry worklist actions — require a collected, non-rejected tube."""
     actions = _empty_actions()
     can_enter, _ = TestStateMachine.can_enter_results(order_test.status)
-    actions["enterResults"] = can_enter
-    return actions, None
+    sample_ok = sample is not None and sample.status == SampleStatus.COLLECTED
+    actions["enterResults"] = can_enter and sample_ok
+    attention = None
+    if sample is not None and sample.status == SampleStatus.REJECTED:
+        attention = "sample_rejected"
+    return actions, attention
 
 
 def action_flags_for_validation(

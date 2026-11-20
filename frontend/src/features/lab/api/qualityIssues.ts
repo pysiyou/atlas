@@ -53,6 +53,8 @@ export function useReportQualityIssue() {
         kind: 'qualityIssue',
         orderId: result.orderId,
         orderTestId: result.orderTestId,
+        createdTestId: result.createdTestId ?? undefined,
+        createdSampleId: result.createdSampleId ?? undefined,
       });
     },
   });

@@ -10,12 +10,14 @@ import { useLabCopy } from '@/strings';
 export interface SampleRejectedBannerProps {
   sampleId?: string | null;
   sampleRejectionReason?: string;
+  successorSampleId?: string | null;
   size?: 'default' | 'compact';
 }
 
 export function SampleRejectedBanner({
   sampleId,
   sampleRejectionReason,
+  successorSampleId,
   size = 'default',
 }: SampleRejectedBannerProps) {
   const labCopy = useLabCopy();
@@ -46,7 +48,23 @@ export function SampleRejectedBanner({
           className={`space-y-space-0-5 ${isCompact ? text({ role: 'caption' }) : text({ role: 'body' })} ${FG.captionMuted} leading-tight`}
         >
           <p>{quality.enteredBeforeRejection}</p>
-          <p className="font-medium">{quality.approveOrAction}</p>
+          {successorSampleId ? (
+            <p className="font-medium">
+              Recollection tube:{' '}
+              <RecordId
+                type="sample"
+                value={successorSampleId}
+                emphasis="inline"
+                navigateToFiltered={{
+                  targetPage: '/laboratory',
+                  filterKey: 'sampleId',
+                  labTab: 'collection',
+                }}
+              />
+            </p>
+          ) : (
+            <p className="font-medium">{quality.approveOrAction}</p>
+          )}
           <ul className="list-disc list-inside pl-space-2 space-y-space-0-5 mt-space-1">
             <li>{quality.actionApprove}</li>
             <li>{quality.actionRecollect}</li>

@@ -137,6 +137,38 @@ class QualityRemedySupport:
                 )
         return issue
 
+    def attach_created_artifacts(
+        self,
+        issue: QualityIssue,
+        *,
+        created_test_id: int | None,
+        created_sample_id: str | None,
+        user_id: str,
+        reason: str,
+    ) -> None:
+        """Write successor sample/test ids created after the quality-issue row was inserted.
+
+        Recollection executes after ``record_issue`` so the new accession is unknown at insert.
+        Without this, the persisted issue (and retest audit) omit the active line analyzers need.
+        """
+        if created_test_id is not None:
+            issue.createdTestId = created_test_id
+        if created_sample_id is not None:
+            issue.createdSampleId = created_sample_id
+        if (
+            issue.stage == QualityStage.VALIDATION
+            and created_test_id is not None
+            and issue.orderTestId is not None
+        ):
+            self.emitter.order_test_retest(
+                order_id=issue.orderId,
+                original_test_id=issue.orderTestId,
+                new_test_id=created_test_id,
+                test_code=issue.testCode or "",
+                user_id=user_id,
+                reason=reason,
+            )
+
     def create_retest(
         self,
         order_test: OrderTest,
@@ -161,11 +193,24 @@ class QualityRemedySupport:
             retestNumber=next_retest,
             technicianNotes=f"{technician_note_prefix} #{next_retest}: {reason}"
             + (f" — {notes}" if notes else ""),
-            flags=order_test.flags,
+            flags=None,
             isReflexTest=order_test.isReflexTest,
             triggeredBy=order_test.triggeredBy,
             reflexRule=order_test.reflexRule,
         )
+        existing_successor = (
+            self.db.query(OrderTest)
+            .filter(
+                OrderTest.retestOfTestId == order_test.id,
+                OrderTest.status.notin_(
+                    (TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED)
+                ),
+            )
+            .first()
+        )
+        if existing_successor:
+            return existing_successor
+
         self.db.add(new_test)
         self.db.flush()
 
@@ -203,18 +248,41 @@ class QualityRemedySupport:
         order_test.validationNotes = None
         order_test.flags = None
         order_test.hasCriticalValues = False
+        order_test.secondValidatorId = None
+        order_test.secondValidatedAt = None
+        order_test.criticalNotificationSent = False
+        order_test.criticalNotifiedAt = None
+        order_test.criticalNotifiedTo = None
+        order_test.criticalAcknowledgedAt = None
 
     def reattach_tests_to_recollection(self, rejected_sample: Sample, new_sample: Sample) -> None:
-        for test in self._svc.linked_tests(
+        from app.domains.lab.specimen.lookup import (
+            linked_order_tests_for_sample,
+            sync_sample_test_codes,
+        )
+
+        moved: list[OrderTest] = []
+        linked = linked_order_tests_for_sample(
+            self.db,
             rejected_sample,
-            exclude=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
-        ):
-            if test.status != TestStatus.PENDING:
+            exclude_statuses=[TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED],
+            include_unassigned=True,
+        )
+        for test in linked:
+            if test.status not in {TestStatus.PENDING, TestStatus.ESCALATED}:
                 continue
-            if test.sampleId != rejected_sample.sampleId:
+            if test.sampleId not in {rejected_sample.sampleId, None}:
                 continue
             test.sampleId = new_sample.sampleId
-            self.clear_test_results(test)
+            if test.status == TestStatus.PENDING:
+                self.clear_test_results(test)
+            moved.append(test)
+        created_on_new = (
+            self.db.query(OrderTest)
+            .filter(OrderTest.sampleId == new_sample.sampleId)
+            .all()
+        )
+        sync_sample_test_codes(new_sample, [*moved, *created_on_new])
 
     def reject_sample_record(
         self,
@@ -227,6 +295,7 @@ class QualityRemedySupport:
         skip_test_ids: set[int] | None = None,
         reset_unfinished: bool = True,
         resulted_outcome: ResultedRejectionOutcome = "cancel",
+        recollection_required: bool = False,
     ) -> None:
         can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
         if not can_reject:
@@ -238,7 +307,7 @@ class QualityRemedySupport:
         sample.rejectedBy = str(user_id)
         sample.rejectionReason = reason
         sample.rejectionNotes = notes
-        sample.recollectionRequired = True
+        sample.recollectionRequired = recollection_required
         sample.updatedBy = str(user_id)
 
         audit_meta: dict[str, Any] = {"rejection_stage": context.stage.value}

@@ -18,7 +18,6 @@ from app.domains.lab.quality.schemas import AcknowledgeRequest, NotifyRequest
 from app.domains.lab.results.flags import FlagCalculatorService
 from app.domains.lab.results.validator import ResultValidatorService
 from app.domains.lab.rules.eligibility import active_linked_tests_for_collection, assert_can_collect
-from app.domains.lab.rules.state_machines import TestStateMachine
 from app.domains.lab.specimen.lookup import get_sample_or_error, linked_order_tests_for_sample
 from app.domains.lab.specimen.models import Sample
 from app.domains.lab.specimen.volume import apply_received_volume_quality_issues
@@ -91,14 +90,16 @@ class CollectionCommandHandler:
         sample.updatedBy = str(user_id)
 
         for order_test in order_tests:
-            if TestStateMachine.can_transition(order_test.status, TestStatus.SAMPLE_COLLECTED):
+            if order_test.status == TestStatus.PENDING:
                 order_test.status = TestStatus.SAMPLE_COLLECTED
                 order_test.sampleId = sample_id
-            elif order_test.status not in (
+            elif order_test.status in (
                 TestStatus.SAMPLE_COLLECTED,
                 TestStatus.RESULTED,
                 TestStatus.ESCALATED,
             ):
+                continue
+            else:
                 status_val = (
                     order_test.status.value if order_test.status else str(order_test.status)
                 )
@@ -373,6 +374,13 @@ class LabOperationsService:
             order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
             after_rollup=_after_rollup,
             action="validate_results",
+        )
+
+    def resolve_escalation(self, **kwargs):
+        return self.run_lab_mutation(
+            lambda: self._results.resolve_escalation(**kwargs),
+            order_id=self._order_id_for_order_test(kwargs.get("order_test_id")),
+            action="resolve_escalation",
         )
 
     def reject_results(self, **kwargs):

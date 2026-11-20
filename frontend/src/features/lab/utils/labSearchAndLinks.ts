@@ -1,5 +1,7 @@
 /** Lab search keys, result presence, collection lookup filters, and queue deep-links. */
-import type { OrderTest } from '@/types';
+import type { Order, OrderTest } from '@/types';
+import { walkToLiveOrderTest } from '@/features/orders/utils/orderTestLineage';
+import { isTerminalTestStatus } from './queueDisplay';
 import type { LabModalWorkItem } from '../types/labQueueChrome';
 import {
   classifyClinicalSearch,
@@ -16,6 +18,8 @@ export interface LabQueueSearchableIds {
   orderTestId?: number | null;
   orderId?: string | null;
   sampleId?: string | null;
+  originalSampleId?: string | null;
+  recollectionSampleId?: string | null;
   patientId?: string | null;
   testCode?: string | null;
 }
@@ -82,7 +86,11 @@ export function matchLabQueueSearchQuery(
     return Boolean(ids.orderId && ids.orderId === intent.orderId);
   }
   if (intent.kind === 'accession') {
-    return Boolean(ids.sampleId && ids.sampleId === intent.sampleId);
+    return Boolean(
+      (ids.sampleId && ids.sampleId === intent.sampleId) ||
+        (ids.originalSampleId && ids.originalSampleId === intent.sampleId) ||
+        (ids.recollectionSampleId && ids.recollectionSampleId === intent.sampleId)
+    );
   }
   if (intent.kind === 'patientId') {
     return Boolean(ids.patientId && ids.patientId === intent.patientId);
@@ -163,8 +171,9 @@ export function resolveCollectionStatusFilters<T extends string>(
 export function labQueueSearchTermForTest(
   test: Pick<OrderTest, 'testCode'> & { sampleId?: string | null },
   orderId: string,
+  liveSampleId?: string | null,
 ): string | undefined {
-  const accession = test.sampleId?.trim();
+  const accession = (liveSampleId ?? test.sampleId)?.trim();
   if (accession) return accession;
   const mnemonic = test.testCode?.trim().toUpperCase();
   if (mnemonic) return mnemonic;
@@ -181,13 +190,36 @@ export function getLabQueueUrlForTest(
     lab?: { pipelineStage?: string | null } | null;
   },
   orderId: string,
+  order?: Pick<Order, 'tests'>,
 ): string | null {
-  const tab = getLabTabForTestStatus(test.status as TestStatus, test.lab?.pipelineStage);
+  const live =
+    order?.tests && test.id != null
+      ? walkToLiveOrderTest(order.tests, test as OrderTest)
+      : test;
+  const tab = getLabTabForTestStatus(live.status as TestStatus, live.lab?.pipelineStage);
   if (!tab) return null;
 
-  const search = labQueueSearchTermForTest(test, orderId);
+  const search = labQueueSearchTermForTest(live, orderId, live.sampleId);
   if (!search) return getLabQueueUrl(tab);
   return getLabQueueUrl(tab, { search });
+}
+
+export function filterLiveOrderTestQueueRows<
+  T extends {
+    orderTestId: number;
+    status: string;
+    retestOfTestId?: number | null;
+    retestOrderTestId?: number | null;
+  },
+>(rows: T[]): T[] {
+  const hiddenIds = new Set<number>();
+  for (const row of rows) {
+    if (row.retestOfTestId != null) hiddenIds.add(row.retestOfTestId);
+    if (row.retestOrderTestId != null) hiddenIds.add(row.orderTestId);
+  }
+  return rows.filter(
+    row => !isTerminalTestStatus(row.status) && !hiddenIds.has(row.orderTestId)
+  );
 }
 
 /** Lab queue URL with accession in the search bar. */

@@ -25,6 +25,11 @@ export function getSampleCollectionViewModel(display: SampleCollectionQueueItem,
     isRecollection: sample.isRecollection === true,
     collectAllowed: isLabActionAllowed(display.allowedActions, 'collect'),
     collectDisabledTitle: labDisabledActionTooltip({ denyMessage: display.denyMessage }, display),
+    rejectAllowed:
+      isLabActionAllowed(display.allowedActions, 'reject') && !sample.recollectionSampleId,
+    rejectDisabledTitle: sample.recollectionSampleId
+      ? 'Recollection already requested'
+      : labDisabledActionTooltip({ denyMessage: display.denyMessage }, display),
     rejectedSample: isRejected ? (sample as RejectedSample) : null,
     containerColor,
     colorName: containerColor

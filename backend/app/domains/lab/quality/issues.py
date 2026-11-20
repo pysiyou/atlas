@@ -137,6 +137,7 @@ class QualityIssueService:
         skip_test_ids: set[int] | None = None,
         reset_unfinished: bool = True,
         resulted_outcome: ResultedRejectionOutcome = "cancel",
+        recollection_required: bool = False,
     ) -> None:
         return self.remedy.reject_sample_record(
             sample,
@@ -147,6 +148,7 @@ class QualityIssueService:
             skip_test_ids=skip_test_ids,
             reset_unfinished=reset_unfinished,
             resulted_outcome=resulted_outcome,
+            recollection_required=recollection_required,
         )
 
     def create_recollection_sample(

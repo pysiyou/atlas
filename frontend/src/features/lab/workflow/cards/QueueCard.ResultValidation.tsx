@@ -114,6 +114,7 @@ function ResultValidationCardDesktop({
               <SampleRejectedBanner
                 sampleId={sampleRejection.sampleId}
                 sampleRejectionReason={sampleRejectionReason}
+                successorSampleId={sampleRejection.successorSampleId}
               />
             </div>
           )}
@@ -182,6 +183,7 @@ function ResultValidationCardMobile({
           <SampleRejectedBanner
             sampleId={sampleRejection.sampleId}
             sampleRejectionReason={sampleRejectionReason}
+            successorSampleId={sampleRejection.successorSampleId}
             size="compact"
           />
         </div>

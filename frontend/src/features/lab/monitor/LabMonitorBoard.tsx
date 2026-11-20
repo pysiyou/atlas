@@ -2,14 +2,19 @@
  * Lab dashboard — today panel, attention queue, event log panel, orders table.
  */
 
+import { LabMonitorEventLogPanel } from '@/features/audit';
 import { useClientListChrome } from '@/hooks';
-import { SPLIT_WORKSPACE_PANEL } from '@/theme/recipes';
-import { SPLIT_BOTTOM_PANEL, SPLIT_BOTTOM_ROW, SPLIT_WORKSPACE_PAGE, SPLIT_TABLE_WRAP } from '@/theme/recipes';
+import {
+  SPLIT_BOTTOM_PANEL,
+  SPLIT_BOTTOM_ROW,
+  SPLIT_TABLE_WRAP,
+  SPLIT_WORKSPACE_PAGE,
+  SPLIT_WORKSPACE_PANEL,
+} from '@/theme/recipes';
 import { useLabMonitorViewModel } from './useLabMonitorViewModel';
 import { LabOrdersTable } from './LabOrdersTable';
 import { LabTodayPanel } from './LabTodayPanel';
 import { LabAttentionPanel } from './LabAttentionPanel';
-import { LabMonitorEventLogPanel } from '@/features/audit';
 
 export interface LabMonitorBoardProps {
   /** When false, skips full board fetch/poll (inactive monitor tab). */

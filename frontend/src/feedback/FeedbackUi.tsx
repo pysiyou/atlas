@@ -1,22 +1,38 @@
 /**
- * Inline feedback surfaces (alerts, error fallback).
+ * Toast, alert, error fallback, and shared notice chrome.
  */
+/* eslint-disable max-lines, react-refresh/only-export-components -- toast host + notice surfaces live together */
 
-import { type HTMLAttributes, type ReactNode } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type HTMLAttributes,
+  type ReactNode,
+} from 'react';
+import { createPortal } from 'react-dom';
+import toastLib, { resolveValue, useToaster, type DefaultToastOptions, type Toast as HotToast } from 'react-hot-toast';
 import { Icon } from '@/components/primitives';
 import { IconKeys, TOAST_ICON_KEYS } from '@/icons';
-import { RADIUS, TOAST_TYPE, text } from '@/theme/recipes';
+import { DIALOG, RADIUS, TOAST_TYPE, text } from '@/theme/recipes';
 import { cn } from '@/utils';
 
 export type ToastVariant = 'success' | 'error' | 'info' | 'warning' | 'loading';
-export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
 
-export interface NoticeAction {
+interface NoticeAction {
   label: string;
   onClick: () => void;
 }
 
 export const TOAST_ALERT_MESSAGE = 'Something went wrong';
+export const TOAST_DEFAULT_DURATION_MS = 4000;
+const TOAST_REMOVE_DELAY_MS = 360;
+
+const DIVIDER = 'border-border-default';
+const LOGIN_HOST_Z = 50;
+const HOST_CLASS = 'toast-host';
 
 const SURFACE: Record<ToastVariant, string> = {
   success: 'toast-card toast-card--success',
@@ -34,6 +50,8 @@ const ICON_ACCENT: Record<ToastVariant, string> = {
   loading: 'text-toast-fg-muted',
 };
 
+export const NOTICE_CARD_SHELL = `flex w-full flex-col overflow-hidden ${RADIUS.notice} font-sans`;
+
 function toVisualVariant(variant: AlertVariant | ToastVariant): ToastVariant {
   return variant === 'danger' ? 'error' : (variant as ToastVariant);
 }
@@ -44,6 +62,46 @@ function surfaceClass(variant: ToastVariant): string {
 
 function iconClass(variant: ToastVariant): string {
   return ICON_ACCENT[variant];
+}
+
+function NoticeCard({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn(NOTICE_CARD_SHELL, className)} {...props} />;
+}
+
+export function NoticeCardHeader({
+  icon,
+  title,
+  titleClassName,
+  trailing,
+}: {
+  icon?: ReactNode;
+  title?: ReactNode;
+  titleClassName?: string;
+  trailing?: ReactNode;
+}) {
+  return (
+    <div className={cn(DIALOG.popoverHeader, 'bg-transparent border-b', DIVIDER)}>
+      <div className="flex min-w-0 items-start gap-space-2">
+        {icon}
+        {title != null ? <p className={cn('m-0 min-w-0', titleClassName)}>{title}</p> : null}
+      </div>
+      {trailing}
+    </div>
+  );
+}
+
+export function NoticeCardBody({
+  padded = true,
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & { padded?: boolean }) {
+  return <div className={cn('min-w-0', padded && 'px-space-4 py-space-3', className)} {...props} />;
+}
+
+export function NoticeCardFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn(DIALOG.popoverFooter, 'bg-transparent border-t', DIVIDER, className)} {...props} />
+  );
 }
 
 function NoticeIcon({
@@ -99,7 +157,7 @@ function NoticeAction({ action, className }: { action: NoticeAction; className?:
     <button
       type="button"
       className={cn(
-        `mt-space-2 inline-flex items-center ${RADIUS.surface} border border-toast-action-border px-space-2-5 py-space-0-5 ${TOAST_TYPE.action} hover:bg-toast-action-hover cursor-pointer`,
+        `inline-flex items-center ${RADIUS.surface} border border-toast-action-border px-space-2-5 py-space-0-5 ${TOAST_TYPE.action} hover:bg-toast-action-hover cursor-pointer`,
         className
       )}
       onClick={e => {
@@ -112,28 +170,19 @@ function NoticeAction({ action, className }: { action: NoticeAction; className?:
   );
 }
 
-interface NoticeProps {
-  density: 'compact' | 'comfortable';
-  variant: ToastVariant;
-  message?: string;
-  title?: string;
-  subtitle?: string;
-  body?: ReactNode;
-  actions?: NoticeAction[];
-  onDismiss?: () => void;
-  dismissAriaLabel?: string;
-  className?: string;
-  ariaProps?: HTMLAttributes<HTMLDivElement>;
-}
-
-/** Compact toast surface (also used by {@link ToastHost}). */
-export function CompactNotice({
+function CompactNotice({
   variant,
   message,
   onDismiss,
   ariaProps,
   className,
-}: Pick<NoticeProps, 'variant' | 'message' | 'onDismiss' | 'ariaProps' | 'className'>) {
+}: {
+  variant: ToastVariant;
+  message?: string;
+  onDismiss?: () => void;
+  ariaProps?: HTMLAttributes<HTMLDivElement>;
+  className?: string;
+}) {
   const copy = message?.trim() || TOAST_ALERT_MESSAGE;
   const role = variant === 'error' || variant === 'warning' ? 'alert' : 'status';
   return (
@@ -150,62 +199,6 @@ export function CompactNotice({
       <NoticeIcon variant={variant} compact />
       <p className={cn('m-0 min-w-0 flex-1 truncate', TOAST_TYPE.compact)}>{copy}</p>
       {onDismiss ? <DismissButton onClick={onDismiss} /> : null}
-    </div>
-  );
-}
-
-function Notice({
-  density,
-  variant,
-  message,
-  title,
-  subtitle,
-  body,
-  actions,
-  onDismiss,
-  dismissAriaLabel,
-  className,
-  ariaProps,
-}: NoticeProps) {
-  const role = variant === 'error' || variant === 'warning' ? 'alert' : density === 'compact' ? 'status' : 'alert';
-
-  if (density === 'compact') {
-    return (
-      <CompactNotice
-        variant={variant}
-        message={message}
-        onDismiss={onDismiss}
-        ariaProps={ariaProps}
-        className={className}
-      />
-    );
-  }
-
-  return (
-    <div
-      className={cn(
-        `flex items-start gap-space-3 w-full ${RADIUS.notice} p-panel font-sans`,
-        surfaceClass(variant),
-        className
-      )}
-      {...ariaProps}
-      role={role}
-    >
-      <NoticeIcon variant={variant} />
-      <div className="min-w-0 flex-1">
-        {title != null ? (
-          <>
-            <p className={`m-0 ${TOAST_TYPE.title}`}>{title}</p>
-            {subtitle ? <p className={`mt-space-1 mb-0 ${TOAST_TYPE.subtitle}`}>{subtitle}</p> : null}
-          </>
-        ) : (
-          <div className={cn(TOAST_TYPE.subtitle, 'text-toast-fg [&_*]:text-inherit')}>{body}</div>
-        )}
-        {actions?.map(action => (
-          <NoticeAction key={action.label} action={action} />
-        ))}
-      </div>
-      {onDismiss ? <DismissButton onClick={onDismiss} ariaLabel={dismissAriaLabel} /> : null}
     </div>
   );
 }
@@ -228,19 +221,37 @@ export function Alert({
   actions,
   onClose,
   className,
-}: AlertProps) { return (
-  <Notice
-    density="comfortable"
-    variant={toVisualVariant(variant)}
-    title={title}
-    subtitle={description}
-    body={title == null ? children : undefined}
-    actions={actions}
-    onDismiss={onClose}
-    dismissAriaLabel="Close alert"
-    className={className}
-  />
-); }
+}: AlertProps) {
+  const visual = toVisualVariant(variant);
+  const body = title == null ? children : undefined;
+  return (
+    <NoticeCard className={cn(surfaceClass(visual), className)} role="alert">
+      <NoticeCardHeader
+        icon={<NoticeIcon variant={visual} />}
+        title={title}
+        titleClassName={TOAST_TYPE.title}
+        trailing={onClose ? <DismissButton onClick={onClose} ariaLabel="Close alert" /> : null}
+      />
+      {description || body ? (
+        <NoticeCardBody>
+          {description ? <p className={cn('m-0', TOAST_TYPE.subtitle)}>{description}</p> : null}
+          {body ? (
+            <div className={cn(TOAST_TYPE.subtitle, 'text-toast-fg [&_*]:text-inherit', description && 'mt-space-1')}>
+              {body}
+            </div>
+          ) : null}
+        </NoticeCardBody>
+      ) : null}
+      {actions?.length ? (
+        <NoticeCardFooter>
+          {actions.map(action => (
+            <NoticeAction key={action.label} action={action} />
+          ))}
+        </NoticeCardFooter>
+      ) : null}
+    </NoticeCard>
+  );
+}
 
 const FALLBACK_TYPE = {
   title: `${text({ role: 'title-section' })} font-semibold leading-snug text-toast-fg`,
@@ -248,7 +259,7 @@ const FALLBACK_TYPE = {
   detail: `${text({ role: 'body' })} text-toast-fg-muted`,
 } as const;
 
-const FALLBACK_ACTION = cn(text({ role: 'body' }), 'mt-0 px-space-3 py-space-1');
+const FALLBACK_ACTION = cn(text({ role: 'body' }), 'px-space-3 py-space-1');
 
 function formatErrorDetail(error: Error): string {
   const msg: unknown = error.message;
@@ -271,46 +282,130 @@ export interface ErrorFallbackProps {
 
 export function ErrorFallback({ error, onRetry, homeHref = '/' }: ErrorFallbackProps) {
   const errorIconKey = TOAST_ICON_KEYS.error;
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface-page px-space-4">
-      <div
-        className={cn(
-          `flex w-full max-w-lg flex-col ${RADIUS.notice} p-space-8 font-sans`,
-          surfaceClass('error')
-        )}
-        role="alert"
-      >
-        <div className="flex items-center gap-space-3">
-          {errorIconKey ? (
-            <Icon iconKey={errorIconKey} className={cn('h-7 w-7 shrink-0', iconClass('error'))} />
+      <NoticeCard className={cn('max-w-lg', surfaceClass('error'))} role="alert">
+        <NoticeCardHeader
+          icon={
+            errorIconKey ? (
+              <Icon iconKey={errorIconKey} className={cn('mt-space-0-5 h-5 w-5 shrink-0', iconClass('error'))} />
+            ) : null
+          }
+          title={TOAST_ALERT_MESSAGE}
+          titleClassName={FALLBACK_TYPE.title}
+        />
+        <NoticeCardBody>
+          <p className={cn('m-0', FALLBACK_TYPE.subtitle)}>
+            We&apos;re sorry, but something unexpected happened. Please try refreshing the page.
+          </p>
+          {error ? (
+            <div className={`mt-space-3 p-space-4 ${RADIUS.field} border border-toast-border bg-toast-footer-bg overflow-auto max-h-52 ${FALLBACK_TYPE.detail}`}>
+              <p className="mb-space-1 font-normal text-toast-fg">Error details</p>
+              <p>{formatErrorDetail(error)}</p>
+              {import.meta.env.DEV && error.stack ? (
+                <pre className={`mt-space-2 whitespace-pre-wrap font-mono text-[0.8125rem] ${FALLBACK_TYPE.detail}`}>{error.stack}</pre>
+              ) : null}
+            </div>
           ) : null}
-          <p className={`m-0 min-w-0 ${FALLBACK_TYPE.title}`}>{TOAST_ALERT_MESSAGE}</p>
-        </div>
-        <p className={`mt-space-3 mb-0 ${FALLBACK_TYPE.subtitle}`}>
-          We&apos;re sorry, but something unexpected happened. Please try refreshing the page.
-        </p>
-        {error ? (
-          <div
-            className={`mt-space-5 p-space-4 ${RADIUS.field} border border-toast-border bg-toast-footer-bg overflow-auto max-h-52 ${FALLBACK_TYPE.detail}`}
-          >
-            <p className="mb-space-1 font-normal text-toast-fg">Error details</p>
-            <p>{formatErrorDetail(error)}</p>
-            {import.meta.env.DEV && error.stack ? (
-              <pre className={`mt-space-2 whitespace-pre-wrap font-mono text-[0.8125rem] ${FALLBACK_TYPE.detail}`}>
-                {error.stack}
-              </pre>
-            ) : null}
-          </div>
-        ) : null}
-        <div className="mt-space-6 flex flex-wrap justify-end gap-space-3">
+        </NoticeCardBody>
+        <NoticeCardFooter className="justify-end">
           <NoticeAction className={FALLBACK_ACTION} action={{ label: 'Try Again', onClick: onRetry }} />
-          <NoticeAction
-            className={FALLBACK_ACTION}
-            action={{ label: 'Go Home', onClick: () => { window.location.href = homeHref; } }}
-          />
-        </div>
-      </div>
+          <NoticeAction className={FALLBACK_ACTION} action={{ label: 'Go Home', onClick: () => { window.location.href = homeHref; } }} />
+        </NoticeCardFooter>
+      </NoticeCard>
     </div>
   );
+}
+
+const ToastMountContext = React.createContext<HTMLElement | null>(null);
+const ToastMountSetterContext = React.createContext<(node: HTMLElement | null) => void>(() => {});
+
+export function ToastProvider({ children }: { children: ReactNode }) {
+  const [mount, setMount] = useState<HTMLElement | null>(null);
+  return (
+    <ToastMountContext.Provider value={mount}>
+      <ToastMountSetterContext.Provider value={setMount}>{children}</ToastMountSetterContext.Provider>
+    </ToastMountContext.Provider>
+  );
+}
+
+export function useToastMountRef(): (node: HTMLDivElement | null) => void {
+  const setMount = useContext(ToastMountSetterContext);
+  useEffect(() => () => setMount(null), [setMount]);
+  return useCallback((node: HTMLDivElement | null) => setMount(node), [setMount]);
+}
+
+function afterPaint(run: () => void): void {
+  queueMicrotask(() => requestAnimationFrame(run));
+}
+
+function outcomeFromHost(host: HotToast): ToastVariant {
+  const match = (host.className ?? '').match(/toast-outcome-(success|error|warning|info|loading)/);
+  if (match) return match[1] as ToastVariant;
+  if (host.type === 'error') return 'error';
+  if (host.type === 'loading') return 'loading';
+  return 'success';
+}
+
+const ToastChip = React.memo(({ toast: host }: { toast: HotToast }) => {
+  const raw = resolveValue(host.message, host);
+  const message = typeof raw === 'string' ? raw.trim() || TOAST_ALERT_MESSAGE : TOAST_ALERT_MESSAGE;
+  const dismiss = useCallback(() => {
+    toastLib.dismiss(host.id, host.toasterId);
+  }, [host.id, host.toasterId]);
+
+  return (
+    <div className={cn('toast-chip-motion pointer-events-auto', host.visible ? 'toast-chip-enter' : 'toast-chip-exit')}>
+      <CompactNotice variant={outcomeFromHost(host)} message={message} onDismiss={dismiss} ariaProps={host.ariaProps} />
+    </div>
+  );
+});
+ToastChip.displayName = 'ToastChip';
+
+export function ToastHost({ toastOptions }: { toastOptions?: DefaultToastOptions }) {
+  const mount = useContext(ToastMountContext);
+  const { toasts } = useToaster({
+    removeDelay: TOAST_REMOVE_DELAY_MS,
+    ...toastOptions,
+  });
+
+  if (toasts.length === 0) return null;
+
+  const stack = (
+    <div data-rht-toaster="" className={cn(HOST_CLASS, 'flex flex-col items-end gap-space-2')}>
+      {toasts.map(t => (
+        <ToastChip key={t.id} toast={t} />
+      ))}
+    </div>
+  );
+
+  if (mount) return createPortal(stack, mount);
+
+  return createPortal(
+    <div
+      className="pointer-events-none fixed top-space-4 right-space-4 w-max max-w-[min(100vw-2rem,20rem)]"
+      style={{ zIndex: LOGIN_HOST_Z }}
+    >
+      {stack}
+    </div>,
+    document.body,
+  );
+}
+
+export function showToast(message: string, variant: ToastVariant): void {
+  toastLib.dismiss();
+  const copy = message.trim() || TOAST_ALERT_MESSAGE;
+  const opts = {
+    duration: TOAST_DEFAULT_DURATION_MS,
+    className: cn(`toast-outcome-${variant}`),
+  };
+  afterPaint(() => {
+    if (variant === 'error') toastLib.error(copy, opts);
+    else if (variant === 'success') toastLib.success(copy, opts);
+    else toastLib(copy, opts);
+  });
+}
+
+if (import.meta.env.DEV) {
+  (globalThis as { __atlasShowToast?: typeof showToast }).__atlasShowToast = showToast;
 }

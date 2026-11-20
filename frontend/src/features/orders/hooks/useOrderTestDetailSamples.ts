@@ -12,7 +12,8 @@ import { getRelatedSamplesForOrderTest } from '../utils/orderTestDetailSamples';
 export function useOrderTestDetailSamples(
   orderId: string,
   orderTest: OrderTest,
-  isOpen: boolean
+  isOpen: boolean,
+  orderTests?: OrderTest[]
 ): { relatedSamples: Sample[]; isLoading: boolean } {
   const { data: orderSamples = [], isLoading } = useQuery({
     queryKey: queryKeys.samples.byOrder(orderId),
@@ -39,8 +40,13 @@ export function useOrderTestDetailSamples(
   }, [orderSamples, fetchedLinked]);
 
   const relatedSamples = useMemo(
-    () => getRelatedSamplesForOrderTest(orderTest, mergedSamples),
-    [orderTest, mergedSamples]
+    () =>
+      getRelatedSamplesForOrderTest(
+        orderTest,
+        mergedSamples,
+        orderTests && orderTests.length > 0 ? orderTests : [orderTest]
+      ),
+    [orderTest, mergedSamples, orderTests]
   );
 
   return { relatedSamples, isLoading };

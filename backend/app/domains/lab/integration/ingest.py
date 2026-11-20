@@ -16,6 +16,11 @@ from app.domains.lab.integration.schemas import (
     AnalyzerResultResponse,
     HL7MessageRequest,
 )
+from app.domains.lab.specimen.lookup import (
+    find_enterable_order_test,
+    find_enterable_order_test_on_order,
+    latest_order_test_on_sample_chain,
+)
 from app.domains.lab.specimen.models import Sample
 from app.domains.lab.workflow.constants import ANALYZER_USER_ID
 from app.domains.lab.workflow.operations import LabOperationsService
@@ -24,7 +29,7 @@ from app.platform.config import settings
 from app.platform.debug_log import workflow_fail, workflow_ok, workflow_start
 from app.shared.clinical import looks_like_accession, looks_like_filler
 from app.shared.errors import LabOperationError
-from app.shared.generated.enums import TestStatus
+from app.shared.generated.enums import SampleStatus, TestStatus
 from fastapi import status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -107,8 +112,8 @@ class AnalyzerIngestService:
                 error_code="VALIDATION_ERROR",
             )
 
-    def _resolve_sample(self, specimen_id: str) -> Sample | None:
-        """Match SPM-2 / specimen_id to accession, then filler order number."""
+    def _resolve_sample(self, specimen_id: str, test_code: str | None = None) -> Sample | None:
+        """Match SPM-2 / specimen_id to accession, then filler + test to the live tube."""
         token = specimen_id.strip()
         if not token:
             return None
@@ -119,32 +124,45 @@ class AnalyzerIngestService:
             return None
         if looks_like_filler(token):
             order = self.db.query(Order).filter(Order.orderId == token).first()
-            if order:
-                return (
-                    self.db.query(Sample)
-                    .filter(Sample.orderId == order.orderId)
-                    .order_by(Sample.sampleId.asc())
-                    .first()
+            if not order:
+                return None
+            if test_code:
+                enterable = find_enterable_order_test_on_order(
+                    self.db, order.orderId, test_code
                 )
+                if enterable and enterable.sampleId:
+                    return (
+                        self.db.query(Sample)
+                        .filter(Sample.sampleId == enterable.sampleId)
+                        .first()
+                    )
+            return (
+                self.db.query(Sample)
+                .filter(
+                    Sample.orderId == order.orderId,
+                    Sample.status == SampleStatus.COLLECTED,
+                )
+                .order_by(Sample.sampleId.desc())
+                .first()
+            )
         return None
 
     def _find_pending_test(self, sample: Sample, test_code: str) -> OrderTest:
-        order_test = (
-            self.db.query(OrderTest)
-            .filter(
-                OrderTest.orderId == sample.orderId,
-                OrderTest.testCode == test_code,
-                OrderTest.status == TestStatus.SAMPLE_COLLECTED,
-            )
-            .first()
-        )
+        """Resolve the SAMPLE_COLLECTED line on a collected tube, including recollection."""
+        order_test = find_enterable_order_test(self.db, sample, test_code)
         if order_test:
             return order_test
-        existing = (
-            self.db.query(OrderTest)
-            .filter(OrderTest.orderId == sample.orderId, OrderTest.testCode == test_code)
-            .first()
-        )
+        order_test = find_enterable_order_test_on_order(self.db, sample.orderId, test_code)
+        if order_test:
+            return order_test
+        existing = latest_order_test_on_sample_chain(self.db, sample, test_code)
+        if existing is None:
+            existing = (
+                self.db.query(OrderTest)
+                .filter(OrderTest.orderId == sample.orderId, OrderTest.testCode == test_code)
+                .order_by(OrderTest.id.desc())
+                .first()
+            )
         if existing and existing.status in [TestStatus.RESULTED, TestStatus.VALIDATED]:
             raise LabOperationError(
                 f"OrderableTest {test_code} already has results",
@@ -253,22 +271,21 @@ class AnalyzerIngestService:
                 phase="hl7_missing_specimen",
                 analyzer_id=analyzer_id,
             )
-        sample = self._resolve_sample(str(specimen_id))
-        if not sample:
-            self._http_reject_ingest(
-                status.HTTP_404_NOT_FOUND,
-                f"Sample {specimen_id} not found",
-                phase="specimen_not_found",
-                analyzer_id=analyzer_id,
-                extra_metadata={"specimen_id": specimen_id},
-            )
         test_code = analyzer_result.test_code
         if not test_code:
             self._http_reject_ingest(
                 status.HTTP_400_BAD_REQUEST,
                 "No test code found in HL7 message",
                 phase="hl7_missing_test_code",
-                order_id=sample.orderId,
+                analyzer_id=analyzer_id,
+                extra_metadata={"specimen_id": specimen_id},
+            )
+        sample = self._resolve_sample(str(specimen_id), test_code)
+        if not sample:
+            self._http_reject_ingest(
+                status.HTTP_404_NOT_FOUND,
+                f"Sample {specimen_id} not found",
+                phase="specimen_not_found",
                 analyzer_id=analyzer_id,
                 extra_metadata={"specimen_id": specimen_id},
             )
@@ -283,6 +300,16 @@ class AnalyzerIngestService:
         if validation_errors:
             warnings.extend(validation_errors)
         internal_results = adapter.to_internal_format(analyzer_result, analyte_defs)
+        if not internal_results:
+            self._http_reject_ingest(
+                status.HTTP_400_BAD_REQUEST,
+                "No final observations mapped for this test",
+                phase="hl7_empty_results",
+                order_id=sample.orderId,
+                order_test_id=order_test.id,
+                test_code=test_code,
+                analyzer_id=analyzer_id,
+            )
         notes = (
             f"Auto-entered from analyzer "
             f"{request.analyzer_id or analyzer_result.analyzer_id or 'unknown'}"
@@ -315,7 +342,7 @@ class AnalyzerIngestService:
             specimen_id=request.specimen_id,
             test_code=request.test_code,
         )
-        sample = self._resolve_sample(str(request.specimen_id))
+        sample = self._resolve_sample(str(request.specimen_id), request.test_code)
         if not sample:
             raise LabOperationError(
                 f"Sample {request.specimen_id} not found",
@@ -327,7 +354,7 @@ class AnalyzerIngestService:
         if not idempotency_key:
             idempotency_key = (
                 f"json:{request.specimen_id}:{request.test_code}:"
-                f"{request.analyzer_id or 'unknown'}"
+                f"{request.analyzer_id or 'unknown'}:{order_test.id}"
             )
         from app.domains.catalog.service import CatalogAnalyteService, analyte_definitions_for_test
 
@@ -347,6 +374,12 @@ class AnalyzerIngestService:
             validation_errors = adapter.validate_against_catalog(pseudo, analyte_defs)
             self._validation_blocks_ingest(validation_errors)
             internal_results = adapter.to_internal_format(pseudo, analyte_defs)
+        if not internal_results:
+            raise LabOperationError(
+                "No results to enter",
+                status_code=400,
+                error_code="VALIDATION_ERROR",
+            )
         notes = f"Auto-entered from analyzer {request.analyzer_id or 'unknown'}"
         result = self._enter_results(
             order_test,
@@ -368,25 +401,28 @@ class AnalyzerIngestService:
         return result
 
     def list_pending(self, analyzer_id: str) -> dict[str, Any]:
-        pending_tests = (
-            self.db.query(OrderTest)
-            .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
+        del analyzer_id
+        pending_rows = (
+            self.db.query(OrderTest, Sample)
+            .join(Sample, Sample.sampleId == OrderTest.sampleId)
+            .filter(
+                OrderTest.status == TestStatus.SAMPLE_COLLECTED,
+                Sample.status == SampleStatus.COLLECTED,
+            )
             .limit(10000)
             .all()
         )
         results = []
-        for test in pending_tests:
-            sample = self.db.query(Sample).filter(Sample.sampleId == test.sampleId).first()
-            if sample:
-                results.append(
-                    {
-                        "specimen_id": sample.sampleId,
-                        "order_id": test.orderId,
-                        "test_code": test.testCode,
-                        "sample_type": sample.sampleType.value if sample.sampleType else None,
-                        "collected_at": sample.collectedAt.isoformat()
-                        if sample.collectedAt
-                        else None,
-                    }
-                )
+        for test, sample in pending_rows:
+            results.append(
+                {
+                    "specimen_id": sample.sampleId,
+                    "order_id": test.orderId,
+                    "test_code": test.testCode,
+                    "sample_type": sample.sampleType.value if sample.sampleType else None,
+                    "collected_at": sample.collectedAt.isoformat()
+                    if sample.collectedAt
+                    else None,
+                }
+            )
         return {"pending_samples": results, "count": len(results)}

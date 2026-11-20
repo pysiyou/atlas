@@ -11,6 +11,7 @@ import {
 } from '../hooks';
 import { useEntryWorklist } from '../api/worklists';
 import { worklistItemToEntryRow } from '../utils/worklistMappers';
+import { filterLiveOrderTestQueueRows } from '../utils/labSearchAndLinks';
 import type { EntryQueueRow } from '../types/queues';
 import { LabWorkflowQueueLayout } from '../components/LabWorkflowQueueLayout';
 import { LabQueueFilters } from '../components/LabQueueFilters';
@@ -53,7 +54,10 @@ export function ResultEntryQueue() {
     refetch: refetchWorklist,
   });
 
-  const entryRows = useMemo(() => worklistItems.map(worklistItemToEntryRow), [worklistItems]);
+  const entryRows = useMemo(
+    () => filterLiveOrderTestQueueRows(worklistItems.map(worklistItemToEntryRow)),
+    [worklistItems]
+  );
   const uniqueCodes = useMemo(
     () => uniqueSortedTestCodes(entryRows.map(row => row.testCode)),
     [entryRows],

@@ -34,27 +34,36 @@ function compareSampleIds(a: string, b: string): number {
   return a.localeCompare(b, undefined, { numeric: true });
 }
 
+function recollectionSuccessorId(sample: Sample): string | undefined {
+  if ('recollectionSampleId' in sample && sample.recollectionSampleId) {
+    return sample.recollectionSampleId;
+  }
+  return undefined;
+}
+
 /** Original sample and recollections linked to a sample on the order. */
 export function getSampleRecollectionChain(
   sampleId: string,
   orderSamples: Sample[]
 ): Sample[] {
   const byId = new Map(orderSamples.map(s => [s.sampleId, s]));
+  if (!byId.has(sampleId)) return [];
+
   const inChain = new Set<string>();
-  const seed = byId.get(sampleId);
-  if (!seed) return [];
-
-  inChain.add(seed.sampleId);
-
-  let walk: Sample | undefined = seed;
-  while (walk?.originalSampleId != null && byId.has(walk.originalSampleId)) {
-    walk = byId.get(walk.originalSampleId);
-    if (walk) inChain.add(walk.sampleId);
-  }
-
-  for (const s of orderSamples) {
-    if (s.originalSampleId != null && inChain.has(s.originalSampleId)) {
-      inChain.add(s.sampleId);
+  const queue = [sampleId];
+  while (queue.length > 0) {
+    const id = queue.shift()!;
+    if (inChain.has(id)) continue;
+    const sample = byId.get(id);
+    if (!sample) continue;
+    inChain.add(id);
+    if (sample.originalSampleId) queue.push(sample.originalSampleId);
+    const successor = recollectionSuccessorId(sample);
+    if (successor) queue.push(successor);
+    for (const other of orderSamples) {
+      if (other.originalSampleId === id) queue.push(other.sampleId);
+      const otherSuccessor = recollectionSuccessorId(other);
+      if (otherSuccessor === id) queue.push(other.sampleId);
     }
   }
 

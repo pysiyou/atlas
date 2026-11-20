@@ -314,6 +314,7 @@ interface BaseSample {
   isRecollection?: boolean;
   originalSampleId?: string;
   originalSampleCollectedAt?: string;
+  recollectionSampleId?: string;
   recollectionReason?: string;
   recollectionAttempt?: number;
   parentSampleId?: string | null;

@@ -49,7 +49,7 @@ function appendLineageFields(
   } else if (orderTest.retestOfTestId != null) {
     fields.push({
       label: 'Retest of',
-      value: formatOrderTestDisplay(orderTest.sampleId, orderTest.testCode),
+      value: `Test #${orderTest.retestOfTestId}`,
     });
   }
 
@@ -70,7 +70,7 @@ function appendLineageFields(
   } else if (orderTest.retestOrderTestId != null) {
     fields.push({
       label: 'Replacement',
-      value: formatOrderTestDisplay(orderTest.sampleId, orderTest.testCode),
+      value: `Test #${orderTest.retestOrderTestId}`,
     });
   }
 

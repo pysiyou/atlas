@@ -49,6 +49,7 @@ export {
 export {
   findLinkedOrderTests,
   getOrderTestLineageRowClass,
+  walkToLiveOrderTest,
 } from './utils/orderTestLineage';
 export type { LinkedOrderTests } from './utils/orderTestLineage';
 export { BillingSummarySection } from './components/BillingSummarySection';

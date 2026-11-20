@@ -32,7 +32,7 @@ from app.domains.lab.rules.schemas import (
 )
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import Order, OrderTest
-from app.shared.generated.enums import TestStatus
+from app.shared.generated.enums import SampleStatus, TestStatus
 from app.shared.generated.lab_policy import ATTENTION_LABELS, reason_blocks_progress
 
 
@@ -247,7 +247,17 @@ def project_order_test_pipeline(ctx: LabWorkItemContext) -> LabWorkItemProjectio
             ),
             status,
         )
-    if status == TestStatus.PENDING and ctx.sample is not None:
+    if status == TestStatus.PENDING:
+        if ctx.sample is None or ctx.sample.status == SampleStatus.REJECTED:
+            return _with_test_presentation(
+                LabWorkItemProjection(
+                    pipelineStage="collection",
+                    denyReason="sample_rejected",
+                    denyMessage=deny_message("sample_rejected"),
+                    allowedActions=_actions_model({}),
+                ),
+                status,
+            )
         collection = project_collection_sample(ctx)
         return _with_test_presentation(collection, status)
 

@@ -1,7 +1,12 @@
 import type { LabTabId } from '../constants/labConstants';
 import type { UserRole } from '@/types';
 
-const LAB_TECH_ROLES: UserRole[] = ['administrator', 'lab-technician', 'lab-technician-plus'];
+/** Roles that see lab workflow queues, monitor, and analyzer activity. */
+export const LAB_TECH_ROLES: UserRole[] = [
+  'administrator',
+  'lab-technician',
+  'lab-technician-plus',
+];
 const COLLECTION_ROLES: UserRole[] = [
   'administrator',
   'receptionist',

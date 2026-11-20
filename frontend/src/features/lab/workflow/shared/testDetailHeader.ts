@@ -9,12 +9,23 @@ import type { LabModalWorkItem } from '../../types/labQueueChrome';
 
 export type TestDetailHeaderVariant = 'entry' | 'validation' | 'escalation';
 
-export function resolveTestDetailModalStage(lab?: LabWorkItemProjection | null): LabModalStage {
+export function resolveTestDetailModalStage(
+  lab?: LabWorkItemProjection | null,
+  status?: string | null
+): LabModalStage {
+  if (status === 'escalated') return 'escalation';
+  if (status === 'superseded' || status === 'removed' || status === 'cancelled') {
+    return 'collection';
+  }
   const stage = lab?.pipelineStage;
+  if (stage === 'cancelled') return 'collection';
   if (stage === 'validation' || stage === 'completed') return 'validation';
   if (stage === 'entry') return 'entry';
   if (stage === 'collection') return 'collection';
-  return 'validation';
+  if (status === 'resulted' || status === 'validated') return 'validation';
+  if (status === 'sample-collected') return 'entry';
+  if (status === 'pending') return 'collection';
+  return 'collection';
 }
 
 export function resolveTestDetailHeaderVariant(stage: LabModalStage): TestDetailHeaderVariant {

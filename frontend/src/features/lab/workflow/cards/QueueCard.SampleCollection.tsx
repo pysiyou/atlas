@@ -157,7 +157,7 @@ export function SampleCollectionCardDesktop({
                 onCollect(display, volume, notes, color, containerType)
               }
             />
-          ) : sample.sampleId && vm.isCollected ? (
+          ) : sample.sampleId && vm.isCollected && vm.rejectAllowed ? (
             <SampleRejectionPopover
               sampleId={sample.sampleId}
               testCodes={sample.testCodes ?? []}

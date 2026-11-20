@@ -41,26 +41,26 @@ class SampleIssueCommands:
         )
         options = sample_options(self._svc, sample_id)
         unfinished = options.unfinishedTestsCount or 0
+        if unfinished <= 0:
+            raise LabOperationError(
+                "No unfinished tests on this specimen. Reject individual tests at validation.",
+                status_code=400,
+            )
 
-        remedy = preferred_remedy
-        if unfinished > 0:
-            allowed = options.allowedRemedies or sample_unfinished_remedy_types()
-            if remedy is None:
-                remedy = options.suggestedRemedy or RemedyType.CANCEL
-            if remedy not in allowed:
-                raise LabOperationError(
-                    f"Invalid remedy for sample rejection: {remedy}. "
-                    f"Allowed: {[r.value for r in allowed]}",
-                    status_code=400,
-                )
-        else:
-            remedy = RemedyType.REQUEST_RECOLLECTION
+        allowed = options.allowedRemedies or sample_unfinished_remedy_types()
+        remedy = preferred_remedy or options.suggestedRemedy or RemedyType.CANCEL
+        if remedy not in allowed:
+            raise LabOperationError(
+                f"Invalid remedy for sample rejection: {remedy}. "
+                f"Allowed: {[r.value for r in allowed]}",
+                status_code=400,
+            )
 
         rejection_ctx = SampleRejectionContext(stage=QualityStage.COLLECTION)
-        if unfinished > 0 and remedy == RemedyType.REQUEST_RECOLLECTION:
-            resulted_outcome: ResultedRejectionOutcome = "reset_pending"
-        else:
-            resulted_outcome = "cancel"
+        wants_recollection = remedy == RemedyType.REQUEST_RECOLLECTION
+        resulted_outcome: ResultedRejectionOutcome = (
+            "reset_pending" if wants_recollection else "cancel"
+        )
 
         self._svc.remedy.reject_sample_record(
             sample,
@@ -70,44 +70,12 @@ class SampleIssueCommands:
             rejection_ctx,
             reset_unfinished=True,
             resulted_outcome=resulted_outcome,
+            recollection_required=wants_recollection,
         )
 
-        if unfinished > 0 and remedy == RemedyType.REQUEST_RECOLLECTION:
+        if wants_recollection:
             return self._request_recollection_from_collection(sample, user_id, reason, notes)
-
-        recorded_remedy = (
-            RemedyType.CANCEL if unfinished > 0 and remedy == RemedyType.CANCEL else remedy
-        )
-        issue = self._svc.remedy.record_issue(
-            order_id=sample.orderId,
-            stage=QualityStage.COLLECTION,
-            domain=QualityDomain.SPECIMEN,
-            reason=reason,
-            notes=notes,
-            remedy=recorded_remedy,
-            user_id=user_id,
-            sample_id=sample_id,
-        )
-        parts = ["Sample rejected."]
-        if unfinished > 0 and remedy == RemedyType.CANCEL:
-            parts.append("Unfinished tests were reset to await collection.")
-        if (options.resultedTestsCount or 0) > 0:
-            if resulted_outcome == "reset_pending":
-                parts.append("Unvalidated resulted tests were cleared and reset to pending.")
-            else:
-                parts.append("Unvalidated resulted tests were cleared and cancelled.")
-        if (options.validatedTestsCount or 0) > 0:
-            parts.append("Validated results were left unchanged.")
-
-        return QualityIssueResult(
-            success=True,
-            remedy=recorded_remedy,
-            message=" ".join(parts),
-            qualityIssueId=issue.id,
-            orderId=sample.orderId,
-            sampleId=sample_id,
-            escalationRequired=False,
-        )
+        return self._replace_rejected_tube(sample, user_id, reason, notes, options)
 
     def _request_recollection_from_collection(
         self,
@@ -146,6 +114,13 @@ class SampleIssueCommands:
             order_test_id=None,
             supervisor_authorized=False,
         )
+        self._svc.remedy.attach_created_artifacts(
+            issue,
+            created_test_id=executed.created_test_id,
+            created_sample_id=executed.created_sample_id,
+            user_id=user_id,
+            reason=reason,
+        )
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.REQUEST_RECOLLECTION,
@@ -155,4 +130,61 @@ class SampleIssueCommands:
             sampleId=sample.sampleId,
             createdSampleId=executed.created_sample_id,
             createdTestId=executed.created_test_id,
+        )
+
+    def _replace_rejected_tube(
+        self,
+        sample,
+        user_id: str,
+        reason: str,
+        notes: str | None,
+        options,
+    ) -> QualityIssueResult:
+        """Reject-tube-only: park unfinished work on a new collectable pending accession."""
+        replacement = self._svc.collection.create_initial_pending_sample(
+            order_id=sample.orderId,
+            sample_type=sample.sampleType,
+            test_codes=list(sample.testCodes or []),
+            required_volume=sample.requiredVolume,
+            optimal_volume=sample.optimalVolume or 0.0,
+            priority=sample.priority,
+            required_container_types=list(sample.requiredContainerTypes or []),
+            required_container_colors=list(sample.requiredContainerColors or []),
+            created_by=str(user_id),
+        )
+        self._svc.remedy.reattach_tests_to_recollection(sample, replacement)
+        self._svc.emitter.sample_created(
+            replacement.sampleId,
+            sample.orderId,
+            None,
+            test_codes=list(replacement.testCodes or []),
+        )
+        issue = self._svc.remedy.record_issue(
+            order_id=sample.orderId,
+            stage=QualityStage.COLLECTION,
+            domain=QualityDomain.SPECIMEN,
+            reason=reason,
+            notes=notes,
+            remedy=RemedyType.CANCEL,
+            user_id=user_id,
+            sample_id=sample.sampleId,
+            created_sample_id=replacement.sampleId,
+        )
+        parts = [
+            "Sample rejected.",
+            f"Unfinished tests were moved to pending sample {replacement.sampleId}.",
+        ]
+        if (options.resultedTestsCount or 0) > 0:
+            parts.append("Unvalidated resulted tests were cleared and cancelled.")
+        if (options.validatedTestsCount or 0) > 0:
+            parts.append("Validated results were left unchanged.")
+        return QualityIssueResult(
+            success=True,
+            remedy=RemedyType.CANCEL,
+            message=" ".join(parts),
+            qualityIssueId=issue.id,
+            orderId=sample.orderId,
+            sampleId=sample.sampleId,
+            createdSampleId=replacement.sampleId,
+            escalationRequired=False,
         )

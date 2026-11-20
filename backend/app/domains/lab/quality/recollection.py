@@ -69,26 +69,49 @@ class RecollectionExecutionService:
         if order_test_id and stage == QualityStage.VALIDATION:
             original_test = self.db.query(OrderTest).filter(OrderTest.id == order_test_id).first()
             if original_test and original_test.status == TestStatus.SUPERSEDED:
-                next_retest = (original_test.retestNumber or 0) + 1
-                new_test = OrderTest(
-                    orderId=original_test.orderId,
-                    testCode=original_test.testCode,
-                    status=TestStatus.PENDING,
-                    priceAtOrder=original_test.priceAtOrder,
-                    sampleId=new_sample.sampleId,
-                    isRetest=True,
-                    retestOfTestId=original_test.id,
-                    retestNumber=next_retest,
-                    technicianNotes=f"Recollection: {reason}",
-                    flags=original_test.flags,
-                    isReflexTest=original_test.isReflexTest,
-                    triggeredBy=original_test.triggeredBy,
-                    reflexRule=original_test.reflexRule,
+                existing = (
+                    self.db.query(OrderTest)
+                    .filter(
+                        OrderTest.retestOfTestId == original_test.id,
+                        OrderTest.status.notin_(
+                            (TestStatus.SUPERSEDED, TestStatus.REMOVED, TestStatus.CANCELLED)
+                        ),
+                    )
+                    .first()
                 )
-                self.db.add(new_test)
-                self.db.flush()
-                created_test_id = new_test.id
-                original_test.retestOrderTestId = new_test.id
+                if existing:
+                    created_test_id = existing.id
+                    original_test.retestOrderTestId = existing.id
+                else:
+                    next_retest = (original_test.retestNumber or 0) + 1
+                    new_test = OrderTest(
+                        orderId=original_test.orderId,
+                        testCode=original_test.testCode,
+                        status=TestStatus.PENDING,
+                        priceAtOrder=original_test.priceAtOrder,
+                        sampleId=new_sample.sampleId,
+                        isRetest=True,
+                        retestOfTestId=original_test.id,
+                        retestNumber=next_retest,
+                        technicianNotes=f"Recollection: {reason}",
+                        flags=None,
+                        isReflexTest=original_test.isReflexTest,
+                        triggeredBy=original_test.triggeredBy,
+                        reflexRule=original_test.reflexRule,
+                    )
+                    self.db.add(new_test)
+                    self.db.flush()
+                    created_test_id = new_test.id
+                    original_test.retestOrderTestId = new_test.id
+                from app.domains.lab.specimen.lookup import (
+                    linked_order_tests_for_sample,
+                    sync_sample_test_codes,
+                )
+
+                sync_sample_test_codes(
+                    new_sample,
+                    linked_order_tests_for_sample(self.db, new_sample),
+                )
 
         self.quality.emitter.sample_created(
             new_sample.sampleId,

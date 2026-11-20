@@ -15,7 +15,7 @@ from app.domains.lab.monitor.tat import CatalogTatResolver, assemble_board
 from app.domains.lab.specimen.models import Sample
 from app.domains.orders.models import OrderTest
 from app.shared.generated.enums import SampleStatus, TestStatus
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
 
@@ -33,16 +33,21 @@ class LabBoardService:
         """SQL-backed counts for tab badges — avoids loading full queue rows."""
         from app.shared.generated.enums import SampleStatus, TestStatus
 
-        collection_count = (
-            self.db.query(Sample.sampleId).filter(Sample.status == SampleStatus.PENDING).count()
-        )
+        collection_count = collection_base_query(self.db).filter(
+            Sample.status == SampleStatus.PENDING
+        ).count()
         entry_count = (
-            self.db.query(OrderTest.id)
-            .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
+            order_test_stage_query(self.db)
+            .filter(
+                OrderTest.status == TestStatus.SAMPLE_COLLECTED,
+                Sample.status == SampleStatus.COLLECTED,
+            )
             .count()
         )
         validation_count = (
-            self.db.query(OrderTest.id).filter(awaiting_validation_predicate()).count()
+            order_test_stage_query(self.db, include_sample=False)
+            .filter(awaiting_validation_predicate())
+            .count()
         )
         supervisor = 0
         if include_supervisor:
@@ -132,10 +137,7 @@ class LabBoardService:
 
     @staticmethod
     def _at_validation_predicate():
-        return and_(
-            LabBoardService._running_tests_predicate(),
-            ~OrderTest.status.in_((TestStatus.PENDING, TestStatus.SAMPLE_COLLECTED)),
-        )
+        return awaiting_validation_predicate()
 
     @staticmethod
     def _stage_percent(count: int, total: int) -> int:
@@ -221,9 +223,15 @@ class LabBoardService:
 
     @staticmethod
     def _validation_today_predicate(today_start: datetime):
-        return and_(
-            OrderTest.resultValidatedAt.isnot(None),
-            OrderTest.resultValidatedAt >= today_start,
+        return or_(
+            and_(
+                OrderTest.resultValidatedAt.isnot(None),
+                OrderTest.resultValidatedAt >= today_start,
+            ),
+            and_(
+                OrderTest.validatedBy.isnot(None),
+                OrderTest.updatedAt >= today_start,
+            ),
         )
 
     def _utc_today_start(self) -> datetime:
@@ -251,6 +259,7 @@ class LabBoardService:
                 "priority": order.priority,
                 "payment_status": order.paymentStatus,
                 "order_date": order.orderDate,
+                "sample_created_at": sample.createdAt,
                 "is_recollection": bool(sample.isRecollection),
                 "sample_status": sample.status,
                 "turnaround_hours": self._max_tat_for_codes(sample.testCodes or []),
@@ -261,7 +270,10 @@ class LabBoardService:
     def _entry_rows(self) -> list[dict[str, Any]]:
         rows = (
             order_test_stage_query(self.db)
-            .filter(OrderTest.status == TestStatus.SAMPLE_COLLECTED)
+            .filter(
+                OrderTest.status == TestStatus.SAMPLE_COLLECTED,
+                Sample.status == SampleStatus.COLLECTED,
+            )
             .all()
         )
         return [

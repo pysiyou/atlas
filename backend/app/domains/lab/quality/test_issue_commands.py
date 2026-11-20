@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from app.domains.lab.quality.models import EscalationTicket
 from app.domains.lab.quality.options import count_retests_in_chain
 from app.domains.lab.quality.rejection import RejectionCriteriaService
 from app.domains.lab.quality.remedy import SampleRejectionContext, validation_remedy_types
@@ -15,6 +16,9 @@ from app.domains.lab.rules.state_machines import SampleStateMachine, TestStateMa
 from app.domains.orders.models import OrderTest
 from app.shared.errors import LabOperationError
 from app.shared.generated.enums import (
+    EscalationReasonCode,
+    EscalationSeverity,
+    EscalationTicketStatus,
     QualityDomain,
     QualityStage,
     RemedyType,
@@ -144,12 +148,22 @@ class TestIssueCommands:
         reason: str,
         notes: str | None,
     ) -> QualityIssueResult:
+        if order_test.sampleId:
+            sample = self._svc.get_sample(order_test.sampleId, for_update=True)
+            if sample.status != SampleStatus.COLLECTED:
+                raise LabOperationError(
+                    "Re-test on the same sample requires a collected, non-rejected specimen.",
+                    status_code=400,
+                )
         retest_used = count_retests_in_chain(self._svc.db, order_test)
         retest_remaining = max(0, MAX_RETEST_ATTEMPTS - retest_used - 1)
         if retest_remaining <= 0:
-            raise LabOperationError(
-                f"Re-test limit reached ({MAX_RETEST_ATTEMPTS}). Recollect or cancel instead.",
-                status_code=400,
+            return self._escalate_test(
+                order_test,
+                user_id,
+                reason,
+                notes,
+                EscalationReasonCode.LIMIT_HIT,
             )
 
         new_test = self._svc.remedy.create_retest(order_test, user_id, reason, notes)
@@ -184,20 +198,21 @@ class TestIssueCommands:
         reason: str,
         notes: str | None,
     ) -> QualityIssueResult:
-        from app.shared.generated.lab_policy import MAX_RECOLLECTION_ATTEMPTS
 
         if not order_test.sampleId:
             raise LabOperationError("No sample linked to this test", status_code=400)
         if not self._svc.recollection_execution:
             raise LabOperationError("Recollection request service not configured", status_code=500)
 
-        sample = self._svc.get_sample(order_test.sampleId)
+        sample = self._svc.get_sample(order_test.sampleId, for_update=True)
 
         if not self._svc.collection.can_request_recollection(sample):
-            raise LabOperationError(
-                f"Maximum collection attempts ({MAX_RECOLLECTION_ATTEMPTS}) reached. "
-                "Cancel the test instead.",
-                status_code=400,
+            return self._escalate_test(
+                order_test,
+                user_id,
+                reason,
+                notes,
+                EscalationReasonCode.REJ_SAMP,
             )
 
         if sample.status == SampleStatus.COLLECTED:
@@ -212,6 +227,7 @@ class TestIssueCommands:
                 ),
                 skip_test_ids={order_test.id},
                 resulted_outcome="reset_pending",
+                recollection_required=True,
             )
         elif sample.status != SampleStatus.REJECTED:
             can_reject, reject_reason = SampleStateMachine.can_reject(sample.status)
@@ -244,6 +260,13 @@ class TestIssueCommands:
             order_test_id=order_test.id,
             supervisor_authorized=False,
         )
+        self._svc.remedy.attach_created_artifacts(
+            issue,
+            created_test_id=executed.created_test_id,
+            created_sample_id=executed.created_sample_id,
+            user_id=user_id,
+            reason=reason,
+        )
         return QualityIssueResult(
             success=True,
             remedy=RemedyType.REQUEST_RECOLLECTION,
@@ -254,4 +277,56 @@ class TestIssueCommands:
             orderTestId=order_test.id,
             createdSampleId=executed.created_sample_id,
             createdTestId=executed.created_test_id,
+        )
+
+    def _escalate_test(
+        self,
+        order_test: OrderTest,
+        user_id: str,
+        reason: str,
+        notes: str | None,
+        reason_code: EscalationReasonCode,
+    ) -> QualityIssueResult:
+        TestStateMachine.validate_transition(order_test.status, TestStatus.ESCALATED)
+        order_test.status = TestStatus.ESCALATED
+        severity = (
+            EscalationSeverity.CRITICAL
+            if reason_code == EscalationReasonCode.CRIT_VAL
+            else EscalationSeverity.STANDARD
+        )
+        ticket = EscalationTicket(
+            orderTestId=order_test.id,
+            sampleId=order_test.sampleId,
+            reasonCode=reason_code,
+            status=EscalationTicketStatus.OPEN,
+            severity=severity,
+            ticketMetadata={"reason": reason, "notes": notes},
+            createdByUserId=str(user_id),
+        )
+        self._svc.db.add(ticket)
+        self._svc.db.flush()
+        issue = self._svc.remedy.record_issue(
+            order_id=order_test.orderId,
+            stage=QualityStage.VALIDATION,
+            domain=QualityDomain.ANALYTICAL
+            if reason_code == EscalationReasonCode.LIMIT_HIT
+            else QualityDomain.SPECIMEN,
+            reason=reason,
+            notes=notes,
+            remedy=RemedyType.ESCALATE,
+            user_id=user_id,
+            order_test_id=order_test.id,
+            sample_id=order_test.sampleId,
+            test_code=order_test.testCode,
+        )
+        return QualityIssueResult(
+            success=True,
+            remedy=RemedyType.ESCALATE,
+            message="Escalated for supervisor review.",
+            qualityIssueId=issue.id,
+            orderId=order_test.orderId,
+            testCode=order_test.testCode,
+            orderTestId=order_test.id,
+            sampleId=order_test.sampleId,
+            escalationRequired=True,
         )

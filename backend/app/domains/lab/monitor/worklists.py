@@ -33,7 +33,10 @@ from app.domains.lab.rules.projection import (
     projection_to_worklist_fields,
 )
 from app.domains.lab.rules.status_sets import COLLECTION_WORKLIST_LINKED_EXCLUDE
-from app.domains.lab.specimen.lookup import linked_order_tests_by_sample_ids
+from app.domains.lab.specimen.lookup import (
+    accession_lineage_match,
+    linked_order_tests_by_sample_ids,
+)
 from app.domains.lab.specimen.models import Sample
 from app.domains.lab.specimen.volume import classify_specimen_volume
 from app.domains.orders.models import Order, OrderTest
@@ -104,7 +107,7 @@ def _collection_search_filter(search_term: str):
     if parsed:
         accession, test_code = parsed
         return and_(
-            Sample.sampleId == accession,
+            accession_lineage_match(accession),
             exists().where(
                 and_(
                     OrderTest.sampleId == Sample.sampleId,
@@ -120,7 +123,7 @@ def _collection_search_filter(search_term: str):
     ]
     compact = compact_identifier(term)
     if looks_like_accession(term):
-        predicates.append(Sample.sampleId == term.strip())
+        predicates.append(accession_lineage_match(term))
     if looks_like_filler(term):
         predicates.append(Order.orderId == compact)
     if looks_like_patient_id(term):
@@ -135,7 +138,7 @@ def _order_test_worklist_search_filter(search_term: str):
     if parsed:
         accession, test_code = parsed
         return and_(
-            Sample.sampleId == accession,
+            accession_lineage_match(accession),
             OrderTest.testCode == test_code,
         )
     predicates = [
@@ -148,7 +151,7 @@ def _order_test_worklist_search_filter(search_term: str):
     ]
     compact = compact_identifier(term)
     if looks_like_accession(term):
-        predicates.append(Sample.sampleId == term.strip())
+        predicates.append(accession_lineage_match(term))
     if looks_like_filler(term):
         predicates.append(Order.orderId == compact)
     if looks_like_patient_id(term):
@@ -603,7 +606,10 @@ class LabWorklistService:
         category: str | None = None,
     ) -> dict[str, Any]:
         query, _search_term = self._order_test_worklist_query(
-            extra_filters=(OrderTest.status == TestStatus.SAMPLE_COLLECTED,),
+            extra_filters=(
+                OrderTest.status == TestStatus.SAMPLE_COLLECTED,
+                Sample.status == SampleStatus.COLLECTED,
+            ),
             priorities=priorities,
             date_from=date_from,
             date_to=date_to,
@@ -663,7 +669,9 @@ class LabWorklistService:
                     "sampleOptimalVolume": sample_optimal,
                     "volumeStatus": _sample_volume_status(sample),
                     **work_item_fields,
-                    "queueAgeBand": None,
+                    "queueAgeBand": age_bucket(hours, test.turnaroundTimeHours)
+                    if test.turnaroundTimeHours
+                    else None,
                     "priorityRank": priority_rank(order.priority),
                 }
             )

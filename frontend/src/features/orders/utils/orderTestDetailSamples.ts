@@ -3,36 +3,22 @@
  */
 
 import type { OrderTest, Sample } from '@/types';
-import { expandSamplesWithRecollectionChain } from './orderTestRelations';
+import { walkToLiveOrderTest } from './orderTestLineage';
+import { getSampleRecollectionChain } from './orderTestRelations';
 
-/** Samples tied to this order test: linked id + any sample listing this test code. */
+/** Samples on this test's accession chain — not every tube whose testCodes mention the mnemonic. */
 export function getRelatedSamplesForOrderTest(
   orderTest: OrderTest,
-  orderSamples: Sample[]
+  orderSamples: Sample[],
+  orderTests: OrderTest[] = []
 ): Sample[] {
-  const byId = new Map<string, Sample>();
-
-  for (const sample of orderSamples) {
-    if (sample.testCodes?.includes(orderTest.testCode)) {
-      byId.set(sample.sampleId, sample);
-    }
-  }
-
-  if (orderTest.sampleId != null) {
-    const linked = orderSamples.find(s => s.sampleId === orderTest.sampleId);
-    if (linked) {
-      byId.set(linked.sampleId, linked);
-    }
-  }
-
-  const linkedId = orderTest.sampleId;
-  const byTestCode = Array.from(byId.values()).sort((a, b) => {
-    if (linkedId != null) {
-      if (a.sampleId === linkedId) return -1;
-      if (b.sampleId === linkedId) return 1;
-    }
-    return a.sampleId.localeCompare(b.sampleId, undefined, { numeric: true });
-  });
-
-  return expandSamplesWithRecollectionChain(byTestCode, orderSamples, linkedId);
+  const live =
+    orderTests.length > 0 && (orderTest.status === 'superseded' || orderTest.status === 'removed')
+      ? walkToLiveOrderTest(orderTests, orderTest)
+      : orderTest;
+  const startId = live.sampleId ?? orderTest.sampleId;
+  if (startId == null) return [];
+  const linked = orderSamples.find(s => s.sampleId === startId);
+  if (!linked) return [];
+  return getSampleRecollectionChain(linked.sampleId, orderSamples);
 }

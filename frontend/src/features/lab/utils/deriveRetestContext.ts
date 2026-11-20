@@ -53,8 +53,7 @@ export function deriveRetestContextFromRow(row: Pick<
     attemptMax,
     attemptType,
     showRetestBadge: isRetest && !!row.retestOfTestId,
-    showRecollectionBadge: isSampleRecollection && !isRetest,
-    showRecollectionLink:
-      isSampleRecollection && !isRetest && row.sampleOriginalSampleId != null,
+    showRecollectionBadge: isSampleRecollection,
+    showRecollectionLink: isSampleRecollection && row.sampleOriginalSampleId != null,
   };
 }

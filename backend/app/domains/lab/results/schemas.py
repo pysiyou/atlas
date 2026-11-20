@@ -13,7 +13,7 @@ from app.shared.clinical import (
     REFERENT_DOCTOR_ID_PATTERN,
     SAMPLE_ID_PATTERN,
 )
-from app.shared.generated.enums import RemedyType, ValidationDecision
+from app.shared.generated.enums import EscalationResolutionAction, RemedyType, ValidationDecision
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -48,6 +48,21 @@ class ResultValidationRequest(BaseModel):
                     "preferredRemedy must be retry_same_sample, request_recollection, or cancel"
                 )
         return self
+
+
+class EscalationResolveRequest(BaseModel):
+    action: EscalationResolutionAction
+    validationNotes: str | None = None
+    rejectionReason: str | None = None
+
+
+class EscalationResolveResult(BaseModel):
+    success: bool
+    action: EscalationResolutionAction
+    message: str
+    escalatedTestId: int
+    newTestId: int | None = None
+    newSampleId: str | None = None
 
 
 class PendingEscalationItemResponse(BaseModel):

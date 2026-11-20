@@ -9,6 +9,7 @@ import { useAuthStore } from '@/app/authStore';
 import { AppShell } from '@/components/layout';
 import { PageContentLoadingFallback, PageLoadingFallback } from '@/components/feedback';
 import { ErrorBoundary } from '@/feedback';
+import { LabActivityPanel } from '@/features/lab/activity';
 import { ROUTES } from '@/app/routes';
 
 export function ProtectedLayout() {
@@ -18,12 +19,15 @@ export function ProtectedLayout() {
   if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
 
   return (
-    <AppShell>
-      <ErrorBoundary homeHref={ROUTES.DASHBOARD}>
-        <Suspense fallback={<PageContentLoadingFallback />}>
-          <Outlet />
-        </Suspense>
-      </ErrorBoundary>
-    </AppShell>
+    <>
+      <AppShell>
+        <ErrorBoundary homeHref={ROUTES.DASHBOARD}>
+          <Suspense fallback={<PageContentLoadingFallback />}>
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
+      </AppShell>
+      <LabActivityPanel />
+    </>
   );
 }

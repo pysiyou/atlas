@@ -9,6 +9,7 @@ import type { ValidationQueueRow } from '../types/queues';
 export interface ResultValidationQueueData {
   validationRows: ValidationQueueRow[];
   isLoading: boolean;
+  isFetching: boolean;
   isError: boolean;
   error: unknown;
   refetch: () => void;
@@ -28,6 +29,7 @@ export function useResultValidationQueueData(params?: {
   const {
     items: worklistItems,
     isLoading: worklistLoading,
+    isFetching: worklistFetching,
     isError: worklistError,
     error: worklistErr,
     refetch: refetchWorklist,
@@ -43,6 +45,7 @@ export function useResultValidationQueueData(params?: {
   return {
     validationRows,
     isLoading: worklistLoading,
+    isFetching: worklistFetching,
     isError: worklistError,
     error: worklistErr ?? null,
     refetch: () => {

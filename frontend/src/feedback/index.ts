@@ -11,9 +11,7 @@ import {
 import { isApiError } from '@/lib/api';
 import { getErrorMessage } from '@/utils/errors';
 import { applyFeedbackTerminology, resolveFeedbackTitle } from './terminology';
-import { showToast } from './toast';
-import { TOAST_ALERT_MESSAGE } from './FeedbackUi';
-import type { ToastVariant } from './FeedbackUi';
+import { showToast, TOAST_ALERT_MESSAGE, type ToastVariant } from './FeedbackUi';
 
 export type { FeedbackId, FeedbackEntry, FeedbackVariant } from '@/types/generated/feedback';
 
@@ -45,12 +43,12 @@ function isUnauthorizedApiError(error: unknown): boolean {
 }
 
 /** True when the auth store already showed session.expired — skip a second toast. */
-export function shouldSuppressApiErrorToast(error: unknown): boolean {
+function shouldSuppressApiErrorToast(error: unknown): boolean {
   return isSessionExpired() && isUnauthorizedApiError(error);
 }
 
 /** Visual toast tone from catalog variant (operation outcome, not clinical nature). */
-export function toastOutcomeVariant(catalogVariant: FeedbackVariant): ToastVariant {
+function toastOutcomeVariant(catalogVariant: FeedbackVariant): ToastVariant {
   switch (catalogVariant) {
     case 'success':
     case 'info':
@@ -107,17 +105,17 @@ export function inlineFeedbackMessage(id: FeedbackId, error?: unknown): string {
 export {
   Alert,
   ErrorFallback,
-  TOAST_ALERT_MESSAGE,
+  NOTICE_CARD_SHELL,
+  NoticeCardBody,
+  NoticeCardFooter,
+  NoticeCardHeader,
+  TOAST_DEFAULT_DURATION_MS,
+  ToastHost,
+  ToastProvider,
+  showToast,
+  useToastMountRef,
   type AlertProps,
   type ErrorFallbackProps,
   type ToastVariant,
 } from './FeedbackUi';
-
-export {
-  TOAST_DEFAULT_DURATION_MS,
-  TOAST_REMOVE_DELAY_MS,
-  ToastHost,
-  ToastProvider,
-  useToastMountRef,
-} from './toast';
 export { ErrorBoundary } from './ErrorBoundary';

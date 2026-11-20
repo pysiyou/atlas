@@ -103,7 +103,8 @@ export function useLabModalWorkItemModel(
   const { relatedSamples } = useOrderTestDetailSamples(
     order?.orderId ?? '',
     samplesOrderTest,
-    isOpen && Boolean(order?.orderId && orderTest)
+    isOpen && Boolean(order?.orderId && orderTest),
+    order?.tests
   );
 
   const activeSample = useMemo(

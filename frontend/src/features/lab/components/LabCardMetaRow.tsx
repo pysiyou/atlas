@@ -98,47 +98,37 @@ export function LabModalMetaRow({
 
 export function TestRejectionTailMeta({ row }: { row: LabOrderTestQueueRow }) {
   const ctx = deriveRetestContextFromRow(row);
+  const nodes: ReactNode[] = [];
 
   if (ctx.showRetestBadge && row.priorTestDisplay) {
-    return (
-      <LabCardMetaRow>
-        <span>
-          Re-test of <RecordId type="orderTest" value={row.priorTestDisplay} emphasis="inline" />
-        </span>
-        {ctx.showAttemptInMeta ? (
-          <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
-            Attempt {ctx.attemptNumber}/{ctx.attemptMax}
-          </span>
-        ) : null}
-      </LabCardMetaRow>
+    nodes.push(
+      <span key="retest">
+        Re-test of <RecordId type="orderTest" value={row.priorTestDisplay} emphasis="inline" />
+      </span>
     );
   }
-  if (ctx.showRecollectionLink && row.sampleOriginalSampleId) {
-    return (
-      <LabCardMetaRow>
-        <span>
-          Recollection of{' '}
-          <RecordId type="sample" value={row.sampleOriginalSampleId} emphasis="inline" />
-        </span>
-        {ctx.showAttemptInMeta ? (
-          <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
-            Attempt {ctx.attemptNumber}/{ctx.attemptMax}
-          </span>
-        ) : null}
-      </LabCardMetaRow>
+  if ((ctx.showRecollectionBadge || ctx.showRecollectionLink) && row.sampleOriginalSampleId) {
+    nodes.push(
+      <span key="recollect">
+        Recollection of{' '}
+        <RecordId type="sample" value={row.sampleOriginalSampleId} emphasis="inline" />
+      </span>
     );
   }
   if (ctx.showAttemptInMeta) {
     const typeLabel = ctx.attemptType === 'retest' ? 'Re-test' : 'Recollection';
-    return (
-      <LabCardMetaRow>
-        <span className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}>
-          {typeLabel} attempt {ctx.attemptNumber}/{ctx.attemptMax}
-        </span>
-      </LabCardMetaRow>
+    nodes.push(
+      <span
+        key="attempt"
+        className={ctx.attemptNumber >= ctx.attemptMax - 1 ? TONE.warning.fg : undefined}
+      >
+        {typeLabel} attempt {ctx.attemptNumber}/{ctx.attemptMax}
+      </span>
     );
   }
-  return null;
+
+  if (nodes.length === 0) return null;
+  return <LabCardMetaRow>{nodes}</LabCardMetaRow>;
 }
 
 export function SampleRejectionTailMeta({
@@ -176,7 +166,16 @@ export function RecollectionRequestedMeta({
   return (
     <span>
       Recollection requested:{' '}
-      <RecordId type="sample" value={recollectionSampleId} emphasis="inline" />
+      <RecordId
+        type="sample"
+        value={recollectionSampleId}
+        emphasis="inline"
+        navigateToFiltered={{
+          targetPage: '/laboratory',
+          filterKey: 'sampleId',
+          labTab: 'collection',
+        }}
+      />
     </span>
   );
 }

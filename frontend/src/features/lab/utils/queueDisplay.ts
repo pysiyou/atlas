@@ -8,6 +8,7 @@ import {
 import { differenceInHours, parseISO, isValid } from 'date-fns';
 import { LAB_CONFIG } from '../constants/labConstants';
 import type { OrderTest, TestStatus } from '@/types';
+import { TERMINAL_TEST_STATUSES } from '@/types/generated/policies';
 
 export type { LabAttentionReason };
 export { ATTENTION_LABELS };
@@ -143,6 +144,10 @@ export interface OrderTestQueueState {
   label: string;
 }
 
+export function isTerminalTestStatus(status: string | undefined | null): boolean {
+  return status != null && (TERMINAL_TEST_STATUSES as readonly string[]).includes(status);
+}
+
 function stageFromTestStatus(status: TestStatus): OrderTestQueueStage {
   switch (status) {
     case 'pending':
@@ -156,6 +161,8 @@ function stageFromTestStatus(status: TestStatus): OrderTestQueueStage {
     case 'validated':
       return 'completed';
     case 'cancelled':
+    case 'superseded':
+    case 'removed':
       return 'cancelled';
     default:
       return 'awaiting_collection';

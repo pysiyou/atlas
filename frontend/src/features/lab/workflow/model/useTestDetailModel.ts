@@ -88,7 +88,8 @@ export function resolveModalPresentation(
   workItem: LabModalWorkItem | undefined
 ) {
   const modalStage = resolveTestDetailModalStage(
-    (orderTest?.lab ?? workItem?.lab) as Parameters<typeof resolveTestDetailModalStage>[0]
+    (orderTest?.lab ?? workItem?.lab) as Parameters<typeof resolveTestDetailModalStage>[0],
+    orderTest?.status ?? workItem?.status
   );
   const headerVariant = resolveTestDetailHeaderVariant(modalStage);
   return { modalStage, headerVariant };

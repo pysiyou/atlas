@@ -237,6 +237,17 @@ a.entity-id {
     var(--toast-bg);
 }
 
+/* Same wash as .toast-card, without changing radius/shadow/border. */
+.toast-wash {
+  background:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--toast-variant-accent, var(--toast-info)) var(--toast-accent-mix), transparent) 0%,
+      transparent 52%
+    ),
+    var(--toast-bg);
+}
+
 .toast-card--success {
   --toast-variant-accent: var(--toast-success);
 }

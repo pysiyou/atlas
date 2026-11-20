@@ -5,6 +5,8 @@ from __future__ import annotations
 from app.domains.lab.deps import get_lab_operations_service
 from app.domains.lab.results.query import ResultQueryService
 from app.domains.lab.results.schemas import (
+    EscalationResolveRequest,
+    EscalationResolveResult,
     PendingEscalationItemResponse,
     ResultEntryRequest,
     ResultValidationRequest,
@@ -67,4 +69,23 @@ def validate_results(
         user_id=current_user.id,
         validation_notes=validation_data.validationNotes,
         critical_seen=bool(validation_data.criticalSeen),
+    )
+
+
+@router.post(
+    "/results/order-tests/{orderTestId}/escalation/resolve",
+    response_model=EscalationResolveResult,
+)
+def resolve_escalation(
+    orderTestId: OrderTestIdPath,
+    body: EscalationResolveRequest,
+    service: LabOperationsService = Depends(get_lab_operations_service),
+    current_user: User = Depends(require_lab_tech),
+):
+    return service.resolve_escalation(
+        order_test_id=orderTestId,
+        user_id=current_user.id,
+        action=body.action,
+        validation_notes=body.validationNotes,
+        rejection_reason=body.rejectionReason,
     )

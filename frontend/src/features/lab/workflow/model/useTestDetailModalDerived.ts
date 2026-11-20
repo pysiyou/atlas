@@ -67,7 +67,7 @@ export function useTestDetailModalDerived({
   }, [orderTest, linked, order, openLinkedTest, hasResults, catalogTest, onClose]);
 
   const labUrlRaw =
-    order && orderTest ? getLabQueueUrlForTest(orderTest, order.orderId) : undefined;
+    order && orderTest ? getLabQueueUrlForTest(orderTest, order.orderId, order) : undefined;
   const labUrl = labUrlRaw ?? undefined;
 
   const modalKey = isValidate ? orderTestKey(orderTestId) : `test-detail-${orderTestId}`;

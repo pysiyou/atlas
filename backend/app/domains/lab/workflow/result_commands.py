@@ -103,7 +103,17 @@ class ResultCommandHandler:
 
         from app.domains.lab.rules.eligibility import assert_can_enter_results
 
-        assert_can_enter_results(order_test)
+        sample = None
+        if order_test.sampleId:
+            sample = self._svc._get_sample(order_test.sampleId)
+        assert_can_enter_results(order_test, sample)
+
+        if not results:
+            raise LabOperationError(
+                "No results to enter",
+                status_code=400,
+                error_code="VALIDATION_ERROR",
+            )
 
         analyte_defs = analyte_definitions_for_test(self._svc.db, test_code)
 
@@ -137,9 +147,10 @@ class ResultCommandHandler:
         order_test.resultEnteredAt = datetime.now(UTC)
         order_test.enteredBy = str(user_id)
         order_test.technicianNotes = technician_notes
-        if flags:
-            order_test.flags = self._svc.flag_calculator.flags_to_string_list(flags)
-            flag_modified(order_test, "flags")
+        order_test.flags = (
+            self._svc.flag_calculator.flags_to_string_list(flags) if flags else []
+        )
+        flag_modified(order_test, "flags")
 
         has_critical = self._svc.flag_calculator.has_critical_values(flags)
         order_test.hasCriticalValues = has_critical
@@ -234,6 +245,8 @@ class ResultCommandHandler:
         if order_test.status != TestStatus.RESULTED:
             return
         if order_test.hasCriticalValues:
+            return
+        if not flags:
             return
         if any(flag.status != FlagStatus.NORMAL for flag in flags):
             return
@@ -362,3 +375,111 @@ class ResultCommandHandler:
             notes=validation_notes,
             preferred_remedy=preferred_remedy,
         )
+
+    def resolve_escalation(
+        self,
+        order_test_id: int,
+        user_id: str,
+        action,
+        validation_notes: str | None = None,
+        rejection_reason: str | None = None,
+    ) -> dict[str, Any]:
+        from datetime import UTC, datetime
+
+        from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
+        from app.domains.lab.rules.state_machines import TestStateMachine
+        from app.shared.generated.enums import (
+            EscalationResolutionAction,
+            EscalationTicketStatus,
+            QualityStage,
+            SampleStatus,
+        )
+
+        order_test = self._svc._get_order_test(
+            order_test_id, status=TestStatus.ESCALATED, for_update=True
+        )
+        tickets = load_open_tickets_by_order_test_id(self._svc.db, [order_test.id])
+        ticket = tickets.get(order_test.id)
+        if ticket is None:
+            raise LabOperationError("No open escalation ticket for this test", status_code=400)
+
+        new_test_id: int | None = None
+        new_sample_id: str | None = None
+        message = "Escalation resolved."
+
+        if action == EscalationResolutionAction.FORCE_VALIDATE:
+            TestStateMachine.validate_transition(order_test.status, TestStatus.VALIDATED)
+            now = datetime.now(UTC)
+            order_test.status = TestStatus.VALIDATED
+            order_test.resultValidatedAt = now
+            order_test.validatedBy = str(user_id)
+            order_test.validationNotes = validation_notes or "Supervisor force-validate"
+            message = "Test force-validated."
+        elif action == EscalationResolutionAction.APPLY_AMENDMENT:
+            TestStateMachine.validate_transition(order_test.status, TestStatus.VALIDATED)
+            now = datetime.now(UTC)
+            order_test.status = TestStatus.VALIDATED
+            order_test.resultValidatedAt = now
+            order_test.validatedBy = str(user_id)
+            order_test.validationNotes = validation_notes or "Amendment applied"
+            message = "Amendment applied."
+        elif action == EscalationResolutionAction.AUTHORIZE_RETEST:
+            new_test = self._svc.quality.create_retest(
+                order_test, user_id, rejection_reason or "Supervisor authorized retest", None
+            )
+            new_test_id = new_test.id
+            message = "Retest authorized."
+        elif action == EscalationResolutionAction.AUTHORIZE_RECOLLECT:
+            if not order_test.sampleId:
+                raise LabOperationError("No sample linked to this test", status_code=400)
+            sample = self._svc._get_sample(order_test.sampleId, for_update=True)
+            if sample.status == SampleStatus.COLLECTED:
+                from app.domains.lab.quality.remedy import SampleRejectionContext
+
+                self._svc.quality.reject_sample_record(
+                    sample,
+                    user_id,
+                    rejection_reason or "Supervisor authorized recollection",
+                    validation_notes,
+                    SampleRejectionContext(
+                        stage=QualityStage.VALIDATION, order_test_id=order_test.id
+                    ),
+                    skip_test_ids={order_test.id},
+                    resulted_outcome="reset_pending",
+                    recollection_required=True,
+                )
+            TestStateMachine.validate_transition(order_test.status, TestStatus.SUPERSEDED)
+            order_test.status = TestStatus.SUPERSEDED
+            executed = self._svc.recollection.execute_recollection(
+                rejected_sample=sample,
+                user_id=user_id,
+                reason=rejection_reason or "Supervisor authorized recollection",
+                stage=QualityStage.VALIDATION,
+                order_test_id=order_test.id,
+                supervisor_authorized=True,
+            )
+            new_test_id = executed.created_test_id
+            new_sample_id = executed.created_sample_id
+            message = "Recollection authorized."
+        elif action == EscalationResolutionAction.CANCEL_TEST:
+            TestStateMachine.validate_transition(order_test.status, TestStatus.CANCELLED)
+            order_test.status = TestStatus.CANCELLED
+            order_test.validationNotes = validation_notes or rejection_reason or "Cancelled"
+            message = "Test cancelled."
+        else:
+            raise LabOperationError(f"Unsupported resolution action {action}", status_code=400)
+
+        ticket.status = EscalationTicketStatus.RESOLVED
+        ticket.resolvedByUserId = str(user_id)
+        ticket.resolutionAction = action
+        ticket.resolutionNotes = validation_notes or rejection_reason
+        ticket.resolvedAt = datetime.now(UTC)
+
+        return {
+            "success": True,
+            "action": action,
+            "message": message,
+            "escalatedTestId": order_test.id,
+            "newTestId": new_test_id,
+            "newSampleId": new_sample_id,
+        }

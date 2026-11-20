@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from app.domains.catalog.models import OrderableTest
-from app.domains.lab.rules.status_sets import INACTIVE_LINEAGE_STATUSES
+from app.domains.lab.rules.status_sets import GENERATE_SAMPLES_EXCLUDE_STATUSES
 from app.domains.lab.specimen.collection import (
     SampleCollectionService,
     normalize_sample_type,
@@ -18,6 +18,7 @@ from app.domains.lab.specimen.volume import (
 )
 from app.domains.orders.models import Order, OrderTest
 from app.shared.generated.enums import PriorityLevel, SampleStatus, TestStatus
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 if TYPE_CHECKING:
@@ -43,7 +44,7 @@ def generate_samples_for_order(
         db.query(OrderTest)
         .filter(
             OrderTest.orderId == orderId,
-            OrderTest.status.notin_(INACTIVE_LINEAGE_STATUSES),
+            OrderTest.status.notin_(GENERATE_SAMPLES_EXCLUDE_STATUSES),
         )
         .all()
     )
@@ -73,14 +74,18 @@ def generate_samples_for_order(
     collection = SampleCollectionService(db)
     samples: list[Sample] = []
     for sample_type_key, test_list in sample_groups.items():
-        test_defs = [test for _order_test, test in test_list]
+        pending_pairs = [
+            (ot, test) for ot, test in test_list if ot.status == TestStatus.PENDING
+        ]
+        if not pending_pairs:
+            continue
+        test_defs = [test for _ot, test in pending_pairs]
         required_min = aggregate_required_min_ml(test_defs)
         target_optimal = aggregate_target_optimal_ml(test_defs)
-        test_codes: list[str] = []
+        test_codes = [ot.testCode for ot, _test in pending_pairs]
         container_types_set: set = set()
         container_colors_set: set = set()
-        for _order_test, test in test_list:
-            test_codes.append(test.code)
+        for _order_test, test in pending_pairs:
             if test.containerTypes:
                 container_types_set.update(test.containerTypes)
             if test.containerTopColors:
@@ -119,7 +124,7 @@ def generate_samples_for_order(
                 )
                 _dedupe_pending_samples(db, orderId, pending_recollection, existing)
                 samples.append(pending_recollection)
-            elif not latest_rejected:
+            else:
                 sample = collection.create_initial_pending_sample(
                     order_id=orderId,
                     sample_type=sample_type_enum,
@@ -267,16 +272,19 @@ def _delete_pending_samples_for_order(order_id: str, db: Session, keep_sample_ty
 
 
 def _link_order_tests_to_samples(db: Session, order_id: str, samples: list[Sample]) -> None:
-    """Link collectable order tests to the active pending sample for their type."""
-    linkable_statuses = [
-        TestStatus.PENDING,
-        TestStatus.SAMPLE_COLLECTED,
-    ]
+    """Link unattached PENDING tests to the active pending sample for their type.
+
+    Never rewrite SAMPLE_COLLECTED / resulted / validated rows onto a new accession.
+    """
     for sample in samples:
-        if not sample.testCodes:
+        if not sample.testCodes or sample.status != SampleStatus.PENDING:
             continue
         db.query(OrderTest).filter(
             OrderTest.orderId == order_id,
             OrderTest.testCode.in_(sample.testCodes),
-            OrderTest.status.in_(linkable_statuses),
+            OrderTest.status == TestStatus.PENDING,
+            or_(
+                OrderTest.sampleId.is_(None),
+                OrderTest.sampleId == sample.sampleId,
+            ),
         ).update({OrderTest.sampleId: sample.sampleId}, synchronize_session="fetch")

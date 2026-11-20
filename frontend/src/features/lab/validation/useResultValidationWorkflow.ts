@@ -9,7 +9,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { invalidateAfterLabMutation } from '@/lib/query';
 import { useValidateResults } from '../api/results';
-import { notifyQualityIssueSuccess } from './qualityIssueToastMessages';
 import { notify } from '@/feedback';
 import { logger } from '@/utils/logger';
 import { useModal, ModalType } from '@/lib/context/ModalContext';
@@ -107,11 +106,12 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
       if (rejectionResult) {
         await invalidateAfterLabMutation(queryClient, {
           kind: 'qualityIssue',
-          orderId,
-          orderTestId,
+          orderId: rejectionResult.orderId ?? orderId,
+          orderTestId: rejectionResult.orderTestId ?? orderTestId,
+          createdTestId: rejectionResult.createdTestId,
+          createdSampleId: rejectionResult.createdSampleId,
         });
       }
-      notifyQualityIssueSuccess(rejectionResult);
       clearValidationComments(orderTestId);
     },
     [queueLoading, validateMutation, clearValidationComments, queryClient]
