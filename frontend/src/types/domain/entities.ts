@@ -127,17 +127,6 @@ export interface PatientContext extends Patient {
 // =============================================================================
 /** Orders, order tests, results, and batch collection grouping. */
 
-/**
- * Type for result rejection during validation (legacy labels for display only).
- */
-export type ResultRejectionType =
-  | 're-test'
-  | 're-collect'
-  | 'escalate'
-  | 'authorize_retest'
-  | 'authorize_recollect'
-  | 'cancel_test';
-
 export interface TestResult {
   value: string | number;
   unit?: string;

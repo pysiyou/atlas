@@ -6,7 +6,6 @@ from app.domains.lab.integration.ingest import AnalyzerIngestService
 from app.domains.lab.integration.schemas import (
     AnalyzerResultRequest,
     AnalyzerResultResponse,
-    HL7MessageRequest,
 )
 from app.platform.config import settings
 from app.platform.database import get_db
@@ -34,15 +33,6 @@ def verify_analyzer_auth(x_analyzer_key: str = Header(None)) -> bool:
             detail="Invalid analyzer authentication key",
         )
     return True
-
-
-@router.post("/analyzer/hl7", response_model=AnalyzerResultResponse)
-async def receive_hl7_result(
-    request: HL7MessageRequest,
-    db: Session = Depends(get_db),
-    _: bool = Depends(verify_analyzer_auth),
-):
-    return AnalyzerIngestService(db).ingest_hl7(request)
 
 
 @router.post("/analyzer/json", response_model=AnalyzerResultResponse)

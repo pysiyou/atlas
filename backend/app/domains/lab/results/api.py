@@ -23,6 +23,17 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
+@router.get("/results/pending-escalation", response_model=list[PendingEscalationItemResponse])
+def list_pending_escalation(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_lab_tech),
+):
+    """Supervisor queue: tests in ESCALATED status, including re-test / recollection limit hits."""
+    return ResultQueryService(db).list_pending_escalation(
+        viewer_validator_id=current_user.id
+    )
+
+
 @router.get("/results/order-tests/{orderTestId}", response_model=PendingEscalationItemResponse)
 def get_order_test_context(
     orderTestId: OrderTestIdPath,

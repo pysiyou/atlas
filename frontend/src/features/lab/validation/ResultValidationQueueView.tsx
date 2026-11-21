@@ -1,19 +1,24 @@
+import type { PendingEscalationItem } from '../api/results';
 import type { ValidationQueueRow } from '../types/queues';
 import type { QualityIssueResult } from '@/types';
 import { LabValidationQueueSection } from '../components/LabValidationQueueSection';
-import { ResultValidationCard } from '../workflow';
+import { EscalationCard, ResultValidationCard } from '../workflow';
 import { EmptyState } from '@/components/display';
 import { getEmptyCopy, PANEL_EMPTY_STATE, useLabCopy } from '@/strings';
 
 interface ResultValidationQueueViewProps {
   isEmpty: boolean;
+  hasEscalated: boolean;
   hasValidation: boolean;
+  canResolveEscalation: boolean;
   isMobile: boolean;
+  escalations: PendingEscalationItem[];
   validationRows: ValidationQueueRow[];
   comments: Record<string, string>;
   pendingValidateKey: string | null;
   isValidatePending: boolean;
   getCommentKey: (row: ValidationQueueRow) => string;
+  onOpenEscalation: (item: PendingEscalationItem) => void;
   onCommentsChange: (key: string, value: string) => void;
   onApprove: (orderTestId: number, orderId: string, criticalSeen?: boolean) => void;
   onReject: (row: ValidationQueueRow, result: QualityIssueResult) => void;
@@ -22,13 +27,17 @@ interface ResultValidationQueueViewProps {
 
 export function ResultValidationQueueView({
   isEmpty,
+  hasEscalated,
   hasValidation,
+  canResolveEscalation,
   isMobile,
+  escalations,
   validationRows,
   comments,
   pendingValidateKey,
   isValidatePending,
   getCommentKey,
+  onOpenEscalation,
   onCommentsChange,
   onApprove,
   onReject,
@@ -47,7 +56,27 @@ export function ResultValidationQueueView({
 
   return (
     <div className="space-y-space-8">
-      {hasValidation && (
+      {hasEscalated ? (
+        <LabValidationQueueSection
+          title={
+            canResolveEscalation
+              ? labCopy.panels.supervisorExceptions
+              : labCopy.panels.awaitingSupervisorApproval
+          }
+          count={escalations.length}
+        >
+          {escalations.map((item, idx) => (
+            <EscalationCard
+              key={`escalated-${item.id}-${idx}`}
+              item={item}
+              onClick={() => onOpenEscalation(item)}
+              isMobile={isMobile}
+            />
+          ))}
+        </LabValidationQueueSection>
+      ) : null}
+
+      {hasValidation ? (
         <LabValidationQueueSection title={labCopy.panels.pendingValidation} count={validationRows.length}>
           {validationRows.map((row, idx) => {
             const commentKey = getCommentKey(row);
@@ -67,7 +96,7 @@ export function ResultValidationQueueView({
             );
           })}
         </LabValidationQueueSection>
-      )}
+      ) : null}
     </div>
   );
 }

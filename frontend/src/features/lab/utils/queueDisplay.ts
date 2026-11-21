@@ -239,12 +239,31 @@ export function isPaymentUnpaidLabBlock(...sources: Array<LabDenyCopySource | nu
   return denyMessage === ATTENTION_LABELS.payment_unpaid;
 }
 
+const LIMIT_REACHED_REASONS = new Set(['retry_limit', 'recollection_limit']);
+
+/** Retry / recollection limit copy — not shown on lab modals. */
+export function isLimitReachedAttention(reason?: string | null): boolean {
+  return reason != null && LIMIT_REACHED_REASONS.has(reason);
+}
+
+export function isLimitReachedCopy(message?: string | null): boolean {
+  const trimmed = message?.trim() ?? '';
+  return (
+    trimmed === ATTENTION_LABELS.retry_limit || trimmed === ATTENTION_LABELS.recollection_limit
+  );
+}
+
 /** Status line for lab modal footers (left side of footer actions). */
 export function labModalFooterDenyMessage(...sources: Array<LabDenyCopySource | null | undefined>): string {
   if (isPaymentUnpaidLabBlock(...sources)) {
     return '';
   }
-  return mergeLabDenyCopySources(...sources).denyMessage?.trim() ?? '';
+  const { denyReason, attentionReason, denyMessage } = mergeLabDenyCopySources(...sources);
+  if (isLimitReachedAttention(denyReason) || isLimitReachedAttention(attentionReason)) {
+    return '';
+  }
+  const message = denyMessage?.trim() ?? '';
+  return isLimitReachedCopy(message) ? '' : message;
 }
 
 /** Hover title when a lab action is disabled; skips redundant payment messaging. */
@@ -255,15 +274,19 @@ export function labDisabledActionTooltip(
   if (isPaymentUnpaidLabBlock(...sources)) {
     return undefined;
   }
+  const { denyReason, attentionReason } = mergeLabDenyCopySources(...sources);
+  if (isLimitReachedAttention(denyReason) || isLimitReachedAttention(attentionReason)) {
+    return undefined;
+  }
   const message = options.denyMessage?.trim();
-  if (message) {
+  if (message && !isLimitReachedCopy(message)) {
     return message;
   }
   const fallback = options.fallbackLabel?.trim();
-  if (fallback && fallback !== ATTENTION_LABELS.payment_unpaid) {
-    return fallback;
+  if (!fallback || isLimitReachedCopy(fallback) || fallback === ATTENTION_LABELS.payment_unpaid) {
+    return undefined;
   }
-  return fallback || undefined;
+  return fallback;
 }
 
 function stageLabel(stage: OrderTestQueueStage): string {

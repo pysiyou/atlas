@@ -1,22 +1,17 @@
 /**
- * QualityIssuePopover view subcomponents: Loading, Error, and Action Cards.
- * Extracted to keep QualityIssuePopover.tsx focused on orchestration.
+ * QualityIssuePopover loading and error views.
  */
 
 import { actionButtonPreset, Button } from '@/components/primitives';
 import { QualityIssuePopoverLoadingView as QualityIssuePopoverLoadingViewPreset } from '@/components/surfaces';
-import { RadioCard } from '@/components/overlays';
-import { AttemptProgressBar } from './LabAttemptIndicators';
-import type { ResultRejectionType } from '@/types';
 import { cn } from '@/utils';
 import { getFeedback } from '@/feedback';
 import { QUALITY_ISSUE_POPOVER_LAYOUT, QUALITY_ISSUE_POPOVER_COPY } from '../constants/qualityIssuePopoverCopy';
-import { LAB_CONFIG } from '../constants';
-import { text, FORM_FIELD_LABEL } from '@/theme/recipes';
-/** Re-export preset so feature imports stay stable. */
-export function QualityIssuePopoverLoadingView() { return (
-  <QualityIssuePopoverLoadingViewPreset />
-); }
+import { text } from '@/theme/recipes';
+
+export function QualityIssuePopoverLoadingView() {
+  return <QualityIssuePopoverLoadingViewPreset />;
+}
 
 export interface QualityIssuePopoverErrorViewProps {
   onRetry: () => void;
@@ -26,73 +21,22 @@ export interface QualityIssuePopoverErrorViewProps {
 export function QualityIssuePopoverErrorView({
   onRetry,
   onCancel,
-}: QualityIssuePopoverErrorViewProps) { return (
-  <div
-    className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-layout-section p-panel min-w-0')}
-  >
-    <p className={text({ role: 'body' })}>{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
-    <p className={text({ role: 'caption', intent: 'muted' })}>
-      Check the notification for details, or try again.
-    </p>
-    <div className="flex justify-end gap-space-2">
-      <Button {...actionButtonPreset('cancel')} size="sm" layout="text" onClick={onCancel}>
-        {QUALITY_ISSUE_POPOVER_COPY.error.cancel}
-      </Button>
-      <Button {...actionButtonPreset('retry')} size="sm" onClick={onRetry}>
-        {QUALITY_ISSUE_POPOVER_COPY.error.retry}
-      </Button>
-    </div>
-  </div>
-); }
-
-export interface RejectionActionCardsProps {
-  selectedType: ResultRejectionType;
-  onSelect: (type: ResultRejectionType) => void;
-  isRetestEnabled: boolean;
-  retestDisabledReason: string | null;
-  retestAttemptsRemaining: number;
-}
-
-export function RejectionActionCards({
-  selectedType,
-  onSelect,
-  isRetestEnabled,
-  retestDisabledReason,
-  retestAttemptsRemaining,
-}: RejectionActionCardsProps) {
-  const retestTotal = LAB_CONFIG.MAX_RETEST_ATTEMPTS;
-  const retestUsed = retestTotal - retestAttemptsRemaining;
-
+}: QualityIssuePopoverErrorViewProps) {
   return (
-    <div>
-      <label className={`${FORM_FIELD_LABEL} mb-space-1`}>
-        {QUALITY_ISSUE_POPOVER_COPY.actions.followUpLabel}
-      </label>
-      <div className="grid grid-cols-1 gap-space-2">
-        <RadioCard
-          name="rejection-type"
-          selected={selectedType === 're-test'}
-          onClick={() => isRetestEnabled && onSelect('re-test')}
-          label={QUALITY_ISSUE_POPOVER_COPY.actions.retestLabel}
-          description={
-            <div className="space-y-space-2">
-              <p className={text({ role: 'caption' })}>
-                {QUALITY_ISSUE_POPOVER_COPY.actions.retestDescription}
-              </p>
-              {retestAttemptsRemaining > 0 && (
-                <AttemptProgressBar
-                  used={retestUsed}
-                  total={retestTotal}
-                  label="Attempts"
-                  variant="sky"
-                />
-              )}
-            </div>
-          }
-          variant="sky"
-          disabled={!isRetestEnabled}
-          disabledReason={retestDisabledReason || undefined}
-        />
+    <div
+      className={cn(QUALITY_ISSUE_POPOVER_LAYOUT.widthClass, 'flex flex-col gap-layout-section p-panel min-w-0')}
+    >
+      <p className={text({ role: 'body' })}>{getFeedback('lab.qualityIssue.options.loadFailed').title}</p>
+      <p className={text({ role: 'caption', intent: 'muted' })}>
+        Check the notification for details, or try again.
+      </p>
+      <div className="flex justify-end gap-space-2">
+        <Button {...actionButtonPreset('cancel')} size="sm" layout="text" onClick={onCancel}>
+          {QUALITY_ISSUE_POPOVER_COPY.error.cancel}
+        </Button>
+        <Button {...actionButtonPreset('retry')} size="sm" onClick={onRetry}>
+          {QUALITY_ISSUE_POPOVER_COPY.error.retry}
+        </Button>
       </div>
     </div>
   );

@@ -89,9 +89,6 @@ export interface QualityIssueOptions {
   retestAttemptsRemaining: number;
   recollectionAttemptsUsed: number;
   recollectionAttemptsRemaining: number;
-  willEscalate: boolean;
-  previewRemedy?: RemedyType;
-  previewMessage: string;
   hasSpecimenCriteria?: boolean;
   hasAnalyticalCriteria?: boolean;
   resultedTestsCount?: number;

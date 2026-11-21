@@ -180,9 +180,7 @@
       "required": ["labelFeedbackId", "descriptionFeedbackId"],
       "properties": {
         "labelFeedbackId": { "type": "string" },
-        "descriptionFeedbackId": { "type": "string" },
-        "limitDescriptionFeedbackId": { "type": "string" },
-        "supervisorHintFeedbackId": { "type": "string" }
+        "descriptionFeedbackId": { "type": "string" }
       },
       "additionalProperties": false
     }

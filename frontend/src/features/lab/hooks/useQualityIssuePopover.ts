@@ -2,20 +2,17 @@
  * useQualityIssuePopover — quality issue popover state for result validation.
  */
 import { useState, useMemo, useEffect } from 'react';
-import type { QualityIssueResult } from '@/types';
-import type { RemedyType } from '@/types';
+import type { QualityIssueResult, RemedyType } from '@/types';
 import { useQualityIssueOptions } from '../api/qualityIssues';
 import { useSubmitQualityIssue } from './useSubmitQualityIssue';
 import {
   QUALITY_ISSUE_POPOVER_COPY,
-  getValidationFormCopy,
-} from '../constants/qualityIssuePopoverCopy';
-import { inlineFeedbackMessage } from '@/feedback';
-import { useListLoadErrorToast } from '@/hooks';
-import {
+  validationPreviewAlert,
   buildValidationRemedyOptions,
   resolveSuggestedRemedy,
 } from '../constants/qualityIssuePopoverCopy';
+import { inlineFeedbackMessage } from '@/feedback';
+import { useListLoadErrorToast } from '@/hooks';
 
 function buildSubtitle(
   orderTestId: number,
@@ -79,12 +76,8 @@ export function useQualityIssuePopover({
   );
 
   const suggestedRemedy = useMemo(
-    () =>
-      resolveSuggestedRemedy(
-        options?.suggestedRemedy ?? options?.previewRemedy,
-        remedyOptions
-      ),
-    [options?.previewRemedy, options?.suggestedRemedy, remedyOptions]
+    () => resolveSuggestedRemedy(options?.suggestedRemedy, remedyOptions),
+    [options?.suggestedRemedy, remedyOptions]
   );
 
   const effectivePreferredRemedy = preferredRemedy || suggestedRemedy;
@@ -98,10 +91,7 @@ export function useQualityIssuePopover({
     [hasCriteria, hasReason, hasRemedy]
   );
 
-  const formCopy = useMemo(
-    () => (options ? getValidationFormCopy(options) : null),
-    [options]
-  );
+  const previewAlert = options ? validationPreviewAlert(options) : null;
 
   useEffect(() => {
     onSubmittingChange?.(isRejecting);
@@ -131,7 +121,7 @@ export function useQualityIssuePopover({
   const subtitle = buildSubtitle(orderTestId, testName, testCode, patientName);
   const copy = {
     title: QUALITY_ISSUE_POPOVER_COPY.reject.title,
-    confirmLabel: formCopy?.confirmLabel ?? QUALITY_ISSUE_POPOVER_COPY.reject.confirmLabel,
+    confirmLabel: QUALITY_ISSUE_POPOVER_COPY.reject.confirmLabel,
   };
 
   return {
@@ -148,7 +138,7 @@ export function useQualityIssuePopover({
     error: submitError,
     optionsLoadFailed: fetchError != null && !options,
     options,
-    formCopy,
+    previewAlert,
     handleConfirm,
     handleRetry,
     subtitle,

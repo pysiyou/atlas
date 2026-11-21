@@ -10,26 +10,20 @@ import { Alert } from '@/components/display';
 
 import { LabFormPopoverChrome } from './LabActionPopover';
 import { useQualityIssuePopover } from '../hooks/useQualityIssuePopover';
-import type { QualityIssueResult } from '@/types';
+import type { QualityIssueResult, RemedyType } from '@/types';
 import {
   QUALITY_ISSUE_POPOVER_LAYOUT,
   QUALITY_ISSUE_POPOVER_COPY,
-  type ValidationFormCopy } from '../constants/qualityIssuePopoverCopy';
+  type RemedyOption,
+} from '../constants/qualityIssuePopoverCopy';
 import { CatalogRejectionCriteriaFields } from './CatalogRejectionCriteriaFields';
 import { QualityIssuePopoverLoadingView, QualityIssuePopoverErrorView } from './QualityIssuePopoverStates';
 import { QualityIssueInlineWarning } from './QualityIssueInlineWarning';
 import { QualityIssueRemedyPicker } from './QualityIssueRemedyPicker';
-import type { RemedyOption } from '../constants/qualityIssuePopoverCopy';
-import type { RemedyType } from '@/types';
 
-/** Re-export views for consumers that render them directly */
-export { QualityIssuePopoverLoadingView, QualityIssuePopoverErrorView } from './QualityIssuePopoverStates';
-
-/** Grouped state for form body (readability and future prop additions). */
-export interface QualityIssuePopoverState {
+interface QualityIssuePopoverState {
   error: string | null;
-  escalationRequired: boolean;
-  formCopy: ValidationFormCopy | null;
+  alert: string | null;
   rejectionReason: string;
   rejectionNotes: string;
   allowedCriteria: string[];
@@ -38,8 +32,7 @@ export interface QualityIssuePopoverState {
   preferredRemedy: RemedyType | '';
 }
 
-/** Grouped actions for form body. */
-export interface QualityIssueFormActions {
+interface QualityIssueFormActions {
   onReasonChange: (value: string) => void;
   onNotesChange: (value: string) => void;
   onPreferredRemedyChange: (value: RemedyType) => void;
@@ -50,13 +43,13 @@ interface QualityIssuePopoverFormBodyProps {
   actions: QualityIssueFormActions;
 }
 
-export function QualityIssuePopoverFormBody({
+function QualityIssuePopoverFormBody({
   state,
   actions,
 }: QualityIssuePopoverFormBodyProps) {
   const {
     error,
-    formCopy,
+    alert,
     rejectionReason,
     rejectionNotes,
     allowedCriteria,
@@ -65,14 +58,7 @@ export function QualityIssuePopoverFormBody({
     preferredRemedy,
   } = state;
   const { onReasonChange, onNotesChange, onPreferredRemedyChange } = actions;
-  const copy =
-    formCopy ?? {
-      alert: null,
-      confirmLabel: QUALITY_ISSUE_POPOVER_COPY.reject.confirmLabel,
-      reasonLabel: QUALITY_ISSUE_POPOVER_COPY.reject.reasonLabel,
-      notesLabel: QUALITY_ISSUE_POPOVER_COPY.reject.notesLabel,
-      escalationRequired: false,
-    };
+  const copy = QUALITY_ISSUE_POPOVER_COPY.reject;
 
   return (
     <>
@@ -82,7 +68,7 @@ export function QualityIssuePopoverFormBody({
         </Alert>
       )}
 
-      {copy.alert && <QualityIssueInlineWarning message={copy.alert.message} />}
+      {alert ? <QualityIssueInlineWarning message={alert} /> : null}
 
       <CatalogRejectionCriteriaFields
         criteria={allowedCriteria}
@@ -148,7 +134,7 @@ function QualityIssuePopoverContent({
     error,
     optionsLoadFailed,
     options,
-    formCopy,
+    previewAlert,
     handleConfirm,
     handleRetry,
     subtitle,
@@ -182,8 +168,7 @@ function QualityIssuePopoverContent({
       <QualityIssuePopoverFormBody
         state={{
           error,
-          escalationRequired: formCopy?.escalationRequired ?? false,
-          formCopy,
+          alert: previewAlert,
           rejectionReason,
           rejectionNotes,
           allowedCriteria: options?.allowedCriteria ?? [],

@@ -11,13 +11,8 @@ from app.shared.clinical import (
 from pydantic import BaseModel, Field
 
 
-class HL7MessageRequest(BaseModel):
-    message: str
-    analyzer_id: str | None = Field(None, pattern=ANALYZER_ID_PATTERN)
-
-
 class AnalyzerResultRequest(BaseModel):
-    """JSON ingest: specimen_id is the accession (SPM-2), not the integer sample PK."""
+    """REST ingest: specimen_id is the accession, not the integer sample PK."""
 
     specimen_id: str = Field(..., pattern=SPECIMEN_INGEST_PATTERN)
     test_code: str = Field(..., pattern=TEST_MNEMONIC_PATTERN, min_length=2, max_length=8)

@@ -7,6 +7,7 @@ import type { OrderTest } from '@/types';
 import { Button } from '@/components/primitives';
 import { formatOrderTestDisplay } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
+import { isLimitReachedAttention, isLimitReachedCopy } from '@/features/lab/utils/queueDisplay';
 import type { LinkedOrderTests } from './orderTestLineage';
 
 export interface OrderTestWorkflowFieldOptions {
@@ -90,16 +91,20 @@ function appendLabPipelineFields(fields: DescriptionListItemConfig[], orderTest:
       value: formatStatusBadgeLabel(lab.pipelineStage),
     });
   }
-  if (lab?.attentionLabel) {
+  const hideLimitCopy =
+    isLimitReachedAttention(lab?.attentionReason) ||
+    isLimitReachedCopy(lab?.attentionLabel) ||
+    isLimitReachedCopy(lab?.denyMessage);
+  if (lab?.attentionLabel && !hideLimitCopy) {
     fields.push({ label: 'Attention', value: lab.attentionLabel });
   }
-  if (lab?.attentionReason) {
+  if (lab?.attentionReason && !hideLimitCopy) {
     fields.push({
       label: 'Attention reason',
       value: formatStatusBadgeLabel(lab.attentionReason),
     });
   }
-  if (lab?.denyMessage) {
+  if (lab?.denyMessage && !hideLimitCopy) {
     fields.push({ label: 'Blocked', value: lab.denyMessage });
   }
 }

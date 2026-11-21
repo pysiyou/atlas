@@ -1,4 +1,4 @@
-"""Idempotency keys for analyzer result ingest (HL7 MSH-10 / JSON correlation id)."""
+"""Idempotency keys for analyzer REST ingest (correlation id)."""
 
 from __future__ import annotations
 

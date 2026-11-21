@@ -71,6 +71,8 @@ export {
   isTerminalTestStatus,
   ATTENTION_LABELS,
   isPaymentUnpaidLabBlock,
+  isLimitReachedAttention,
+  isLimitReachedCopy,
   labModalFooterDenyMessage,
   labDisabledActionTooltip,
   type LabDenyCopySource,

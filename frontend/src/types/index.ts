@@ -50,7 +50,6 @@ export type {
   Order,
   OrderTest,
   TestResult,
-  ResultRejectionType,
   LatestPaymentSnippet,
 } from './domain/entities';
 export { getOrderTests, getOrderTestCount } from './domain/entities';

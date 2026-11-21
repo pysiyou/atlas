@@ -98,19 +98,6 @@ def sample_options(svc: QualityIssueService, sample_id: str) -> QualityIssueOpti
         elif allowed:
             suggested = allowed[0]
 
-    parts: list[str] = []
-    if unfinished > 0:
-        parts.append(f"{unfinished} unfinished test(s) — request recollection or reject tube only.")
-    if resulted > 0:
-        parts.append(
-            f"{resulted} unvalidated resulted test(s) will be cleared when the tube is rejected."
-        )
-    if validated > 0:
-        parts.append(
-            f"{validated} validated/released result(s) stay unchanged — amend separately if needed."
-        )
-    if not parts:
-        parts.append("This sample will be marked rejected.")
     criteria = RejectionCriteriaService(svc.db).get_specimen_criteria_for_tests(sample.testCodes)
 
     return QualityIssueOptions(
@@ -124,9 +111,6 @@ def sample_options(svc: QualityIssueService, sample_id: str) -> QualityIssueOpti
         suggestedRemedy=suggested,
         recollectionAttemptsUsed=recollection_used,
         recollectionAttemptsRemaining=recollection_remaining,
-        willEscalate=False,
-        previewRemedy=suggested,
-        previewMessage=" ".join(parts),
         resultedTestsCount=resulted,
         validatedTestsCount=validated,
         unfinishedTestsCount=unfinished,
@@ -164,10 +148,6 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
         allowed = [r for r in allowed if r != RemedyType.RETRY_SAME_SAMPLE]
     if not order_test.sampleId:
         allowed = [r for r in allowed if r != RemedyType.REQUEST_RECOLLECTION]
-    will_escalate = (not sample_rejected and retest_remaining <= 0) or (
-        bool(order_test.sampleId) and recollection_remaining <= 0
-    )
-
     if sample_rejected and RemedyType.REQUEST_RECOLLECTION in allowed:
         suggested = RemedyType.REQUEST_RECOLLECTION
     elif has_specimen and not has_analytical and RemedyType.REQUEST_RECOLLECTION in allowed:
@@ -178,22 +158,6 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
         suggested = allowed[0]
     else:
         suggested = None
-
-    message_parts: list[str] = []
-    if sample_rejected:
-        message_parts.append(
-            "Linked sample is already rejected — retest on the same sample is not available."
-        )
-    if retest_remaining <= 0:
-        message_parts.append("Re-test limit reached — submitting retest escalates for supervisor approval.")
-    if recollection_remaining <= 0:
-        message_parts.append(
-            "Recollection limit reached — submitting recollection escalates for supervisor approval."
-        )
-    if not message_parts:
-        message_parts.append(
-            "Choose retest on the same sample, recollection, or cancel this test."
-        )
 
     return QualityIssueOptions(
         targetType=QualityIssueTargetType.TEST,
@@ -208,9 +172,6 @@ def test_options(svc: QualityIssueService, order_test_id: int) -> QualityIssueOp
         retestAttemptsUsed=retest_used,
         retestAttemptsRemaining=retest_remaining,
         recollectionAttemptsRemaining=recollection_remaining,
-        willEscalate=will_escalate,
-        previewRemedy=suggested,
-        previewMessage=" ".join(message_parts),
         hasSpecimenCriteria=has_specimen,
         hasAnalyticalCriteria=has_analytical,
         sampleRejected=sample_rejected,

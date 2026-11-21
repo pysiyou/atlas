@@ -2602,11 +2602,15 @@
     "/api/v1/lab/samples/{sampleId}/receive": {
       "patch": {
         "tags": [
-          "lab-samples"
+          "lab"
         ],
         "summary": "Receive Sample",
-        "description": "Record optional received volume at lab check-in.",
         "operationId": "receive_sample_api_v1_lab_samples__sampleId__receive_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "sampleId",
@@ -2718,6 +2722,37 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/lab/results/pending-escalation": {
+      "get": {
+        "tags": [
+          "lab"
+        ],
+        "summary": "List Pending Escalation",
+        "description": "Supervisor queue: tests in ESCALATED status, including re-test / recollection limit hits.",
+        "operationId": "list_pending_escalation_api_v1_lab_results_pending_escalation_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PendingEscalationItemResponse"
+                  },
+                  "type": "array",
+                  "title": "Response List Pending Escalation Api V1 Lab Results Pending Escalation Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/lab/results/order-tests/{orderTestId}": {
@@ -2862,6 +2897,64 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lab/results/order-tests/{orderTestId}/escalation/resolve": {
+      "post": {
+        "tags": [
+          "lab"
+        ],
+        "summary": "Resolve Escalation",
+        "operationId": "resolve_escalation_api_v1_lab_results_order_tests__orderTestId__escalation_resolve_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderTestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "title": "Ordertestid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EscalationResolveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EscalationResolveResult"
+                }
               }
             }
           },
@@ -3790,6 +3883,7 @@
             "required": true,
             "schema": {
               "type": "integer",
+              "exclusiveMinimum": 0,
               "title": "Test Id"
             }
           }
@@ -3845,6 +3939,7 @@
             "required": true,
             "schema": {
               "type": "integer",
+              "exclusiveMinimum": 0,
               "title": "Test Id"
             }
           }
@@ -3859,159 +3954,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/lab/analyzer/hl7": {
-      "post": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Receive Hl7 Result",
-        "operationId": "receive_hl7_result_api_v1_lab_analyzer_hl7_post",
-        "parameters": [
-          {
-            "name": "x-analyzer-key",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "title": "X-Analyzer-Key"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HL7MessageRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnalyzerResultResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/lab/analyzer/json": {
-      "post": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Receive Json Result",
-        "operationId": "receive_json_result_api_v1_lab_analyzer_json_post",
-        "parameters": [
-          {
-            "name": "x-analyzer-key",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "title": "X-Analyzer-Key"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AnalyzerResultRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnalyzerResultResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/lab/analyzer/pending/{analyzer_id}": {
-      "get": {
-        "tags": [
-          "lab"
-        ],
-        "summary": "Get Pending Samples",
-        "operationId": "get_pending_samples_api_v1_lab_analyzer_pending__analyzer_id__get",
-        "parameters": [
-          {
-            "name": "analyzer_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Analyzer Id"
-            }
-          },
-          {
-            "name": "x-analyzer-key",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "title": "X-Analyzer-Key"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -4133,6 +4075,107 @@
             "HTTPBearer": []
           }
         ]
+      }
+    },
+    "/api/v1/lab/analyzer/json": {
+      "post": {
+        "tags": [
+          "lab"
+        ],
+        "summary": "Receive Json Result",
+        "operationId": "receive_json_result_api_v1_lab_analyzer_json_post",
+        "parameters": [
+          {
+            "name": "x-analyzer-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "X-Analyzer-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzerResultRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzerResultResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lab/analyzer/pending/{analyzer_id}": {
+      "get": {
+        "tags": [
+          "lab"
+        ],
+        "summary": "Get Pending Samples",
+        "operationId": "get_pending_samples_api_v1_lab_analyzer_pending__analyzer_id__get",
+        "parameters": [
+          {
+            "name": "analyzer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Analyzer Id"
+            }
+          },
+          {
+            "name": "x-analyzer-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "X-Analyzer-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/dashboard/summary": {
@@ -4697,7 +4740,7 @@
           "results"
         ],
         "title": "AnalyzerResultRequest",
-        "description": "JSON ingest: specimen_id is the accession (SPM-2), not the integer sample PK."
+        "description": "REST ingest: specimen_id is the accession, not the integer sample PK."
       },
       "AnalyzerResultResponse": {
         "properties": {
@@ -5648,9 +5691,16 @@
             "anyOf": [
               {
                 "type": "string",
-                "enum": ["no_requirement", "insufficient", "short_sample", "optimal"]
+                "enum": [
+                  "no_requirement",
+                  "insufficient",
+                  "short_sample",
+                  "optimal"
+                ]
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Volumestatus"
           },
@@ -6634,24 +6684,52 @@
             "title": "Priorityrank"
           },
           "collectedVolume": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Collectedvolume"
           },
           "sampleRequiredVolume": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Samplerequiredvolume"
           },
           "sampleOptimalVolume": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Sampleoptimalvolume"
           },
           "volumeStatus": {
             "anyOf": [
               {
                 "type": "string",
-                "enum": ["no_requirement", "insufficient", "short_sample", "optimal"]
+                "enum": [
+                  "no_requirement",
+                  "insufficient",
+                  "short_sample",
+                  "optimal"
+                ]
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Volumestatus"
           }
@@ -6712,6 +6790,100 @@
         "type": "object",
         "title": "EscalationActionFlags"
       },
+      "EscalationResolutionAction": {
+        "type": "string",
+        "enum": [
+          "force_validate",
+          "authorize_retest",
+          "authorize_recollect",
+          "apply_amendment",
+          "cancel_test"
+        ],
+        "title": "EscalationResolutionAction"
+      },
+      "EscalationResolveRequest": {
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/EscalationResolutionAction"
+          },
+          "validationNotes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validationnotes"
+          },
+          "rejectionReason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejectionreason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "EscalationResolveRequest"
+      },
+      "EscalationResolveResult": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "action": {
+            "$ref": "#/components/schemas/EscalationResolutionAction"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "escalatedTestId": {
+            "type": "integer",
+            "title": "Escalatedtestid"
+          },
+          "newTestId": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Newtestid"
+          },
+          "newSampleId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Newsampleid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "action",
+          "message",
+          "escalatedTestId"
+        ],
+        "title": "EscalationResolveResult"
+      },
       "FirstAdminSetupRequest": {
         "properties": {
           "username": {
@@ -6754,31 +6926,6 @@
           "female"
         ],
         "title": "Gender"
-      },
-      "HL7MessageRequest": {
-        "properties": {
-          "message": {
-            "type": "string",
-            "title": "Message"
-          },
-          "analyzer_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "pattern": "^[A-Z0-9][A-Z0-9._-]{2,31}$"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Analyzer Id"
-          }
-        },
-        "type": "object",
-        "required": [
-          "message"
-        ],
-        "title": "HL7MessageRequest"
       },
       "HTTPValidationError": {
         "properties": {
@@ -7423,8 +7570,7 @@
         "required": [
           "message"
         ],
-        "title": "MessageResponse",
-        "description": "Simple message response for operations that return a status message."
+        "title": "MessageResponse"
       },
       "NotifyRequest": {
         "properties": {
@@ -9041,8 +9187,7 @@
           "minVolumeMl": {
             "anyOf": [
               {
-                "type": "number",
-                "minimum": 0
+                "type": "number"
               },
               {
                 "type": "null"
@@ -9053,8 +9198,7 @@
           "optimalVolumeMl": {
             "anyOf": [
               {
-                "type": "number",
-                "minimum": 0
+                "type": "number"
               },
               {
                 "type": "null"
@@ -9264,8 +9408,7 @@
           "hasNext",
           "hasPrev"
         ],
-        "title": "PaginationMeta",
-        "description": "Pagination metadata."
+        "title": "PaginationMeta"
       },
       "PatientCreate": {
         "properties": {
@@ -9597,7 +9740,9 @@
           "phone": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 20,
+                "minLength": 10
               },
               {
                 "type": "null"
@@ -9608,7 +9753,8 @@
           "email": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "maxLength": 254
               },
               {
                 "type": "null"
@@ -10441,26 +10587,6 @@
             "title": "Recollectionattemptsremaining",
             "default": 0
           },
-          "willEscalate": {
-            "type": "boolean",
-            "title": "Willescalate",
-            "default": false
-          },
-          "previewRemedy": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/RemedyType"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "previewMessage": {
-            "type": "string",
-            "title": "Previewmessage",
-            "default": ""
-          },
           "hasSpecimenCriteria": {
             "type": "boolean",
             "title": "Hasspecimencriteria",
@@ -11239,7 +11365,7 @@
         "properties": {
           "receivedVolumeMl": {
             "type": "number",
-            "minimum": 0,
+            "minimum": 0.0,
             "title": "Receivedvolumeml"
           },
           "notes": {
@@ -11301,17 +11427,6 @@
             "type": "array",
             "title": "Requiredcontainercolors"
           },
-          "volumeStatus": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": ["no_requirement", "insufficient", "short_sample", "optimal"]
-              },
-              { "type": "null" }
-            ],
-            "title": "Volumestatus",
-            "readOnly": true
-          },
           "sampleId": {
             "type": "string",
             "pattern": "^\\d{2}-\\d{5}(\\.\\d{1,2})?$",
@@ -11360,8 +11475,7 @@
           "receivedVolumeMl": {
             "anyOf": [
               {
-                "type": "number",
-                "minimum": 0
+                "type": "number"
               },
               {
                 "type": "null"
@@ -11602,6 +11716,17 @@
             "type": "string",
             "pattern": "^1\\d{7}$",
             "title": "Updatedby"
+          },
+          "volumeStatus": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpecimenVolumeStatus"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "readOnly": true
           }
         },
         "type": "object",
@@ -11618,7 +11743,8 @@
           "createdAt",
           "createdBy",
           "updatedAt",
-          "updatedBy"
+          "updatedBy",
+          "volumeStatus"
         ],
         "title": "SampleResponse"
       },
@@ -11663,6 +11789,16 @@
         "title": "SetupStatusResponse",
         "description": "Whether the login screen should collect the first administrator."
       },
+      "SpecimenVolumeStatus": {
+        "type": "string",
+        "enum": [
+          "no_requirement",
+          "insufficient",
+          "short_sample",
+          "optimal"
+        ],
+        "title": "SpecimenVolumeStatus"
+      },
       "StatusPresentation": {
         "properties": {
           "primary": {
@@ -11693,8 +11829,7 @@
           "primary",
           "variant"
         ],
-        "title": "StatusPresentation",
-        "description": "UI-facing primary status and optional secondary reason label."
+        "title": "StatusPresentation"
       },
       "TestResultValue": {
         "properties": {
@@ -11998,7 +12133,8 @@
           "password": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "minLength": 8
               },
               {
                 "type": "null"

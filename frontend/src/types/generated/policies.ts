@@ -192,8 +192,6 @@ export type RemedyPresentationContext = 'validation' | 'sample';
 export type RemedyPresentationFields = {
   labelFeedbackId: FeedbackId;
   descriptionFeedbackId: FeedbackId;
-  limitDescriptionFeedbackId?: FeedbackId;
-  supervisorHintFeedbackId?: FeedbackId;
 };
 
 export const REMEDY_PRESENTATION: Record<
@@ -203,9 +201,7 @@ export const REMEDY_PRESENTATION: Record<
   "retry_same_sample": {
     "validation": {
       "labelFeedbackId": "lab.qualityIssue.dialog.actions.retest",
-      "descriptionFeedbackId": "lab.qualityIssue.dialog.actions.retestDescription",
-      "limitDescriptionFeedbackId": "lab.qualityIssue.dialog.actions.retestLimit",
-      "supervisorHintFeedbackId": "lab.qualityIssue.dialog.actions.retestHint"
+      "descriptionFeedbackId": "lab.qualityIssue.dialog.actions.retestDescription"
     }
   },
   "request_recollection": {

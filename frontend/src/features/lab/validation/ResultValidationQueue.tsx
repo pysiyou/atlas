@@ -15,7 +15,10 @@ import {
   useLabQueueFilterBarProps,
   useResultValidationQueueData,
 } from '../hooks';
-import { VALIDATION_REVIEW_WORKLIST_PROFILE } from '../utils/labQueueSecondaryProfiles';
+import {
+  VALIDATION_REVIEW_ESCALATION_PROFILE,
+  VALIDATION_REVIEW_WORKLIST_PROFILE,
+} from '../utils/labQueueSecondaryProfiles';
 import type { PriorityLevel, SampleStatus, TestStatus } from '@/types';
 import { getValidationFilterConfig } from '../constants';
 import { useClientConfig } from '@/app/clientConfigContext';
@@ -27,7 +30,9 @@ import type { ValidationQueueRow } from '../types/queues';
 import { useResultValidationWorkflow } from './useResultValidationWorkflow';
 import { useLabDraftStore } from '../state/labDraftStore';
 import { filterLiveOrderTestQueueRows, orderTestKey } from '../utils/labSearchAndLinks';
+import { usePendingEscalation } from '../api/results';
 import { ResultValidationQueueView } from './ResultValidationQueueView';
+import { useResultValidationQueueActions } from './useResultValidationQueueActions';
 
 function getCommentKey(row: ValidationQueueRow) {
   return orderTestKey(row.orderTestId);
@@ -48,6 +53,14 @@ export function ResultValidationQueue() {
     pagination,
     goToPage,
   } = useResultValidationQueueData(bar.serverFilters);
+  const {
+    escalatedItems,
+    canViewEscalations,
+    canResolveEscalation,
+    isLoading: escalationLoading,
+    refetch: refetchEscalation,
+    invalidatePendingEscalation,
+  } = usePendingEscalation();
   useClientListChrome({
     loadFailedKey: 'lab.worklist.loadFailed',
     isLoading: dataLoading,
@@ -68,8 +81,17 @@ export function ResultValidationQueue() {
 
   useEffect(() => {
     const validationIds = validationRows.map(row => row.orderTestId);
-    useLabDraftStore.getState().retainValidationDrafts(validationIds);
-  }, [validationRows]);
+    const escalationIds = escalatedItems
+      .map(item => item.id)
+      .filter((id): id is number => id != null);
+    useLabDraftStore.getState().retainValidationDrafts([...validationIds, ...escalationIds]);
+  }, [validationRows, escalatedItems]);
+
+  const { openEscalationModal } = useResultValidationQueueActions({
+    canResolveEscalation,
+    invalidatePendingEscalation,
+    refetchEscalation,
+  });
 
   const filterBarProps = useLabQueueFilterBarProps(bar, { statusFilterKey: 'priority' });
 
@@ -104,8 +126,21 @@ export function ResultValidationQueue() {
     [liveValidationRows, filterState, bar],
   );
 
-  const hasNoWorklistData = validationRows.length === 0;
-  const waitingOnInitialLoad = hasNoWorklistData && dataLoading;
+  const filteredEscalations = useMemo(
+    () =>
+      applyLabQueueFiltersWithProfile(
+        escalatedItems,
+        filterState,
+        bar,
+        VALIDATION_REVIEW_ESCALATION_PROFILE,
+      ),
+    [escalatedItems, filterState, bar],
+  );
+
+  const hasNoWorklistData = validationRows.length === 0 && escalatedItems.length === 0;
+  const waitingOnInitialLoad =
+    hasNoWorklistData && (dataLoading || (canViewEscalations && escalationLoading));
+  const hasEscalated = canViewEscalations && filteredEscalations.length > 0;
   const hasValidation = filteredValidationRows.length > 0;
 
   return (
@@ -119,14 +154,18 @@ export function ResultValidationQueue() {
           <QueueListPlaceholder />
         ) : (
           <ResultValidationQueueView
-            isEmpty={!hasValidation}
+            isEmpty={!hasEscalated && !hasValidation}
+            hasEscalated={hasEscalated}
             hasValidation={hasValidation}
+            canResolveEscalation={canResolveEscalation}
             isMobile={isMobile}
+            escalations={filteredEscalations}
             validationRows={filteredValidationRows}
             comments={comments}
             pendingValidateKey={pendingValidateKey}
             isValidatePending={validateMutation.isPending || dataFetching}
             getCommentKey={getCommentKey}
+            onOpenEscalation={openEscalationModal}
             onCommentsChange={handleCommentsChange}
             onApprove={(testId, orderId, criticalSeen) =>
               handleValidate(testId, orderId, true, undefined, criticalSeen)

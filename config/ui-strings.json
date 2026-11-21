@@ -284,6 +284,8 @@
       "criticalValueNotification": "Critical Value Notification",
       "escalationSummary": "Escalation Summary",
       "pendingValidation": "Pending validation",
+      "awaitingSupervisorApproval": "Awaiting supervisor approval",
+      "supervisorExceptions": "Supervisor exceptions",
       "collectionRequirements": "Collection Requirements & Instructions",
       "resultValidation": "Result Validation",
       "placeholderTestDetails": "Test details",

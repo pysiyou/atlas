@@ -18,8 +18,7 @@ export function resolveQualityIssueSuccessToast(result?: QualityIssueResult | nu
     return DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST;
   }
 
-  const { remedy, escalationRequired, createdSampleId, message } = result;
-  const msg = (message ?? '').toLowerCase();
+  const { remedy, escalationRequired, createdSampleId } = result;
 
   if (remedy === REQUEST_RECOLLECTION_WIRE) {
     return createdSampleId != null
@@ -31,14 +30,8 @@ export function resolveQualityIssueSuccessToast(result?: QualityIssueResult | nu
     return escalationRequired ? 'lab.qualityIssue.retest.limitHit' : 'lab.qualityIssue.retest';
   }
 
-  if (remedy === 'escalate' /* RemedyType.ESCALATE wire */) {
-    if (escalationRequired && (msg.includes('re-test') || msg.includes('retest'))) {
-      return 'lab.qualityIssue.retest.limitHit';
-    }
-    if (escalationRequired) {
-      return 'lab.qualityIssue.escalate.limitHit';
-    }
-    return 'lab.qualityIssue.escalate';
+  if (remedy === 'escalate') {
+    return escalationRequired ? 'lab.qualityIssue.escalate.limitHit' : 'lab.qualityIssue.escalate';
   }
 
   if (remedy === 'cancel') {

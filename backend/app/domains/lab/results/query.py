@@ -22,13 +22,75 @@ class ResultQueryService:
             }
         )
 
+    def _project_enriched(
+        self, order_test, samples_by_id, tickets_by_test, *, viewer_validator_id: str | None
+    ):
+        """Enrich an order-test row and attach lab pipeline eligibility."""
+        item = self._enrich_order_test(order_test, samples_by_id, tickets_by_test)
+        projection = None
+        if order_test.order is not None:
+            from app.domains.lab.rules.projection import (
+                LabWorkItemContext,
+                project_order_test_pipeline,
+            )
+
+            sample = samples_by_id.get(order_test.sampleId) if order_test.sampleId else None
+            ticket = tickets_by_test.get(order_test.id) if tickets_by_test else None
+            ctx = LabWorkItemContext(
+                order=order_test.order,
+                order_test=order_test,
+                sample=sample,
+                viewer_validator_id=viewer_validator_id,
+                escalation_reason_code=(
+                    ticket.reasonCode.value if ticket and ticket.reasonCode else None
+                ),
+            )
+            projection = project_order_test_pipeline(ctx)
+        return self._with_lab_projection(item, projection)
+
+    def list_pending_escalation(self, *, viewer_validator_id: str | None = None):
+        """Open supervisor queue: every order test currently in ESCALATED status."""
+        from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
+        from app.domains.lab.specimen.models import Sample
+        from app.domains.orders.models import Order, OrderTest
+        from app.shared.generated.enums import TestStatus
+
+        tests = (
+            self.db.query(OrderTest)
+            .filter(OrderTest.status == TestStatus.ESCALATED)
+            .options(
+                joinedload(OrderTest.order).joinedload(Order.patient),
+                joinedload(OrderTest.order).joinedload(Order.referentDoctor),
+                joinedload(OrderTest.order).selectinload(Order.tests),
+                joinedload(OrderTest.test),
+            )
+            .order_by(OrderTest.updatedAt.desc())
+            .all()
+        )
+        sample_ids = {t.sampleId for t in tests if t.sampleId}
+        prior_ids = [t.retestOfTestId for t in tests if t.retestOfTestId]
+        if prior_ids:
+            for prior in self.db.query(OrderTest).filter(OrderTest.id.in_(prior_ids)).all():
+                if prior.sampleId:
+                    sample_ids.add(prior.sampleId)
+        samples_by_id: dict[str, Sample] = {}
+        if sample_ids:
+            for sample in self.db.query(Sample).filter(Sample.sampleId.in_(sample_ids)).all():
+                samples_by_id[sample.sampleId] = sample
+        tickets_by_test = load_open_tickets_by_order_test_id(self.db, [t.id for t in tests])
+        return [
+            self._project_enriched(
+                t, samples_by_id, tickets_by_test, viewer_validator_id=viewer_validator_id
+            )
+            for t in tests
+        ]
+
     def get_order_test_context(
         self, order_test_id: int, *, viewer_validator_id: str | None = None
     ):
-        from app.domains.lab.quality.models import EscalationTicket
+        from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
         from app.domains.lab.specimen.models import Sample
         from app.domains.orders.models import Order, OrderTest
-        from app.shared.generated.enums import EscalationTicketStatus
         from fastapi import HTTPException
         from fastapi import status as http_status
 
@@ -55,40 +117,13 @@ class ResultQueryService:
             if sample:
                 samples_by_id[sample.sampleId] = sample
 
-        tickets_by_test: dict[int, EscalationTicket] = {}
-        open_ticket = (
-            self.db.query(EscalationTicket)
-            .filter(
-                EscalationTicket.orderTestId == order_test_id,
-                EscalationTicket.status == EscalationTicketStatus.OPEN,
-            )
-            .first()
+        tickets_by_test = load_open_tickets_by_order_test_id(self.db, [order_test_id])
+        return self._project_enriched(
+            order_test,
+            samples_by_id,
+            tickets_by_test,
+            viewer_validator_id=viewer_validator_id,
         )
-        if open_ticket:
-            tickets_by_test[order_test_id] = open_ticket
-
-        item = self._enrich_order_test(order_test, samples_by_id, tickets_by_test)
-        projection = None
-        if order_test.order is not None:
-            from app.domains.lab.rules.projection import (
-                LabWorkItemContext,
-                project_order_test_pipeline,
-            )
-
-            sample = samples_by_id.get(order_test.sampleId) if order_test.sampleId else None
-            ctx = LabWorkItemContext(
-                order=order_test.order,
-                order_test=order_test,
-                sample=sample,
-                viewer_validator_id=viewer_validator_id,
-                escalation_reason_code=(
-                    open_ticket.reasonCode.value
-                    if open_ticket and open_ticket.reasonCode
-                    else None
-                ),
-            )
-            projection = project_order_test_pipeline(ctx)
-        return self._with_lab_projection(item, projection)
 
     def _prior_test_display(self, order_test, samples_by_id) -> str | None:
         """Accession/mnemonic of the superseded test, when this row is a retest."""

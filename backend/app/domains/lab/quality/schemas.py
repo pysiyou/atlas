@@ -74,9 +74,6 @@ class QualityIssueOptions(BaseModel):
     retestAttemptsRemaining: int = 0
     recollectionAttemptsUsed: int = 0
     recollectionAttemptsRemaining: int = 0
-    willEscalate: bool = False
-    previewRemedy: RemedyType | None = None
-    previewMessage: str = ""
     hasSpecimenCriteria: bool = False
     hasAnalyticalCriteria: bool = False
     resultedTestsCount: int = 0

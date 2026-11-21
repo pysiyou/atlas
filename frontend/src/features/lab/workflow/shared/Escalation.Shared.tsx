@@ -26,6 +26,7 @@ import type { EscalationResolutionAction, Order } from '@/types';
 import { formatOrderTestDisplay } from '@/utils';
 import { formatStatusBadgeLabel } from '@/utils/statusBadge';
 import { notify } from '@/feedback';
+import { isLimitReachedCopy } from '../../utils/queueDisplay';
 import { DetailGrid } from './DetailModalLayout';
 import { useLabCopy } from '@/strings';
 
@@ -54,7 +55,8 @@ export function EscalationExceptionBadges({ row }: { row: LabOrderTestQueueRow }
 export function EscalationExceptionReviewBody({ row }: { row: LabOrderTestQueueRow }) {
   const rejectionReason = ticketString(row.ticketMetadata?.rejectionReason);
   const rejectionNotes = ticketString(row.ticketMetadata?.rejectionNotes);
-  const denyMessage = row.denyMessage ?? row.lab?.denyMessage ?? undefined;
+  const denyMessageRaw = row.denyMessage ?? row.lab?.denyMessage ?? undefined;
+  const denyMessage = isLimitReachedCopy(denyMessageRaw) ? undefined : denyMessageRaw;
   const reasonCode = row.reasonCode ? formatStatusBadgeLabel(row.reasonCode) : undefined;
 
   const hasContent = Boolean(reasonCode || denyMessage || rejectionReason || rejectionNotes);

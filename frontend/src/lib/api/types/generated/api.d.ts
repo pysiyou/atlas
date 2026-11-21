@@ -610,10 +610,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /**
-         * Receive Sample
-         * @description Record optional received volume at lab check-in.
-         */
+        /** Receive Sample */
         patch: operations["receive_sample_api_v1_lab_samples__sampleId__receive_patch"];
         trace?: never;
     };
@@ -631,6 +628,26 @@ export interface paths {
          * @description Create child aliquot tubes from a collected parent sample.
          */
         post: operations["create_sample_aliquots_api_v1_lab_samples__sampleId__aliquots_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/results/pending-escalation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Pending Escalation
+         * @description Supervisor queue: tests in ESCALATED status, including re-test / recollection limit hits.
+         */
+        get: operations["list_pending_escalation_api_v1_lab_results_pending_escalation_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -666,6 +683,23 @@ export interface paths {
         put?: never;
         /** Validate Results */
         post: operations["validate_results_api_v1_lab_results_order_tests__orderTestId__validate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/results/order-tests/{orderTestId}/escalation/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resolve Escalation */
+        post: operations["resolve_escalation_api_v1_lab_results_order_tests__orderTestId__escalation_resolve_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -842,7 +876,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/lab/analyzer/hl7": {
+    "/api/v1/lab/quality-issues/options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Quality Issue Options */
+        get: operations["get_quality_issue_options_api_v1_lab_quality_issues_options_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lab/quality-issues": {
         parameters: {
             query?: never;
             header?: never;
@@ -851,8 +902,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Receive Hl7 Result */
-        post: operations["receive_hl7_result_api_v1_lab_analyzer_hl7_post"];
+        /** Report Quality Issue */
+        post: operations["report_quality_issue_api_v1_lab_quality_issues_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -887,40 +938,6 @@ export interface paths {
         get: operations["get_pending_samples_api_v1_lab_analyzer_pending__analyzer_id__get"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/quality-issues/options": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Quality Issue Options */
-        get: operations["get_quality_issue_options_api_v1_lab_quality_issues_options_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lab/quality-issues": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Report Quality Issue */
-        post: operations["report_quality_issue_api_v1_lab_quality_issues_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1092,7 +1109,7 @@ export interface components {
         };
         /**
          * AnalyzerResultRequest
-         * @description JSON ingest: specimen_id is the accession (SPM-2), not the integer sample PK.
+         * @description REST ingest: specimen_id is the accession, not the integer sample PK.
          */
         AnalyzerResultRequest: {
             /** Specimen Id */
@@ -1706,6 +1723,33 @@ export interface components {
             allowForceValidate: boolean;
         };
         /**
+         * EscalationResolutionAction
+         * @enum {string}
+         */
+        EscalationResolutionAction: "force_validate" | "authorize_retest" | "authorize_recollect" | "apply_amendment" | "cancel_test";
+        /** EscalationResolveRequest */
+        EscalationResolveRequest: {
+            action: components["schemas"]["EscalationResolutionAction"];
+            /** Validationnotes */
+            validationNotes?: string | null;
+            /** Rejectionreason */
+            rejectionReason?: string | null;
+        };
+        /** EscalationResolveResult */
+        EscalationResolveResult: {
+            /** Success */
+            success: boolean;
+            action: components["schemas"]["EscalationResolutionAction"];
+            /** Message */
+            message: string;
+            /** Escalatedtestid */
+            escalatedTestId: number;
+            /** Newtestid */
+            newTestId?: number | null;
+            /** Newsampleid */
+            newSampleId?: string | null;
+        };
+        /**
          * FirstAdminSetupRequest
          * @description Public first-account payload. Role is always administrator.
          */
@@ -1724,13 +1768,6 @@ export interface components {
          * @enum {string}
          */
         Gender: "male" | "female";
-        /** HL7MessageRequest */
-        HL7MessageRequest: {
-            /** Message */
-            message: string;
-            /** Analyzer Id */
-            analyzer_id?: string | null;
-        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -1980,10 +2017,7 @@ export interface components {
             familyHistory?: string[];
             lifestyle?: components["schemas"]["Lifestyle"] | null;
         };
-        /**
-         * MessageResponse
-         * @description Simple message response for operations that return a status message.
-         */
+        /** MessageResponse */
         MessageResponse: {
             /** Message */
             message: string;
@@ -2503,10 +2537,7 @@ export interface components {
             /** @description Pagination metadata */
             pagination: components["schemas"]["PaginationMeta"];
         };
-        /**
-         * PaginationMeta
-         * @description Pagination metadata.
-         */
+        /** PaginationMeta */
         PaginationMeta: {
             /**
              * Page
@@ -2900,17 +2931,6 @@ export interface components {
              */
             recollectionAttemptsRemaining: number;
             /**
-             * Willescalate
-             * @default false
-             */
-            willEscalate: boolean;
-            previewRemedy?: components["schemas"]["RemedyType"] | null;
-            /**
-             * Previewmessage
-             * @default
-             */
-            previewMessage: string;
-            /**
              * Hasspecimencriteria
              * @default false
              */
@@ -3204,8 +3224,6 @@ export interface components {
             requiredContainerTypes: components["schemas"]["ContainerType"][];
             /** Requiredcontainercolors */
             requiredContainerColors: components["schemas"]["ContainerTopColor"][];
-            /** Volumestatus */
-            readonly volumeStatus?: ("no_requirement" | "insufficient" | "short_sample" | "optimal") | null;
             /** Sampleid */
             sampleId: string;
             /** Orderid */
@@ -3284,6 +3302,7 @@ export interface components {
             updatedAt: string;
             /** Updatedby */
             updatedBy: string;
+            readonly volumeStatus: components["schemas"]["SpecimenVolumeStatus"] | null;
         };
         /**
          * SampleStatus
@@ -3304,9 +3323,11 @@ export interface components {
             required: boolean;
         };
         /**
-         * StatusPresentation
-         * @description UI-facing primary status and optional secondary reason label.
+         * SpecimenVolumeStatus
+         * @enum {string}
          */
+        SpecimenVolumeStatus: "no_requirement" | "insufficient" | "short_sample" | "optimal";
+        /** StatusPresentation */
         StatusPresentation: {
             /**
              * Primary
@@ -4871,6 +4892,26 @@ export interface operations {
             };
         };
     };
+    list_pending_escalation_api_v1_lab_results_pending_escalation_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PendingEscalationItemResponse"][];
+                };
+            };
+        };
+    };
     get_order_test_context_api_v1_lab_results_order_tests__orderTestId__get: {
         parameters: {
             query?: never;
@@ -4959,6 +5000,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resolve_escalation_api_v1_lab_results_order_tests__orderTestId__escalation_resolve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderTestId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EscalationResolveRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EscalationResolveResult"];
                 };
             };
             /** @description Validation Error */
@@ -5314,18 +5390,48 @@ export interface operations {
             };
         };
     };
-    receive_hl7_result_api_v1_lab_analyzer_hl7_post: {
+    get_quality_issue_options_api_v1_lab_quality_issues_options_get: {
+        parameters: {
+            query: {
+                targetType: components["schemas"]["QualityIssueTargetType"];
+                targetId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QualityIssueOptions"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    report_quality_issue_api_v1_lab_quality_issues_post: {
         parameters: {
             query?: never;
-            header?: {
-                "x-analyzer-key"?: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["HL7MessageRequest"];
+                "application/json": components["schemas"]["ReportQualityIssueRequest"];
             };
         };
         responses: {
@@ -5335,7 +5441,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AnalyzerResultResponse"];
+                    "application/json": components["schemas"]["QualityIssueResult"];
                 };
             };
             /** @description Validation Error */
@@ -5404,71 +5510,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_quality_issue_options_api_v1_lab_quality_issues_options_get: {
-        parameters: {
-            query: {
-                targetType: components["schemas"]["QualityIssueTargetType"];
-                targetId: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["QualityIssueOptions"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    report_quality_issue_api_v1_lab_quality_issues_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReportQualityIssueRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["QualityIssueResult"];
                 };
             };
             /** @description Validation Error */

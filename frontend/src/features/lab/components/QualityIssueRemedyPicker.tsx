@@ -17,7 +17,7 @@ export interface RemedyDestinationPickerProps {
 }
 
 export function QualityIssueRemedyPicker({
-  label = QUALITY_ISSUE_POPOVER_COPY.actions.followUpLabel,
+  label = QUALITY_ISSUE_POPOVER_COPY.followUpLabel,
   options,
   value,
   onChange,
@@ -29,20 +29,17 @@ export function QualityIssueRemedyPicker({
     <div>
       <label className={`${FORM_FIELD_LABEL} mb-space-1`}>{label}</label>
       <div className="grid grid-cols-1 gap-space-2">
-        {options.map(option => {
-          const labelText = option.hint ? `${option.label} ${option.hint}` : option.label;
-          return (
-            <RadioCard
-              key={option.value}
-              name="remedy-destination"
-              selected={value === option.value}
-              onClick={() => onChange(option.value)}
-              label={labelText}
-              description={option.description}
-              disabled={option.disabled || disabled}
-            />
-          );
-        })}
+        {options.map(option => (
+          <RadioCard
+            key={option.value}
+            name="remedy-destination"
+            selected={value === option.value}
+            onClick={() => onChange(option.value)}
+            label={option.label}
+            description={option.description}
+            disabled={option.disabled || disabled}
+          />
+        ))}
       </div>
     </div>
   );

@@ -450,7 +450,7 @@
       "channel": "toast",
       "variant": "success",
       "title": "Escalated to supervisor",
-      "subtitle": "Re-test limit reached. A supervisor must approve before another run — find it under Awaiting supervisor approval on Validation.",
+      "subtitle": "A supervisor must approve before another run — find it under Awaiting supervisor approval on Validation.",
       "brief": "escalated"
     },
     "lab.qualityIssue.retest": {
@@ -464,7 +464,7 @@
       "channel": "toast",
       "variant": "success",
       "title": "Escalated for re-test approval",
-      "subtitle": "Re-test limit reached. The {{test}} is on Validation awaiting supervisor approval.",
+      "subtitle": "The {{test}} is on Validation awaiting supervisor approval.",
       "brief": "Retest escalated"
     },
     "lab.qualityIssue.recollection.requested": {
@@ -844,35 +844,15 @@
       "variant": "danger",
       "title": "Submit Rejection"
     },
-    "lab.qualityIssue.dialog.reject.warningTitle": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "Choose Next Step"
-    },
-    "lab.qualityIssue.dialog.reject.warningBody": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "Select a rejection reason and where to send this {{test}}. The system will not decide automatically."
-    },
     "lab.qualityIssue.dialog.reject.reasonLabel": {
       "channel": "inline",
       "variant": "warning",
       "title": "Result rejection reason"
     },
-    "lab.qualityIssue.dialog.escalation.warningTitle": {
+    "lab.qualityIssue.dialog.sampleRejected": {
       "channel": "inline",
       "variant": "warning",
-      "title": "Re-test Limit Reached"
-    },
-    "lab.qualityIssue.dialog.escalation.warningBody": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "Re-test attempts are exhausted. You can still choose re-test — it will escalate to a supervisor for approval before another run."
-    },
-    "lab.qualityIssue.dialog.escalation.reasonLabel": {
-      "channel": "inline",
-      "variant": "danger",
-      "title": "Rejection Reason"
+      "title": "Linked sample is already rejected — retest on the same sample is not available."
     },
     "lab.qualityIssue.dialog.notesLabel": {
       "channel": "inline",
@@ -914,45 +894,15 @@
       "variant": "info",
       "title": "Close this {{test}} line. Other {{tests}} on the {{order}} are not affected."
     },
-    "lab.qualityIssue.dialog.actions.retestLimit": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "Re-test limit reached on this sample. Choose recollection or cancel."
-    },
-    "lab.qualityIssue.dialog.actions.retestHint": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "(supervisor approval required)"
-    },
-    "lab.qualityIssue.dialog.recollectBlocked": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "Cannot collect new {{sample}} - {{order}} has validated {{tests}}"
-    },
     "lab.qualityIssue.dialog.trigger": {
       "channel": "inline",
       "variant": "danger",
       "title": "Reject"
     },
-    "lab.qualityIssue.collection.recollect.warningTitle": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "Reject {{sampleCap}}"
-    },
-    "lab.qualityIssue.collection.recollect.warningBody": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "Decide what happens to unfinished {{tests}}. Unvalidated resulted {{tests}} will be cleared and reset or cancelled per your remedy. Validated results stay released."
-    },
     "lab.qualityIssue.collection.reasonLabel": {
       "channel": "inline",
       "variant": "warning",
       "title": "{{sampleCap}} Issue"
-    },
-    "lab.qualityIssue.collection.escalate.warningTitle": {
-      "channel": "inline",
-      "variant": "warning",
-      "title": "Linked {{testsCap}} Have Results"
     },
     "lab.qualityIssue.collection.escalate.warningBody": {
       "channel": "inline",

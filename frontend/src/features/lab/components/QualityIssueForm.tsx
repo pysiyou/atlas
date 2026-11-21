@@ -32,23 +32,22 @@ type CollectionFormCopy = {
 function getCollectionFormCopy(options: QualityIssueOptions): CollectionFormCopy {
   const hasResultedOrValidated =
     (options.resultedTestsCount ?? 0) > 0 || (options.validatedTestsCount ?? 0) > 0;
-  const recollect = QUALITY_ISSUE_POPOVER_COPY.collection.recollect;
-  const resultedWarning = QUALITY_ISSUE_POPOVER_COPY.collection.escalateResults.warningBody;
+  const collection = QUALITY_ISSUE_POPOVER_COPY.collection;
 
   if (hasResultedOrValidated) {
     return {
       alert: {
-        message: resultedWarning,
+        message: collection.resultedWarning,
       },
-      reasonLabel: recollect.reasonLabel,
-      notesLabel: recollect.notesLabel,
+      reasonLabel: collection.reasonLabel,
+      notesLabel: collection.notesLabel,
     };
   }
 
   return {
     alert: null,
-    reasonLabel: recollect.reasonLabel,
-    notesLabel: recollect.notesLabel,
+    reasonLabel: collection.reasonLabel,
+    notesLabel: collection.notesLabel,
   };
 }
 
@@ -102,12 +101,8 @@ function QualityIssueFormLoaded({
   );
 
   const suggestedRemedy = React.useMemo(
-    () =>
-      resolveSuggestedRemedy(
-        options?.suggestedRemedy ?? options?.previewRemedy,
-        sampleRemedyOptions
-      ),
-    [options?.previewRemedy, options?.suggestedRemedy, sampleRemedyOptions]
+    () => resolveSuggestedRemedy(options?.suggestedRemedy, sampleRemedyOptions),
+    [options?.suggestedRemedy, sampleRemedyOptions]
   );
 
   const effectivePreferredRemedy = preferredRemedy || suggestedRemedy;
@@ -150,7 +145,7 @@ function QualityIssueFormLoaded({
 
       {targetType === 'sample' && sampleRemedyOptions.length > 0 ? (
         <QualityIssueRemedyPicker
-          label={QUALITY_ISSUE_POPOVER_COPY.collection.actions.followUpLabel}
+          label={QUALITY_ISSUE_POPOVER_COPY.collection.followUpLabel}
           options={sampleRemedyOptions}
           value={effectivePreferredRemedy}
           onChange={remedy => onPreferredRemedyChange?.(remedy)}

@@ -85,10 +85,7 @@ export type FeedbackId =
   | "lab.qualityIssue.collection.actions.recollect"
   | "lab.qualityIssue.collection.actions.recollectDescription"
   | "lab.qualityIssue.collection.escalate.warningBody"
-  | "lab.qualityIssue.collection.escalate.warningTitle"
   | "lab.qualityIssue.collection.reasonLabel"
-  | "lab.qualityIssue.collection.recollect.warningBody"
-  | "lab.qualityIssue.collection.recollect.warningTitle"
   | "lab.qualityIssue.dialog.actions.cancel"
   | "lab.qualityIssue.dialog.actions.cancelDescription"
   | "lab.qualityIssue.dialog.actions.followUp"
@@ -96,21 +93,14 @@ export type FeedbackId =
   | "lab.qualityIssue.dialog.actions.recollectDescription"
   | "lab.qualityIssue.dialog.actions.retest"
   | "lab.qualityIssue.dialog.actions.retestDescription"
-  | "lab.qualityIssue.dialog.actions.retestHint"
-  | "lab.qualityIssue.dialog.actions.retestLimit"
   | "lab.qualityIssue.dialog.error.cancel"
   | "lab.qualityIssue.dialog.error.retry"
-  | "lab.qualityIssue.dialog.escalation.reasonLabel"
-  | "lab.qualityIssue.dialog.escalation.warningBody"
-  | "lab.qualityIssue.dialog.escalation.warningTitle"
   | "lab.qualityIssue.dialog.loading"
   | "lab.qualityIssue.dialog.notesLabel"
-  | "lab.qualityIssue.dialog.recollectBlocked"
   | "lab.qualityIssue.dialog.reject.confirm"
   | "lab.qualityIssue.dialog.reject.reasonLabel"
   | "lab.qualityIssue.dialog.reject.title"
-  | "lab.qualityIssue.dialog.reject.warningBody"
-  | "lab.qualityIssue.dialog.reject.warningTitle"
+  | "lab.qualityIssue.dialog.sampleRejected"
   | "lab.qualityIssue.dialog.trigger"
   | "lab.qualityIssue.escalate"
   | "lab.qualityIssue.escalate.limitHit"
@@ -260,10 +250,7 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   "lab.qualityIssue.collection.actions.recollect": { channel: "inline", variant: "info", title: "Recollect (new draw)" },
   "lab.qualityIssue.collection.actions.recollectDescription": { channel: "inline", variant: "info", title: "Reject this tube and create a new pending {{sample}} for collection when attempts remain." },
   "lab.qualityIssue.collection.escalate.warningBody": { channel: "inline", variant: "warning", title: "Unvalidated resulted {{tests}} will be cleared when the tube is rejected. Validated results will remain released." },
-  "lab.qualityIssue.collection.escalate.warningTitle": { channel: "inline", variant: "warning", title: "Linked {{testsCap}} Have Results" },
   "lab.qualityIssue.collection.reasonLabel": { channel: "inline", variant: "warning", title: "{{sampleCap}} Issue" },
-  "lab.qualityIssue.collection.recollect.warningBody": { channel: "inline", variant: "warning", title: "Decide what happens to unfinished {{tests}}. Unvalidated resulted {{tests}} will be cleared and reset or cancelled per your remedy. Validated results stay released." },
-  "lab.qualityIssue.collection.recollect.warningTitle": { channel: "inline", variant: "warning", title: "Reject {{sampleCap}}" },
   "lab.qualityIssue.dialog.actions.cancel": { channel: "inline", variant: "info", title: "Cancel this {{test}}" },
   "lab.qualityIssue.dialog.actions.cancelDescription": { channel: "inline", variant: "info", title: "Close this {{test}} line. Other {{tests}} on the {{order}} are not affected." },
   "lab.qualityIssue.dialog.actions.followUp": { channel: "inline", variant: "info", title: "Send to" },
@@ -271,31 +258,24 @@ export const FEEDBACK_CATALOG: Record<FeedbackId, FeedbackEntry> = {
   "lab.qualityIssue.dialog.actions.recollectDescription": { channel: "inline", variant: "info", title: "Authorize a new {{sample}} collection and linked retest." },
   "lab.qualityIssue.dialog.actions.retest": { channel: "inline", variant: "info", title: "Retest on same {{sample}}" },
   "lab.qualityIssue.dialog.actions.retestDescription": { channel: "inline", variant: "info", title: "Run the {{test}} again on the specimen already collected." },
-  "lab.qualityIssue.dialog.actions.retestHint": { channel: "inline", variant: "warning", title: "(supervisor approval required)" },
-  "lab.qualityIssue.dialog.actions.retestLimit": { channel: "inline", variant: "warning", title: "Re-test limit reached on this sample. Choose recollection or cancel." },
   "lab.qualityIssue.dialog.error.cancel": { channel: "inline", variant: "info", title: "Cancel" },
   "lab.qualityIssue.dialog.error.retry": { channel: "inline", variant: "info", title: "Retry" },
-  "lab.qualityIssue.dialog.escalation.reasonLabel": { channel: "inline", variant: "danger", title: "Rejection Reason" },
-  "lab.qualityIssue.dialog.escalation.warningBody": { channel: "inline", variant: "warning", title: "Re-test attempts are exhausted. You can still choose re-test — it will escalate to a supervisor for approval before another run." },
-  "lab.qualityIssue.dialog.escalation.warningTitle": { channel: "inline", variant: "warning", title: "Re-test Limit Reached" },
   "lab.qualityIssue.dialog.loading": { channel: "inline", variant: "info", title: "Loading options..." },
   "lab.qualityIssue.dialog.notesLabel": { channel: "inline", variant: "info", title: "Additional Context / Notes" },
-  "lab.qualityIssue.dialog.recollectBlocked": { channel: "inline", variant: "warning", title: "Cannot collect new {{sample}} - {{order}} has validated {{tests}}" },
   "lab.qualityIssue.dialog.reject.confirm": { channel: "inline", variant: "danger", title: "Submit Rejection" },
   "lab.qualityIssue.dialog.reject.reasonLabel": { channel: "inline", variant: "warning", title: "Result rejection reason" },
   "lab.qualityIssue.dialog.reject.title": { channel: "inline", variant: "danger", title: "Reject Results" },
-  "lab.qualityIssue.dialog.reject.warningBody": { channel: "inline", variant: "warning", title: "Select a rejection reason and where to send this {{test}}. The system will not decide automatically." },
-  "lab.qualityIssue.dialog.reject.warningTitle": { channel: "inline", variant: "warning", title: "Choose Next Step" },
+  "lab.qualityIssue.dialog.sampleRejected": { channel: "inline", variant: "warning", title: "Linked sample is already rejected — retest on the same sample is not available." },
   "lab.qualityIssue.dialog.trigger": { channel: "inline", variant: "danger", title: "Reject" },
   "lab.qualityIssue.escalate": { channel: "toast", variant: "success", title: "Escalated to supervisor", subtitle: "This {{test}} has been sent to the escalation queue for supervisor review.", brief: "escalated" },
-  "lab.qualityIssue.escalate.limitHit": { channel: "toast", variant: "success", title: "Escalated to supervisor", subtitle: "Re-test limit reached. A supervisor must approve before another run — find it under Awaiting supervisor approval on Validation.", brief: "escalated" },
+  "lab.qualityIssue.escalate.limitHit": { channel: "toast", variant: "success", title: "Escalated to supervisor", subtitle: "A supervisor must approve before another run — find it under Awaiting supervisor approval on Validation.", brief: "escalated" },
   "lab.qualityIssue.options.loadFailed": { channel: "toast", variant: "danger", title: "Failed to load options", brief: "failed" },
   "lab.qualityIssue.recollection.requested": { channel: "toast", variant: "success", title: "Recollection scheduled", subtitle: "A new pending {{sample}} was created for collection.", brief: "Recollection scheduled" },
   "lab.qualityIssue.reject.error": { channel: "inline", variant: "danger", title: "Failed to reject results" },
   "lab.qualityIssue.report.error": { channel: "toast", variant: "error", title: "Failed to {{report}} quality issue", subtitle: "Check the details and try again.", brief: "failed" },
   "lab.qualityIssue.reported": { channel: "toast", variant: "success", title: "Quality issue reported", subtitle: "The issue has been recorded and the workflow updated.", brief: "reported" },
   "lab.qualityIssue.retest": { channel: "toast", variant: "success", title: "Re-test requested", subtitle: "A new result entry has been created using the same {{sample}}.", brief: "Retest scheduled" },
-  "lab.qualityIssue.retest.limitHit": { channel: "toast", variant: "success", title: "Escalated for re-test approval", subtitle: "Re-test limit reached. The {{test}} is on Validation awaiting supervisor approval.", brief: "Retest escalated" },
+  "lab.qualityIssue.retest.limitHit": { channel: "toast", variant: "success", title: "Escalated for re-test approval", subtitle: "The {{test}} is on Validation awaiting supervisor approval.", brief: "Retest escalated" },
   "lab.qualityIssue.specimenRejected": { channel: "toast", variant: "success", title: "{{sampleCap}} rejected", subtitle: "Linked resulted {{tests}} remain in Validation for validator decision.", brief: "rejected" },
   "lab.validation.approve.error": { channel: "toast", variant: "error", title: "Failed to validate results", subtitle: "The validation request failed. Please try again or contact support if the issue persists.", brief: "failed" },
   "lab.validation.approve.networkAmbiguous": { channel: "toast", variant: "warning", title: "Action may have completed", subtitle: "The request did not complete. Please refresh the page to see the latest status.", brief: "pending" },

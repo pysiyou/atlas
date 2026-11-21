@@ -78,7 +78,7 @@ function CollectionRejectionPopoverContent({
   const unfinishedCount = options?.unfinishedTestsCount ?? 0;
   const requiresUnfinishedChoice = unfinishedCount > 0;
   const suggestedRemedy = resolveSuggestedRemedy(
-    options?.suggestedRemedy ?? options?.previewRemedy,
+    options?.suggestedRemedy,
     buildSampleRemedyOptions(options?.allowedRemedies)
   );
   const effectiveRemedy = preferredRemedy || suggestedRemedy;

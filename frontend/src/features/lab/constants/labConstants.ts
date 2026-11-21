@@ -233,7 +233,6 @@ export const LAB_PATHS = {
   },
   qualityIssues: { list: '/lab/quality-issues', options: '/lab/quality-issues/options' },
   analyzer: {
-    hl7: '/lab/analyzer/hl7',
     json: '/lab/analyzer/json',
     pending: (analyzerId: string) => `/lab/analyzer/pending/${analyzerId}`,
   },
