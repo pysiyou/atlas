@@ -1,4 +1,7 @@
 """Read models for result entry and order-test context."""
+from datetime import date
+
+from app.shared.generated.enums import PriorityLevel
 from sqlalchemy.orm import Session, joinedload
 
 
@@ -48,16 +51,38 @@ class ResultQueryService:
             projection = project_order_test_pipeline(ctx)
         return self._with_lab_projection(item, projection)
 
-    def list_pending_escalation(self, *, viewer_validator_id: str | None = None):
-        """Open supervisor queue: every order test currently in ESCALATED status."""
+    def list_pending_escalation(
+        self,
+        *,
+        viewer_validator_id: str | None = None,
+        search: str | None = None,
+        priorities: list[PriorityLevel] | None = None,
+        date_from: date | None = None,
+        date_to: date | None = None,
+        sample_types: list[str] | None = None,
+    ):
+        """Open supervisor queue: order tests in ESCALATED status, with worklist filters."""
+        from app.domains.lab.monitor.queries import order_test_stage_query
+        from app.domains.lab.monitor.worklists import apply_order_test_worklist_filters
         from app.domains.lab.quality.escalation import load_open_tickets_by_order_test_id
         from app.domains.lab.specimen.models import Sample
         from app.domains.orders.models import Order, OrderTest
         from app.shared.generated.enums import TestStatus
 
+        filtered, _search_term = apply_order_test_worklist_filters(
+            order_test_stage_query(self.db).filter(OrderTest.status == TestStatus.ESCALATED),
+            priorities=priorities,
+            date_from=date_from,
+            date_to=date_to,
+            sample_types=sample_types,
+            search=search,
+        )
+        test_ids = [order_test.id for order_test, *_rest in filtered.all()]
+        if not test_ids:
+            return []
         tests = (
             self.db.query(OrderTest)
-            .filter(OrderTest.status == TestStatus.ESCALATED)
+            .filter(OrderTest.id.in_(test_ids))
             .options(
                 joinedload(OrderTest.order).joinedload(Order.patient),
                 joinedload(OrderTest.order).joinedload(Order.referentDoctor),

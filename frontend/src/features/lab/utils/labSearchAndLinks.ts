@@ -121,6 +121,7 @@ export function worklistServerFilters(options: {
   search?: string;
   dateRange: [Date, Date] | null;
   sampleTypeFilters: string[];
+  status?: string[];
   priority?: string[];
   priorityGroup?: string[];
   category?: string;
@@ -129,6 +130,7 @@ export function worklistServerFilters(options: {
   dateFrom?: string;
   dateTo?: string;
   sampleType?: string;
+  status?: string;
   priority?: string;
   priorityGroup?: string;
   category?: string;
@@ -140,6 +142,7 @@ export function worklistServerFilters(options: {
     dateFrom: bounds ? toIsoDateParam(bounds.start) : undefined,
     dateTo: bounds ? toIsoDateParam(bounds.end) : undefined,
     sampleType: options.sampleTypeFilters.length ? options.sampleTypeFilters.join(',') : undefined,
+    status: options.status?.length ? options.status.join(',') : undefined,
     priority: options.priority?.length ? options.priority.join(',') : undefined,
     priorityGroup: groups.length === 1 ? groups[0] : undefined,
     category: options.category?.trim() || undefined,

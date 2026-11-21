@@ -33,15 +33,19 @@ function useLabQueueFilteredItems<T extends LabQueueWorkflowType>(
   );
 
   const filtersForApply = useMemo((): LabQueueFilterState<LabQueueClientStatus> => {
-    const resolvedStatus: LabQueueClientStatus[] = bar.collectionSampleLookup
-      ? (resolveCollectionStatusFilters(true, filterState.statusFilters as string[]) as LabQueueClientStatus[])
-      : filterState.statusFilters;
+    const resolvedStatus: LabQueueClientStatus[] =
+      workflowType === 'collection'
+        ? (resolveCollectionStatusFilters(
+            bar.collectionSampleLookup,
+            filterState.statusFilters as string[],
+          ) as LabQueueClientStatus[])
+        : filterState.statusFilters;
 
     return {
       ...filterState,
       statusFilters: resolvedStatus,
     };
-  }, [filterState, bar.collectionSampleLookup]);
+  }, [filterState, bar.collectionSampleLookup, workflowType]);
 
   const filteredItems = useMemo(
     () =>
@@ -62,6 +66,7 @@ function useLabQueueFilteredItems<T extends LabQueueWorkflowType>(
         skipSearchFilter: bar.skipSearchFilter,
         skipDateFilter: bar.skipDateFilter,
         skipSampleTypeFilter: bar.skipSampleTypeFilter,
+        skipStatusFilter: bar.skipStatusFilter,
       }),
     [items, filtersForApply, filterConfig, bar],
   );

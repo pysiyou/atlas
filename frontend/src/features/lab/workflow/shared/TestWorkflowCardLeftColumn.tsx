@@ -41,6 +41,7 @@ export interface TestWorkflowCardLeftColumnProps {
  */
 function TestWorkflowIdentityLines({
   patientName,
+  patientId,
   testName,
   referentDoctorName,
   orderId,
@@ -48,6 +49,7 @@ function TestWorkflowIdentityLines({
   sampleId,
 }: {
   patientName: string;
+  patientId?: string | null;
   testName: string;
   referentDoctorName?: string;
   orderId?: string | null;
@@ -57,10 +59,18 @@ function TestWorkflowIdentityLines({
   const idClass = 'whitespace-nowrap';
 
   const line1: ReactNode[] = [];
-  if (patientName) {
+  if (patientName || patientId) {
     line1.push(
       <span key="patient" className={cn(IDENTITY_INLINE.primaryText, 'min-w-0 truncate')}>
-        {patientName}
+        {patientName || '—'}
+        {patientId ? (
+          <>
+            {' '}
+            <span className="whitespace-nowrap">
+              (<RecordId type="patient" value={patientId} emphasis="inline" />)
+            </span>
+          </>
+        ) : null}
       </span>
     );
   }
@@ -221,6 +231,7 @@ export function TestWorkflowCardLeftColumn({
       identity={
         <TestWorkflowIdentityLines
           patientName={patientName}
+          patientId={variant === 'entry' ? row.patientId : undefined}
           testName={row.testName}
           referentDoctorName={row.referentDoctorName ?? undefined}
           orderId={row.orderId}

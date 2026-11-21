@@ -7,6 +7,7 @@ import React from 'react';
 
 import type { Patient } from '@/types';
 import { DescriptionItem } from '@/components/display';
+import { RecordId } from '@/features/shared';
 
 import {
   formatBirthdayWithAge,
@@ -23,6 +24,20 @@ export interface GeneralInfoSectionProps {
 /** Core identity and contact fields (order detail top section). */
 export function renderPatientBasicInfoDescriptionItems(patient: Patient): React.ReactElement[] {
   return [
+    <DescriptionItem
+      key="full-name"
+      icon={IconKeys.dataFields.user}
+      label="Full Name"
+      value={
+        <span className="min-w-0">
+          {patient.fullName}{' '}
+          <span className="whitespace-nowrap">
+            (<RecordId type="patient" value={patient.id} emphasis="inline" />)
+          </span>
+        </span>
+      }
+      orientation="vertical"
+    />,
     <DescriptionItem
       key="gender"
       icon={IconKeys.dataFields.gender}

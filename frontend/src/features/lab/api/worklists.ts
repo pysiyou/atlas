@@ -27,7 +27,7 @@ export type {
   WorklistPagination,
 } from '@/lib/api/types';
 
-interface WorklistParams {
+export interface WorklistParams {
   page?: number;
   pageSize?: number;
   search?: string;
@@ -40,7 +40,7 @@ interface WorklistParams {
   category?: string;
 }
 
-function buildParams(params?: WorklistParams): Record<string, string> {
+export function buildWorklistParams(params?: WorklistParams): Record<string, string> {
   const q: Record<string, string> = {};
   if (params?.page != null) q.page = String(params.page);
   if (params?.pageSize != null) q.pageSize = String(params.pageSize);
@@ -59,35 +59,35 @@ export const worklistsAPI = {
   getCollection(params?: WorklistParams) {
     return apiClient.get<{ items: CollectionWorklistItem[]; pagination: WorklistPagination }>(
       LAB_PATHS.worklists.collection,
-      buildParams(params)
+      buildWorklistParams(params)
     );
   },
 
   getEntry(params?: WorklistParams) {
     return apiClient.get<{ items: EntryWorklistItem[]; pagination: WorklistPagination }>(
       LAB_PATHS.worklists.entry,
-      buildParams(params)
+      buildWorklistParams(params)
     );
   },
 
   getValidation(params?: WorklistParams) {
     return apiClient.get<{ items: ValidationWorklistItem[]; pagination: WorklistPagination }>(
       LAB_PATHS.worklists.validation,
-      buildParams(params)
+      buildWorklistParams(params)
     );
   },
 
   getDashboardToday(params?: WorklistParams) {
     return apiClient.get<{ items: DashboardWorklistItem[]; pagination: WorklistPagination }>(
       LAB_PATHS.worklists.dashboardToday,
-      buildParams(params)
+      buildWorklistParams(params)
     );
   },
 
   getAllTests(params?: WorklistParams) {
     return apiClient.get<{ items: DashboardWorklistItem[]; pagination: WorklistPagination }>(
       LAB_PATHS.worklists.allTests,
-      buildParams(params)
+      buildWorklistParams(params)
     );
   },
 };

@@ -101,6 +101,17 @@ def _apply_worklist_window_filters(
     return query
 
 
+def _collection_linked_test_exists(*clauses):
+    """True when this sample has a linked order-test matching extra SQL clauses."""
+    return exists().where(
+        and_(
+            OrderTest.sampleId == Sample.sampleId,
+            OrderTest.testCode == OrderableTest.code,
+            *clauses,
+        )
+    )
+
+
 def _collection_search_filter(search_term: str):
     term = search_term.strip()
     parsed = parse_order_test_display_search(term)
@@ -108,18 +119,15 @@ def _collection_search_filter(search_term: str):
         accession, test_code = parsed
         return and_(
             accession_lineage_match(accession),
-            exists().where(
-                and_(
-                    OrderTest.sampleId == Sample.sampleId,
-                    OrderTest.testCode == test_code,
-                )
-            ),
+            _collection_linked_test_exists(OrderTest.testCode == test_code),
         )
     predicates = [
         Patient.fullName.ilike(f"%{term}%"),
         Sample.sampleId.ilike(f"%{term}%"),
         Order.orderId.ilike(f"%{term}%"),
         Patient.id.ilike(f"%{term}%"),
+        _collection_linked_test_exists(OrderableTest.name.ilike(f"%{term}%")),
+        _collection_linked_test_exists(OrderTest.testCode.ilike(f"%{term}%")),
     ]
     compact = compact_identifier(term)
     if looks_like_accession(term):
@@ -128,6 +136,8 @@ def _collection_search_filter(search_term: str):
         predicates.append(Order.orderId == compact)
     if looks_like_patient_id(term):
         predicates.append(Patient.id == compact)
+    if looks_like_mnemonic(term):
+        predicates.append(_collection_linked_test_exists(OrderTest.testCode == term.strip().upper()))
     return or_(*predicates)
 
 
@@ -159,6 +169,35 @@ def _order_test_worklist_search_filter(search_term: str):
     if looks_like_mnemonic(term):
         predicates.append(OrderTest.testCode == term.strip().upper())
     return or_(*predicates)
+
+
+def apply_order_test_worklist_filters(
+    query,
+    *,
+    priorities: list[PriorityLevel] | None = None,
+    date_from: date | None = None,
+    date_to: date | None = None,
+    sample_types: list[str] | None = None,
+    search: str | None = None,
+    category: str | None = None,
+):
+    """Restrict an order-test join query by the shared worklist filter bar."""
+    if priorities:
+        query = query.filter(Order.priority.in_(priorities))
+    if category:
+        query = query.filter(OrderableTest.category == category)
+    query = _apply_worklist_window_filters(
+        query,
+        order_date_col=Order.orderDate,
+        sample_type_col=OrderableTest.sampleType,
+        date_from=date_from,
+        date_to=date_to,
+        sample_types=sample_types,
+    )
+    search_term = search.strip() if search else ""
+    if search_term:
+        query = query.filter(_order_test_worklist_search_filter(search_term))
+    return query, search_term
 
 
 def _paginate(total: int, page: int, page_size: int) -> dict[str, Any]:
@@ -447,22 +486,15 @@ class LabWorklistService:
         category: str | None = None,
     ):
         query = order_test_stage_query(self.db).filter(*extra_filters)
-        if priorities:
-            query = query.filter(Order.priority.in_(priorities))
-        if category:
-            query = query.filter(OrderableTest.category == category)
-        query = _apply_worklist_window_filters(
+        return apply_order_test_worklist_filters(
             query,
-            order_date_col=Order.orderDate,
-            sample_type_col=OrderableTest.sampleType,
+            priorities=priorities,
             date_from=date_from,
             date_to=date_to,
             sample_types=sample_types,
+            search=search,
+            category=category,
         )
-        search_term = search.strip() if search else ""
-        if search_term:
-            query = query.filter(_order_test_worklist_search_filter(search_term))
-        return query, search_term
 
     def list_collection(
         self,
@@ -475,14 +507,18 @@ class LabWorklistService:
         date_to: date | None = None,
         sample_types: list[str] | None = None,
         category: str | None = None,
+        statuses: list[SampleStatus] | None = None,
     ) -> dict[str, Any]:
         search_term = search.strip() if search else ""
         if len(search_term) < COLLECTION_SAMPLE_LOOKUP_MIN_LEN:
             search_term = ""
         query = collection_base_query(self.db)
-        query = query.filter(Sample.status == SampleStatus.PENDING)
         if search_term:
             query = query.filter(_collection_search_filter(search_term))
+            if statuses:
+                query = query.filter(Sample.status.in_(statuses))
+        else:
+            query = query.filter(Sample.status == SampleStatus.PENDING)
         if priorities:
             query = query.filter(Sample.priority.in_(priorities))
         if category:

@@ -27,7 +27,7 @@ from app.domains.lab.monitor.schemas import (
 from app.domains.lab.monitor.worklists import LabWorklistService, resolve_worklist_priorities
 from app.domains.users.models import User
 from app.platform.http import parse_csv_values, require_lab_tech, require_sample_collector
-from app.shared.generated.enums import PriorityLevel, TestStatus, UserRole
+from app.shared.generated.enums import PriorityLevel, SampleStatus, TestStatus, UserRole
 from fastapi import APIRouter, Depends, Query
 
 router = APIRouter()
@@ -156,15 +156,23 @@ def get_collection_worklist(
     dateFrom: date | None = Query(None),
     dateTo: date | None = Query(None),
     sampleType: str | None = Query(None, description="Comma-separated sample types"),
+    status: str | None = Query(
+        None, description="Comma-separated sample statuses (applied during accession lookup)"
+    ),
     service: LabWorklistService = Depends(get_lab_worklist_service),
     _user: User = Depends(require_sample_collector),
 ):
+    status_wires = parse_csv_values(status) or None
+    statuses: list[SampleStatus] | None = (
+        [SampleStatus(item) for item in status_wires] if status_wires else None
+    )
     return _paginated_filterable_worklist(
         log_name="lab.worklists.collection",
         page=page,
         page_size=pageSize,
         list_fn=service.list_collection,
         item_model=CollectionWorklistItem,
+        list_fn_extra={"statuses": statuses},
         **_stage_worklist_kwargs(
             search=search,
             priority=priority,

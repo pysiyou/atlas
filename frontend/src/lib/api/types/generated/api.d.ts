@@ -4894,7 +4894,16 @@ export interface operations {
     };
     list_pending_escalation_api_v1_lab_results_pending_escalation_get: {
         parameters: {
-            query?: never;
+            query?: {
+                search?: string | null;
+                /** @description Comma-separated priority levels */
+                priority?: string | null;
+                priorityGroup?: ("stat" | "routine") | null;
+                dateFrom?: string | null;
+                dateTo?: string | null;
+                /** @description Comma-separated sample types */
+                sampleType?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -4908,6 +4917,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PendingEscalationItemResponse"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -5063,6 +5081,8 @@ export interface operations {
                 dateTo?: string | null;
                 /** @description Comma-separated sample types */
                 sampleType?: string | null;
+                /** @description Comma-separated sample statuses (applied during accession lookup) */
+                status?: string | null;
             };
             header?: never;
             path?: never;

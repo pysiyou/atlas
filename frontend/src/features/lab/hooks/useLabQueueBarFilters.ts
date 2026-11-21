@@ -11,7 +11,7 @@ import {
   writeLabQueueBarFilters,
   type LabQueueBarFilters,
 } from '../utils/labQueueUrlCodec';
-import { worklistServerFilters } from '../utils/labSearchAndLinks';
+import { resolveCollectionStatusFilters, worklistServerFilters } from '../utils/labSearchAndLinks';
 import {
   getLabQueueStageConfig,
   type LabQueueWorkflowType,
@@ -44,6 +44,7 @@ export interface LabQueueBarState {
   skipSearchFilter: boolean;
   skipDateFilter: boolean;
   skipSampleTypeFilter: boolean;
+  skipStatusFilter: boolean;
   collectionSampleLookup: boolean;
 }
 
@@ -85,6 +86,11 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
     trimmedSearch.length > 0 &&
     trimmedSearch.length < LAB_CONFIG.SAMPLE_LOOKUP_MIN_CHARS;
 
+  const collectionLookupStatuses = useMemo(() => {
+    if (workflowType !== 'collection' || !isSampleLookup) return undefined;
+    return resolveCollectionStatusFilters(true, statusFilters as string[]);
+  }, [workflowType, isSampleLookup, statusFilters]);
+
   const serverFilters = useMemo(
     () =>
       worklistServerFilters({
@@ -96,6 +102,7 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
             : trimmedSearch || undefined,
         dateRange,
         sampleTypeFilters,
+        status: collectionLookupStatuses,
         priority:
           workflowType === 'validationReview'
             ? (statusFilters as string[])
@@ -108,15 +115,16 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
       trimmedSearch,
       dateRange,
       sampleTypeFilters,
+      collectionLookupStatuses,
       statusFilters,
       priorityGroupFilters,
     ],
   );
 
-  const skipSearchFilter =
-    workflowType === 'collection' ? isSampleLookup : true;
+  const skipSearchFilter = true;
   const skipDateFilter = true;
   const skipSampleTypeFilter = true;
+  const skipStatusFilter = true;
   const collectionSampleLookup = workflowType === 'collection' && isSampleLookup;
 
   const skipUrlDecodeRef = useRef(false);
@@ -195,6 +203,7 @@ export function useLabQueueBarFilters(workflowType: LabQueueWorkflowType): LabQu
     skipSearchFilter,
     skipDateFilter,
     skipSampleTypeFilter,
+    skipStatusFilter,
     collectionSampleLookup,
   };
 }

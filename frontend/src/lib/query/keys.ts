@@ -175,7 +175,17 @@ export const queryKeys = {
    */
   results: {
     all: ['results'] as const,
-    pendingEscalation: () => [...queryKeys.results.all, 'pending-escalation'] as const,
+    pendingEscalation: (filters?: {
+      search?: string;
+      dateFrom?: string;
+      dateTo?: string;
+      sampleType?: string;
+      priority?: string;
+      priorityGroup?: string;
+    }) =>
+      filters
+        ? ([...queryKeys.results.all, 'pending-escalation', filters] as const)
+        : ([...queryKeys.results.all, 'pending-escalation'] as const),
     orderTest: (orderTestId?: number) =>
       [...queryKeys.results.all, 'order-test', orderTestId] as const,
   },
@@ -230,6 +240,7 @@ export const queryKeys = {
         dateFrom?: string;
         dateTo?: string;
         sampleType?: string;
+        status?: string;
         priority?: string;
         priorityGroup?: string;
         category?: string;

@@ -60,7 +60,7 @@ export function ResultValidationQueue() {
     isLoading: escalationLoading,
     refetch: refetchEscalation,
     invalidatePendingEscalation,
-  } = usePendingEscalation();
+  } = usePendingEscalation(bar.serverFilters);
   useClientListChrome({
     loadFailedKey: 'lab.worklist.loadFailed',
     isLoading: dataLoading,

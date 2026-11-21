@@ -18,6 +18,7 @@ export interface LabQueueClientSkipFlags {
   skipSearchFilter: boolean;
   skipDateFilter: boolean;
   skipSampleTypeFilter: boolean;
+  skipStatusFilter: boolean;
 }
 
 export type LabQueueClientStatus = SampleStatus | TestStatus | PriorityLevel;
@@ -46,6 +47,7 @@ export function applyLabQueueFilters<T, S>({
   skipSearchFilter = false,
   skipDateFilter = false,
   skipSampleTypeFilter = false,
+  skipStatusFilter = false,
 }: {
   items: T[];
   filters: LabQueueFilterState<S>;
@@ -60,6 +62,7 @@ export function applyLabQueueFilters<T, S>({
   skipSearchFilter?: boolean;
   skipDateFilter?: boolean;
   skipSampleTypeFilter?: boolean;
+  skipStatusFilter?: boolean;
 }): T[] {
   let out = items;
 
@@ -72,7 +75,7 @@ export function applyLabQueueFilters<T, S>({
       return st && filters.sampleTypeFilters.includes(st);
     });
   }
-  if (applyStatusFilter && filters.statusFilters.length > 0) {
+  if (applyStatusFilter && !skipStatusFilter && filters.statusFilters.length > 0) {
     out = out.filter(item => {
       const s = getStatus(item);
       return s != null && filters.statusFilters.includes(s);
@@ -111,5 +114,6 @@ export function applyLabQueueFiltersWithProfile<T, S extends LabQueueClientStatu
     skipSearchFilter: bar.skipSearchFilter,
     skipDateFilter: bar.skipDateFilter,
     skipSampleTypeFilter: bar.skipSampleTypeFilter,
+    skipStatusFilter: bar.skipStatusFilter,
   });
 }

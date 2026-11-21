@@ -23,6 +23,12 @@ import { useAuthStore } from '@/app/authStore';
 import { feedbackTitle } from '@/feedback';
 import { LAB_PATHS } from '../constants/labConstants';
 import { canReleaseResults, LAB_VALIDATOR_ROLES } from '../pages/laboratoryPageAccess';
+import { buildWorklistParams, type WorklistParams } from './worklists';
+
+export type PendingEscalationFilters = Pick<
+  WorklistParams,
+  'search' | 'dateFrom' | 'dateTo' | 'sampleType' | 'priority' | 'priorityGroup'
+>;
 
 interface ResultEntryRequest {
   results: Record<string, unknown>;
@@ -38,8 +44,11 @@ interface ResultValidationRequest {
 }
 
 export const resultAPI = {
-  async getPendingEscalation(): Promise<PendingEscalationItem[]> {
-    return apiClient.get<PendingEscalationItem[]>(LAB_PATHS.results.pendingEscalation);
+  async getPendingEscalation(params?: PendingEscalationFilters): Promise<PendingEscalationItem[]> {
+    return apiClient.get<PendingEscalationItem[]>(
+      LAB_PATHS.results.pendingEscalation,
+      buildWorklistParams(params)
+    );
   },
 
   async getOrderTestContext(orderTestId: number): Promise<PendingEscalationItem> {
@@ -224,15 +233,18 @@ export interface LabQueryRefetchOptions {
   refetchInterval?: number;
 }
 
-export function usePendingEscalation(refetchOptions?: LabQueryRefetchOptions) {
+export function usePendingEscalation(
+  filters?: PendingEscalationFilters,
+  refetchOptions?: LabQueryRefetchOptions,
+) {
   const { isAuthenticated, isLoading: isRestoring, hasRole } = useAuthStore();
   const queryClient = useQueryClient();
   const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
   const canResolveEscalation = hasRole(LAB_VALIDATOR_ROLES);
 
   const query = useQuery({
-    queryKey: queryKeys.results.pendingEscalation(),
-    queryFn: () => resultAPI.getPendingEscalation(),
+    queryKey: queryKeys.results.pendingEscalation(filters),
+    queryFn: () => resultAPI.getPendingEscalation(filters),
     enabled: isAuthenticated && !isRestoring && canViewEscalations,
     ...cacheConfig.dynamic,
     refetchInterval: refetchOptions?.refetchInterval ?? 15_000,
