@@ -14,7 +14,12 @@ from app.domains.lab.results.schemas import (
 from app.domains.lab.workflow.operations import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http import get_current_user, require_lab_tech
+from app.platform.http import (
+    assert_can_release_results,
+    get_current_user,
+    require_lab_tech,
+    require_lab_validator,
+)
 from app.shared.api import OrderTestIdPath
 from app.shared.generated.enums import ValidationDecision
 from fastapi import APIRouter, Depends
@@ -75,6 +80,7 @@ def validate_results(
             validation_notes=validation_data.validationNotes,
             preferred_remedy=validation_data.preferredRemedy,
         )
+    assert_can_release_results(current_user)
     return service.validate_results(
         order_test_id=orderTestId,
         user_id=current_user.id,
@@ -91,7 +97,7 @@ def resolve_escalation(
     orderTestId: OrderTestIdPath,
     body: EscalationResolveRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
-    current_user: User = Depends(require_lab_tech),
+    current_user: User = Depends(require_lab_validator),
 ):
     return service.resolve_escalation(
         order_test_id=orderTestId,

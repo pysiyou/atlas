@@ -229,7 +229,10 @@ def get_validation_worklist(
         page_size=pageSize,
         list_fn=service.list_validation,
         item_model=ValidationWorklistItem,
-        list_fn_extra={"viewer_validator_id": current_user.id},
+        list_fn_extra={
+            "viewer_validator_id": current_user.id,
+            "viewer_can_release": current_user.role in (UserRole.ADMIN, UserRole.LAB_TECH_PLUS),
+        },
         **_stage_worklist_kwargs(
             search=search,
             priority=priority,

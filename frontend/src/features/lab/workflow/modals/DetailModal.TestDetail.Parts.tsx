@@ -2,9 +2,8 @@
  * Test-detail modal chrome: header column, badges, footer, and body.
  */
 
-import { useNavigate } from 'react-router-dom';
-import { actionButtonPreset, Button } from '@/components/primitives';
 import { Panel } from '@/components/surfaces';
+import { useLabCopy } from '@/strings';
 import { LazyLabEventLogPanel } from '@/features/audit/LazyLabEventLogPanel';
 import {
   formatPipelinePendingMessage,
@@ -13,17 +12,13 @@ import {
 } from '@/features/orders';
 import type { Order, OrderTest, Patient, Sample, OrderableTest } from '@/types';
 import { text } from '@/theme/recipes';
-import type { QualityIssueResult } from '@/types';
 import type { LabModalWorkItem } from '../../types/labQueueChrome';
 import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
 import { ResultValidationPanel } from '../../validation/ResultValidationForm';
-import { QualityIssuePopover } from '../../components/QualityIssuePopover';
-import { CriticalSeenConfirm } from '../../validation/CriticalSeenConfirm';
 import { TestHeaderBadges } from '../../components/LabWorkflowBadges';
 import { SampleRejectedBanner } from '../../components/SampleRejectedBanner';
 import {
   DetailGrid,
-  ModalFooter,
   type LabModalStage,
   type DetailGridSectionConfig,
 } from '../shared/DetailModalLayout';
@@ -33,8 +28,9 @@ import {
   resolveTestDetailQueueSince,
   type TestDetailHeaderVariant,
 } from '../shared/testDetailHeader';
-import { isLabActionAllowed, isTerminalTestStatus, labModalFooterDenyMessage } from '../../utils/queueDisplay';
-import { useLabCopy } from '@/strings';
+import { isLabActionAllowed, isTerminalTestStatus } from '../../utils/queueDisplay';
+import { canReleaseResults } from '../../pages/laboratoryPageAccess';
+import { useAuthStore } from '@/app/authStore';
 
 /** Left-column identity chrome for the test-detail modal header. */
 export function TestDetailHeaderColumn({
@@ -92,119 +88,6 @@ export function TestDetailModalHeaderBadges({
   return <TestHeaderBadges row={row} variant={headerVariant} showStatus />;
 }
 
-type TestDetailModalFooterProps = {
-  isValidate: boolean;
-  orderTestId: number;
-  displayWorkItem: LabModalWorkItem | undefined;
-  orderTest: OrderTest | undefined;
-  testDisplayName: string;
-  patientName: string;
-  hasResults: boolean;
-  isApproving: boolean;
-  onClose: () => void;
-  onApprove: () => void;
-  onReject: (result: QualityIssueResult) => void | Promise<void>;
-  labUrl: string | undefined;
-  hasCriticalValues?: boolean;
-  criticalSeen?: boolean;
-  onCriticalSeenChange?: (checked: boolean) => void;
-};
-
-/** Approve/reject or "open in lab" footer for the test-detail modal. */
-export function TestDetailModalFooter({
-  isValidate,
-  orderTestId,
-  displayWorkItem,
-  orderTest,
-  testDisplayName,
-  patientName,
-  hasResults,
-  isApproving,
-  onClose,
-  onApprove,
-  onReject,
-  labUrl,
-  hasCriticalValues = false,
-  criticalSeen = false,
-  onCriticalSeenChange,
-}: TestDetailModalFooterProps) {
-  const navigate = useNavigate();
-
-  if (isValidate) {
-    const allowedActions =
-      orderTest?.lab?.allowedActions ?? displayWorkItem?.allowedActions;
-    const isTerminal = isTerminalTestStatus(orderTest?.status ?? displayWorkItem?.status);
-    const canValidate = isLabActionAllowed(allowedActions, 'validate') && !isTerminal;
-    const canReject = isLabActionAllowed(allowedActions, 'reject') && !isTerminal;
-    const liveOrderTestId = orderTest?.retestOrderTestId ?? orderTestId;
-    const approveDisabled = !canValidate || !hasResults || (hasCriticalValues && !criticalSeen);
-    return (
-      <ModalFooter>
-        {hasCriticalValues && onCriticalSeenChange ? (
-          <CriticalSeenConfirm
-            id={`critical-seen-modal-${orderTestId}`}
-            checked={criticalSeen}
-            onChange={onCriticalSeenChange}
-            disabled={isApproving || !canValidate}
-          />
-        ) : null}
-        <QualityIssuePopover
-          orderTestId={liveOrderTestId}
-          testCode={displayWorkItem?.testCode ?? orderTest?.testCode ?? ''}
-          testName={displayWorkItem?.testName ?? orderTest?.testName ?? testDisplayName}
-          patientName={patientName}
-          disabled={!canReject}
-          trigger={
-            <Button
-              {...actionButtonPreset('reject')}
-              size="sm"
-              layout="icon-text"
-              disabled={!canReject}
-            >
-              Reject
-            </Button>
-          }
-          onReject={result => {
-            void onReject(result);
-          }}
-        />
-        <Button
-          onClick={onApprove}
-          {...actionButtonPreset('approve')}
-          size="sm"
-          layout="icon-text"
-          isLoading={isApproving}
-          disabled={approveDisabled}
-        >
-          Approve
-        </Button>
-      </ModalFooter>
-    );
-  }
-
-  const footerStatus = labModalFooterDenyMessage(orderTest?.lab, displayWorkItem);
-
-  if (!labUrl) {
-    return <ModalFooter statusMessage={footerStatus} />;
-  }
-
-  return (
-    <ModalFooter statusMessage={footerStatus}>
-      <Button
-        variant="primary"
-        size="sm"
-        layout="icon-text"
-        onClick={() => {
-          onClose();
-          navigate(labUrl);
-        }}
-      >
-        Open in lab
-      </Button>
-    </ModalFooter>
-  );
-}
-
 type TestDetailModalBodyProps = {
   sampleRejection: ReturnType<typeof useSampleRejectionDisplay>;
   hasResults: boolean;
@@ -248,6 +131,7 @@ export function TestDetailModalBody({
   patient,
 }: TestDetailModalBodyProps) {
   const labCopy = useLabCopy();
+  const { hasRole } = useAuthStore();
   const resultsTitle = isValidate ? labCopy.panels.resultValidation : labCopy.panels.recordedResults;
   return (
     <>
@@ -276,6 +160,7 @@ export function TestDetailModalBody({
           readOnly={!isValidate}
           enableApproveShortcut={
             isValidate &&
+            canReleaseResults(hasRole) &&
             isLabActionAllowed(
               orderTest.lab?.allowedActions ?? undefined,
               'validate'

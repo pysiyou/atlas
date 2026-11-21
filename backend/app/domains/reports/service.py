@@ -45,6 +45,18 @@ def is_reportable_order(order: _OrderLike) -> bool:
     return len(active_order_tests(order)) > 0
 
 
+def released_order_tests(order: _OrderLike) -> list[_OrderTestLike]:
+    return [test for test in active_order_tests(order) if test.status == TestStatus.VALIDATED]
+
+
+def can_issue_report_pdf(order: _OrderLike) -> bool:
+    if order.overallStatus == OrderStatus.CANCELLED:
+        return False
+    if order.overallStatus == OrderStatus.COMPLETED:
+        return True
+    return len(released_order_tests(order)) > 0
+
+
 def _order_load_options():
     return (
         joinedload(Order.patient),
@@ -171,18 +183,18 @@ class ReportService:
         self.db.commit()
         return item
 
-    def _load_completed_order(self, order_id: str) -> Order:
+    def _load_printable_order(self, order_id: str) -> Order:
         order = self._load_reportable_order(order_id)
-        if order.overallStatus != OrderStatus.COMPLETED:
+        if not can_issue_report_pdf(order):
             raise HTTPException(
                 status_code=400,
-                detail=f"Order {order_id} must be COMPLETED before issuing a PDF",
+                detail=f"Order {order_id} has no validated tests to report",
             )
         return order
 
     def issue_pdf(self, order_id: str, user_id: str) -> tuple[bytes, str]:
         """Generate, archive, and return PDF bytes plus a download filename."""
-        order = self._load_completed_order(order_id)
+        order = self._load_printable_order(order_id)
         if not order.orderId:
             raise HTTPException(
                 status_code=500,

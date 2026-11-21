@@ -52,6 +52,9 @@ export function useTestDetailModalActions({
         clearValidationComments(orderTestId);
         onClose();
         notify.show('lab.validation.approve.success');
+        if (orderId) {
+          openModal({ type: ModalType.REPORT_PREVIEW, orderId });
+        }
       } catch (error) {
         logger.error('Error validating results', error instanceof Error ? error : undefined);
         if (isLikelyNetworkOrTimeout(error)) {
@@ -71,6 +74,7 @@ export function useTestDetailModalActions({
       clearValidationComments,
       onClose,
       criticalSeen,
+      openModal,
     ]
   );
   const { execute: handleApprove, isPending: isApproving } = useAsyncAction(approveHandler, {

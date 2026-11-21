@@ -127,7 +127,7 @@ class ReportPdfService:
         header = ["Test", "Parameter", "Result", "Flag", "Reference"]
         rows: list[list[str]] = [header]
         for ot in order.tests or []:
-            if ot.status in {TestStatus.SUPERSEDED, TestStatus.REMOVED}:
+            if ot.status != TestStatus.VALIDATED:
                 continue
             results = ot.results if isinstance(ot.results, dict) else {}
             test_name = ot.testName or ot.testCode

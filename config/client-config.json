@@ -61,7 +61,7 @@
     "requireDoctorApproval": false,
     "requireDualValidation": false,
     "requireEmergencyContact": true,
-    "enableAutoVerification": false
+    "enableAutoVerification": true
   },
   "reports": {
     "headerText": "Atlas Clinical Laboratories - Laboratory Report",

@@ -101,6 +101,7 @@ export function useLabStageQueueCounts() {
   const { summary, isPending, isError, error, refetch } = useLabMonitorSummaryQuery();
   return {
     counts: summary?.counts ?? EMPTY_COUNTS,
+    suggestedTab: summary?.suggestedTab ?? null,
     isPending,
     isError,
     error,

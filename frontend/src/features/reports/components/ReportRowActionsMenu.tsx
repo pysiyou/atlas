@@ -26,7 +26,9 @@ export function ReportRowActionsMenu({
   const panels = usePanelCopy();
   const printable = canPrintReport(order);
   const printDisabled = disabled || !printable;
-  const printHint = printable ? 'Print report' : 'Print available when order is completed';
+  const printHint = printable
+    ? 'Print report'
+    : 'Print available when a test is released';
 
   return (
     <Popover

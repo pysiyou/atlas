@@ -145,6 +145,8 @@ export function invalidateResultQueries(
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.byId(orderId) }));
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.lists() }));
     tasks.push(client.invalidateQueries({ queryKey: [...queryKeys.orders.all, 'paginated'] }));
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.reports.byOrder(orderId) }));
+    tasks.push(client.invalidateQueries({ queryKey: queryKeys.reports.all }));
   } else {
     tasks.push(client.invalidateQueries({ queryKey: queryKeys.orders.all }));
   }

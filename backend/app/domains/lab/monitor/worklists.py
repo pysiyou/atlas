@@ -689,6 +689,7 @@ class LabWorklistService:
         sample_types: list[str] | None = None,
         category: str | None = None,
         viewer_validator_id: str | None = None,
+        viewer_can_release: bool = True,
     ) -> dict[str, Any]:
         query, _search_term = self._order_test_worklist_query(
             extra_filters=(awaiting_validation_predicate(),),
@@ -726,6 +727,7 @@ class LabWorklistService:
                     order_test=ot,
                     sample=sample,
                     viewer_validator_id=viewer_validator_id,
+                    viewer_can_release=viewer_can_release,
                 )
             )
             work_item_fields = projection_to_worklist_fields(projection)

@@ -9,6 +9,7 @@ import { Alert } from '@/components/display';
 import { RecordId } from '@/features/shared';
 import { formatDateTime, formatOrderTestDisplay } from '@/utils';
 import { useAuthStore } from '@/app/authStore';
+import { canReleaseResults } from '../pages/laboratoryPageAccess';
 import { notify } from '@/feedback';
 import {
   useAcknowledgeCriticalValue,
@@ -28,7 +29,8 @@ export function CriticalValueActions({
   compact = false,
   onUpdated,
 }: CriticalValueActionsProps) {
-  const { user } = useAuthStore();
+  const { user, hasRole } = useAuthStore();
+  const canCallCritical = canReleaseResults(hasRole);
   const notifyMutation = useNotifyCriticalValue();
   const acknowledgeMutation = useAcknowledgeCriticalValue();
   const [notifiedTo, setNotifiedTo] = useState('');
@@ -106,16 +108,28 @@ export function CriticalValueActions({
             onChange={e => setNotifiedTo(e.target.value)}
             placeholder="Notified to (physician / department)"
             className={inputBase}
-            disabled={isBusy}
+            disabled={isBusy || !canCallCritical}
           />
-          <Button variant="primary" size="sm" onClick={handleNotify} isLoading={notifyMutation.isPending}>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={handleNotify}
+            isLoading={notifyMutation.isPending}
+            disabled={!canCallCritical}
+          >
             Record Notification
           </Button>
         </div>
       )}
 
       {record.criticalNotificationSent && !record.criticalAcknowledgedAt && (
-        <Button {...actionButtonPreset('approve')} size="sm" onClick={handleAcknowledge} isLoading={acknowledgeMutation.isPending}>
+        <Button
+          {...actionButtonPreset('approve')}
+          size="sm"
+          onClick={handleAcknowledge}
+          isLoading={acknowledgeMutation.isPending}
+          disabled={!canCallCritical}
+        >
           Acknowledge
         </Button>
       )}

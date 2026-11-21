@@ -81,6 +81,7 @@ export const LAB_TAB_ICONS: Record<LabTabId, IconKey> = {
   monitor: IconKeys.modules.dashboard,
 };
 
+/** Senior (admin / tech-plus) home. Bench techs use `defaultLabTabForUser`. */
 export const DEFAULT_LAB_TAB: LabTabId = 'monitor';
 
 export function normalizeLabTabParam(value: string | undefined): LabTabId | null {

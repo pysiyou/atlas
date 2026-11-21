@@ -11,7 +11,9 @@ export function getReportableOrderOverallStatus(
   return order.overallStatus ?? order.order?.overallStatus;
 }
 
-/** Lab reports may only be printed when the order is completed. */
+/** Print when at least one test is released. Partial orders include only validated lines. */
 export function canPrintReport(order: ReportableOrder): boolean {
+  if (getReportableOrderOverallStatus(order) === 'cancelled') return false;
+  if ((order.validatedTestCount ?? 0) > 0) return true;
   return getReportableOrderOverallStatus(order) === 'completed';
 }

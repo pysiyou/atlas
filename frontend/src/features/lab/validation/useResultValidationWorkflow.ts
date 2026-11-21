@@ -89,6 +89,7 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
           });
           notify.show('lab.validation.approve.success');
           clearValidationComments(orderTestId);
+          openModal({ type: ModalType.REPORT_PREVIEW, orderId });
         } catch (error) {
           logger.error('Error validating results', error instanceof Error ? error : undefined);
           if (isLikelyNetworkOrTimeout(error)) {
@@ -114,7 +115,7 @@ export function useResultValidationWorkflow(queueLoading: boolean): ResultValida
       }
       clearValidationComments(orderTestId);
     },
-    [queueLoading, validateMutation, clearValidationComments, queryClient]
+    [queueLoading, validateMutation, clearValidationComments, queryClient, openModal]
   );
 
   const openValidationModal = useCallback(

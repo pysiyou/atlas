@@ -171,6 +171,11 @@ export function getActiveOrderTests(order: Order): OrderTest[] {
     .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 }
 
+/** Tests released to the patient report (validated only). */
+export function getReleasedOrderTests(order: Order): OrderTest[] {
+  return getActiveOrderTests(order).filter(test => test.status === 'validated');
+}
+
 function resolveActiveCount(input: OrderTestsPresentationInput): number {
   const { activeTests, fallbackCount, testCodes } = input;
   return (

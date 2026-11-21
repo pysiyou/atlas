@@ -22,6 +22,7 @@ import { queryKeys, cacheConfig, useAuthQueryEnabled } from '@/lib/query';
 import { useAuthStore } from '@/app/authStore';
 import { feedbackTitle } from '@/feedback';
 import { LAB_PATHS } from '../constants/labConstants';
+import { canReleaseResults, LAB_VALIDATOR_ROLES } from '../pages/laboratoryPageAccess';
 
 interface ResultEntryRequest {
   results: Record<string, unknown>;
@@ -150,6 +151,10 @@ export function useValidateResults() {
       validationNotes?: string;
       criticalSeen?: boolean;
     }) => {
+      const { hasRole } = useAuthStore.getState();
+      if (!canReleaseResults(hasRole)) {
+        throw new Error(feedbackTitle('api.permissionDenied'));
+      }
       if (orderTestId == null) {
         throw new Error('orderTestId is required to validate results.');
       }
@@ -191,7 +196,7 @@ export function useResolveEscalation() {
       readBack?: EscalationResolveRequest['readBack'];
     }) => {
       const { hasRole } = useAuthStore.getState();
-      if (!hasRole(['administrator', 'lab-technician-plus'])) {
+      if (!hasRole(LAB_VALIDATOR_ROLES)) {
         throw new Error(feedbackTitle('lab.escalation.permissionDenied'));
       }
       if (orderTestId == null) {
@@ -223,7 +228,7 @@ export function usePendingEscalation(refetchOptions?: LabQueryRefetchOptions) {
   const { isAuthenticated, isLoading: isRestoring, hasRole } = useAuthStore();
   const queryClient = useQueryClient();
   const canViewEscalations = hasRole(['administrator', 'lab-technician', 'lab-technician-plus']);
-  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
+  const canResolveEscalation = hasRole(LAB_VALIDATOR_ROLES);
 
   const query = useQuery({
     queryKey: queryKeys.results.pendingEscalation(),

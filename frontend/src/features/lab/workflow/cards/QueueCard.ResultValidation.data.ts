@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { useUserLookup } from '@/lib/api';
 import { useLabWorkflowCardClickGuard } from '../../hooks';
 import { isLabActionAllowed } from '../../utils/queueDisplay';
+import { useAuthStore } from '@/app/authStore';
+import { canReleaseResults } from '../../pages/laboratoryPageAccess';
 import { useSampleRejectionDisplay } from '../../hooks/useSampleRejectionDisplay';
 import type { ValidationQueueRow } from '../../types/queues';
 import {
@@ -46,9 +48,11 @@ export function useResultValidationCardData(
 ): ResultValidationCardSharedData | null {
   const { row, onApprove, onReject, onClick, isApproving = false } = props;
   const { getUserName } = useUserLookup();
+  const { hasRole } = useAuthStore();
   const handleCardClick = useLabWorkflowCardClickGuard(onClick);
   const chromeRow = useMemo(() => labModalWorkItemFromDto(row), [row]);
-  const canValidate = isLabActionAllowed(row.allowedActions, 'validate');
+  const canValidate =
+    canReleaseResults(hasRole) && isLabActionAllowed(row.allowedActions, 'validate');
   const canReject = isLabActionAllowed(row.allowedActions, 'reject');
   const rejection = useMemo(() => retestContextFromRow(chromeRow), [chromeRow]);
   const sampleRejection = useSampleRejectionDisplay(chromeRow);

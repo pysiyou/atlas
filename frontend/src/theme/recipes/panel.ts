@@ -41,7 +41,7 @@ const PAGE_PANEL_CHROME = {
 } as const;
 
 const COMPACT_PANEL_CHROME = {
-  shell: `w-full ${SURFACE.recessed} ${RADIUS.surface} overflow-hidden`,
+  shell: `w-full ${SURFACE.raised} ${RADIUS.surface} overflow-hidden`,
   header: PANEL_LAYOUT.compactHeader,
   headerBetween: PANEL_LAYOUT.compactHeaderBetween,
   title: PANEL_TITLE,

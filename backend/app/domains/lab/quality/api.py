@@ -15,7 +15,11 @@ from app.domains.lab.quality.schemas import (
 from app.domains.lab.workflow.operations import LabOperationsService
 from app.domains.users.models import User
 from app.platform.database import get_db
-from app.platform.http import assert_quality_issue_target_access, get_current_user, require_lab_tech
+from app.platform.http import (
+    assert_quality_issue_target_access,
+    get_current_user,
+    require_lab_validator,
+)
 from app.shared.api import OrderTestIdPath
 from app.shared.generated.enums import QualityIssueTargetType
 from fastapi import APIRouter, Depends, Query
@@ -37,7 +41,7 @@ def notify_critical_value(
     test_id: OrderTestIdPath,
     request: NotifyRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
-    current_user: User = Depends(require_lab_tech),
+    current_user: User = Depends(require_lab_validator),
 ):
     return service.notify_critical_value(test_id, request, current_user.id)
 
@@ -47,7 +51,7 @@ def acknowledge_critical_value(
     test_id: OrderTestIdPath,
     request: AcknowledgeRequest,
     service: LabOperationsService = Depends(get_lab_operations_service),
-    current_user: User = Depends(require_lab_tech),
+    current_user: User = Depends(require_lab_validator),
 ):
     return service.acknowledge_critical_value(test_id, request, current_user.id)
 

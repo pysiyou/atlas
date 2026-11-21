@@ -576,9 +576,17 @@ class OrderService:
         order = self.db.query(Order).filter(Order.orderId == order_id).first()
         if not order:
             raise LabOperationError(f"Order {order_id} not found", status_code=404)
-        if order.overallStatus != OrderStatus.COMPLETED:
+        if order.overallStatus == OrderStatus.CANCELLED:
             raise LabOperationError(
-                f"Order must be COMPLETED before reporting. Current status: {order.overallStatus}",
+                f"Order {order_id} is cancelled and cannot be reported.",
+                status_code=400,
+            )
+        has_released = any(
+            test.status == TestStatus.VALIDATED for test in (order.tests or [])
+        )
+        if not has_released:
+            raise LabOperationError(
+                f"Order {order_id} has no validated tests to report. Current status: {order.overallStatus}",
                 status_code=400,
             )
         self.emitter.reporting_generated(order_id, user_id)

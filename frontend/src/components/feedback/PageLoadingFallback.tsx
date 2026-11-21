@@ -31,10 +31,10 @@ function isRecordDetailPath(pathname: string, collectionPath: string): boolean {
   return rest.length > 0 && !rest.includes('/');
 }
 
-/** Default laboratory tab is monitor (`/laboratory` and `/laboratory/monitor`). */
+/** Monitor board chrome (`/laboratory/monitor`). Bare `/laboratory` redirects by role. */
 function isLabMonitorPath(pathname: string): boolean {
   const path = pathWithoutTrailingSlash(pathname);
-  return path === ROUTES.LABORATORY || path === `${ROUTES.LABORATORY}/monitor`;
+  return path === `${ROUTES.LABORATORY}/monitor`;
 }
 
 function TablePageLoadingLayout({ fullScreen }: { fullScreen: boolean }) {

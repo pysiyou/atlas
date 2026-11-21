@@ -4,6 +4,7 @@ import { useResolveEscalation } from '../api/results';
 import { useAuthStore } from '@/app/authStore';
 import { notify } from '@/feedback';
 import { useCallback } from 'react';
+import { LAB_VALIDATOR_ROLES } from '../pages/laboratoryPageAccess';
 
 interface UseEscalationResolutionOptions {
   orderTestId: number;
@@ -19,7 +20,7 @@ export function useEscalationResolution({
   onResetForm,
 }: UseEscalationResolutionOptions) {
   const { hasRole } = useAuthStore();
-  const canResolveEscalation = hasRole(['administrator', 'lab-technician-plus']);
+  const canResolveEscalation = hasRole(LAB_VALIDATOR_ROLES);
   const resolveEscalation = useResolveEscalation();
   const resolving = resolveEscalation.isPending;
 

@@ -121,6 +121,7 @@ def require_role(*allowed_roles: UserRole):
 
 require_admin = require_role(UserRole.ADMIN)
 require_lab_tech = require_role(UserRole.ADMIN, UserRole.LAB_TECH, UserRole.LAB_TECH_PLUS)
+require_lab_validator = require_role(UserRole.ADMIN, UserRole.LAB_TECH_PLUS)
 require_sample_collector = require_role(
     UserRole.ADMIN,
     UserRole.RECEPTIONIST,
@@ -129,6 +130,7 @@ require_sample_collector = require_role(
 )
 
 _LAB_TECH_ROLES = frozenset({UserRole.ADMIN, UserRole.LAB_TECH, UserRole.LAB_TECH_PLUS})
+_LAB_VALIDATOR_ROLES = frozenset({UserRole.ADMIN, UserRole.LAB_TECH_PLUS})
 _SAMPLE_COLLECTOR_ROLES = frozenset(
     {
         UserRole.ADMIN,
@@ -137,6 +139,20 @@ _SAMPLE_COLLECTOR_ROLES = frozenset(
         UserRole.LAB_TECH_PLUS,
     }
 )
+
+
+def user_can_release_results(user: User) -> bool:
+    """Tech Plus / admin may approve (release) results and resolve escalations."""
+    return user.role in _LAB_VALIDATOR_ROLES
+
+
+def assert_can_release_results(user: User) -> None:
+    if user_can_release_results(user):
+        return
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail=f"Requires role: {', '.join(r.value for r in _LAB_VALIDATOR_ROLES)}",
+    )
 
 
 def assert_quality_issue_target_access(user: User, target_type: QualityIssueTargetType) -> None:

@@ -240,6 +240,7 @@ def action_flags_for_validation(
     *,
     order_test: OrderTest,
     validator_id: str | None = None,
+    viewer_can_release: bool = True,
 ) -> tuple[WorklistAllowedActions, str | None]:
     from app.platform.config import client_config
 
@@ -257,7 +258,7 @@ def action_flags_for_validation(
     if awaiting_second_signoff and validator_id and order_test.validatedBy == str(validator_id):
         can_validate = False
         deny_reason = "dual_validation_pending"
-    actions["validate"] = can_validate
+    actions["validate"] = can_validate and viewer_can_release
     actions["reject"] = order_test.status == TestStatus.RESULTED
     return actions, deny_reason
 

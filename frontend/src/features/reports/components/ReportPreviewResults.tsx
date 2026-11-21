@@ -11,7 +11,7 @@ import {
 import type { Gender } from '@/types';
 import { text, SPACING } from '@/theme/recipes';
 import type { LabReportPayload, ReportPreviewResultsLayout } from '@/types';
-import { getActiveOrderTests } from '@/utils/presentation';
+import { getReleasedOrderTests } from '@/utils/presentation';
 
 const PLACEHOLDER_PANEL_COUNT = 2;
 interface ReportPreviewResultsProps {
@@ -70,9 +70,13 @@ export function ReportPreviewResults({
   }
 
   const patient = reportPatient(reportData);
-  const orderTests = getActiveOrderTests(reportData.order);
+  const orderTests = getReleasedOrderTests(reportData.order);
   if (reportData.testResults.length === 0) {
-    return <p className={text({ role: 'body', intent: 'muted' })}>No active tests on this order.</p>;
+    return (
+      <p className={text({ role: 'body', intent: 'muted' })}>
+        No released tests on this order yet.
+      </p>
+    );
   }
 
   return (

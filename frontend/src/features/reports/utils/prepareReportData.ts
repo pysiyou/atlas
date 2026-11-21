@@ -2,7 +2,7 @@ import type { LabReportPayload, OrderTest, Patient, ReportableOrder, OrderableTe
 import { getBrandingPresentation } from '@/config';
 import { RESULT_NOT_AVAILABLE } from '@/types';
 import { isDateInInclusiveRange } from '@/utils/date';
-import { getActiveOrderTests } from '@/utils/presentation';
+import { getReleasedOrderTests } from '@/utils/presentation';
 import { calculateAge } from '@/utils/string';
 import type jsPDF from 'jspdf';
 
@@ -196,7 +196,7 @@ export function prepareReportData({
     throw new Error('Reportable order is missing nested order data.');
   }
   const patient = patients?.find(p => p.id === reportableOrder.patientId);
-  const activeTests = getActiveOrderTests(order);
+  const activeTests = getReleasedOrderTests(order);
 
   const sampleSource = activeTests.find(test => test.sampleId);
   const sample = sampleSource?.sampleId ? getSample(sampleSource.sampleId) : undefined;

@@ -10,9 +10,9 @@ import { LabModalPlaceholder } from '../shared/LabModalPlaceholders';
 import {
   TestDetailHeaderColumn,
   TestDetailModalBody,
-  TestDetailModalFooter,
   TestDetailModalHeaderBadges,
 } from './DetailModal.TestDetail.Parts';
+import { TestDetailModalFooter } from './DetailModal.TestDetail.Footer';
 import { useModuleListTitles } from '@/strings';
 
 /**

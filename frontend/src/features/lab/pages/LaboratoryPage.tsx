@@ -18,7 +18,7 @@ import {
   type LabTabId,
   getLabTabPath } from '../constants/labConstants';
 import { useAuthStore } from '@/app/authStore';
-import { tabAllowed } from './laboratoryPageAccess';
+import { defaultLabTabForUser, tabAllowed, usesQueueHomeTab } from './laboratoryPageAccess';
 import { LaboratoryPageTabRail, type LaboratoryPageTabDef } from './LaboratoryPageTabRail';
 import { LaboratoryPageStageContent } from './LaboratoryPageStageContent';
 
@@ -27,24 +27,32 @@ export function LaboratoryPage() {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams<{ tab?: string }>();
   const { hasRole } = useAuthStore();
-  const { counts, isError, error, refetch } = useLabStageQueueCounts();
+  const { counts, suggestedTab, isPending: summaryPending, isError, error, refetch } =
+    useLabStageQueueCounts();
+  const queueHome = usesQueueHomeTab(hasRole);
+  const homeTab = defaultLabTabForUser(hasRole, {
+    suggestedTab,
+    counts,
+  });
+  const waitingOnHomeTab = !tabParam && queueHome && summaryPending && !isError;
 
-  const activeTab: LabTabId = normalizeLabTabParam(tabParam) ?? DEFAULT_LAB_TAB;
+  const activeTab: LabTabId = normalizeLabTabParam(tabParam) ?? homeTab;
 
   useEffect(() => {
+    if (waitingOnHomeTab) return;
     if (!tabParam) {
-      navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
+      navigate(getLabTabPath(homeTab), { replace: true });
       return;
     }
     const normalized = normalizeLabTabParam(tabParam);
     if (!normalized) {
-      navigate(getLabTabPath(DEFAULT_LAB_TAB), { replace: true });
+      navigate(getLabTabPath(homeTab), { replace: true });
       return;
     }
     if (tabParam !== normalized) {
       navigate(getLabTabPath(normalized), { replace: true });
     }
-  }, [tabParam, navigate]);
+  }, [tabParam, navigate, homeTab, waitingOnHomeTab]);
 
   const handleTabChange = useCallback(
     (tab: LabTabId) => {
@@ -83,12 +91,16 @@ export function LaboratoryPage() {
     return all.filter(tab => tabAllowed(tab.id, hasRole));
   }, [counts, hasRole]);
 
+  if (waitingOnHomeTab) {
+    return null;
+  }
+
   if (!tabParam) {
-    return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
+    return <Navigate to={getLabTabPath(homeTab)} replace />;
   }
 
   if (!normalizeLabTabParam(tabParam)) {
-    return <Navigate to={getLabTabPath(DEFAULT_LAB_TAB)} replace />;
+    return <Navigate to={getLabTabPath(homeTab)} replace />;
   }
 
   if (!tabAllowed(activeTab, hasRole)) {
