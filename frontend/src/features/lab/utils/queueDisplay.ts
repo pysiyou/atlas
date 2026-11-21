@@ -6,6 +6,7 @@ import {
   type LabAttentionReason,
 } from '@/types/generated/policies';
 import { differenceInHours, parseISO, isValid } from 'date-fns';
+import { getLabCopy } from '@/strings';
 import { LAB_CONFIG } from '../constants/labConstants';
 import type { OrderTest, TestStatus } from '@/types';
 import { TERMINAL_TEST_STATUSES } from '@/types/generated/policies';
@@ -119,8 +120,9 @@ function stageFromPipeline(pipelineStage?: string): OrderTestQueueStage | null {
     case 'entry':
       return 'awaiting_results';
     case 'validation':
-    case 'escalation':
       return 'awaiting_validation';
+    case 'escalation':
+      return 'awaiting_supervisor';
     case 'completed':
       return 'completed';
     case 'cancelled':
@@ -177,7 +179,11 @@ export function deriveOrderTestQueueState(
   context: OrderTestQueueContext = {}
 ): OrderTestQueueState {
   const status = test.status as TestStatus;
-  const stage = stageFromPipeline(context.lab?.pipelineStage) ?? stageFromTestStatus(status);
+  // Escalated tests share pipelineStage "validation" with ordinary review.
+  const stage =
+    status === 'escalated'
+      ? 'awaiting_supervisor'
+      : (stageFromPipeline(context.lab?.pipelineStage) ?? stageFromTestStatus(status));
 
   const denyReason = context.serverDenyReason ?? context.lab?.denyReason ?? null;
   const denyMessage = context.serverDenyMessage ?? context.lab?.denyMessage ?? null;
@@ -290,20 +296,21 @@ export function labDisabledActionTooltip(
 }
 
 function stageLabel(stage: OrderTestQueueStage): string {
+  const copy = getLabCopy().workflow.queue;
   switch (stage) {
     case 'awaiting_collection':
-      return 'Awaiting collection';
+      return copy.awaitingCollection;
     case 'awaiting_results':
-      return 'Awaiting results';
+      return copy.awaitingResults;
     case 'awaiting_validation':
-      return 'Awaiting validation';
+      return copy.awaitingValidation;
     case 'awaiting_supervisor':
-      return 'Supervisor review';
+      return copy.awaitingSupervisor;
     case 'completed':
-      return 'Completed';
+      return copy.completed;
     case 'cancelled':
-      return 'Cancelled';
+      return copy.cancelled;
     default:
-      return 'Running';
+      return copy.running;
   }
 }

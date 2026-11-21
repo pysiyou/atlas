@@ -14,17 +14,21 @@ export function resolveTestDetailModalStage(
   status?: string | null
 ): LabModalStage {
   if (status === 'escalated') return 'escalation';
-  if (status === 'superseded' || status === 'removed' || status === 'cancelled') {
-    return 'collection';
-  }
+
   const stage = lab?.pipelineStage;
-  if (stage === 'cancelled') return 'collection';
-  if (stage === 'validation' || stage === 'completed') return 'validation';
   if (stage === 'entry') return 'entry';
-  if (stage === 'collection') return 'collection';
-  if (status === 'resulted' || status === 'validated') return 'validation';
+  if (stage === 'validation' || stage === 'completed') return 'validation';
+  if (stage === 'collection' || stage === 'cancelled') return 'collection';
+
+  if (
+    status === 'resulted' ||
+    status === 'validated' ||
+    status === 'superseded' ||
+    status === 'removed'
+  ) {
+    return 'validation';
+  }
   if (status === 'sample-collected') return 'entry';
-  if (status === 'pending') return 'collection';
   return 'collection';
 }
 

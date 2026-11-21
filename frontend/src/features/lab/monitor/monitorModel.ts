@@ -1,5 +1,6 @@
 /** Command center board types and attention-queue categories. */
 import { getLabCopy } from '@/strings';
+import { ATTENTION_TYPE_SORT } from '@/types/generated/policies';
 import { LAB_CONFIG } from '../constants/labConstants';
 import type { LabAttentionReason } from '../utils/queueDisplay';
 import type { PriorityLevel } from '@/types';
@@ -48,21 +49,10 @@ export const ATTENTION_TYPE_KEYS: Record<AttentionType, true> = {
   queue_overdue_warning: true,
 };
 
-/** Display order for feed sections (escalations → blockers → priority → SLA). */
-export const ATTENTION_TYPE_ORDER: AttentionType[] = [
-  'escalation_critical',
-  'escalation_amendment',
-  'escalation_retry_limit',
-  'escalation_recollection_limit',
-  'supervisor_approval',
-  'payment_blocked',
-  'sample_rejected',
-  'retest_in_progress',
-  'priority_urgent',
-  'priority_high',
-  'queue_overdue_critical',
-  'queue_overdue_warning',
-];
+/** Display order for feed sections — sort weights come from `lab-policy.json`. */
+export const ATTENTION_TYPE_ORDER: AttentionType[] = (
+  Object.keys(ATTENTION_TYPE_KEYS) as AttentionType[]
+).sort((a, b) => (ATTENTION_TYPE_SORT[a] ?? 999) - (ATTENTION_TYPE_SORT[b] ?? 999));
 
 /** Attention type labels resolved at call time so terminology can load after import. */
 function buildAttentionTypeConfig(): Record<AttentionType, AttentionTypeConfig> {
@@ -73,84 +63,84 @@ function buildAttentionTypeConfig(): Record<AttentionType, AttentionTypeConfig> 
       groupLabel: copy.attention.criticalValue,
       pillLabel: 'Critical',
       badgeVariant: 'escalated',
-      sortOrder: 10,
+      sortOrder: ATTENTION_TYPE_SORT.escalation_critical,
     },
     escalation_amendment: {
       id: 'escalation_amendment',
       groupLabel: 'Amended results',
       pillLabel: 'Amended',
       badgeVariant: 'escalated',
-      sortOrder: 20,
+      sortOrder: ATTENTION_TYPE_SORT.escalation_amendment,
     },
     escalation_retry_limit: {
       id: 'escalation_retry_limit',
       groupLabel: 'Repeat analysis limit',
       pillLabel: 'Repeat limit',
       badgeVariant: 'escalated',
-      sortOrder: 30,
+      sortOrder: ATTENTION_TYPE_SORT.escalation_retry_limit,
     },
     escalation_recollection_limit: {
       id: 'escalation_recollection_limit',
       groupLabel: 'Recollection limit',
       pillLabel: 'Recollect limit',
       badgeVariant: 'escalated',
-      sortOrder: 40,
+      sortOrder: ATTENTION_TYPE_SORT.escalation_recollection_limit,
     },
     supervisor_approval: {
       id: 'supervisor_approval',
       groupLabel: 'Pathologist review',
       pillLabel: 'Review',
       badgeVariant: 'escalated',
-      sortOrder: 45,
+      sortOrder: ATTENTION_TYPE_SORT.supervisor_approval,
     },
     payment_blocked: {
       id: 'payment_blocked',
       groupLabel: 'Financial hold',
       pillLabel: 'Unpaid',
       badgeVariant: 'warning',
-      sortOrder: 50,
+      sortOrder: ATTENTION_TYPE_SORT.payment_blocked,
     },
     sample_rejected: {
       id: 'sample_rejected',
       groupLabel: 'Pre-analytical rejection',
       pillLabel: 'Rejected',
       badgeVariant: 'cancelled',
-      sortOrder: 60,
+      sortOrder: ATTENTION_TYPE_SORT.sample_rejected,
     },
     retest_in_progress: {
       id: 'retest_in_progress',
       groupLabel: 'Repeat analysis',
       pillLabel: 'Repeat',
       badgeVariant: 'info',
-      sortOrder: 80,
+      sortOrder: ATTENTION_TYPE_SORT.retest_in_progress,
     },
     priority_urgent: {
       id: 'priority_urgent',
       groupLabel: 'STAT priority',
       pillLabel: 'STAT',
       badgeVariant: 'urgent',
-      sortOrder: 82,
+      sortOrder: ATTENTION_TYPE_SORT.priority_urgent,
     },
     priority_high: {
       id: 'priority_high',
       groupLabel: 'High priority',
       pillLabel: 'High',
       badgeVariant: 'high',
-      sortOrder: 84,
+      sortOrder: ATTENTION_TYPE_SORT.priority_high,
     },
     queue_overdue_critical: {
       id: 'queue_overdue_critical',
       groupLabel: `Turnaround exceeded (${LAB_CONFIG.QUEUE_AGE_CRITICAL_HOURS}h+)`,
       pillLabel: 'Critical TAT',
       badgeVariant: 'danger',
-      sortOrder: 90,
+      sortOrder: ATTENTION_TYPE_SORT.queue_overdue_critical,
     },
     queue_overdue_warning: {
       id: 'queue_overdue_warning',
       groupLabel: `Turnaround at risk (${LAB_CONFIG.QUEUE_AGE_WARNING_HOURS}h+)`,
       pillLabel: 'TAT warning',
       badgeVariant: 'warning',
-      sortOrder: 100,
+      sortOrder: ATTENTION_TYPE_SORT.queue_overdue_warning,
     },
   };
 }

@@ -22,6 +22,7 @@ ATTENTION_REASON_KEYS: frozenset[str] = frozenset(
         "recollection_limit",
         "supervisor_review",
         "dual_validation_pending",
+        "validation_rejected",
     }
 )
 
@@ -34,6 +35,7 @@ BLOCKS_PROGRESS_REASONS: frozenset[str] = frozenset(
         "retry_limit",
         "recollection_limit",
         "supervisor_review",
+        "validation_rejected",
     }
 )
 
@@ -53,6 +55,7 @@ ATTENTION_LABELS: dict[str, str] = {
     "recollection_limit": "Recollection limit reached",
     "supervisor_review": "Supervisor approval required",
     "dual_validation_pending": "Awaiting second validator sign-off",
+    "validation_rejected": "Validation rejected — supervisor review",
 }
 
 ATTENTION_TYPE_BY_REASON: dict[str, str] = {
@@ -64,6 +67,7 @@ ATTENTION_TYPE_BY_REASON: dict[str, str] = {
     "recollection_limit": "escalation_recollection_limit",
     "supervisor_review": "supervisor_approval",
     "dual_validation_pending": "supervisor_approval",
+    "validation_rejected": "supervisor_approval",
 }
 
 ALLOWED_ACTION_KEYS: tuple[str, ...] = (
@@ -89,6 +93,7 @@ ATTENTION_TYPE_SORT: dict[str, int] = {
     "supervisor_approval": 45,
     "payment_blocked": 50,
     "sample_rejected": 60,
+    "retest_in_progress": 70,
     "priority_urgent": 82,
     "priority_high": 84,
     "queue_overdue_critical": 90,

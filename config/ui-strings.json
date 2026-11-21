@@ -237,7 +237,16 @@
       "allTestsPageSubtitle": "Every {{order}} {{test}}, sorted by last modified",
       "escalation": "Escalation",
       "sentBack": "Sent back",
-      "sentBackShort": "Rework"
+      "sentBackShort": "Rework",
+      "queue": {
+        "awaitingCollection": "Awaiting collection",
+        "awaitingResults": "Awaiting results",
+        "awaitingValidation": "Awaiting validation",
+        "awaitingSupervisor": "Supervisor review",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "running": "Running"
+      }
     },
     "quality": {
       "sampleRejected": "{{sampleCap}} rejected",

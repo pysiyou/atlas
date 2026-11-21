@@ -168,7 +168,8 @@
         "when": {
           "type": "object",
           "properties": {
-            "escalationRequired": { "type": "boolean" }
+            "escalationRequired": { "type": "boolean" },
+            "createdSample": { "type": "boolean" }
           },
           "additionalProperties": false
         }

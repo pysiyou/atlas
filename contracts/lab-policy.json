@@ -55,6 +55,11 @@
         "label": "Awaiting second validator sign-off",
         "attentionType": "supervisor_approval",
         "blocksProgress": false
+      },
+      "validation_rejected": {
+        "label": "Validation rejected — supervisor review",
+        "attentionType": "supervisor_approval",
+        "blocksProgress": true
       }
     },
     "attentionTypeSort": {
@@ -65,6 +70,7 @@
       "supervisor_approval": 45,
       "payment_blocked": 50,
       "sample_rejected": 60,
+      "retest_in_progress": 70,
       "priority_urgent": 82,
       "priority_high": 84,
       "queue_overdue_critical": 90,
@@ -174,7 +180,7 @@
       {
         "remedy": "request_recollection",
         "feedbackId": "lab.qualityIssue.recollection.requested",
-        "when": { "escalationRequired": false }
+        "when": { "createdSample": true }
       },
       {
         "remedy": "request_recollection",

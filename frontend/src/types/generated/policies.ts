@@ -20,15 +20,17 @@ export const ATTENTION_REASON_KEYS = [
   "retry_limit",
   "recollection_limit",
   "supervisor_review",
+  "dual_validation_pending",
+  "validation_rejected",
 ] as const;
 
-export const BLOCKS_PROGRESS_REASONS = new Set<string>(["payment_unpaid", "sample_rejected", "critical_value", "amendment_pending", "retry_limit", "recollection_limit", "supervisor_review"]);
+export const BLOCKS_PROGRESS_REASONS = new Set<string>(["payment_unpaid", "sample_rejected", "critical_value", "amendment_pending", "retry_limit", "recollection_limit", "supervisor_review", "validation_rejected"]);
 
 export function reasonBlocksProgress(reason: string | null | undefined): boolean {
   return reason != null && BLOCKS_PROGRESS_REASONS.has(reason);
 }
 
-export type LabAttentionReason = "payment_unpaid" | "sample_rejected" | "critical_value" | "amendment_pending" | "retry_limit" | "recollection_limit" | "supervisor_review";
+export type LabAttentionReason = "payment_unpaid" | "sample_rejected" | "critical_value" | "amendment_pending" | "retry_limit" | "recollection_limit" | "supervisor_review" | "dual_validation_pending" | "validation_rejected";
 
 export const ATTENTION_LABELS: Record<LabAttentionReason, string> = {
   "payment_unpaid": "Payment required",
@@ -38,6 +40,8 @@ export const ATTENTION_LABELS: Record<LabAttentionReason, string> = {
   "retry_limit": "Re-test limit reached",
   "recollection_limit": "Recollection limit reached",
   "supervisor_review": "Supervisor approval required",
+  "dual_validation_pending": "Awaiting second validator sign-off",
+  "validation_rejected": "Validation rejected — supervisor review",
 };
 
 export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string>> = {
@@ -48,11 +52,13 @@ export const ATTENTION_ATTENTION_TYPE: Partial<Record<LabAttentionReason, string
   "retry_limit": "escalation_retry_limit",
   "recollection_limit": "escalation_recollection_limit",
   "supervisor_review": "supervisor_approval",
+  "dual_validation_pending": "supervisor_approval",
+  "validation_rejected": "supervisor_approval",
 };
 
-export const ALLOWED_ACTION_KEYS = ["collect","enterResults","validate","reject"] as const;
+export const ALLOWED_ACTION_KEYS = ["collect", "enterResults", "validate", "reject"] as const;
 
-export const PIPELINE_STAGES = ["collection","entry","validation","completed","cancelled"] as const;
+export const PIPELINE_STAGES = ["collection", "entry", "validation", "completed", "cancelled"] as const;
 
 export const ATTENTION_TYPE_SORT: Record<string, number> = {
   "escalation_critical": 10,
@@ -62,24 +68,25 @@ export const ATTENTION_TYPE_SORT: Record<string, number> = {
   "supervisor_approval": 45,
   "payment_blocked": 50,
   "sample_rejected": 60,
+  "retest_in_progress": 70,
   "priority_urgent": 82,
   "priority_high": 84,
   "queue_overdue_critical": 90,
-  "queue_overdue_warning": 100
+  "queue_overdue_warning": 100,
 };
 
-export const SUPERVISOR_ATTENTION_TYPES = ["escalation_critical","escalation_amendment","escalation_retry_limit","escalation_recollection_limit","supervisor_approval"] as const;
+export const SUPERVISOR_ATTENTION_TYPES = ["escalation_critical", "escalation_amendment", "escalation_retry_limit", "escalation_recollection_limit", "supervisor_approval"] as const;
 
-export const PRIORITY_ATTENTION_TYPES = ["priority_urgent","priority_high"] as const;
+export const PRIORITY_ATTENTION_TYPES = ["priority_urgent", "priority_high"] as const;
 
-export const TERMINAL_TEST_STATUSES = ["validated","cancelled","superseded","removed"] as const;
+export const TERMINAL_TEST_STATUSES = ["validated", "cancelled", "superseded", "removed"] as const;
 
 export const ORDER_STATUS_TO_PRIMARY: Record<string, string> = {
   "ordered": "pending",
   "running": "in_progress",
   "partial-results": "partial_results",
   "completed": "completed",
-  "cancelled": "cancelled"
+  "cancelled": "cancelled",
 };
 
 export const TEST_STATUS_TO_PRIMARY: Record<string, string> = {
@@ -90,20 +97,20 @@ export const TEST_STATUS_TO_PRIMARY: Record<string, string> = {
   "cancelled": "cancelled",
   "escalated": "escalated",
   "superseded": "superseded",
-  "removed": "removed"
+  "removed": "removed",
 };
 
 export const SAMPLE_STATUS_TO_PRIMARY: Record<string, string> = {
   "pending": "pending",
   "collected": "in_progress",
-  "rejected": "rejected"
+  "rejected": "rejected",
 };
 
-export const INACTIVE_TEST_STATUSES_FOR_REPORTS = ["removed","superseded"] as const;
+export const INACTIVE_TEST_STATUSES_FOR_REPORTS = ["removed", "superseded"] as const;
 
-export const INACTIVE_TEST_STATUSES_FOR_ROLLUP = ["removed","superseded","cancelled"] as const;
+export const INACTIVE_TEST_STATUSES_FOR_ROLLUP = ["removed", "superseded", "cancelled"] as const;
 
-export const INACTIVE_TEST_STATUSES_FOR_BILLING = ["removed","superseded"] as const;
+export const INACTIVE_TEST_STATUSES_FOR_BILLING = ["removed", "superseded"] as const;
 
 /** Report lines excluded from PDF/list eligibility (subset of rollup inactive). */
 export const INACTIVE_REPORTABLE_TEST_STATUSES = new Set<string>(INACTIVE_TEST_STATUSES_FOR_REPORTS);
@@ -115,24 +122,25 @@ export const PRIORITY_RANK: Record<string, number> = {
   "urgent": 0,
   "high": 1,
   "medium": 2,
-  "low": 3
+  "low": 3,
 };
 
 export const PRIORITY_WEIGHT: Record<string, number> = {
   "urgent": 4,
   "high": 3,
   "medium": 2,
-  "low": 1
+  "low": 1,
 };
 
 // ── Quality workflow (remedy policy) ───────────────────────────────────
 
-export const VALIDATION_REMEDY_WIRES = ["retry_same_sample","request_recollection","cancel"] as const;
+export const VALIDATION_REMEDY_WIRES = ["retry_same_sample", "request_recollection", "cancel"] as const;
 
-export const SAMPLE_UNFINISHED_REMEDY_WIRES = ["request_recollection","cancel"] as const;
+export const SAMPLE_UNFINISHED_REMEDY_WIRES = ["request_recollection", "cancel"] as const;
 
 export type QualityIssueSuccessToastWhen = {
   escalationRequired?: boolean;
+  createdSample?: boolean;
 };
 
 export type QualityIssueSuccessToastRule = {
@@ -141,49 +149,50 @@ export type QualityIssueSuccessToastRule = {
   when: QualityIssueSuccessToastWhen;
 };
 
-export const QUALITY_ISSUE_SUCCESS_TOAST_RULES: QualityIssueSuccessToastRule[] = [
-  {
-    "remedy": "escalate",
-    "feedbackId": "lab.qualityIssue.escalate.limitHit",
-    "when": {
-      "escalationRequired": true
+export const QUALITY_ISSUE_SUCCESS_TOAST_RULES: QualityIssueSuccessToastRule[] =
+  [
+    {
+      "remedy": "escalate",
+      "feedbackId": "lab.qualityIssue.escalate.limitHit",
+      "when": {
+        "escalationRequired": true
+      }
+    },
+    {
+      "remedy": "escalate",
+      "feedbackId": "lab.qualityIssue.escalate",
+      "when": {}
+    },
+    {
+      "remedy": "retry_same_sample",
+      "feedbackId": "lab.qualityIssue.retest.limitHit",
+      "when": {
+        "escalationRequired": true
+      }
+    },
+    {
+      "remedy": "retry_same_sample",
+      "feedbackId": "lab.qualityIssue.retest",
+      "when": {}
+    },
+    {
+      "remedy": "request_recollection",
+      "feedbackId": "lab.qualityIssue.recollection.requested",
+      "when": {
+        "createdSample": true
+      }
+    },
+    {
+      "remedy": "request_recollection",
+      "feedbackId": "lab.qualityIssue.specimenRejected",
+      "when": {}
+    },
+    {
+      "remedy": "cancel",
+      "feedbackId": "lab.qualityIssue.cancelled",
+      "when": {}
     }
-  },
-  {
-    "remedy": "escalate",
-    "feedbackId": "lab.qualityIssue.escalate",
-    "when": {}
-  },
-  {
-    "remedy": "retry_same_sample",
-    "feedbackId": "lab.qualityIssue.retest.limitHit",
-    "when": {
-      "escalationRequired": true
-    }
-  },
-  {
-    "remedy": "retry_same_sample",
-    "feedbackId": "lab.qualityIssue.retest",
-    "when": {}
-  },
-  {
-    "remedy": "request_recollection",
-    "feedbackId": "lab.qualityIssue.recollection.requested",
-    "when": {
-      "escalationRequired": false
-    }
-  },
-  {
-    "remedy": "request_recollection",
-    "feedbackId": "lab.qualityIssue.specimenRejected",
-    "when": {}
-  },
-  {
-    "remedy": "cancel",
-    "feedbackId": "lab.qualityIssue.cancelled",
-    "when": {}
-  }
-];
+  ];
 
 export const DEFAULT_QUALITY_ISSUE_SUCCESS_TOAST = "lab.qualityIssue.reported" as FeedbackId;
 
